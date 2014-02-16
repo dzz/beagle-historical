@@ -4,6 +4,9 @@
 #include "panels.h"
 #include <SDL.h>
 
+void initBrushEditor();
+void destroyBrushEditor();
+
 void renderBrushEditor(SDL_Surface *target, UI_AREA *area);
 
 void brusheditor_mousedown(int x,int y, UI_AREA *area);

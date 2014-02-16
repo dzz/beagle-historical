@@ -28,7 +28,11 @@ static double v = 0;
 
 cp_color cur_color;
 
-unsigned int secondary_toggle = 0;
+static unsigned int secondary_toggle = 0;
+
+unsigned int get_cp_secondary(void) { 
+	return secondary_toggle;
+}
 
 void cp_toggle_primary_secondary(void) {
 	secondary_toggle = !secondary_toggle;
@@ -164,16 +168,26 @@ void drawColorWheel(int w,int h) {
 				double unit_x = ((double)x - (double)w2)/(double)w2;
 				double unit_y = ((double)y - (double)h4)/(double)h4;
 				double d= sqrt(((unit_x)*(unit_x))+((unit_y)*(unit_y)));
-				double h = atan2(unit_y,unit_x)*(350/(3.14*2))+180;
+				double calc_h = atan2(unit_y,unit_x)*(350/(3.14*2))+180;
+
 
 				if(h == 0) h = 0.0001;
 				if(h == 360) h = 359.999;
 				coord = (y*w)+x;
-				if(d<1) {
-					cp_color rgb = rgb_from_hsv(h,sqrt(d),1);
+				if(d<0.95) {
+
+					cp_color rgb = rgb_from_hsv(calc_h,sqrt(d),1);
 					pixels[coord] = SDL_MapRGB(
 									interfaceSurface->format,
 									rgb.r,rgb.g,rgb.b);
+				} else {
+						if(d<0.98) {
+								cp_color rgb = rgb_from_hsv(calc_h,sqrt(d),0.7);
+								pixels[coord] = SDL_MapRGB(
+												interfaceSurface->format,
+												rgb.r,rgb.g,rgb.b);
+						}
+
 				}
 			}
 	SDL_UnlockSurface(interfaceSurface);

@@ -14,16 +14,22 @@ const int screenHeight = 1080;
 const int screenWidth = 1920;
 
 UI_AREA *area;
+UI_AREA *be_area;
 
 void movePanel(int x, int y) {
 	(*area).x0 = x;
-	(*area).y0 = y; 
+	(*area).y0 = y;
 	(*area).x1 = x+panelWidth;
 	(*area).y1 = y+panelHeight;
 	(*area).x = (*area).x0;
 	(*area).y = (*area).y0;
 	(*area).w = (*area).x1 - (*area).x0;
 	(*area).h = (*area).y1 - (*area).y0;
+
+	be_area->x = area->x+COLORPICKER_WIDTH;
+	be_area->y = area->y;
+	be_area->w = area->w-COLORPICKER_WIDTH;
+	be_area->h = area->h;
 }
 
 void togglePanels(void) {
@@ -51,6 +57,7 @@ unsigned int panelColor;
 
 void initPanels(SDL_Surface *target) {
 	area = malloc(sizeof(UI_AREA));
+	be_area = malloc(sizeof(UI_AREA));
 	movePanel(0,0);
 
 	panelColor = SDL_MapRGB(target->format,
@@ -59,6 +66,7 @@ void initPanels(SDL_Surface *target) {
 					0xFF );
 
 	initColorPicker();
+	initBrushEditor();
 }
 
 static int mouse_x;
@@ -70,12 +78,12 @@ void panels_dispatch_mousemotion(int x, int y) {
 }
 
 #define PANEL_COLORPICKER 0
-#define PANEL_BRUSHEDITOR 1 
+#define PANEL_BRUSHEDITOR 1
 
 typedef struct {
 	int offset_x;
 	int offset_y;
-	int panel_id;	
+	int panel_id;
 } mouse_route;
 
 void get_mouse_route(mouse_route* mr, int x, int y){
@@ -111,11 +119,15 @@ void renderColorSwatch(SDL_Surface *target) {
 		cp_color col = getPrimaryColor();
 		SDL_Rect sr;
 
-		sr.x = mouse_x - 30 - 3; 
+		sr.x = mouse_x - 30 - 3;
 		sr.y = mouse_y - 30 - 3;
 
 		sr.w = 15;
 		sr.h = 30;
+
+		if(!get_cp_secondary()) {
+			sr.h+=5;
+		}
 
 		SDL_FillRect( target, &sr, SDL_MapRGB(
 								target->format,
@@ -126,28 +138,36 @@ void renderColorSwatch(SDL_Surface *target) {
 		sr.x+=15;
 		col = getSecondaryColor();
 
+		if(get_cp_secondary()) {
+			sr.h+=5;
+		} else {
+			sr.h-=5;
+		}
 		SDL_FillRect( target, &sr, SDL_MapRGB(
 								target->format,
 								col.r,
 								col.g,
 								col.b ) );
 
-		invalidateDirty(sr.x-15,sr.y,sr.x+30,sr.y+30);
+		invalidateDirty(sr.x-15,sr.y,sr.x+30,sr.y+35);
 }
 
 void renderPanels(SDL_Surface *target) {
 		if(panelsEnabled == 1) {
 				SDL_Rect * r = (SDL_Rect*)area; //steady now
 				SDL_FillRect(target,r,panelColor);
+				renderBrushEditor(target,be_area);
 				renderColorPicker(target,area);
-				renderBrushEditor(target,area);
-				renderColorSwatch(target);		
+				renderColorSwatch(target);
 		}
 
 }
 
 void dropPanels() {
 	destroyColorPicker();
-	if(area!=NULL)
+	destroyBrushEditor();
+	if(area!=NULL){
 		free(area);
+		free(be_area);
+	}
 }
