@@ -8,11 +8,29 @@
 
 #include "../user/stylus.h"
 #include "../user/colorPicker.h"
+#include "../user/brushEditor.h"
 #include "../system/dirty.h"
 #include "../colors/pixmap.h"
 #include "../compositor/compositor.h"
 
 static SDL_Surface* gContext;
+
+static float brush_size;
+static float brush_power; // "hardness"
+static float brush_alpha;
+static int mixPaint = 0;
+
+void setValuesFromUI() {
+	const double brush_min = 5;
+	const double brush_max = 100;
+
+	const double brush_pow_min = 5;
+	const double brush_pow_max = 128;
+
+	brush_size = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
+	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
+	brush_alpha = get_brusheditor_value(2);
+}
 
 void initBrush( SDL_Surface* context ) {
 	gContext = context;
@@ -21,7 +39,6 @@ void initBrush( SDL_Surface* context ) {
 void drawLine(int x0,int y0,int x1,int y1,float p0,float p1);
 
 void brushPaint(stylusState a, stylusState b) {
-	int tlX,tlY,brX,brY;
 	SDL_Rect rect;
 
 	rect.x = a.x;
@@ -29,12 +46,9 @@ void brushPaint(stylusState a, stylusState b) {
 	rect.w = (int)(a.pressure*16);
 	rect.h = (int)(a.pressure*16);
 
-	drawLine(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure);
+	setValuesFromUI();
 
-	tlX = MIN(a.x,b.x);
-	tlY = MIN(a.y,b.y);
-	brX = MAX(a.x,b.x);
-	brY = MAX(a.y,b.y);
+	drawLine(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure);
 
 }
 
@@ -80,7 +94,7 @@ unsigned int*  mix(pixMap src, pixMap dst) {
 
 float map_intensity(float x,float y,float p) {
 		float d = sqrtf((x*x)+(y*y));
-		if(d>1) return 0; else return ((1-d))*(32.0f+(32.0f*p));
+		if(d>1) return 0; else return ((1-d))*(brush_power+(brush_power*p));
 }
 
 void getMixedPaint(pixMap *pix, float p) {
@@ -120,7 +134,7 @@ void plotSplat(int x, int y, int r, float p) {
 			if(coord>0) {
 					ucoord = (unsigned int)coord;
 					intensity = map_intensity(plotX,plotY,p);
-					v = (unsigned char)intensity;
+					v = (unsigned char)(intensity*brush_alpha);
 					dest.pix =pixels[ucoord];
 					current.p.a = v;
 					pixels[ucoord] = *mix(current,dest);
@@ -134,28 +148,6 @@ void plotSplat(int x, int y, int r, float p) {
 	invalidateDirty(x-r,y-r,x+r,y+r);
 }
 
-void plotBrush(int x,int y,float p)
-{
-  SDL_Rect rect;
-  unsigned char col = (unsigned char)((p)*255);
-  unsigned char col2 = col/2;
-  rect.x=x;
-  rect.y=y;
-  rect.w=1+(int)(128*(p*p));
-  rect.h=1+(int)(72*(p*p));
-
-  SDL_FillRect(gContext, &rect, SDL_MapRGB( gContext->format, col, 255-col, col ) );
-  invalidateDirty(rect.x,rect.y,rect.x+rect.w,rect.y+rect.h);
-
-  rect.w -= 2;
-  rect.h -= 2;
-  rect.x ++;
-  rect.y ++;
-
-  SDL_FillRect(gContext, &rect, SDL_MapRGB( gContext->format, col2, col2, col2 ) );
-}
-
-
 void brushReset() {
 }
 
@@ -167,7 +159,7 @@ void drawLine(int x0, int y0, int x1, int y1,float p0,float p1) {
 
 		SDL_LockSurface(gContext);
     	for(;;){
-				plotSplat(x0,y0,(int)(p0*p0*30),p1);
+				plotSplat(x0,y0,(int)(p0*p0*brush_size),p1);
     			if (x0==x1 && y0==y1) break;
     			e2 = err;
     			if (e2 >-dx) { err -= dy; x0 += sx; }

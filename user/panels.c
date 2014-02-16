@@ -102,11 +102,15 @@ void panels_dispatch_mouseup(int x,int y) {
 	mouse_route route;
 	get_mouse_route(&route,x,y);
 
+	x -= route.offset_x;
+	y -= route.offset_y;
+
 	switch(route.panel_id) {
 		case PANEL_COLORPICKER:
 			colorpicker_mousedown(x,y,area);
 			break;
 		case PANEL_BRUSHEDITOR:
+			brusheditor_mousedown(x,y,area);
 			break;
 	}
 }
