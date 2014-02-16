@@ -8,22 +8,28 @@
 #define PACKETDATA (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE)
 #define PACKETMODE PK_BUTTONS
 #include <pktdef.h>
-#include "../vendor/wintab_utils.h"
 #include <SDL.h>
 #include <SDL_syswm.h>
-#include "ctt2.h"
-#include "../drawing/brush.h"
-#include "../user/stylus.h"
-#include "../document/animation.h"
 
-#include "../drawing/drawingSurfaces.h"
-#include "dirty.h"
-#include "../compositor/compositor.h"
-#include "../document/layers.h"
-#include "surfaceCache.h"
-#include "../user/panels.h"
-#include "../user/colorPicker.h"
-#include "../user/dispatch.h"
+#include "system/ctt2.h"
+#include "system/dirty.h"
+#include "system/surfaceCache.h"
+
+#include "vendor/wintab_utils.h"
+
+#include "user/stylus.h"
+#include "document/animation.h"
+
+#include "drawing/brush.h"
+#include "drawing/drawingSurfaces.h"
+
+#include "compositor/compositor.h"
+
+#include "document/layers.h"
+
+#include "user/panels.h"
+#include "user/colorPicker.h"
+#include "user/dispatch.h"
 
 HWND gWnd;
 char* gpszProgramName = "ctt22";
@@ -80,7 +86,7 @@ void updateDrawingContext() {
 		SDL_BlitSurface( comp,NULL, screenSurface,&r);
 		SDL_FreeSurface(comp);
 	}
-	resetDirty(); 
+	resetDirty();
 	drawingContextInvalid = 0;
 }
 
@@ -94,7 +100,7 @@ void initTablet(SDL_Window* window) {
 		AXIS TabletX = {0};
 		AXIS TabletY = {0};
 		AXIS Pressure = {0};
-		int numDevices = 0;	
+		int numDevices = 0;
 		int contextOpen;
 		int ctxIndex = 0;
 		int nOpenContexts = 0;
@@ -138,7 +144,7 @@ void initTablet(SDL_Window* window) {
 						lcMine.lcInExtX = TabletX.axMax;
 						lcMine.lcInExtY = TabletY.axMax;
 
-						// Guarantee the output coordinate space to be in screen coordinates.  
+						// Guarantee the output coordinate space to be in screen coordinates.
 						lcMine.lcOutOrgX = GetSystemMetrics( SM_XVIRTUALSCREEN );
 						lcMine.lcOutOrgY = GetSystemMetrics( SM_YVIRTUALSCREEN );
 						lcMine.lcOutExtX = GetSystemMetrics( SM_CXVIRTUALSCREEN );
@@ -169,7 +175,7 @@ void initTablet(SDL_Window* window) {
 				}
 
 				ctxIndex++;
-		} 
+		}
 
 		if ( nOpenContexts < nAttachedDevices ) {
 				ShowError("Oops - did not open a context for each attached device");
@@ -198,10 +204,10 @@ void handle_wt_packet(PACKET pkt) {
 								(sPkt.y < panelArea.y1) ) {
 						panelsDispatchPacket(sPkt);
 						shouldUpdateStylus = 0;
-				} 
+				}
 		}
 		if(shouldUpdateStylus == 1) {
-				updateStylus(sPkt);	
+				updateStylus(sPkt);
 				invalidateDrawingContext();
 		} else {
 			resetStylusState();
@@ -218,8 +224,8 @@ void handle_wm_event(SDL_Event event) {
 			if(gpWTPacket(hctx, wParam, &pkt)) {
 				handle_wt_packet(pkt);
 			}
-	}	
-} 
+	}
+}
 
 int local_dispatch(SDL_Keycode sym);
 
@@ -239,7 +245,7 @@ __declspec( dllexport) void __stdcall makewin() {
 		SDL_Window* window = NULL;
 		int fin = 0;
 
-		startLog(); 
+		startLog();
 
 		//Initialize SDL
 		if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
@@ -335,7 +341,7 @@ int local_dispatch(SDL_Keycode sym) {
 					return 1;
 			case SDLK_q:
 					anim_nav(drawingContext,-1, 1);
-					invalidateDirty(0,0,1920,1080);	
+					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_e:
 					anim_nav(drawingContext,1, 1);

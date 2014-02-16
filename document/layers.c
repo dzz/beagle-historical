@@ -13,8 +13,8 @@ void initLayers(void) {
 	layers[0].mode = CMP_ADD;
 	layers[1].mode = CMP_ALPHA_OVER;
 
-	strcpy_s(layers[0].name, MAX_LAYERNAME_SIZE, colName);
-	strcpy_s(layers[1].name, MAX_LAYERNAME_SIZE, lineName);
+	strcpy(layers[0].name, colName);
+	strcpy(layers[1].name, lineName);
 
 	numLayers = 2;
 	activeLayer = 1;

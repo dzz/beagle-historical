@@ -1,0 +1,506 @@
+# depslib dependency file v1.0
+1392551029 source:c:\ctt2_whimsy\whimsey\compositor\compositor.c
+	"../system/ctt2.h"
+	"compositor.h"
+	"../drawing/drawingSurfaces.h"
+	<stdio.h>
+	"../colors/pixmap.h"
+
+1392518596 c:\ctt2_whimsy\whimsey\system\ctt2.h
+	<stdio.h>
+
+1392500248 c:\ctt2_whimsy\whimsey\compositor\compositor.h
+	<SDL.h>
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_config.h
+	"SDL_platform.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\begin_code.h
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\close_code.h
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<intrin.h>
+	<libkern/OSAtomic.h>
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109093 c:\c\libs\sdl2-2.0.1\include\sdl_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<mmintrin.h>
+	<mm3dnow.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109093 c:\c\libs\sdl2-2.0.1\include\sdl_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_pixels.h
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_scancode.h
+	"SDL_stdinc.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109093 c:\c\libs\sdl2-2.0.1\include\sdl_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109093 c:\c\libs\sdl2-2.0.1\include\sdl_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1390109093 c:\c\libs\sdl2-2.0.1\include\sdl_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1391979844 c:\ctt2_whimsy\whimsey\drawing\drawingsurfaces.h
+	<SDL.h>
+
+1392013173 c:\ctt2_whimsy\whimsey\colors\pixmap.h
+
+1392554983 source:c:\ctt2_whimsy\whimsey\ctt2.c
+	<stdio.h>
+	<stdlib.h>
+	<Windows.h>
+	<WindowsX.h>
+	<msgpack.h>
+	<wintab.h>
+	<pktdef.h>
+	<SDL.h>
+	<SDL_syswm.h>
+	"system/ctt2.h"
+	"system/dirty.h"
+	"system/surfaceCache.h"
+	"vendor/wintab_utils.h"
+	"user/stylus.h"
+	"document/animation.h"
+	"drawing/brush.h"
+	"drawing/drawingSurfaces.h"
+	"compositor/compositor.h"
+	"document/layers.h"
+	"user/panels.h"
+	"user/colorPicker.h"
+	"user/dispatch.h"
+
+1381942744 c:\c\wintab\includes\msgpack.h
+
+1390197031 c:\c\wintab\includes\wintab.h
+
+1381942744 c:\c\wintab\includes\pktdef.h
+	<wintab.h>
+	<pktdef.h>
+	<wintab.h>
+	<pktdef.h>
+	<pktdef.h>
+	<pktdef.h>
+	<wintab.h>
+	<pktdef.h>
+
+1390109092 c:\c\libs\sdl2-2.0.1\include\sdl_syswm.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	<windows.h>
+	<X11/Xlib.h>
+	<X11/Xatom.h>
+	<directfb.h>
+	<Cocoa/Cocoa.h>
+	<UIKit/UIKit.h>
+	"close_code.h"
+
+1390783302 c:\ctt2_whimsy\whimsey\system\dirty.h
+	<SDL.H>
+
+1392541932 c:\ctt2_whimsy\whimsey\system\surfacecache.h
+	"../document/animation.h"
+	"../compositor/compositor.h"
+	"../drawing/drawingSurfaces.h"
+	<SDL.h>
+
+1392541369 c:\ctt2_whimsy\whimsey\document\animation.h
+	<SDL.H>
+	"../compositor/compositor.h"
+	"../document/layers.h"
+
+1392109861 c:\ctt2_whimsy\whimsey\document\layers.h
+
+1390196783 c:\ctt2_whimsy\whimsey\vendor\wintab_utils.h
+	<windows.h>
+	<stdio.h>
+	<assert.h>
+	<stdarg.h>
+	<WINTAB.H>
+
+1392100375 c:\ctt2_whimsy\whimsey\user\stylus.h
+
+1392541905 c:\ctt2_whimsy\whimsey\drawing\brush.h
+	"../user/stylus.h"
+	<SDL.H>
+
+1392541588 c:\ctt2_whimsy\whimsey\user\panels.h
+	"../user/stylus.h"
+	<SDL.H>
+
+1392540666 c:\ctt2_whimsy\whimsey\user\colorpicker.h
+	"panels.h"
+	<SDL.H>
+
+1392108341 c:\ctt2_whimsy\whimsey\user\dispatch.h
+	<SDL.H>
+
+1392541494 source:c:\ctt2_whimsy\whimsey\document\animation.c
+	"animation.h"
+	"../drawing/drawingSurfaces.h"
+	<stdio.h>
+	"../compositor/compositor.h"
+	"../system/surfaceCache.h"
+
+1392555054 source:c:\ctt2_whimsy\whimsey\document\layers.c
+	"../compositor/compositor.h"
+	"layers.h"
+	<string.h>
+
+1392542362 source:c:\ctt2_whimsy\whimsey\drawing\brush.c
+	<SDL.h>
+	<SDL_image.h>
+	<stdio.h>
+	<math.h>
+	"../user/stylus.h"
+	"../user/colorPicker.h"
+	"../system/dirty.h"
+	"../colors/pixmap.h"
+	"../compositor/compositor.h"
+
+1390109368 c:\c\libs\sdl2_image-2.0.0\include\sdl_image.h
+	"SDL.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1392359781 source:c:\ctt2_whimsy\whimsey\drawing\drawingsurfaces.c
+	"drawingSurfaces.h"
+	<stdio.h>
+
+1392516406 source:c:\ctt2_whimsy\whimsey\system\dirty.c
+	"dirty.h"
+
+1392542128 source:c:\ctt2_whimsy\whimsey\system\surfacecache.c
+	"surfaceCache.h"
+	"../document/animation.h"
+	"../compositor/compositor.h"
+	"../document/layers.h"
+	<stdio.h>
+	<SDL.h>
+
+1392548091 source:c:\ctt2_whimsy\whimsey\user\brusheditor.c
+	"brushEditor.h"
+
+1392548267 c:\ctt2_whimsy\whimsey\user\brusheditor.h
+	"panels.h"
+	<SDL.h>
+
+1392541623 source:c:\ctt2_whimsy\whimsey\user\colorpicker.c
+	"colorPicker.h"
+	"panels.h"
+	<SDL.h>
+	<math.h>
+	"../drawing/drawingSurfaces.h"
+
+1392541674 source:c:\ctt2_whimsy\whimsey\user\dispatch.c
+	"dispatch.h"
+	"colorPicker.h"
+	"../document/animation.h"
+	"panels.h"
+
+1392548465 source:c:\ctt2_whimsy\whimsey\user\panels.c
+	"panels.h"
+	"../system/dirty.h"
+	"stylus.h"
+	"colorPicker.h"
+	"brushEditor.h"
+
+1392542120 source:c:\ctt2_whimsy\whimsey\user\stylus.c
+	"stylus.h"
+	"../drawing/brush.h"
+	<stdio.h>
+	"../document/animation.h"
+
+1390197702 source:c:\ctt2_whimsy\whimsey\vendor\wintab_utils.c
+	"wintab_utils.h"
+

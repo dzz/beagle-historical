@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="whimsey" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/whimsey" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/whimsey" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="colors/pixmap.h" />
+		<Unit filename="compositor/compositor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="compositor/compositor.h" />
+		<Unit filename="ctt2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="document/animation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="document/animation.h" />
+		<Unit filename="document/layers.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="document/layers.h" />
+		<Unit filename="drawing/brush.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="drawing/brush.h" />
+		<Unit filename="drawing/drawingSurfaces.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="drawing/drawingSurfaces.h" />
+		<Unit filename="system/ctt2.h" />
+		<Unit filename="system/dirty.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="system/dirty.h" />
+		<Unit filename="system/surfaceCache.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="system/surfaceCache.h" />
+		<Unit filename="user/brushEditor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="user/brushEditor.h" />
+		<Unit filename="user/colorPicker.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="user/colorPicker.h" />
+		<Unit filename="user/dispatch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="user/dispatch.h" />
+		<Unit filename="user/panels.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="user/panels.h" />
+		<Unit filename="user/stylus.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="user/stylus.h" />
+		<Unit filename="vendor/wintab_utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vendor/wintab_utils.h" />
+		<Extensions>
+			<code_completion>
+				<search_path add="..\..\c\libs\SDL2-2.0.1\include" />
+				<search_path add="..\..\c\libs\SDL2_image-2.0.0" />
+				<search_path add="..\..\c\wintab\includes" />
+			</code_completion>
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

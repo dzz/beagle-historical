@@ -2,11 +2,13 @@
 #include "../system/dirty.h"
 #include "stylus.h"
 #include "colorPicker.h"
+#include "brushEditor.h"
 
 int panelsEnabled = 1;
 
+#define BRUSHPICKER_WIDTH 400
 const int panelHeight = COLORPICKER_HEIGHT;
-const int panelWidth = COLORPICKER_WIDTH;
+const int panelWidth = COLORPICKER_WIDTH + BRUSHPICKER_WIDTH;
 const int screenHeight = 1080;
 const int screenWidth = 1920;
 
@@ -137,6 +139,7 @@ void renderPanels(SDL_Surface *target) {
 				SDL_Rect * r = (SDL_Rect*)area; //steady now
 				SDL_FillRect(target,r,panelColor);
 				renderColorPicker(target,area);
+				renderBrushEditor(target,area);
 				renderColorSwatch(target);		
 		}
 

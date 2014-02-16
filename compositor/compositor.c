@@ -14,7 +14,6 @@ const int CMP_ALPHA_OVER=4;
 
 #include "../colors/pixmap.h"
 
-
 COMPOSITE createFlatCompositeTarget(int w, int h) {
 	return (COMPOSITE)createDrawingSurface(w,h);
 }
@@ -76,14 +75,14 @@ unsigned int * getLayerData(COMPOSITE_LAYER target) {
 unsigned char clamp_add(unsigned char l,unsigned char r,unsigned char src_a) {
 	int acc = l + r;
 	if(acc>255) acc = 255;
-	return (unsigned char)acc;	
+	return (unsigned char)acc;
 }
 
 unsigned char clamp_sub(unsigned char l,unsigned char r,unsigned char src_a) {
 	int acc = r - l;
 	if(acc>255) acc = 255;
 	if(acc<0) acc = 0;
-	return (unsigned char)acc;	
+	return (unsigned char)acc;
 }
 
 unsigned char clamp_src(unsigned char l,unsigned char r,unsigned char src_a) {
@@ -101,13 +100,12 @@ unsigned char comp_alpha_over(unsigned char l, unsigned char r,unsigned char src
 }
 
 COMPOSITE compositeLayers_(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {
-	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);	 
+	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);
 	return flat;
 }
 
 COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {
-	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);	 
-
+	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);
 	int start = area.y * stack[0].w + area.x;
 	int end = (area.y+area.h) * stack[0].w;
 	int read = start;
@@ -133,22 +131,23 @@ COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) 
 	if (end>=(stack[0].w*stack[0].h)-1) end = (stack[0].w*stack[0].h)-1;
 
 	for(l = 0; l < len; ++l) {
-		prepareLayer(stack[0]);	
+		prepareLayer(stack[0]);
 	}
 
 	prepareComposite(flat);
 	do{
 			for(l = 0; l < len; ++l) {
 				func = functab[stack[l].mode];
-				source = getLayerData(stack[l]);				
+				source = getLayerData(stack[l]);
 				{
 					src.pix = source[read];
-					dst.pix = dest[put];	
-									
+					dst.pix = dest[put];
+
+
 					acc.p.r = (*func)(src.p.r,dst.p.r,src.p.a);
 					acc.p.g = (*func)(src.p.g,dst.p.g,src.p.a);
 					acc.p.b = (*func)(src.p.b,dst.p.b,src.p.a);
-					acc.p.a = 255;	
+					acc.p.a = 255;
 
 					dest[put] = acc.pix;
 				}
@@ -165,7 +164,7 @@ COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) 
 	} while (read <end);
 	releaseComposite(flat);
 	for(l = 0; l < len; ++l) {
-		releaseLayer(stack[0]);	
+		releaseLayer(stack[0]);
 	}
 	return flat;
 }
