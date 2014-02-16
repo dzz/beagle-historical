@@ -35,7 +35,7 @@ void cp_toggle_primary_secondary(void) {
 	if(secondary_toggle == 1) {
 			h = secondary.h;
 			s = secondary.s;
-			v = secondary.v; 
+			v = secondary.v;
 	} else {
 			h = primary.h;
 			s = primary.s;
@@ -109,7 +109,7 @@ static void commitColor(void) {
 		double hr = ((h+180)/180)*3.14;
 		double wx = ((cos(hr)*r)+1.0)/2.0;
 		double wy = ((sin(hr)*r)+1.0)/2.0;
-		wheel_x = (int)(wx * COLORPICKER_WIDTH); 
+		wheel_x = (int)(wx * COLORPICKER_WIDTH);
 		wheel_y = (int)(wy * (COLORPICKER_HEIGHT / 2));
 
 		sv_x = (int)(s*COLORPICKER_WIDTH);
@@ -122,8 +122,6 @@ static SDL_Surface * if_buffer;
 
 void drawSVTriangle(int w,int hgt) {
 	int h2 = hgt/2;
-	int h4 = hgt/4;
-	int w2 = w/2;
 	int x =0;
 	int coord;
 	int y =0;
@@ -187,8 +185,19 @@ void initColorPicker(void) {
 		cur_color.g=128;
 		cur_color.b=64;
 		cur_color.a=255;
+
+
+		h = 90;
+		s = 0.5;
+		v = 0.5;
+		commitColor();
+		cp_toggle_primary_secondary();
+		commitColor();
+		cp_toggle_primary_secondary();
+
 		interfaceSurface = createDrawingSurface(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 		if_buffer = createDrawingSurface(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
+
 		drawColorWheel(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 		drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 }
@@ -207,17 +216,16 @@ cp_color getSecondaryColor(void) {
 }
 
 void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
-		int x_start;
+
 		int x_end;
-		int y_start;
+
 		int y_end;
 
 		if(area->x > target->w) return;
 		if(area->y > target->h) return;
 
-		x_start = area->x;
 		x_end = area->x + area->w;
-		y_start = area->y;
+
 		y_end = area->y + area->h;
 
 		x_end = x_end > target->w ? target->w : x_end;
@@ -227,7 +235,6 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 
 		if(wheel_x !=-1 ) {
 			int rad = 5;
-			int t = 1;
 			SDL_Rect r;
 			r.x = (wheel_x-rad);
 			r.y = (wheel_y-rad);

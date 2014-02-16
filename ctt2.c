@@ -80,7 +80,6 @@ void invalidateDrawingContext() {
 
 void updateDrawingContext() {
 	SDL_Rect r = getDirtyRect();
-	fprintf(getLogfile(), "rect: %d,%d,%d,%d \n",r.x,r.y,r.w,r.h);
 	{
 		SDL_Surface *comp = compositeFrameWithContext( drawingContext, getActiveFrame() , r);
 		SDL_BlitSurface( comp,NULL, screenSurface,&r);

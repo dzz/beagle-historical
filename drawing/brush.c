@@ -13,7 +13,6 @@
 #include "../compositor/compositor.h"
 
 static SDL_Surface* gContext;
-static SDL_Surface* brush;
 
 void initBrush( SDL_Surface* context ) {
 	gContext = context;
@@ -36,7 +35,7 @@ void brushPaint(stylusState a, stylusState b) {
 	tlY = MIN(a.y,b.y);
 	brX = MAX(a.x,b.x);
 	brY = MAX(a.y,b.y);
-	
+
 }
 
 unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
@@ -87,18 +86,16 @@ float map_intensity(float x,float y,float p) {
 void getMixedPaint(pixMap *pix, float p) {
 	cp_color prim = getPrimaryColor();
 	cp_color secon = getSecondaryColor();
-
 	pix->p.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
 	pix->p.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
 	pix->p.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
-
 }
 
 void plotSplat(int x, int y, int r, float p) {
 	signed int i;
 	signed int j;
 	signed int r2 = r+r;
-	float pi = 2; 
+	float pi = 2;
 	float piov_2 = 1;
 	float delta = pi / (float)(r2);
 	float plotX = -piov_2;
@@ -114,26 +111,26 @@ void plotSplat(int x, int y, int r, float p) {
 	unsigned int* pixels = (unsigned int*)gContext->pixels;
 	int clipped_x = gContext->w -(x+r);
    	clipped_x = clipped_x	< 0 ? r2 + clipped_x : r2;
-	
+
 	getMixedPaint(&current,p);
 
 	for( i=0; i<clipped_x; ++i) {
 		for( j=0; j<r2; ++j) {
 			plotX += delta;
 			if(coord>0) {
-					ucoord = (unsigned int)coord;	
+					ucoord = (unsigned int)coord;
 					intensity = map_intensity(plotX,plotY,p);
 					v = (unsigned char)intensity;
 					dest.pix =pixels[ucoord];
 					current.p.a = v;
 					pixels[ucoord] = *mix(current,dest);
 			}
-			coord++;	
+			coord++;
 		}
 		plotX = -piov_2;
 		plotY += delta;
 		coord += jmp;
-	}	
+	}
 	invalidateDirty(x-r,y-r,x+r,y+r);
 }
 
@@ -158,42 +155,19 @@ void plotBrush(int x,int y,float p)
   SDL_FillRect(gContext, &rect, SDL_MapRGB( gContext->format, col2, col2, col2 ) );
 }
 
-static float pressureFilter = -1;
-static float xFilter = -1;
-static float yFilter = -1;
 
 void brushReset() {
-	pressureFilter = -1;
-	xFilter = -1;
-	yFilter = -1;
 }
+
 void drawLine(int x0, int y0, int x1, int y1,float p0,float p1) {
 
-	const float a = 0.2f; //IIR pressure filter coefficients
-	const float b = 0.8f;
-
-	const float c = 0.3f; //IIR plot filter coefficients
-	const float d = 0.7f;
-
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
-   	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
+   	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
    	int err = (dx>dy ? dx : -dy)/2, e2;
-
-	if (pressureFilter = -1) pressureFilter = p0;
-	if (xFilter = -1) {
-			xFilter = (float)x0;
-			yFilter = (float)y0;
-	}
 
 		SDL_LockSurface(gContext);
     	for(;;){
-    			//plotBrush(x0,y0,p1);
-			
-				pressureFilter = (pressureFilter*a) + (p1*b);
-				xFilter = (xFilter*c) + ( (float)x0*d);
-				yFilter = (yFilter*c) + ( (float)y0*d);
-
-				plotSplat((int)xFilter,(int)yFilter,(int)(pressureFilter*pressureFilter)*20,pressureFilter);	
+				plotSplat(x0,y0,(int)(p0*p0*30),p1);
     			if (x0==x1 && y0==y1) break;
     			e2 = err;
     			if (e2 >-dx) { err -= dy; x0 += sx; }

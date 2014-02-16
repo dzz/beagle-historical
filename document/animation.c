@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "../compositor/compositor.h"
 #include "../system/surfaceCache.h"
+#include <malloc.h>
 
 int baseSize = 1024;	//our initial stack
 
@@ -19,12 +20,12 @@ frame *getActiveFrame() {
 
 void createFrame( unsigned int addr, int idx) {
 		unsigned int i = 0;
-		
+
 		frameArr[addr] = malloc(sizeof(frame));
 		frameArr[addr]->idx = idx;
 		frameArr[addr]->drawing = createDrawingSurface(1920,1080);
 
-	
+
 		for(i=0; i< numLayers; ++i) {
 			frameArr[addr]->layerKeyFrames[i]=0;
 		}
@@ -47,9 +48,8 @@ void initFrames(void) {
 		//SDL_FillRect( background.data, NULL, SDL_MapRGB( background.data->format, 0x00, 0xFF, 0x00 ) );
 		frameArr=(frame **) malloc(baseSize*sizeof(frame*));
 		memset(frameArr,0,baseSize*sizeof(frame*));
-		printf("init-frames : %d", frameArr[0]);
 		activeFrame = find(0);
-		printf("exit-init-frames : %d", frameArr[0]);
+		activeFrame = find(0);
 }
 
 /*find stored frame object for idx. If nothing found, return pointer
@@ -71,7 +71,7 @@ frame* find(int idx) {
 //			printf("%d\n",frameArr[i]);
 			if(frameArr[i]==0) {
 					found =-1;	/*we iterated the whole list and didn't find a frame*/
-								
+
 			} else {
 					ret = frameArr[i];
 					if(ret->idx == idx) {
@@ -88,7 +88,7 @@ frame* find(int idx) {
 		/*frameArr[i] = malloc(sizeof(frame));
 		frameArr[i]->idx = idx;
 		frameArr[i]->drawing = createDrawingSurface(1920,1080);*/
-		
+
 		printf("%d - %d - %d" , frameArr[i], frameArr[i]->idx,i);
 		return frameArr[i];
 }
@@ -97,7 +97,7 @@ frame* find_left() {
 	int i=0;
 	int max=999999999; //this is dumb!
 
-	frame *found = 0;	
+	frame *found = 0;
 	if(activeFrame->idx==0)
 		return 0;
 	do {
@@ -106,7 +106,7 @@ frame* find_left() {
 			{
 							delta=(activeFrame->idx-frameArr[i]->idx );
 							if(delta<max) {
-								max=delta;	
+								max=delta;
 								found=frameArr[i];
 							}
 			}
@@ -156,7 +156,7 @@ SDL_Surface *compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r) {
 	COMPOSITE_AREA area;
 	COMPOSITE_LAYER stack[2];
 	ctxt.w = 1920;
-	ctxt.h = 1080;	
+	ctxt.h = 1080;
 	ctxt.data = drawingContext;
 	ctxt.mode = CMP_SUB;
 
@@ -165,9 +165,9 @@ SDL_Surface *compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r) {
 	area.w = r.w;
 	area.h = r.h;
 	background.mode = CMP_ADD;
-	stack[0] = background; 
+	stack[0] = background;
 	stack[1] = ctxt;
-	
+
 
 	comp = compositeLayers(stack,2,area);
 	//SDL_BlitSurface( (SDL_Surface *)comp,NULL, background.data,&r);

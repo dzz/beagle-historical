@@ -3,6 +3,7 @@
 #include "stylus.h"
 #include "colorPicker.h"
 #include "brushEditor.h"
+#include <malloc.h>
 
 int panelsEnabled = 1;
 

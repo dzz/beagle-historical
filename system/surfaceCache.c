@@ -4,6 +4,7 @@
 #include "../document/layers.h"
 #include <stdio.h>
 #include <SDL.h>
+#include <string.h>
 
 COMPOSITE_LAYER** surface_cache;
 
@@ -25,9 +26,9 @@ void allocateLayersForNewFrame(frame *fr) {
 
 					//clear to background colour
 					if(i==0) {
-							SDL_FillRect( 
-										surface_cache[coord]->data, 
-										NULL, 
+							SDL_FillRect(
+										surface_cache[coord]->data,
+										NULL,
 										SDL_MapRGBA(surface_cache[coord]->data->format, 0x11,0x44,0x22,0xFF)
 										);
 					}
@@ -40,7 +41,7 @@ void destroySurfaceCache() {
 	unsigned int i = 0;
 	for( i = 0; i < surface_cache_size; ++i) {
 		if(surface_cache[i]!=0) {
-			destroyCompositeLayer((*surface_cache[i]));	
+			destroyCompositeLayer((*surface_cache[i]));
 			free(surface_cache[i]);
 		}
 	}
@@ -71,7 +72,7 @@ COMPOSITE_LAYER* getCompositeLayerFromFrame(frame *fr, unsigned int layerIndex) 
 SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 		COMPOSITE comp;
 		COMPOSITE_AREA area;
-		COMPOSITE_LAYER* stack = (COMPOSITE_LAYER*)malloc(sizeof(COMPOSITE_LAYER)*numLayers); 
+		COMPOSITE_LAYER* stack = (COMPOSITE_LAYER*)malloc(sizeof(COMPOSITE_LAYER)*numLayers);
 		unsigned int i;
 
 		area.x = (r.x > 0) ? r.x : 0;
@@ -89,7 +90,7 @@ SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 				} else {
 						stack[i] = findHeldFrame();
 				}
-		}	
+		}
 
 		comp = compositeLayers(stack,numLayers,area);
 
@@ -104,7 +105,7 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 		COMPOSITE comp;
 		COMPOSITE_AREA area;
 		COMPOSITE_LAYER ctxt;
-		COMPOSITE_LAYER* stack = (COMPOSITE_LAYER*)malloc(sizeof(COMPOSITE_LAYER)*numLayers); 
+		COMPOSITE_LAYER* stack = (COMPOSITE_LAYER*)malloc(sizeof(COMPOSITE_LAYER)*numLayers);
 		unsigned int i;
 
 		area.x = (r.x > 0) ? r.x : 0;
@@ -118,7 +119,7 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 						ctxt.h = COMPOSITOR_DEFAULT_H;
 						ctxt.data = context;
 						ctxt.mode = layers[getActiveLayer()].mode;
-						stack[i] = ctxt;	
+						stack[i] = ctxt;
 						stack[i].mode = layers[i].mode; //inherit mode from layer manager
 				} else {
 
@@ -132,7 +133,7 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 								stack[i] = findHeldFrame();
 						}
 				}
-		}	
+		}
 
 		comp = compositeLayers(stack,numLayers,area);
 

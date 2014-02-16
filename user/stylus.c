@@ -2,6 +2,7 @@
 #include "../drawing/brush.h"
 #include <stdio.h>
 #include "../document/animation.h"
+#include "../system/ctt2.h"
 
 stylusState gStylusState = {0};
 stylusState gSSLastFrame = {0};
@@ -14,8 +15,9 @@ void updateStylus(stylusPacket packet) {
 
 	gStylusState.x = packet.x;
 	gStylusState.y = packet.y;
-	gStylusState.pressure = packet.pressure;	
+	gStylusState.pressure = packet.pressure;
 
+	fprintf(getLogfile(), "pressure: %f \n", packet.pressure);
 /*	printf("{\n%d\n%d\n%f\n\n--\n",packet.x,packet.y,packet.pressure);*/
 
 	runStylusLogic();

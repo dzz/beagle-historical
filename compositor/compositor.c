@@ -5,6 +5,7 @@
 #include "compositor.h"
 #include "../drawing/drawingSurfaces.h"
 #include <stdio.h>
+#include <malloc.h>
 
 const int CMP_ADD=0;
 const int CMP_SUB=1;
