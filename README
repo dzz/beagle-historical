@@ -1,0 +1,27 @@
+  ___  ____  ____  ___  
+ / __)(_  _)(_  _)(__ \ 
+( (__   )(    )(   / _/ 
+ \___) (__)  (__) (____)
+      ctt2 0.00000001
+-------------------------------------------------------------------------------
+an obscurely named animation and painting tool  
+
+Currently not offered under any license, however it will be soon. 
+
+if you would like to help, please email me at:
+devon.zachary@gmail.com
+
+resources:
+
+WINTAB SDK
+http://www.wacomeng.com/windows/index.html
+
+SDL 2.0
+http://www.libsdl.org/
+
+SDL_image 2.0
+https://www.libsdl.org/projects/SDL_image/
+                                                                         
+-------------------------------------------------------------------------------
+Copright (c) 2014 Devon Zachary
+except items in vendor/ from WINTAB SDK
