@@ -29,7 +29,7 @@ void allocateLayersForNewFrame(frame *fr) {
 							SDL_FillRect(
 										surface_cache[coord]->data,
 										NULL,
-										SDL_MapRGBA(surface_cache[coord]->data->format, 0xFF,0xFF,0xFF,0xFF)
+										SDL_MapRGBA(surface_cache[coord]->data->format, 0x00,0x00,0x00,0x00)
 										);
 					}
 				}

@@ -16,20 +16,21 @@
 static SDL_Surface* gContext;
 
 static float brush_size;
-static float brush_power; // "hardness"
+static double brush_power; // "hardness"
 static float brush_alpha;
-static int mixPaint = 0;
+static int brush_mixpaint = 0;
 
 void setValuesFromUI() {
 	const double brush_min = 5;
 	const double brush_max = 100;
 
-	const double brush_pow_min = 5;
-	const double brush_pow_max = 128;
+	const double brush_pow_min = 1;
+	const double brush_pow_max = 256;
 
 	brush_size = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
 	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
 	brush_alpha = get_brusheditor_value(2);
+	brush_mixpaint = get_brusheditor_value(3) > 0.5 ? 1 : 0;
 }
 
 void initBrush( SDL_Surface* context ) {
@@ -93,16 +94,22 @@ unsigned int*  mix(pixMap src, pixMap dst) {
 
 
 float map_intensity(float x,float y,float p) {
-		float d = sqrtf((x*x)+(y*y));
+		double d = sqrtf((x*x)+(y*y));
 		if(d>1) return 0; else return ((1-d))*(brush_power+(brush_power*p));
 }
 
 void getMixedPaint(pixMap *pix, float p) {
-	cp_color prim = getPrimaryColor();
-	cp_color secon = getSecondaryColor();
-	pix->p.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
-	pix->p.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
-	pix->p.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
+		cp_color prim = getPrimaryColor();
+		if( brush_mixpaint == 0) {
+				pix->p.r = prim.r;
+				pix->p.g = prim.g;
+				pix->p.b = prim.b;
+		} else {
+				cp_color secon = getSecondaryColor();
+				pix->p.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
+				pix->p.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
+				pix->p.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
+		}
 }
 
 void plotSplat(int x, int y, int r, float p) {

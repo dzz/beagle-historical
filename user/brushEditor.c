@@ -1,4 +1,5 @@
 #include "brushEditor.h"
+#include "../drawing/brush.h"
 #include <SDL.h>
 
 static SDL_Surface* bg;
@@ -19,7 +20,7 @@ void initBrushEditor() {
 	sVals[0] = 0.5;
 	sVals[1] = 0.5;
 	sVals[2] = 0.5;
-	sVals[4] = 1;
+	sVals[3] = 1;
 }
 
 void destroyBrushEditor() {
@@ -37,7 +38,7 @@ void renderBrushEditor(SDL_Surface *target, UI_AREA *area) {
 		//our slider images are 30x244 and we have a
 		// 400x256 area to fill with sliders
 
-		for(i=0; i<3; ++i) {
+		for(i=0; i<4; ++i) {
 			spos.x = (area->x + (i*50))+5; //5px margin
 			spos.y = area->y + 6; //12px margin
 			spos.w = 30;
