@@ -24,9 +24,9 @@ static int brush_mixpaint = 0;
 static double brush_jitter = 0;
 
 void brush_setValuesFromUI() {
-	const double brush_min = 5.0;
-	const double brush_max = 125.0;
-	const double brush_pow_min = 0.05;
+	const double brush_min = 1.2;
+	const double brush_max = 95.0;
+	const double brush_pow_min = 16;
 	const double brush_pow_max = 128.0;
 
 	brush_size = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
@@ -164,11 +164,11 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		SDL_LockSurface(ctxt);
     	for(;;){
-				double j_size = 100*brush_jitter*p1;
+				double j_size = 75*brush_jitter*(p0*p1);
 				double j_x = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
 				double j_y = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
 
-				plotSplat((x0+j_x),(y0+j_y),(int)(p0*p0*brush_size),p1, ctxt);
+				plotSplat((x0+j_x),(y0+j_y),(int)(p0*brush_size),p1, ctxt);
     			if (x0==x1 && y0==y1) break;
     			e2 = err;
     			if (e2 >-dx) { err -= dy; x0 += sx; }
@@ -178,6 +178,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 }
 
 unsigned int mix_noalpha(cp_color src, cp_color dst,unsigned char blend) {
+
 	pixMap mixed;
 
 	mixed.p.r = comp_alpha_over(src.r,dst.r,blend);

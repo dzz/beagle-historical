@@ -62,14 +62,15 @@ SDL_Rect get_buttons_rect() {
 void draw_buttons_to_bg() {
 	SDL_Rect r= get_buttons_rect();	
 	SDL_BlitSurface(button_images[0],NULL,bg,&r);
-
-	r.y+=r.h+5;
+	r.y+=r.h;
 	SDL_BlitSurface(button_images[2],NULL,bg,&r);
-	r.y+=r.h+5;
+	r.y+=r.h;
 	SDL_BlitSurface(button_images[4],NULL,bg,&r);
-	r.y+=r.h+5;
+	r.y+=r.h;
 	SDL_BlitSurface(button_images[6],NULL,bg,&r);
-
+	r.y+=r.h;
+	SDL_BlitSurface(button_images[8],NULL,bg,&r);
+	r.y+=r.h;
 }
 
 int get_brusheditor_toggle(int idx) {
@@ -108,6 +109,8 @@ void initBrushEditor() {
 	button_images[5] = SDL_LoadBMP("ui_gen/button_2_down.bmp");
 	button_images[6] = SDL_LoadBMP("ui_gen/button_3_up.bmp");
 	button_images[7] = SDL_LoadBMP("ui_gen/button_3_down.bmp");
+	button_images[8] = SDL_LoadBMP("ui_gen/button_4_up.bmp");
+	button_images[9] = SDL_LoadBMP("ui_gen/button_4_down.bmp");
 
 	redraw_stroke_sample();
 	draw_buttons_to_bg();

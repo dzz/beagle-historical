@@ -123,11 +123,11 @@ void renderColorSwatch(SDL_Surface *target) {
 		cp_color col = getPrimaryColor();
 		SDL_Rect sr;
 
-		sr.x = mouse_x - 30 - 3;
-		sr.y = mouse_y - 30 - 3;
+		sr.x = 1920 - 100;
+		sr.y = 1080 - 100;
 
-		sr.w = 15;
-		sr.h = 30;
+		sr.w = 45;
+		sr.h = 90;
 
 		if(!get_cp_secondary()) {
 			sr.h+=5;
@@ -139,21 +139,16 @@ void renderColorSwatch(SDL_Surface *target) {
 								col.g,
 								col.b ) );
 
-		sr.x+=15;
+		sr.x+=55;
 		col = getSecondaryColor();
 
-		if(get_cp_secondary()) {
-			sr.h+=5;
-		} else {
-			sr.h-=5;
-		}
 		SDL_FillRect( target, &sr, SDL_MapRGB(
 								target->format,
 								col.r,
 								col.g,
 								col.b ) );
 
-		invalidateDirty(sr.x-15,sr.y,sr.x+30,sr.y+35);
+		//invalidateDirty(sr.x-100,sr.y,sr.x+100,sr.y+100);
 }
 
 void renderPanels(SDL_Surface *target) {

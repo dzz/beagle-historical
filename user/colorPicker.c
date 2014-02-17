@@ -9,9 +9,12 @@ static void commitColor(void);
 
 static int wheel_x =-1;
 static int wheel_y =-1;
-
+static int buffered_wheel_x = -1;
+static int buffered_wheel_y = -1;
 static int sv_x = -1;
 static int sv_y = -1;
+static int buffered_sv_x = -1;
+static int buffered_sv_y = -1;
 
 typedef struct {
 		double h;
@@ -38,6 +41,12 @@ unsigned int get_cp_secondary(void) {
 }
 
 void cp_toggle_primary_secondary(void) {
+	int tmp;
+	tmp = wheel_x; wheel_x = buffered_wheel_x; buffered_wheel_x = tmp;
+	tmp = wheel_y; wheel_y = buffered_wheel_y; buffered_wheel_y = tmp;
+	tmp = sv_x; sv_x = buffered_sv_x; buffered_sv_x = tmp;
+	tmp = sv_y; sv_y = buffered_sv_y; buffered_sv_y = tmp;
+
 	secondary_toggle = !secondary_toggle;
 	if(secondary_toggle == 1) {
 			h = secondary.h;
@@ -206,11 +215,14 @@ void initColorPicker(void) {
 		cur_color.a=255;
 
 
-		h = 90;
-		s = 0.5;
-		v = 0.5;
+		h = 15;
+		s = 1;
+		v = 1;
 		commitColor();
 		cp_toggle_primary_secondary();
+		h = 180;
+		s = 1;
+		v = 1;
 		commitColor();
 		cp_toggle_primary_secondary();
 
@@ -266,6 +278,22 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 			r.w = rad*2;
 			r.h = rad*2;
 			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 255,255,255));
+		}
+
+		if(buffered_wheel_x !=-1 ) {
+			int rad = 5;
+			SDL_Rect r;
+			r.x = (buffered_wheel_x-rad);
+			r.y = (buffered_wheel_y-rad);
+			r.w = rad*2;
+			r.h = rad*2;
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 0,0,0));
+
+			r.x = (buffered_sv_x-rad);
+			r.y = (buffered_sv_y-rad);
+			r.w = rad*2;
+			r.h = rad*2;
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 0,0,0));
 		}
 
 		SDL_BlitSurface(if_buffer,NULL,target,(SDL_Rect *)area);
