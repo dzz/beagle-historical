@@ -22,22 +22,53 @@ static double brush_power; // "hardness"
 static float brush_alpha;
 static int brush_mixpaint = 0;
 static double brush_jitter = 0;
+static double brush_noise = 0;
+static double brush_pressure_dynamics = 0;
+
+(*active_mixing_function)(unsigned char,unsigned char,unsigned char);
+
+inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
+inline unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
+inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
 
 void brush_setValuesFromUI() {
-	const double brush_min = 1.2;
-	const double brush_max = 95.0;
+	const double brush_min = 0.2;
+	const double brush_max = 125.0;
 	const double brush_pow_min = 16;
 	const double brush_pow_max = 128.0;
 
 	brush_size = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
 	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
 	brush_alpha = get_brusheditor_value(2);
-	brush_mixpaint = get_brusheditor_toggle(0);
+	brush_pressure_dynamics = get_brusheditor_value(3);
 	brush_jitter = get_brusheditor_value(4);
+	brush_noise = get_brusheditor_value(5);
+	brush_mixpaint = get_brusheditor_toggle(0);
+	switch(get_brusheditor_radio()) {
+		case 1:
+			active_mixing_function=&mix_char;
+			break;
+		case 2:
+			active_mixing_function=&bright_char;
+			break;
+		case 3:
+			active_mixing_function=&dark_char;
+			break;
+	}
 }
 
+#define DITHER_KERNEL_SIZE 3
+unsigned int dither_kernel[DITHER_KERNEL_SIZE];
+
+
 void initBrush( SDL_Surface* context ) {
+	active_mixing_function = &mix_char;
+
+	int i;
 	gContext = context;
+	for(i = 0; i< DITHER_KERNEL_SIZE; ++i) {
+		dither_kernel[i] = (unsigned int)(((float)rand()/RAND_MAX)*112);
+	}
 }
 
 
@@ -46,18 +77,43 @@ void brushPaint(stylusState a, stylusState b) {
 	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, gContext);
 }
 
-unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
+unsigned int dither = 0;
+inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
 /*	float blend = (float)idx/255;
 
 	float final = (float)l * blend + (float)r * (1-blend);
 	return (unsigned char)final; */
 
-	unsigned int yolo = (l*idx+r*(255-idx))/255;
+	unsigned int yolo = (unsigned int)(((l*idx+r*((255-idx))+dither_kernel[(dither%DITHER_KERNEL_SIZE)])/255));
+	dither ++;
 	return yolo;
 }
 
+inline unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
+		unsigned int yolo = ((l*idx)+(r*255))/255;
+		if(yolo>255) yolo=255;
+		return yolo;
+}
+
+inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
+	
+		float a = (float)l/255;
+		float b = (float)r/255;
+		float c = (float)idx/255;
+
+		float mix_amt = 1-c;
+		float mul_v = a*b;
+		
+		float result = (mul_v*c) + (mix_amt*b);
+		
+		unsigned int yolo = (unsigned int)( (result) * 255);
+		return yolo;
+}
+
 pixMap mixed;
-unsigned int*  mix(pixMap src, pixMap dst) {
+
+
+inline unsigned int*  mix(pixMap src, pixMap dst) {
 	const int Fringe = 0;
 	unsigned int alpha;
 /*
@@ -66,9 +122,9 @@ unsigned int*  mix(pixMap src, pixMap dst) {
 	}
 	*/
 
-	mixed.p.r = mix_char(src.p.r,dst.p.r,src.p.a);
-	mixed.p.g = mix_char(src.p.g,dst.p.g,src.p.a);
-	mixed.p.b = mix_char(src.p.b,dst.p.b,src.p.a);
+	mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
+	mixed.p.g = (*active_mixing_function)(src.p.g,dst.p.g,src.p.a);
+	mixed.p.b = (*active_mixing_function)(src.p.b,dst.p.b,src.p.a);
 
 	if(src.p.a > dst.p.a) {
 			alpha = src.p.a;
@@ -87,7 +143,7 @@ unsigned int*  mix(pixMap src, pixMap dst) {
 
 
 float map_intensity(float x,float y,float p) {
-		double d = sqrtf((x*x)+(y*y));
+		double d = sqrt((x*x)+(y*y));
 		if(d>1) return 0; else return ((1-d))*(brush_power+(brush_power*p));
 }
 
@@ -124,6 +180,7 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 	unsigned int* pixels = (unsigned int*)ctxt->pixels;
 	int clipped_x = ctxt->w -(x+r);
 	int end = ctxt->w*ctxt->h;
+	float noise = 1;
    	clipped_x = clipped_x	< 0 ? r2 + clipped_x : r2;
 
 	getMixedPaint(&current,p);
@@ -131,10 +188,15 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 	for( i=0; i<clipped_x; ++i) {
 		for( j=0; j<r2; ++j) {
 			plotX += delta;
+
+			if(brush_noise > 0.1) {
+				noise = 1-(((float)rand()/RAND_MAX)*brush_noise);
+			}
+
 			if(coord>0 && coord<end) {
 					ucoord = (unsigned int)coord;
 					intensity = map_intensity(plotX,plotY,p);
-					v = (unsigned char)(intensity*brush_alpha);
+					v = (unsigned char)(intensity*brush_alpha*noise);
 					dest.pix =pixels[ucoord];
 					current.p.a = v;
 					pixels[ucoord] = *mix(current,dest);
@@ -161,18 +223,22 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
    	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
    	int err = (dx>dy ? dx : -dy)/2, e2;
-
+	float pD = brush_pressure_dynamics;
 		SDL_LockSurface(ctxt);
     	for(;;){
-				double j_size = 75*brush_jitter*(p0*p1);
+				double j_size = brush_size*p0*brush_jitter*10;
 				double j_x = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
 				double j_y = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
 
-				plotSplat((x0+j_x),(y0+j_y),(int)(p0*brush_size),p1, ctxt);
     			if (x0==x1 && y0==y1) break;
     			e2 = err;
     			if (e2 >-dx) { err -= dy; x0 += sx; }
     			if (e2 < dy) { err += dx; y0 += sy; }
+
+				plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
+													((p0*pD) +
+													 (1-pD))*3.14
+														)*brush_size),p1, ctxt);
     	}
 		SDL_UnlockSurface(ctxt);
 }
