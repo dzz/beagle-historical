@@ -1,8 +1,11 @@
 #include "colorPicker.h"
+#include "brushEditor.h"
 #include "panels.h"
 #include <SDL.h>
 #include <math.h>
 #include "../drawing/drawingSurfaces.h"
+
+static void commitColor(void);
 
 static int wheel_x =-1;
 static int wheel_y =-1;
@@ -45,6 +48,7 @@ void cp_toggle_primary_secondary(void) {
 			s = primary.s;
 			v = primary.v;
 	}
+	commitColor();
 }
 
 cp_color rgb_from_dbl(double r,double g, double b) {
@@ -119,6 +123,7 @@ static void commitColor(void) {
 		sv_x = (int)(s*COLORPICKER_WIDTH);
 		sv_y = ((int)((1-v)*(COLORPICKER_HEIGHT/2)))+(COLORPICKER_HEIGHT/2);
 	}
+	brusheditor_redraw_stroke();
 }
 
 static SDL_Surface * interfaceSurface;

@@ -10,8 +10,10 @@ void destroyBrushEditor();
 void renderBrushEditor(SDL_Surface *target, UI_AREA *area);
 
 void brusheditor_mousedown(int x,int y, UI_AREA *area);
+void brusheditor_redraw_stroke();
 
 double get_brusheditor_value(int idx);
-
+int get_brusheditor_toggle(int idx);
+int get_brusheditor_radio();
 
 #endif
