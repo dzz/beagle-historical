@@ -21,6 +21,7 @@ static float brush_size;
 static double brush_power; // "hardness"
 static float brush_alpha;
 static int brush_mixpaint = 0;
+static int brush_erase = 0;
 static double brush_jitter = 0;
 static double brush_noise = 0;
 static double brush_pressure_dynamics = 0;
@@ -43,7 +44,10 @@ void brush_setValuesFromUI() {
 	brush_pressure_dynamics = get_brusheditor_value(3);
 	brush_jitter = get_brusheditor_value(4);
 	brush_noise = get_brusheditor_value(5);
+
 	brush_mixpaint = get_brusheditor_toggle(0);
+	brush_erase = get_brusheditor_toggle(1);
+
 	switch(get_brusheditor_radio()) {
 		case 1:
 			active_mixing_function=&mix_char;
@@ -55,6 +59,7 @@ void brush_setValuesFromUI() {
 			active_mixing_function=&dark_char;
 			break;
 	}
+
 }
 
 #define DITHER_KERNEL_SIZE 3
@@ -96,22 +101,31 @@ inline unsigned char bright_char(unsigned char l, unsigned char r, unsigned char
 }
 
 inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
-	
+
 		float a = (float)l/255;
 		float b = (float)r/255;
 		float c = (float)idx/255;
 
 		float mix_amt = 1-c;
 		float mul_v = a*b;
-		
+
 		float result = (mul_v*c) + (mix_amt*b);
-		
+
 		unsigned int yolo = (unsigned int)( (result) * 255);
 		return yolo;
 }
 
 pixMap mixed;
 
+inline unsigned int* erase(pixMap src,pixMap dst) {
+
+	mixed.p.r = dst.p.r;
+	mixed.p.g = dst.p.g;
+	mixed.p.b = dst.p.b;
+
+	if(dst.p.a<src.p.a) mixed.p.a = 0; else mixed.p.a=dst.p.a-src.p.a;
+	return &mixed.pix;
+}
 
 inline unsigned int*  mix(pixMap src, pixMap dst) {
 	const int Fringe = 0;
@@ -181,7 +195,15 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 	int clipped_x = ctxt->w -(x+r);
 	int end = ctxt->w*ctxt->h;
 	float noise = 1;
+	unsigned int* (*mixer)(pixMap,pixMap);
+
    	clipped_x = clipped_x	< 0 ? r2 + clipped_x : r2;
+
+	if(brush_erase == 1) {
+			mixer = &erase;
+	} else {
+		mixer = &mix;
+	}
 
 	getMixedPaint(&current,p);
 
@@ -199,7 +221,7 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 					v = (unsigned char)(intensity*brush_alpha*noise);
 					dest.pix =pixels[ucoord];
 					current.p.a = v;
-					pixels[ucoord] = *mix(current,dest);
+					pixels[ucoord] = *(*mixer)(current,dest);
 			}
 			coord++;
 		}
