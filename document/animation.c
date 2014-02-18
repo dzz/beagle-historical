@@ -145,8 +145,6 @@ void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 	/*copy current frame to context*/
 	activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer() );
 	SDL_BlitSurface(activeCompositeLayer->data,NULL, drawingContext,NULL);
-
-	printf("found left:%d\n",find_left());
 }
 
 void dropFrames(void) {

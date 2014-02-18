@@ -161,9 +161,20 @@ inline unsigned int*  mix(pixMap src, pixMap dst) {
 	//return &mixed.pix;
 }
 
+float squareRoot(float x)
+{
+  unsigned int i = *(unsigned int*) &x;
+
+  // adjust bias
+  i  += 127 << 23;
+  // approximation of square root
+  i >>= 1;
+
+  return *(float*) &i;
+}
 
 inline float map_intensity(float x,float y,float p) {
-		double d = sqrt((x*x)+(y*y));
+		double d = squareRoot((x*x)+(y*y));
 		if(d>1) return 0; else return ((1-d))*(brush_power*p*(1+brush_pressure_dynamics));
 }
 
@@ -184,24 +195,25 @@ void getMixedPaint(pixMap *pix, float p) {
 void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 	signed int i;
 	signed int j;
-	signed int r2 = r+r;
+	const signed int r2 = r+r;
 	const float pi = 2;
 	const float piov_2 = 1;
-	float delta = pi / (float)(r2);
+	const float delta = pi / (float)(r2);
 	float plotX = -piov_2;
 	float plotY = -piov_2;
 	float intensity;
 	unsigned char v = 0;
 	int coord = (x-r)+((y-r) * ctxt->w);
-	unsigned int jmp = (ctxt->w - ((r*2)));
+	const unsigned int jmp = (ctxt->w - ((r*2)));
 	unsigned int ucoord;
 	pixMap dest;
 	pixMap current;
 	unsigned int* pixels = (unsigned int*)ctxt->pixels;
 	int clipped_x = ctxt->w -(x+r);
-	int end = ctxt->w*ctxt->h;
+	const int end = ctxt->w*ctxt->h;
 	float noise = 1;
 	unsigned int* (*mixer)(pixMap,pixMap);
+	double buf;
 
    	clipped_x = clipped_x	< 0 ? r2 + clipped_x : r2;
 
@@ -214,13 +226,12 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 	getMixedPaint(&current,p);
 
 	for( i=0; i<clipped_x; ++i) {
-		double buf;
 		for( j=0; j<r2; ++j) {
 			plotX += delta;
 
-			if(brush_noise > 0.1) {
+			//if(brush_noise > 0.1) {
 				noise = 1-(((float)rand()/RAND_MAX)*brush_noise);
-			}
+			//}
 
 			if(coord>0 && coord<end) {
 					ucoord = (unsigned int)coord;
@@ -256,9 +267,12 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 	int spacing = 2;
 	int space_ctr = 0;
+
 	float pD = brush_pressure_dynamics;
+	if( brush_size_base > 0.33) 
+			spacing = 10;
 	if( brush_size_base > 0.5 )
-			spacing = 12;
+			spacing = 24;
 
 		SDL_LockSurface(ctxt);
     	for(;;){

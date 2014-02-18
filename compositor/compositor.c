@@ -1,9 +1,12 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define CLAMP(a,b) (unsigned char)(((a)>(b))?(a):(b))
 
-#include "../system/ctt2.h"
 #include "compositor.h"
+
+#include "../system/ctt2.h"
 #include "../drawing/drawingSurfaces.h"
+#include "../colors/pixmap.h"
+
 #include <stdio.h>
 #include <malloc.h>
 
@@ -13,7 +16,6 @@ const int CMP_SRC=2;
 const int CMP_ZERO=3;
 const int CMP_ALPHA_OVER=4;
 
-#include "../colors/pixmap.h"
 
 COMPOSITE createFlatCompositeTarget(int w, int h) {
 	return (COMPOSITE)createDrawingSurface(w,h);
@@ -105,6 +107,18 @@ COMPOSITE compositeLayers_(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area)
 	return flat;
 }
 
+int field_toggle = 0;
+
+
+unsigned char (*functab[5])(unsigned char,unsigned char,unsigned char);
+void initCompositor(void) {
+	functab[CMP_ADD] = &clamp_add;
+	functab[CMP_SUB] = &clamp_sub;
+	functab[CMP_SRC] = &clamp_src;
+	functab[CMP_ZERO] = &comp_zero;
+	functab[CMP_ALPHA_OVER] = &comp_alpha_over;
+}
+
 COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {
 	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);
 	int start = area.y * stack[0].w + area.x;
@@ -113,20 +127,15 @@ COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) 
 	int put = 0;
 	int jump = stack[0].w - (area.w) + 1;
 	int scan = 0;
+	int scanline = 0;
 	int l;
 	unsigned int * dest = getCompositeData(flat);
 	unsigned int * source;
-	unsigned char (*functab[5])(unsigned char,unsigned char,unsigned char);
 	unsigned char (*func)(unsigned char, unsigned char, unsigned char);
 	pixMap src;
 	pixMap dst;
 	pixMap acc;
 
-	functab[CMP_ADD] = &clamp_add;
-	functab[CMP_SUB] = &clamp_sub;
-	functab[CMP_SRC] = &clamp_src;
-	functab[CMP_ZERO] = &comp_zero;
-	functab[CMP_ALPHA_OVER] = &comp_alpha_over;
 
 	if (start<0) start = 0;
 	if (end>=(stack[0].w*stack[0].h)-1) end = (stack[0].w*stack[0].h)-1;
@@ -138,34 +147,32 @@ COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) 
 	prepareComposite(flat);
 	do{
 			for(l = 0; l < len; ++l) {
-				func = functab[stack[l].mode];
-				source = getLayerData(stack[l]);
-				{
-					src.pix = source[read];
-					dst.pix = dest[put];
-
-
-					acc.p.r = (*func)(src.p.r,dst.p.r,src.p.a);
-					acc.p.g = (*func)(src.p.g,dst.p.g,src.p.a);
-					acc.p.b = (*func)(src.p.b,dst.p.b,src.p.a);
-					acc.p.a = 255;
-
-					dest[put] = acc.pix;
-				}
+					func = functab[stack[l].mode];
+					source = getLayerData(stack[l]);
+					{
+							src.pix = source[read];
+							dst.pix = dest[put];
+							acc.p.r = (*func)(src.p.r,dst.p.r,src.p.a);
+							acc.p.g = (*func)(src.p.g,dst.p.g,src.p.a);
+							acc.p.b = (*func)(src.p.b,dst.p.b,src.p.a);
+							acc.p.a = 255;
+							dest[put] = acc.pix;
+					}
 			}
 			scan ++;
 			if (scan >= area.w) {
-				scan = 0;
-				read+=jump;
+					scan = 0;
+					read+=jump;
+					scanline++;
 			} else {
-				read++;
+					read++;
 			}
 			put ++;
 
 	} while (read <end);
 	releaseComposite(flat);
 	for(l = 0; l < len; ++l) {
-		releaseLayer(stack[0]);
+			releaseLayer(stack[0]);
 	}
 	return flat;
 }

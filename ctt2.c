@@ -77,10 +77,13 @@ void invalidateDrawingContext() {
 	drawingContextInvalid = 1;
 }
 
+static char field_mode = 0;
 void updateDrawingContext() {
+	field_mode = (field_mode +1) % 2;
+
 	SDL_Rect r = getDirtyRect();
 	{
-		SDL_Surface *comp = compositeFrameWithContext( drawingContext, getActiveFrame() , r);
+		SDL_Surface *comp = compositeFrameWithContext( drawingContext, getActiveFrame() , r ,field_mode );
 		SDL_BlitSurface( comp,NULL, screenSurface,&r);
 		SDL_FreeSurface(comp);
 	}
@@ -256,17 +259,15 @@ __declspec( dllexport) void __stdcall makewin() {
 				}
 				else {
 						SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+						initCompositor();
 						initLayers();
 						initFrames();
 						initDrawingContext();
 						initTablet(window);
-						//Get window surface
+
 						screenSurface = SDL_GetWindowSurface( window );
-						//Fill the surface white
 						SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-						//Update the surface
 						SDL_UpdateWindowSurface( window );
-						//Wait two seconds
 				}
 		}
 

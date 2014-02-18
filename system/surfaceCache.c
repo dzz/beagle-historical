@@ -99,8 +99,9 @@ SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 }
 
 // this is the same as compositeFrame but injects a drawing context in place
-// of the active layer
-SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_Rect r) {
+// of the active layer and provides a speed hack with field_mode to reduce
+// required number of pixel recalcs for realtime display
+SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_Rect r, unsigned char field_mode) {
 
 		COMPOSITE comp;
 		COMPOSITE_AREA area;
@@ -134,7 +135,7 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 						}
 				}
 		}
-
+		
 		comp = compositeLayers(stack,numLayers,area);
 
 		free(stack);

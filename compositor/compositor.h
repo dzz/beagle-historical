@@ -32,5 +32,6 @@ COMPOSITE_LAYER* allocateCompositeLayer(int w,int h);
 
 void destroyCompositeLayer(COMPOSITE_LAYER layer);
 unsigned char comp_alpha_over(unsigned char l, unsigned char r,unsigned char src_a);
+void initCompositor(void);
 
 #endif
