@@ -81,8 +81,8 @@ int get_brusheditor_radio() {
 }
 
 void initBrushEditor() {
-	bg = SDL_LoadBMP("be_bg.bmp");
-	slider = SDL_LoadBMP("be_slider.bmp");
+	bg = SDL_LoadBMP("ui_gen/be_bg.bmp");
+	slider = SDL_LoadBMP("ui_gen/be_slider.bmp");
 	handle = SDL_LoadBMP("be_handle.bmp");
 	preview_bg = SDL_LoadBMP("be_preview.bmp");
 

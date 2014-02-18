@@ -163,7 +163,7 @@ void initTablet(SDL_Window* window) {
 						{
 							hctx = hCtx;
 							gPressure = Pressure;
-							printf("context:%u\n",hctx);
+hjkjk:							printf("context:%u\n",hctx);
 						}
 						else
 						{

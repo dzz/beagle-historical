@@ -23,4 +23,5 @@ SDL_Surface * compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r);
 frame* getActiveFrame();
 
 unsigned int frame_has_content(int idx);
+frame* frame_find_held_frame(int idx, int layer);
 #endif

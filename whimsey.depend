@@ -1,15 +1,16 @@
 # depslib dependency file v1.0
-1392551029 source:c:\ctt2_whimsy\whimsey\compositor\compositor.c
-	"../system/ctt2.h"
+1392717059 source:c:\ctt2_whimsy\whimsey\compositor\compositor.c
 	"compositor.h"
+	"../system/ctt2.h"
 	"../drawing/drawingSurfaces.h"
-	<stdio.h>
 	"../colors/pixmap.h"
+	<stdio.h>
+	<malloc.h>
 
 1392518596 c:\ctt2_whimsy\whimsey\system\ctt2.h
 	<stdio.h>
 
-1392500248 c:\ctt2_whimsy\whimsey\compositor\compositor.h
+1392717014 c:\ctt2_whimsy\whimsey\compositor\compositor.h
 	<SDL.h>
 
 1390109092 c:\c\libs\sdl2-2.0.1\include\sdl.h
@@ -332,7 +333,7 @@
 
 1392013173 c:\ctt2_whimsy\whimsey\colors\pixmap.h
 
-1392554983 source:c:\ctt2_whimsy\whimsey\ctt2.c
+1392720443 source:c:\ctt2_whimsy\whimsey\ctt2.c
 	<stdio.h>
 	<stdlib.h>
 	<Windows.h>
@@ -387,20 +388,20 @@
 1390783302 c:\ctt2_whimsy\whimsey\system\dirty.h
 	<SDL.H>
 
-1392541932 c:\ctt2_whimsy\whimsey\system\surfacecache.h
+1392715721 c:\ctt2_whimsy\whimsey\system\surfacecache.h
 	"../document/animation.h"
 	"../compositor/compositor.h"
 	"../drawing/drawingSurfaces.h"
 	<SDL.h>
 
-1392541369 c:\ctt2_whimsy\whimsey\document\animation.h
+1392719531 c:\ctt2_whimsy\whimsey\document\animation.h
 	<SDL.H>
 	"../compositor/compositor.h"
 	"../document/layers.h"
 
 1392109861 c:\ctt2_whimsy\whimsey\document\layers.h
 
-1390196783 c:\ctt2_whimsy\whimsey\vendor\wintab_utils.h
+1392557810 c:\ctt2_whimsy\whimsey\vendor\wintab_utils.h
 	<windows.h>
 	<stdio.h>
 	<assert.h>
@@ -409,7 +410,7 @@
 
 1392100375 c:\ctt2_whimsy\whimsey\user\stylus.h
 
-1392541905 c:\ctt2_whimsy\whimsey\drawing\brush.h
+1392590885 c:\ctt2_whimsy\whimsey\drawing\brush.h
 	"../user/stylus.h"
 	<SDL.H>
 
@@ -417,32 +418,37 @@
 	"../user/stylus.h"
 	<SDL.H>
 
-1392540666 c:\ctt2_whimsy\whimsey\user\colorpicker.h
+1392560881 c:\ctt2_whimsy\whimsey\user\colorpicker.h
 	"panels.h"
 	<SDL.H>
 
 1392108341 c:\ctt2_whimsy\whimsey\user\dispatch.h
 	<SDL.H>
 
-1392541494 source:c:\ctt2_whimsy\whimsey\document\animation.c
+1392720993 source:c:\ctt2_whimsy\whimsey\document\animation.c
 	"animation.h"
-	"../drawing/drawingSurfaces.h"
-	<stdio.h>
-	"../compositor/compositor.h"
+	"../system/ctt2.h"
 	"../system/surfaceCache.h"
+	"../drawing/drawingSurfaces.h"
+	"../compositor/compositor.h"
+	<stdio.h>
+	<malloc.h>
+	<string.h>
 
 1392555054 source:c:\ctt2_whimsy\whimsey\document\layers.c
 	"../compositor/compositor.h"
 	"layers.h"
 	<string.h>
 
-1392542362 source:c:\ctt2_whimsy\whimsey\drawing\brush.c
+1392721332 source:c:\ctt2_whimsy\whimsey\drawing\brush.c
 	<SDL.h>
-	<SDL_image.h>
 	<stdio.h>
 	<math.h>
+	<stdlib.h>
+	"brush.h"
 	"../user/stylus.h"
 	"../user/colorPicker.h"
+	"../user/brushEditor.h"
 	"../system/dirty.h"
 	"../colors/pixmap.h"
 	"../compositor/compositor.h"
@@ -460,23 +466,29 @@
 1392516406 source:c:\ctt2_whimsy\whimsey\system\dirty.c
 	"dirty.h"
 
-1392542128 source:c:\ctt2_whimsy\whimsey\system\surfacecache.c
+1392720452 source:c:\ctt2_whimsy\whimsey\system\surfacecache.c
 	"surfaceCache.h"
 	"../document/animation.h"
 	"../compositor/compositor.h"
 	"../document/layers.h"
 	<stdio.h>
 	<SDL.h>
+	<string.h>
 
-1392548091 source:c:\ctt2_whimsy\whimsey\user\brusheditor.c
+1392719863 source:c:\ctt2_whimsy\whimsey\user\brusheditor.c
 	"brushEditor.h"
+	"../drawing/drawingSurfaces.h"
+	"../drawing/brush.h"
+	"h_slider.h"
+	<SDL.h>
 
-1392548267 c:\ctt2_whimsy\whimsey\user\brusheditor.h
+1392605967 c:\ctt2_whimsy\whimsey\user\brusheditor.h
 	"panels.h"
 	<SDL.h>
 
-1392541623 source:c:\ctt2_whimsy\whimsey\user\colorpicker.c
+1392609731 source:c:\ctt2_whimsy\whimsey\user\colorpicker.c
 	"colorPicker.h"
+	"brushEditor.h"
 	"panels.h"
 	<SDL.h>
 	<math.h>
@@ -488,19 +500,35 @@
 	"../document/animation.h"
 	"panels.h"
 
-1392548465 source:c:\ctt2_whimsy\whimsey\user\panels.c
+1392696274 source:c:\ctt2_whimsy\whimsey\user\panels.c
 	"panels.h"
 	"../system/dirty.h"
 	"stylus.h"
 	"colorPicker.h"
 	"brushEditor.h"
+	"timeline.h"
+	<malloc.h>
 
-1392542120 source:c:\ctt2_whimsy\whimsey\user\stylus.c
+1392557049 source:c:\ctt2_whimsy\whimsey\user\stylus.c
 	"stylus.h"
 	"../drawing/brush.h"
 	<stdio.h>
 	"../document/animation.h"
+	"../system/ctt2.h"
 
 1390197702 source:c:\ctt2_whimsy\whimsey\vendor\wintab_utils.c
 	"wintab_utils.h"
+
+1392597519 c:\ctt2_whimsy\whimsey\user\h_slider.h
+
+1392598084 source:c:\ctt2_whimsy\whimsey\user\h_slider.c
+	"h_slider.h"
+
+1392696263 c:\ctt2_whimsy\whimsey\user\timeline.h
+	<SDL.h>
+
+1392715289 source:c:\ctt2_whimsy\whimsey\user\timeline.c
+	"../document/animation.h"
+	"timeline.h"
+	<SDL.h>
 

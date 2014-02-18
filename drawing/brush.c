@@ -2,7 +2,6 @@
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
 #include <SDL.h>
-#include <SDL_image.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -140,7 +139,7 @@ inline unsigned int*  mix(pixMap src, pixMap dst) {
 	//this seemed right but gives undesirable results (weird overflow-esque
 	//artifacts when compositing brushes on blank canavses. Without the first
 	//block we get a "wet edges" effect due to gradiating to the drawing surface's
-	//base colour. 
+	//base colour.
 	//
 	//will this out correctly at some point
 
@@ -148,7 +147,7 @@ inline unsigned int*  mix(pixMap src, pixMap dst) {
 	if(src.p.a > dst.p.a) {
 			alpha = src.p.a;
 	}
-	else  
+	else
 	*/
 	{
     	alpha = src.p.a+dst.p.a;
@@ -269,7 +268,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 	int space_ctr = 0;
 
 	float pD = brush_pressure_dynamics;
-	if( brush_size_base > 0.33) 
+	if( brush_size_base > 0.33)
 			spacing = 10;
 	if( brush_size_base > 0.5 )
 			spacing = 24;

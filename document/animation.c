@@ -35,8 +35,15 @@ void createFrame( unsigned int addr, unsigned int idx) {
 			frameArr[addr]->layerKeyFrames[i]=0;
 		}
 
-		frameArr[addr]->layerKeyFrames[0] = 1;
-		frameArr[addr]->layerKeyFrames[1] = 1;
+		if(idx==0) {
+			frameArr[addr]->layerKeyFrames[0] = 1;
+			frameArr[addr]->layerKeyFrames[1] = 1;
+		} //testing hack, background for first frame, rest don't get one
+		else {
+			frameArr[addr]->layerKeyFrames[0] = 1;
+			frameArr[addr]->layerKeyFrames[1] = 1;
+		}
+
 
 		allocateLayersForNewFrame(frameArr[addr]);
 		frameMap[idx] = addr;
@@ -89,6 +96,7 @@ unsigned int findFreeAddr() {
 	exit(1); //you lose
 }
 
+
 frame* find(int idx) {
 		fprintf(getLogfile(), "idx = %d\n",idx);
 		fprintf(getLogfile(), "frame map @ idx = %d\n",frameMap[idx]);
@@ -99,6 +107,19 @@ frame* find(int idx) {
 				return frameArr[frameMap[idx]];
 		}
 		return frameArr[frameMap[idx]];
+}
+
+frame* frame_find_held_frame(int idx, int layer){
+	int i = idx-1;
+	do {
+		if(frame_has_content(i)){
+			if(frameArr[frameMap[idx]]->layerKeyFrames[layer]==1){
+					fprintf(getLogfile(), "found held: %d %d",i,layer);
+					return frameArr[frameMap[idx]];
+					}
+		}
+		i--;
+	} while(i>0);
 }
 
 

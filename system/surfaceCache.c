@@ -54,9 +54,16 @@ void initSurfaceCache() {
 		memset(surface_cache,0,surface_cache_size*sizeof(COMPOSITE_LAYER*));
 }
 
-COMPOSITE_LAYER findHeldFrame() {
-		printf("call to findHeldFrame");
-		exit(1);
+COMPOSITE_LAYER findHeldFrame(int idx, int layer) {
+	frame* fr = frame_find_held_frame(idx,layer);
+	unsigned int coord = fr->idx + (layer*current_frame_storage);
+	return *surface_cache[coord];
+}
+
+COMPOSITE_LAYER* findPtrHeldFrame(int idx, int layer) {
+	frame* fr = frame_find_held_frame(idx,layer);
+	unsigned int coord = fr->idx + (layer*current_frame_storage);
+	return surface_cache[coord];
 }
 
 COMPOSITE_LAYER* getCompositeLayerFromFrame(frame *fr, unsigned int layerIndex) {
@@ -64,8 +71,7 @@ COMPOSITE_LAYER* getCompositeLayerFromFrame(frame *fr, unsigned int layerIndex) 
 		if(surface_cache[coord]!=0) {
 			return surface_cache[coord];
 		} else {
-			printf("tried to pull invalid layer");
-			exit(1);
+			return findPtrHeldFrame(fr->idx,layerIndex);
 		}
 }
 
@@ -88,7 +94,7 @@ SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 						stack[i].mode = layers[i].mode;
 #endif
 				} else {
-						stack[i] = findHeldFrame();
+						stack[i] = findHeldFrame(fr->idx, i);
 				}
 		}
 
@@ -131,11 +137,11 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 								stack[i].mode = layers[i].mode;
 #endif
 						} else {
-								stack[i] = findHeldFrame();
+								stack[i] = findHeldFrame(fr->idx, i);
 						}
 				}
 		}
-		
+
 		comp = compositeLayers(stack,numLayers,area);
 
 		free(stack);
