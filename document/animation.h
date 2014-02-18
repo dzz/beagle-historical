@@ -22,4 +22,5 @@ void anim_commit(void);
 SDL_Surface * compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r);
 frame* getActiveFrame();
 
+unsigned int frame_has_content(int idx);
 #endif

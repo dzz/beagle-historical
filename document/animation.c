@@ -101,6 +101,11 @@ frame* find(int idx) {
 		return frameArr[frameMap[idx]];
 }
 
+
+unsigned int frame_has_content(int idx){
+	return frameArr[frameMap[idx]]!=0;
+}
+
 frame* find_left() {
 	int i=0;
 	int max=999999999; //this is dumb!

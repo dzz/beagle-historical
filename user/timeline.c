@@ -46,9 +46,21 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 		marker.h = layer_size;
 		marker.w = jmp;
 		for( i=0; i<frame_ticks;++i) {
+
 				marker.x = (int)h;
 				marker.y = (i%num_layers) * layer_size + full_timeline.y;
 				SDL_FillRect(target,&marker,SDL_MapRGB(target->format, 0xAA,0xBB,0xCC ));
+
+				if(frame_has_content(i)) {
+					int j;
+					for(j=0; j< num_layers;++j) {
+						SDL_Rect data_marker = marker;
+						data_marker.w=5;	
+						data_marker.h=5;
+						data_marker.y = full_timeline.y + (j*layer_size);
+						SDL_FillRect(target,&data_marker,SDL_MapRGB(target->format, 0x22,0x22,0x52 ));
+					}
+				}
 				h+=jmp;
 		}
 
@@ -62,7 +74,6 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 }
 
 void renderTimeline(SDL_Surface* target) {
-
 	renderTimelineBackground(target);
 	renderTimelineFrameTicks(target);
 }
