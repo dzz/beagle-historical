@@ -37,7 +37,7 @@ void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
 	const double brush_max = 125.0;
 	const double brush_pow_min = 16;
-	const double brush_pow_max = 128.0;
+	const double brush_pow_max = 512.0;
 
 	brush_size_base = get_brusheditor_value(0);
 	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
@@ -131,37 +131,40 @@ inline unsigned int* erase(pixMap src,pixMap dst) {
 }
 
 inline unsigned int*  mix(pixMap src, pixMap dst) {
-	const int Fringe = 0;
 	unsigned int alpha;
-/*
-	if(dst.p.a == 0 && Fringe == 0) {
-		return &src.pix;
-	}
-	*/
 
 	mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
 	mixed.p.g = (*active_mixing_function)(src.p.g,dst.p.g,src.p.a);
 	mixed.p.b = (*active_mixing_function)(src.p.b,dst.p.b,src.p.a);
 
+	//this seemed right but gives undesirable results (weird overflow-esque
+	//artifacts when compositing brushes on blank canavses. Without the first
+	//block we get a "wet edges" effect due to gradiating to the drawing surface's
+	//base colour. 
+	//
+	//will this out correctly at some point
+
+	/*
 	if(src.p.a > dst.p.a) {
 			alpha = src.p.a;
 	}
-	else {
+	else  
+	*/
+	{
     	alpha = src.p.a+dst.p.a;
 		if(alpha>255)
 				alpha = 255;
 
 	}
-
 	mixed.p.a = (unsigned char)alpha;
 	return &mixed.pix;
 	//return &mixed.pix;
 }
 
 
-float map_intensity(float x,float y,float p) {
+inline float map_intensity(float x,float y,float p) {
 		double d = sqrt((x*x)+(y*y));
-		if(d>1) return 0; else return ((1-d))*(brush_power+(brush_power*p));
+		if(d>1) return 0; else return ((1-d))*(brush_power*p*(1+brush_pressure_dynamics));
 }
 
 void getMixedPaint(pixMap *pix, float p) {
@@ -211,6 +214,7 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 	getMixedPaint(&current,p);
 
 	for( i=0; i<clipped_x; ++i) {
+		double buf;
 		for( j=0; j<r2; ++j) {
 			plotX += delta;
 
@@ -221,7 +225,8 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 			if(coord>0 && coord<end) {
 					ucoord = (unsigned int)coord;
 					intensity = map_intensity(plotX,plotY,p);
-					v = (unsigned char)(intensity*brush_alpha*noise);
+					buf = intensity*brush_alpha*noise;
+					v = (unsigned char)(buf);
 					dest.pix =pixels[ucoord];
 					current.p.a = v;
 					pixels[ucoord] = *(*mixer)(current,dest);
@@ -276,15 +281,4 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				space_ctr = (space_ctr+1) % spacing;
     	}
 		SDL_UnlockSurface(ctxt);
-}
-
-unsigned int mix_noalpha(cp_color src, cp_color dst,unsigned char blend) {
-
-	pixMap mixed;
-
-	mixed.p.r = comp_alpha_over(src.r,dst.r,blend);
-	mixed.p.g = comp_alpha_over(src.g,dst.g,blend);
-	mixed.p.b = comp_alpha_over(src.b,dst.b,blend);
-
-	return mixed.pix;
 }
