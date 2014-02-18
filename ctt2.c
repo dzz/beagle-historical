@@ -53,7 +53,6 @@ void closeLog() {
 	fclose(logfile);
 }
 
-
 __declspec( dllexport) void __stdcall origin_init() {
 		LoadWintab();
 		if(!gpWTInfoA(0,0, NULL)) {
@@ -235,8 +234,8 @@ __declspec( dllexport) void __stdcall makewin() {
 
 		/* controls how many mainloops pass before an invalid context is
 		 * reupdated, for a small performance increase */
-		const int CYCLES_BETWEEN_RECOMPOSITE = 10;
-		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 3;
+		const int CYCLES_BETWEEN_RECOMPOSITE = 12;
+		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 2;
 
 		int recomposite_cycles = 0;
 		int screenbuffer_cycles = 0;
@@ -329,8 +328,6 @@ __declspec( dllexport) void __stdcall makewin() {
 		SDL_Quit();
 		closeLog();
 }
-
-
 //low level hook for debugging, return 1 to signal
 // program exit
 

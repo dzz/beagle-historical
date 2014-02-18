@@ -18,6 +18,7 @@
 static SDL_Surface* gContext;
 
 static float brush_size;
+static float brush_size_base;
 static double brush_power; // "hardness"
 static float brush_alpha;
 static int brush_mixpaint = 0;
@@ -38,7 +39,9 @@ void brush_setValuesFromUI() {
 	const double brush_pow_min = 16;
 	const double brush_pow_max = 128.0;
 
-	brush_size = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
+	brush_size_base = get_brusheditor_value(0);
+	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
+
 	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
 	brush_alpha = get_brusheditor_value(2);
 	brush_pressure_dynamics = get_brusheditor_value(3);
@@ -62,7 +65,7 @@ void brush_setValuesFromUI() {
 
 }
 
-#define DITHER_KERNEL_SIZE 3
+#define DITHER_KERNEL_SIZE 256
 unsigned int dither_kernel[DITHER_KERNEL_SIZE];
 
 
@@ -89,8 +92,8 @@ inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char id
 	float final = (float)l * blend + (float)r * (1-blend);
 	return (unsigned char)final; */
 
-	unsigned int yolo = (unsigned int)(((l*idx+r*((255-idx))+dither_kernel[(dither%DITHER_KERNEL_SIZE)])/255));
-	dither ++;
+	unsigned int yolo = (double)(((l*idx+r*((255-idx))/*+dither_kernel[(dither%DITHER_KERNEL_SIZE)]*/)/255));
+//	dither ++;
 	return yolo;
 }
 
@@ -245,7 +248,13 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
    	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
    	int err = (dx>dy ? dx : -dy)/2, e2;
+
+	int spacing = 2;
+	int space_ctr = 0;
 	float pD = brush_pressure_dynamics;
+	if( brush_size_base > 0.5 )
+			spacing = 12;
+
 		SDL_LockSurface(ctxt);
     	for(;;){
 				double j_size = brush_size*p0*brush_jitter*10;
@@ -257,10 +266,14 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
     			if (e2 >-dx) { err -= dy; x0 += sx; }
     			if (e2 < dy) { err += dx; y0 += sy; }
 
-				plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
-													((p0*pD) +
-													 (1-pD))*3.14
-														)*brush_size),p1, ctxt);
+
+				if(space_ctr==0){
+					plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
+														((p0*pD) +
+														 (1-pD))*3.14
+															)*brush_size),p1, ctxt);
+				}
+				space_ctr = (space_ctr+1) % spacing;
     	}
 		SDL_UnlockSurface(ctxt);
 }

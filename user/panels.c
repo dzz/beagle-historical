@@ -3,6 +3,7 @@
 #include "stylus.h"
 #include "colorPicker.h"
 #include "brushEditor.h"
+#include "timeline.h"
 #include <malloc.h>
 
 int panelsEnabled = 1;
@@ -67,6 +68,7 @@ void initPanels(SDL_Surface *target) {
 
 	initColorPicker();
 	initBrushEditor();
+	initTimeline();
 }
 
 static int mouse_x;
@@ -158,6 +160,7 @@ void renderPanels(SDL_Surface *target) {
 				renderBrushEditor(target,be_area);
 				renderColorPicker(target,area);
 				renderColorSwatch(target);
+				renderTimeline(target);
 		}
 
 }

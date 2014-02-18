@@ -1,12 +1,16 @@
 #include "animation.h"
-#include "../drawing/drawingSurfaces.h"
-#include <stdio.h>
-#include "../compositor/compositor.h"
+#include "../system/ctt2.h"
 #include "../system/surfaceCache.h"
+#include "../drawing/drawingSurfaces.h"
+#include "../compositor/compositor.h"
+
+#include <stdio.h>
 #include <malloc.h>
+#include <string.h>
 
-int baseSize = 1024;	//our initial stack
+unsigned int baseSize = 1024;	//our initial stack
 
+static unsigned int *frameMap;
 frame **frameArr;
 frame *activeFrame;
 
@@ -18,7 +22,8 @@ frame *getActiveFrame() {
 	return activeFrame;
 }
 
-void createFrame( unsigned int addr, int idx) {
+void createFrame( unsigned int addr, unsigned int idx) {
+
 		unsigned int i = 0;
 
 		frameArr[addr] = malloc(sizeof(frame));
@@ -34,21 +39,32 @@ void createFrame( unsigned int addr, int idx) {
 		frameArr[addr]->layerKeyFrames[1] = 1;
 
 		allocateLayersForNewFrame(frameArr[addr]);
+		frameMap[idx] = addr;
 }
 
 void initFrames(void) {
-		SDL_Surface * bgImage = SDL_LoadBMP("c:\\res\\test.bmp");
-		background = createCompositeLayer(1920,1080);
 
 		initSurfaceCache();
 
-		SDL_BlitSurface(bgImage,NULL,background.data,NULL);
-		SDL_FreeSurface(bgImage);
-
-		//SDL_FillRect( background.data, NULL, SDL_MapRGB( background.data->format, 0x00, 0xFF, 0x00 ) );
 		frameArr=(frame **) malloc(baseSize*sizeof(frame*));
 		memset(frameArr,0,baseSize*sizeof(frame*));
-		activeFrame = find(0);
+
+		{
+			//an addr that fits inside 0...baseSize but won't have a value until
+			//the buffer is full, needs to link to NULLs in frameArr
+			//
+			//later on when we are adjusting the baseSize this will need to be
+			//recalculated based on the new baseSize
+			unsigned int i;
+			unsigned int invalid_addr = 1023;
+			frameMap=(unsigned int*)malloc(baseSize*sizeof(unsigned int));
+
+			for(i=0; i< baseSize; ++i) {
+				fprintf(getLogfile(), "i = %d\n",i);
+				frameMap[i] = invalid_addr;
+			}
+		}
+
 		activeFrame = find(0);
 }
 
@@ -60,37 +76,29 @@ should opto with sorting
 caching eventually needed
 
 */
+
+unsigned int findFreeAddr() {
+	unsigned int i;
+
+	for(i=0; i< baseSize; ++i) {
+		fprintf(getLogfile(), "i = %d frameptr %d \n",i,frameArr[i]);
+		if(frameArr[i]==0) {
+			return i;
+		}
+	}
+	exit(1); //you lose
+}
+
 frame* find(int idx) {
+		fprintf(getLogfile(), "idx = %d\n",idx);
+		fprintf(getLogfile(), "frame map @ idx = %d\n",frameMap[idx]);
+		fprintf(getLogfile(), "frame arr in map = %d\n",frameArr[frameMap[idx]]);
 
-		int i = 0;
-		int found = 0;
-		frame *ret;
-
-		do{
-//			printf("iterating frames idx:%d",i);
-//			printf("%d\n",frameArr[i]);
-			if(frameArr[i]==0) {
-					found =-1;	/*we iterated the whole list and didn't find a frame*/
-
-			} else {
-					ret = frameArr[i];
-					if(ret->idx == idx) {
-							printf("found existing frame\n");
-							return ret;
-					}
-					i++;
-			}
-		} while(found == 0);
-		/*allocate a new frame*/
-		printf("allocd new frame\n");
-		createFrame(i, idx);
-
-		/*frameArr[i] = malloc(sizeof(frame));
-		frameArr[i]->idx = idx;
-		frameArr[i]->drawing = createDrawingSurface(1920,1080);*/
-
-		printf("%d - %d - %d" , frameArr[i], frameArr[i]->idx,i);
-		return frameArr[i];
+        if(frameArr[frameMap[idx]] == 0){
+				createFrame(findFreeAddr(), idx);
+				return frameArr[frameMap[idx]];
+		}
+		return frameArr[frameMap[idx]];
 }
 
 frame* find_left() {
@@ -144,6 +152,7 @@ void dropFrames(void) {
 			}
 		}
 		free(frameArr);
+		free(frameMap);
 		destroyCompositeLayer(background);
 		destroySurfaceCache();
 }
