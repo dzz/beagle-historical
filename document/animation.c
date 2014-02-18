@@ -149,27 +149,3 @@ void dropFrames(void) {
 }
 
 
-//this is a debug/demo function
-SDL_Surface *compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r) {
-	COMPOSITE comp;
-	COMPOSITE_LAYER ctxt;
-	COMPOSITE_AREA area;
-	COMPOSITE_LAYER stack[2];
-	ctxt.w = 1920;
-	ctxt.h = 1080;
-	ctxt.data = drawingContext;
-	ctxt.mode = CMP_SUB;
-
-	area.x = (r.x > 0) ? r.x : 0;
-	area.y = (r.y > 0) ? r.y : 0;
-	area.w = r.w;
-	area.h = r.h;
-	background.mode = CMP_ADD;
-	stack[0] = background;
-	stack[1] = ctxt;
-
-
-	comp = compositeLayers(stack,2,area);
-	//SDL_BlitSurface( (SDL_Surface *)comp,NULL, background.data,&r);
-	return (SDL_Surface *)comp;
-}
