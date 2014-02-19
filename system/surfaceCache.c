@@ -1,3 +1,4 @@
+#include "../system/ctt2.h"
 #include "surfaceCache.h"
 #include "../document/animation.h"
 #include "../compositor/compositor.h"
@@ -45,7 +46,7 @@ void destroySurfaceCache() {
 			free(surface_cache[i]);
 		}
 	}
-	free(surface_cache);
+ 	free(surface_cache);
 }
 
 void initSurfaceCache() {
@@ -54,11 +55,6 @@ void initSurfaceCache() {
 		memset(surface_cache,0,surface_cache_size*sizeof(COMPOSITE_LAYER*));
 }
 
-COMPOSITE_LAYER findHeldFrame(int idx, int layer) {
-	frame* fr = frame_find_held_frame(idx,layer);
-	unsigned int coord = fr->idx + (layer*current_frame_storage);
-	return *surface_cache[coord];
-}
 
 COMPOSITE_LAYER* findPtrHeldFrame(int idx, int layer) {
 	frame* fr = frame_find_held_frame(idx,layer);
@@ -94,7 +90,7 @@ SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 						stack[i].mode = layers[i].mode;
 #endif
 				} else {
-						stack[i] = findHeldFrame(fr->idx, i);
+						stack[i] = *(findPtrHeldFrame(fr->idx, i));
 				}
 		}
 
@@ -137,7 +133,7 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 								stack[i].mode = layers[i].mode;
 #endif
 						} else {
-								stack[i] = findHeldFrame(fr->idx, i);
+								stack[i] = *(findPtrHeldFrame(fr->idx, i));
 						}
 				}
 		}

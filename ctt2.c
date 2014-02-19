@@ -232,8 +232,8 @@ int local_dispatch(SDL_Keycode sym);
 
 __declspec( dllexport) void __stdcall makewin() {
 		SDL_Event event;
-		const int SCREEN_WIDTH = 1920;
-		const int SCREEN_HEIGHT = 1080;
+		const int SCREEN_WIDTH = 500;
+		const int SCREEN_HEIGHT = 500;
 
 		/* controls how many mainloops pass before an invalid context is
 		 * reupdated, for a small performance increase */

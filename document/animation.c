@@ -40,13 +40,14 @@ void createFrame( unsigned int addr, unsigned int idx) {
 			frameArr[addr]->layerKeyFrames[1] = 1;
 		} //testing hack, background for first frame, rest don't get one
 		else {
-			frameArr[addr]->layerKeyFrames[0] = 1;
+			frameArr[addr]->layerKeyFrames[0] = 0;
 			frameArr[addr]->layerKeyFrames[1] = 1;
 		}
 
 
 		allocateLayersForNewFrame(frameArr[addr]);
 		frameMap[idx] = addr;
+		printf(" allocd fr:%d\n", frameArr[frameMap[idx]]);
 }
 
 void initFrames(void) {
@@ -110,16 +111,18 @@ frame* find(int idx) {
 }
 
 frame* frame_find_held_frame(int idx, int layer){
-	int i = idx-1;
+	int i = idx;
 	do {
-		if(frame_has_content(i)){
-			if(frameArr[frameMap[idx]]->layerKeyFrames[layer]==1){
-					fprintf(getLogfile(), "found held: %d %d",i,layer);
-					return frameArr[frameMap[idx]];
-					}
+		frame *fr=frameArr[frameMap[i]];
+		if(fr!=0){
+				if(fr->layerKeyFrames[layer]==1) {
+					return fr;
+				}
 		}
 		i--;
-	} while(i>0);
+	} while(i>=0);
+	printf("developer loses this round");
+	exit(1);
 }
 
 
