@@ -185,25 +185,51 @@ void handle_mousedown_for_buttons(int x, int y, UI_AREA *area) {
 	}
 }
 
-void brusheditor_mousedown(int x,int y, UI_AREA *area) {
-		int idx = (x-10) / 35;
-		int vert = (y-6);
+static int lockedSlider = -1;
 
-		//we're in the margins
-		if(idx<0) {
-				return;
-		}
-		//we have six sliders
-		if(idx>6) {
-			handle_mousedown_for_buttons(x,y,area);
-		}
-		else {
-			sVals[idx] = (double)vert / 244.0;
-			if(sVals[idx]>1) sVals[idx]=1;
-			if(sVals[idx]<0) sVals[idx]=0;
-			sVals[idx] = 1-sVals[idx];
 
-			srand(0);
+static int motion_redraw_step = 0;
+static const int motion_redraw_cycles = 4;
+
+void brusheditor_mousemotion(int x,int y, UI_AREA *area) {
+	motion_redraw_step++;
+	motion_redraw_step %= motion_redraw_cycles;
+	if(lockedSlider!=-1) {
+		double value;
+		map_to_slider_value(&x,&y,&value);
+		sVals[lockedSlider] = value;
+		if(motion_redraw_step == 0 ) {
 			redraw_stroke_sample();
 		}
+	}
+}
+
+void map_to_slider_value(int *x, int *y,double *p) {
+	(*x) = (*x-10) / 35;
+	(*y) = (*y-6);
+	(*p) = (double)(*y) / 244.0;
+
+	if((*p)>1) (*p)=1;
+	if((*p)<0) (*p)=0;
+		(*p) = 1-(*p);
+}
+void brusheditor_mousedown(int x,int y, UI_AREA *area) {
+		double value;
+		map_to_slider_value(&x,&y,&value);
+		if(x<0) 
+				return;
+		//we have six sliders, so this overflowed to button area
+		if(x>5) {
+				handle_mousedown_for_buttons(x,y,area);
+		}else 
+		{
+				lockedSlider = x;
+				sVals[x] = value;
+				srand(0);
+				redraw_stroke_sample();
+		}
+}
+
+void brusheditor_mouseup(int x,int y, UI_AREA *area) {
+		lockedSlider = -1;
 }

@@ -74,10 +74,6 @@ void initPanels(SDL_Surface *target) {
 static int mouse_x;
 static int mouse_y;
 
-void panels_dispatch_mousemotion(int x, int y) {
-	mouse_x = x;
-	mouse_y = y;
-}
 
 #define PANEL_COLORPICKER 0
 #define PANEL_BRUSHEDITOR 1
@@ -100,7 +96,36 @@ void get_mouse_route(mouse_route* mr, int x, int y){
 	}
 }
 
+void panels_dispatch_mousemotion(int x, int y) {
+	mouse_route route;
+	get_mouse_route(&route,x,y);
+
+	mouse_x = x - route.offset_x;
+	mouse_y = y - route.offset_y;
+	switch(route.panel_id) {
+			case PANEL_BRUSHEDITOR:
+					brusheditor_mousemotion(x,y,area);
+					break;
+	}
+}
 void panels_dispatch_mouseup(int x,int y) {
+	mouse_route route;
+	get_mouse_route(&route,x,y);
+
+	x -= route.offset_x;
+	y -= route.offset_y;
+
+	switch(route.panel_id) {
+		case PANEL_COLORPICKER:
+			printf("warning, undispatched mouseup to colorpicker\n");
+			break;
+		case PANEL_BRUSHEDITOR:
+			brusheditor_mouseup(x,y,area);
+			break;
+	}
+}
+
+void panels_dispatch_mousedown(int x, int y) {
 	mouse_route route;
 	get_mouse_route(&route,x,y);
 
@@ -115,9 +140,6 @@ void panels_dispatch_mouseup(int x,int y) {
 			brusheditor_mousedown(x,y,area);
 			break;
 	}
-}
-
-void panels_dispatch_mousedown(int x, int y) {
 
 }
 
