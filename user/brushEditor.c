@@ -223,7 +223,6 @@ void brusheditor_mousedown(int x,int y, UI_AREA *area) {
 				map_to_slider_value(&x,&y,&value);
 				if(x<0) 
 						return;
-				//we have six sliders, so this overflowed to button area
 				{
 						lockedSlider = x;
 						sVals[x] = value;
