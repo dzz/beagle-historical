@@ -31,11 +31,11 @@ void redraw_stroke_sample() {
 	brush_setValuesFromUI();
 	{
 		int v;
-		for( v = 0; v< 200; ++v ) {
-				float p = (float)v/200;
+		for( v = 0; v< 50; ++v ) {
+				float p = (float)v/50;
 				int x = (int)((cosf((p*3.14*4)))*10) + 57;
 				brush_drawStrokeSegment(
-								x,v,x,v+1,p,p,brushSample);
+								x,(v*4),x,(v*4)+4,p,p,brushSample);
 		}
 	}
 
@@ -56,7 +56,6 @@ SDL_Rect get_buttons_rect() {
 	SDL_Rect r;
 	r.w = 45;
 	r.h = 20;
-
 	r.x = 230;
 	r.y = 7;
 	return r;
@@ -157,7 +156,7 @@ void renderBrushEditor(SDL_Surface *target, UI_AREA *area) {
 
 void handle_mousedown_for_buttons(int x, int y, UI_AREA *area) {
 	SDL_Rect r = get_buttons_rect();
-	if((x>r.x) && (x< (r.x+r.w))){
+	if( x>r.x && x< (r.x+r.w)){
 		int button_id = (y-r.y) / r.h;
 		if(button_id>=0) {
 			toggles[button_id] = !toggles[button_id];
@@ -180,7 +179,6 @@ void handle_mousedown_for_buttons(int x, int y, UI_AREA *area) {
 			}
 			redraw_stroke_sample();
 			draw_buttons_to_bg();
-
 		}
 	}
 }
@@ -191,6 +189,16 @@ static int lockedSlider = -1;
 static int motion_redraw_step = 0;
 static const int motion_redraw_cycles = 4;
 
+
+void map_to_slider_value(int *x, int *y,double *p) {
+	(*x) = (*x-10) / 35;
+	(*y) = (*y-6);
+	(*p) = (double)(*y) / 244.0;
+
+	if((*p)>1) (*p)=1;
+	if((*p)<0) (*p)=0;
+		(*p) = 1-(*p);
+}
 void brusheditor_mousemotion(int x,int y, UI_AREA *area) {
 	motion_redraw_step++;
 	motion_redraw_step %= motion_redraw_cycles;
@@ -203,30 +211,24 @@ void brusheditor_mousemotion(int x,int y, UI_AREA *area) {
 		}
 	}
 }
-
-void map_to_slider_value(int *x, int *y,double *p) {
-	(*x) = (*x-10) / 35;
-	(*y) = (*y-6);
-	(*p) = (double)(*y) / 244.0;
-
-	if((*p)>1) (*p)=1;
-	if((*p)<0) (*p)=0;
-		(*p) = 1-(*p);
-}
 void brusheditor_mousedown(int x,int y, UI_AREA *area) {
-		double value;
-		map_to_slider_value(&x,&y,&value);
-		if(x<0) 
-				return;
-		//we have six sliders, so this overflowed to button area
-		if(x>5) {
+		SDL_Rect r = get_buttons_rect();
+		if(x>r.x) {
 				handle_mousedown_for_buttons(x,y,area);
-		}else 
+				return;
+		} 
+
 		{
-				lockedSlider = x;
-				sVals[x] = value;
-				srand(0);
-				redraw_stroke_sample();
+				double value;
+				map_to_slider_value(&x,&y,&value);
+				if(x<0) 
+						return;
+				//we have six sliders, so this overflowed to button area
+				{
+						lockedSlider = x;
+						sVals[x] = value;
+						redraw_stroke_sample();
+				}
 		}
 }
 

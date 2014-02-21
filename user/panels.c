@@ -37,7 +37,8 @@ void togglePanels(void) {
 	stylusState ss = getStylusState();
 	panelsEnabled = !panelsEnabled;
 	invalidateDirty(0,0,screenWidth,screenHeight);
-	movePanel(ss.x,ss.y);
+	
+	// movePanel(ss.x,ss.y);  
 }
 
 int getPanelsEnabled(void) {
@@ -84,8 +85,8 @@ typedef struct {
 	int panel_id;
 } mouse_route;
 
-void get_mouse_route(mouse_route* mr, int x, int y){
-	if(x < COLORPICKER_WIDTH ) {
+void get_mouse_route(mouse_route* mr, int *x, int *y){
+	if( *x < COLORPICKER_WIDTH ) {
 		mr->offset_x = 0;
 		mr->offset_y = 0;
 		mr->panel_id = PANEL_COLORPICKER;
@@ -94,30 +95,34 @@ void get_mouse_route(mouse_route* mr, int x, int y){
 		mr->offset_y = 0;
 		mr->panel_id = PANEL_BRUSHEDITOR;
 	}
+
+	*x = *x - mr->offset_x;
+	*y = *y - mr->offset_y;
 }
 
 void panels_dispatch_mousemotion(int x, int y) {
 	mouse_route route;
-	get_mouse_route(&route,x,y);
+	get_mouse_route(&route,&x,&y);
 
-	mouse_x = x - route.offset_x;
-	mouse_y = y - route.offset_y;
+	mouse_x = x;
+	mouse_y = y;
+
 	switch(route.panel_id) {
 			case PANEL_BRUSHEDITOR:
 					brusheditor_mousemotion(x,y,area);
+					break;
+			case PANEL_COLORPICKER:
+					colorpicker_mousemotion(x,y,area);
 					break;
 	}
 }
 void panels_dispatch_mouseup(int x,int y) {
 	mouse_route route;
-	get_mouse_route(&route,x,y);
-
-	x -= route.offset_x;
-	y -= route.offset_y;
+	get_mouse_route(&route,&x,&y);
 
 	switch(route.panel_id) {
 		case PANEL_COLORPICKER:
-			printf("warning, undispatched mouseup to colorpicker\n");
+			colorpicker_mouseup(x,y,area);
 			break;
 		case PANEL_BRUSHEDITOR:
 			brusheditor_mouseup(x,y,area);
@@ -127,10 +132,7 @@ void panels_dispatch_mouseup(int x,int y) {
 
 void panels_dispatch_mousedown(int x, int y) {
 	mouse_route route;
-	get_mouse_route(&route,x,y);
-
-	x -= route.offset_x;
-	y -= route.offset_y;
+	get_mouse_route(&route,&x,&y);
 
 	switch(route.panel_id) {
 		case PANEL_COLORPICKER:
@@ -144,18 +146,16 @@ void panels_dispatch_mousedown(int x, int y) {
 }
 
 void renderColorSwatch(SDL_Surface *target) {
+		const int swatchWidth = 18;
+		const int swatchHeight = 30;
 		cp_color col = getPrimaryColor();
 		SDL_Rect sr;
 
-		sr.x = 1920 - 100;
-		sr.y = 1080 - 100;
+		sr.x = mouse_x;
+		sr.y = mouse_y;
 
-		sr.w = 45;
-		sr.h = 90;
-
-		if(!get_cp_secondary()) {
-			sr.h+=5;
-		}
+		sr.w = swatchWidth;
+		sr.h = swatchHeight;
 
 		SDL_FillRect( target, &sr, SDL_MapRGB(
 								target->format,
@@ -163,7 +163,7 @@ void renderColorSwatch(SDL_Surface *target) {
 								col.g,
 								col.b ) );
 
-		sr.x+=55;
+		sr.x+=swatchWidth;
 		col = getSecondaryColor();
 
 		SDL_FillRect( target, &sr, SDL_MapRGB(
@@ -172,16 +172,16 @@ void renderColorSwatch(SDL_Surface *target) {
 								col.g,
 								col.b ) );
 
-		//invalidateDirty(sr.x-100,sr.y,sr.x+100,sr.y+100);
+		invalidateDirty(sr.x-swatchWidth,sr.y,sr.x+swatchWidth,sr.y+swatchHeight);
 }
 
 void renderPanels(SDL_Surface *target) {
 		if(panelsEnabled == 1) {
 				SDL_Rect * r = (SDL_Rect*)area; //steady now
-				SDL_FillRect(target,r,panelColor);
+				//SDL_FillRect(target,r,panelColor);
+				renderColorSwatch(target);
 				renderBrushEditor(target,be_area);
 				renderColorPicker(target,area);
-				renderColorSwatch(target);
 				renderTimeline(target);
 		}
 

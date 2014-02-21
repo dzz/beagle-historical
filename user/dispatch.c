@@ -23,8 +23,16 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 		}
 }
 
+
 void dispatch_mousemotion(int x, int y) {
-		panels_dispatch_mousemotion(x,y);
+	if( getPanelsEnabled() ) {
+		UI_AREA panelArea = getPanelsArea();
+		if(pointInArea(x,y,panelArea) == 1)	{
+			x -= panelArea.x;
+			y -= panelArea.y;
+			panels_dispatch_mousemotion(x,y);	
+		}
+	}
 }
 void dispatch_mousedown( int button,int x,int y) {
 	if( getPanelsEnabled() ) {

@@ -18,6 +18,7 @@
 #include "vendor/wintab_utils.h"
 
 #include "user/stylus.h"
+
 #include "document/animation.h"
 
 #include "drawing/brush.h"
@@ -232,11 +233,10 @@ int local_dispatch(SDL_Keycode sym);
 
 __declspec( dllexport) void __stdcall makewin() {
 		SDL_Event event;
-		const int SCREEN_WIDTH = 500;
-		const int SCREEN_HEIGHT = 500;
-
 		/* controls how many mainloops pass before an invalid context is
 		 * reupdated, for a small performance increase */
+		const int SCREEN_WIDTH = 920;
+		const int SCREEN_HEIGHT = 480;
 		const int CYCLES_BETWEEN_RECOMPOSITE = 12;
 		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 2;
 

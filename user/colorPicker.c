@@ -122,7 +122,7 @@ static void commitColor(void) {
 	secondary_rgb = rgb_from_hsv(secondary.h,secondary.s,secondary.v);
 
 	{
-		double r = s*s;
+		double r = 0.6;
 		double hr = ((h+180)/180)*3.14;
 		double wx = ((cos(hr)*r)+1.0)/2.0;
 		double wy = ((sin(hr)*r)+1.0)/2.0;
@@ -184,24 +184,15 @@ void drawColorWheel(int w,int h) {
 				double d= sqrt(((unit_x)*(unit_x))+((unit_y)*(unit_y)));
 				double calc_h = atan2(unit_y,unit_x)*(350/(3.14*2))+180;
 
-
 				if(h == 0) h = 0.0001;
 				if(h == 360) h = 359.999;
 				coord = (y*w)+x;
-				if(d<0.95) {
+				if(d<0.78 && d>0.42) {
 
-					cp_color rgb = rgb_from_hsv(calc_h,sqrt(d),1);
+					cp_color rgb = rgb_from_hsv(calc_h,s,v);
 					pixels[coord] = SDL_MapRGB(
 									interfaceSurface->format,
 									rgb.r,rgb.g,rgb.b);
-				} else {
-						if(d<0.98) {
-								cp_color rgb = rgb_from_hsv(calc_h,sqrt(d),0.7);
-								pixels[coord] = SDL_MapRGB(
-												interfaceSurface->format,
-												rgb.r,rgb.g,rgb.b);
-						}
-
 				}
 			}
 	SDL_UnlockSurface(interfaceSurface);
@@ -265,7 +256,7 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 		SDL_BlitSurface(interfaceSurface,NULL,if_buffer,NULL);
 
 		if(wheel_x !=-1 ) {
-			int rad = 5;
+			int rad = 3;
 			SDL_Rect r;
 			r.x = (wheel_x-rad);
 			r.y = (wheel_y-rad);
@@ -281,7 +272,7 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 		}
 
 		if(buffered_wheel_x !=-1 ) {
-			int rad = 5;
+			int rad = 3;
 			SDL_Rect r;
 			r.x = (buffered_wheel_x-rad);
 			r.y = (buffered_wheel_y-rad);
@@ -304,7 +295,26 @@ void destroyColorPicker(void) {
 		SDL_FreeSurface(if_buffer);
 }
 
+static int editing = 0;
+void colorpicker_mousemotion(int x,int y, UI_AREA *area) {
+	if(editing>0) {
+		colorpicker_mousedown(x,y,area);
+	}
+}
+
+void colorpicker_mouseup(int x,int y, UI_AREA *area) {
+	editing = 0;
+}
+
 void colorpicker_mousedown(int x,int y, UI_AREA *area) {
+		if( x<20 && y<20 ) {
+			cp_toggle_primary_secondary();
+		} else{
+			   	colorpicker_color_selection_mousedown(x,y,area);
+		}
+}
+void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
+	editing = 1;
 	int h2 = COLORPICKER_HEIGHT/2;
 	int w2 = COLORPICKER_WIDTH/2;
 	int h4 = h2/2;
@@ -315,7 +325,7 @@ void colorpicker_mousedown(int x,int y, UI_AREA *area) {
 			h = atan2(unit_y,unit_x)*(350/(3.14*2))+180;
 			if(h<0.0001) h = 0.0001;
 			if(h>359.999) h = 359.999;
-			s = sqrt(d);
+			//s = sqrt(d)
 
 	} else {
 		y-=h2;

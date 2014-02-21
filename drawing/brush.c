@@ -34,7 +34,7 @@ inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char i
 
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
-	const double brush_max = 125.0;
+	const double brush_max = 80.0;
 	const double brush_pow_min = 16;
 	const double brush_pow_max = 512.0;
 
@@ -268,10 +268,15 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 	int space_ctr = 0;
 
 	float pD = brush_pressure_dynamics;
+
+	//these are just some sketched in values for a better
+	//optimized curve later on
 	if( brush_size_base > 0.33)
 			spacing = 10;
-	if( brush_size_base > 0.5 )
+	if( brush_size_base > 0.4 )
 			spacing = 24;
+	if( brush_size_base > 0.6 )
+			spacing = 26;
 
 		SDL_LockSurface(ctxt);
     	for(;;){
