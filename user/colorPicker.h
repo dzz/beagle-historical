@@ -11,7 +11,7 @@ typedef struct {
 	unsigned char r;
 	unsigned char g;
 	unsigned char b;
-	unsigned char a;	
+	unsigned char a;
 } cp_color;
 
 void initColorPicker(void);
@@ -20,6 +20,8 @@ void destroyColorPicker(void);
 void renderColorPicker(SDL_Surface *target, UI_AREA *area);
 
 void colorpicker_mousedown(int x,int y, UI_AREA *area);
+void colorpicker_mouseup(int x,int y, UI_AREA *area);
+void colorpicker_mousemotion(int x,int y, UI_AREA *area);
 
 cp_color getCurColor(void);
 

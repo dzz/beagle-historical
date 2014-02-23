@@ -36,7 +36,7 @@ cp_color cur_color;
 
 static unsigned int secondary_toggle = 0;
 
-unsigned int get_cp_secondary(void) { 
+unsigned int get_cp_secondary(void) {
 	return secondary_toggle;
 }
 
@@ -306,13 +306,6 @@ void colorpicker_mouseup(int x,int y, UI_AREA *area) {
 	editing = 0;
 }
 
-void colorpicker_mousedown(int x,int y, UI_AREA *area) {
-		if( x<20 && y<20 ) {
-			cp_toggle_primary_secondary();
-		} else{
-			   	colorpicker_color_selection_mousedown(x,y,area);
-		}
-}
 void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
 	editing = 1;
 	int h2 = COLORPICKER_HEIGHT/2;
@@ -338,4 +331,12 @@ void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
 	}
 	commitColor();
 	drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
+}
+
+void colorpicker_mousedown(int x,int y, UI_AREA *area) {
+		if( x<20 && y<20 ) {
+			cp_toggle_primary_secondary();
+		} else{
+			   	colorpicker_color_selection_mousedown(x,y,area);
+		}
 }

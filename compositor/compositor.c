@@ -1,14 +1,15 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define CLAMP(a,b) (unsigned char)(((a)>(b))?(a):(b))
 
+#include <stdio.h>
+#include <malloc.h>
+
 #include "compositor.h"
 
 #include "../system/ctt2.h"
 #include "../drawing/drawingSurfaces.h"
 #include "../colors/pixmap.h"
 
-#include <stdio.h>
-#include <malloc.h>
 
 const int CMP_ADD=0;
 const int CMP_SUB=1;

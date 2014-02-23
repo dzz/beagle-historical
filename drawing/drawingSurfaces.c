@@ -12,24 +12,22 @@ SDL_Surface* createDrawingSurface(int w, int h) {
 	    gmask = 0x00ff0000;
 	    bmask = 0x0000ff00;
 	    amask = 0x000000ff;
-		
+
 	/*	canvas = SDL_CreateRGBSurface(0, 1920,1080,32,rmask,gmask,bmask,amask);*/
-		
+
 		canvas = SDL_CreateRGBSurface(0, w,h,32,rmask,gmask,bmask,amask);
-		
-	
+
+
 		SDL_FillRect( canvas, NULL, SDL_MapRGBA( canvas->format, 0x00, 0x00, 0x00, 0x00 ) );
 		SDL_SetSurfaceBlendMode(canvas, SDL_BLENDMODE_NONE);
 		return canvas;
 }
 
 SDL_Surface * getConvertedForBlit(SDL_Surface *drawingContext, SDL_Surface *screenSurface) {
-	
-	printf("drawing Context format:%d\nscreen format:%d\n",drawingContext->format,screenSurface->format);	
 	if(convertedContext != 0) {
-		SDL_FreeSurface(convertedContext);	
+		SDL_FreeSurface(convertedContext);
 	}
-	convertedContext = SDL_ConvertSurface(drawingContext, screenSurface->format, 0); 
+	convertedContext = SDL_ConvertSurface(drawingContext, screenSurface->format, 0);
 	return convertedContext;
 }
 

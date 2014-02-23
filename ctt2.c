@@ -97,7 +97,7 @@ void initTablet(SDL_Window* window) {
 		HWND hWnd;
 		SDL_SysWMinfo data;
 
-		LOGCONTEXTA lcMine = {0};
+		LOGCONTEXTA lcMine = {{0}};
 		UINT wWTInfoRetVal = 0;
 		AXIS TabletX = {0};
 		AXIS TabletY = {0};
@@ -164,7 +164,7 @@ void initTablet(SDL_Window* window) {
 						{
 							hctx = hCtx;
 							gPressure = Pressure;
-hjkjk:							printf("context:%u\n",hctx);
+    						printf("context:%u\n",(unsigned int)hctx);
 						}
 						else
 						{
@@ -185,7 +185,7 @@ hjkjk:							printf("context:%u\n",hctx);
 		return;
 }
 
-void dropTablet() { if(hctx>0) {gpWTClose(hctx);printf("dropped tablet context:%u",hctx); }}
+void dropTablet() { if(hctx>0) {gpWTClose(hctx);printf("dropped tablet context:%u",(unsigned int)hctx); }}
 
 
 void handle_wt_packet(PACKET pkt) {
@@ -235,8 +235,8 @@ __declspec( dllexport) void __stdcall makewin() {
 		SDL_Event event;
 		/* controls how many mainloops pass before an invalid context is
 		 * reupdated, for a small performance increase */
-		const int SCREEN_WIDTH = 920;
-		const int SCREEN_HEIGHT = 480;
+		const int SCREEN_WIDTH = 1920;
+		const int SCREEN_HEIGHT = 1080;
 		const int CYCLES_BETWEEN_RECOMPOSITE = 12;
 		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 2;
 

@@ -1,8 +1,9 @@
-#include "stylus.h"
-#include "../drawing/brush.h"
 #include <stdio.h>
-#include "../document/animation.h"
+
+#include "stylus.h"
 #include "../system/ctt2.h"
+#include "../drawing/brush.h"
+#include "../document/animation.h"
 
 stylusState gStylusState = {0};
 stylusState gSSLastFrame = {0};

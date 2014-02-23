@@ -34,11 +34,10 @@ void movePanel(int x, int y) {
 }
 
 void togglePanels(void) {
-	stylusState ss = getStylusState();
+	//stylusState ss = getStylusState();
+	//movePanel(ss.x,ss.y);
 	panelsEnabled = !panelsEnabled;
 	invalidateDirty(0,0,screenWidth,screenHeight);
-	
-	// movePanel(ss.x,ss.y);  
 }
 
 int getPanelsEnabled(void) {
@@ -75,7 +74,6 @@ void initPanels(SDL_Surface *target) {
 static int mouse_x;
 static int mouse_y;
 
-
 #define PANEL_COLORPICKER 0
 #define PANEL_BRUSHEDITOR 1
 
@@ -102,10 +100,12 @@ void get_mouse_route(mouse_route* mr, int *x, int *y){
 
 void panels_dispatch_mousemotion(int x, int y) {
 	mouse_route route;
-	get_mouse_route(&route,&x,&y);
 
 	mouse_x = x;
 	mouse_y = y;
+
+	get_mouse_route(&route,&x,&y);
+
 
 	switch(route.panel_id) {
 			case PANEL_BRUSHEDITOR:
@@ -177,8 +177,6 @@ void renderColorSwatch(SDL_Surface *target) {
 
 void renderPanels(SDL_Surface *target) {
 		if(panelsEnabled == 1) {
-				SDL_Rect * r = (SDL_Rect*)area; //steady now
-				//SDL_FillRect(target,r,panelColor);
 				renderColorSwatch(target);
 				renderBrushEditor(target,be_area);
 				renderColorPicker(target,area);

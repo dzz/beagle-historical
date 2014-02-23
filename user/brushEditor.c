@@ -1,9 +1,11 @@
+#include <SDL.h>
+#include <math.h>
+
 #include "brushEditor.h"
+#include "h_slider.h"
 #include "../drawing/drawingSurfaces.h"
 #include "../drawing/brush.h"
-#include "h_slider.h"
 
-#include <SDL.h>
 
 static SDL_Surface* bg;
 static SDL_Surface* slider;
@@ -18,10 +20,6 @@ SDL_Surface* button_images[64];
 
 double get_brusheditor_value(int idx) {
 	return sVals[idx];
-}
-
-void brusheditor_redraw_stroke() {
-	redraw_stroke_sample();
 }
 
 void redraw_stroke_sample() {
@@ -47,6 +45,10 @@ void redraw_stroke_sample() {
 
 	SDL_BlitSurface(brushSample,NULL,bg,&rect);
 	SDL_FreeSurface(brushSample);
+}
+
+void brusheditor_redraw_stroke() {
+	redraw_stroke_sample();
 }
 
 int button_origin_x;
@@ -135,7 +137,7 @@ void renderBrushEditor(SDL_Surface *target, UI_AREA *area) {
 		int i;
 		SDL_Rect spos;
 
-		SDL_BlitSurface(bg,NULL,target,area);
+		SDL_BlitSurface(bg,NULL,target,(SDL_Rect*)area);
 
 		//our slider images are 30x244 and we have a
 		// 400x256 area to fill with sliders
@@ -216,12 +218,12 @@ void brusheditor_mousedown(int x,int y, UI_AREA *area) {
 		if(x>r.x) {
 				handle_mousedown_for_buttons(x,y,area);
 				return;
-		} 
+		}
 
 		{
 				double value;
 				map_to_slider_value(&x,&y,&value);
-				if(x<0) 
+				if(x<0)
 						return;
 				{
 						lockedSlider = x;

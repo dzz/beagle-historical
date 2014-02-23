@@ -26,7 +26,7 @@ static double brush_jitter = 0;
 static double brush_noise = 0;
 static double brush_pressure_dynamics = 0;
 
-(*active_mixing_function)(unsigned char,unsigned char,unsigned char);
+unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
 inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
 inline unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
@@ -280,6 +280,8 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		SDL_LockSurface(ctxt);
     	for(;;){
+
+				/* TODO: Optimize jitter */
 				double j_size = brush_size*p0*brush_jitter*10;
 				double j_x = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
 				double j_y = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
@@ -290,6 +292,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
     			if (e2 < dy) { err += dx; y0 += sy; }
 
 
+				/* TODO: This tanhf is more expensive than it's worth */
 				if(space_ctr==0){
 					plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
 														((p0*pD) +

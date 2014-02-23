@@ -1,6 +1,7 @@
-#include "../compositor/compositor.h"
-#include "layers.h"
 #include <string.h>
+
+#include "layers.h"
+#include "../compositor/compositor.h"
 
 layer layers[MAX_LAYERS];
 unsigned int numLayers;

@@ -1,6 +1,7 @@
-#include "../document/animation.h"
-#include "timeline.h"
 #include <SDL.h>
+#include "timeline.h"
+
+#include "../document/animation.h"
 
 static const int num_layers = 2;
 static const int layer_size = 60;
@@ -58,7 +59,11 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 						data_marker.w=5;	
 						data_marker.h=5;
 						data_marker.y = full_timeline.y + (j*layer_size);
-						SDL_FillRect(target,&data_marker,SDL_MapRGB(target->format, 0x22,0x22,0x52 ));
+						if( frame_has_layer_keyframe(i,j)==1 ) {
+							SDL_FillRect(target,
+										&data_marker,
+										SDL_MapRGB(target->format, 0x22,0x22,0x52 ));
+						}
 					}
 				}
 				h+=jmp;

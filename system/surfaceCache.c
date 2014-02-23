@@ -4,6 +4,7 @@
 #include "../compositor/compositor.h"
 #include "../document/layers.h"
 #include <stdio.h>
+#include <malloc.h>
 #include <SDL.h>
 #include <string.h>
 

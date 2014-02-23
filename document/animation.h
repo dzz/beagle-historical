@@ -6,7 +6,7 @@
 #include "../document/layers.h"
 
 typedef struct {
-	SDL_Surface *drawing;	
+	SDL_Surface* drawing;	
 	int layerKeyFrames [ MAX_LAYERS ];
 	int idx;
 } frame;

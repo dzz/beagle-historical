@@ -1,12 +1,12 @@
+#include <stdio.h>
+#include <malloc.h>
+#include <string.h>
+
 #include "animation.h"
 #include "../system/ctt2.h"
 #include "../system/surfaceCache.h"
 #include "../drawing/drawingSurfaces.h"
 #include "../compositor/compositor.h"
-
-#include <stdio.h>
-#include <malloc.h>
-#include <string.h>
 
 unsigned int baseSize = 1024;	//our initial stack
 
@@ -14,7 +14,7 @@ static unsigned int *frameMap;
 frame **frameArr;
 frame *activeFrame;
 
-frame* find(int idx);
+frame* find_implicit_create(int idx);
 
 COMPOSITE_LAYER background;
 
@@ -47,7 +47,6 @@ void createFrame( unsigned int addr, unsigned int idx) {
 
 		allocateLayersForNewFrame(frameArr[addr]);
 		frameMap[idx] = addr;
-		printf(" allocd fr:%d\n", frameArr[frameMap[idx]]);
 }
 
 void initFrames(void) {
@@ -73,23 +72,16 @@ void initFrames(void) {
 			}
 		}
 
-		activeFrame = find(0);
+		activeFrame = find_implicit_create(0);
 }
 
 /*find stored frame object for idx. If nothing found, return pointer
-to new frame
-
-should opto with sorting
-
-caching eventually needed
-
-*/
+to new frame */
 
 unsigned int findFreeAddr() {
 	unsigned int i;
 
 	for(i=0; i< baseSize; ++i) {
-		fprintf(getLogfile(), "i = %d frameptr %d \n",i,frameArr[i]);
 		if(frameArr[i]==0) {
 			return i;
 		}
@@ -98,11 +90,7 @@ unsigned int findFreeAddr() {
 }
 
 
-frame* find(int idx) {
-		fprintf(getLogfile(), "idx = %d\n",idx);
-		fprintf(getLogfile(), "frame map @ idx = %d\n",frameMap[idx]);
-		fprintf(getLogfile(), "frame arr in map = %d\n",frameArr[frameMap[idx]]);
-
+frame* find_implicit_create(int idx) {
         if(frameArr[frameMap[idx]] == 0){
 				createFrame(findFreeAddr(), idx);
 				return frameArr[frameMap[idx]];
@@ -121,13 +109,22 @@ frame* frame_find_held_frame(int idx, int layer){
 		}
 		i--;
 	} while(i>=0);
-	printf("developer loses this round");
 	exit(1);
 }
 
 
 unsigned int frame_has_content(int idx){
 	return frameArr[frameMap[idx]]!=0;
+}
+
+unsigned int frame_has_layer_keyframe(int idx, int layer) {
+	if(!frame_has_content(idx))
+		return 0;
+
+	if(frameArr[frameMap[idx]]->layerKeyFrames[layer] == 1)
+		return 1;
+
+	return 0;
 }
 
 frame* find_left() {
@@ -165,7 +162,7 @@ void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 		SDL_BlitSurface(drawingContext,NULL, activeCompositeLayer->data,NULL);
 	}
 
-	activeFrame = find(activeFrame->idx+delta);
+	activeFrame = find_implicit_create(activeFrame->idx+delta);
 	/*copy current frame to context*/
 	activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer() );
 	SDL_BlitSurface(activeCompositeLayer->data,NULL, drawingContext,NULL);
