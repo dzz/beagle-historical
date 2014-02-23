@@ -66,12 +66,17 @@ COMPOSITE_LAYER* findPtrHeldFrame(int idx, int layer) {
 	return surface_cache[coord];
 }
 
-COMPOSITE_LAYER* getCompositeLayerFromFrame(frame *fr, unsigned int layerIndex) {
+
+COMPOSITE_LAYER* getCompositeLayerFromFrame(frame *fr, unsigned int layerIndex, unsigned int resolveVirtual) {
 		unsigned int coord = fr->idx + (layerIndex*current_frame_storage);
 		if(surface_cache[coord]!=0) {
 			return surface_cache[coord];
 		} else {
-			return findPtrHeldFrame(fr->idx,layerIndex);
+			if(resolveVirtual == COMP_RESOLVE_VIRTUAL ) {
+				return findPtrHeldFrame(fr->idx,layerIndex);
+			} else {
+					return 0;
+			}
 		}
 }
 
@@ -90,9 +95,9 @@ SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 				unsigned int coord = fr->idx + (i*current_frame_storage);
 				if(surface_cache[coord]!=0) {
 						stack[i] = (*surface_cache[coord]);
-#ifdef COMPOSITE_MODE_PREFERENCE_LAYER
+						#ifdef COMPOSITE_MODE_PREFERENCE_LAYER
 						stack[i].mode = layers[i].mode;
-#endif
+						#endif
 				} else {
 						stack[i] = *(findPtrHeldFrame(fr->idx, i));
 				}
@@ -133,9 +138,9 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 						unsigned int coord = fr->idx + (i*current_frame_storage);
 						if(surface_cache[coord]!=0) {
 								stack[i] = (*surface_cache[coord]);
-#ifdef COMPOSITE_MODE_PREFERENCE_LAYER
+								#ifdef COMPOSITE_MODE_PREFERENCE_LAYER
 								stack[i].mode = layers[i].mode;
-#endif
+								#endif
 						} else {
 								stack[i] = *(findPtrHeldFrame(fr->idx, i));
 						}

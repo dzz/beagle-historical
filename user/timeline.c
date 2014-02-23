@@ -56,7 +56,7 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 					int j;
 					for(j=0; j< num_layers;++j) {
 						SDL_Rect data_marker = marker;
-						data_marker.w=5;	
+						data_marker.w=5;
 						data_marker.h=5;
 						data_marker.y = full_timeline.y + (j*layer_size);
 						if( frame_has_layer_keyframe(i,j)==1 ) {

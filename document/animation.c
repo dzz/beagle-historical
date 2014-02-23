@@ -158,7 +158,7 @@ frame* find_left() {
 
 void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 
-	COMPOSITE_LAYER* activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer() );
+	COMPOSITE_LAYER* activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer(), COMP_RESOLVE_VIRTUAL	);
 
 	if((activeFrame->idx==0) && (delta<0)) {
 		return; 
@@ -171,7 +171,7 @@ void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 
 	activeFrame = find_implicit_create(activeFrame->idx+delta);
 	/*copy current frame to context*/
-	activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer() );
+	activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer(), COMP_RESOLVE_VIRTUAL );
 	SDL_BlitSurface(activeCompositeLayer->data,NULL, drawingContext,NULL);
 }
 
