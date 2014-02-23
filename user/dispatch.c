@@ -20,6 +20,10 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 					if(mode==1) 
 							togglePanels();
 					break;
+			case SDLK_s:
+					if(mode==1)
+							animation_save();
+					break;
 		}
 }
 

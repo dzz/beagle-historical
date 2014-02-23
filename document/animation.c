@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#include <SDL_image.h>
 
 #include "animation.h"
 #include "../system/ctt2.h"
@@ -182,6 +183,23 @@ void dropFrames(void) {
 		destroySurfaceCache();
 }
 
-void save(char *filename) {
-
+void animation_save() {
+		int i;
+		for(i=0; i<animation_total_frames; ++i) {
+				if( frame_has_content(i) == 1 ) {
+						int j;
+						frame* fr = find_implicit_create(i);
+						char fname [2048];
+						for(j=0; j<MAX_LAYERS; ++j) {
+								if( fr->layerKeyFrames[j] == 1 ) {
+										COMPOSITE_LAYER* image = getCompositeLayerFromFrame(fr,j,COMP_RESOLVE_ACTUAL);
+										sprintf(fname,"c:\\res\\tmpout\\%u_%u.png",i,j);
+										printf("%s\n",fname);
+										IMG_SavePNG( image->data, fname);
+								}
+						}
+				}
+		}
 }
+#include <SDL_image.h>
+#include <SDL_image.h>

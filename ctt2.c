@@ -1,4 +1,12 @@
+// debug defines for compile time configuration
+//     
+//     CTT2_SCREENMODE_DEBUG
+//     WACOM_DEBUG
+
+//#define CTT2_SCREENMODE_DEBUG
 //#define WACOM_DEBUG
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
@@ -235,8 +243,13 @@ __declspec( dllexport) void __stdcall makewin() {
 		SDL_Event event;
 		/* controls how many mainloops pass before an invalid context is
 		 * reupdated, for a small performance increase */
+#ifndef CTT2_SCREENMODE_DEBUG
 		const int SCREEN_WIDTH = 1920;
 		const int SCREEN_HEIGHT = 1080;
+#else
+		const int SCREEN_WIDTH = 920;
+		const int SCREEN_HEIGHT = 508;
+#endif
 		const int CYCLES_BETWEEN_RECOMPOSITE = 12;
 		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 2;
 

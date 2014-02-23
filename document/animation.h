@@ -24,4 +24,7 @@ frame* getActiveFrame();
 unsigned int frame_has_content(int idx);
 unsigned int frame_has_layer_keyframe(int idx, int layer_idx);
 frame* frame_find_held_frame(int idx, int layer);
+
+void animation_save();
+
 #endif

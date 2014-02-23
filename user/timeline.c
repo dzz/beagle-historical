@@ -47,7 +47,6 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 		marker.h = layer_size;
 		marker.w = jmp;
 		for( i=0; i<frame_ticks;++i) {
-
 				marker.x = (int)h;
 				marker.y = (i%num_layers) * layer_size + full_timeline.y;
 				SDL_FillRect(target,&marker,SDL_MapRGB(target->format, 0xAA,0xBB,0xCC ));
