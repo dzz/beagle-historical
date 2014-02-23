@@ -11,6 +11,8 @@
 unsigned int baseSize = 1024;	//our initial stack
 
 static unsigned int *frameMap;
+static unsigned int animation_total_frames = 0;
+
 frame **frameArr;
 frame *activeFrame;
 
@@ -28,7 +30,6 @@ void createFrame( unsigned int addr, unsigned int idx) {
 
 		frameArr[addr] = malloc(sizeof(frame));
 		frameArr[addr]->idx = idx;
-		frameArr[addr]->drawing = createDrawingSurface(1920,1080);
 
 
 		for(i=0; i< numLayers; ++i) {
@@ -91,6 +92,12 @@ unsigned int findFreeAddr() {
 
 
 frame* find_implicit_create(int idx) {
+		int idx_origin_plus_one = idx+1;
+
+		if( (idx_origin_plus_one) > animation_total_frames ) {
+			animation_total_frames = idx_origin_plus_one;
+		}
+
         if(frameArr[frameMap[idx]] == 0){
 				createFrame(findFreeAddr(), idx);
 				return frameArr[frameMap[idx]];
@@ -129,7 +136,7 @@ unsigned int frame_has_layer_keyframe(int idx, int layer) {
 
 frame* find_left() {
 	int i=0;
-	int max=999999999; //this is dumb!
+	int max=animation_total_frames;
 
 	frame *found = 0;
 	if(activeFrame->idx==0)
@@ -154,7 +161,7 @@ void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 	COMPOSITE_LAYER* activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer() );
 
 	if((activeFrame->idx==0) && (delta<0)) {
-		return; //sorry bubsy
+		return; 
 	}
 
 	if(commit == 1) {
@@ -169,16 +176,12 @@ void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 }
 
 void dropFrames(void) {
-		int i;
-		for(i=0; i<baseSize;++i) {
-			if(frameArr[i]!=0) {
-				SDL_FreeSurface(frameArr[i]->drawing);
-			}
-		}
 		free(frameArr);
 		free(frameMap);
 		destroyCompositeLayer(background);
 		destroySurfaceCache();
 }
 
+void save(char *filename) {
 
+}

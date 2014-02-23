@@ -6,7 +6,6 @@
 #include "../document/layers.h"
 
 typedef struct {
-	SDL_Surface* drawing;	
 	int layerKeyFrames [ MAX_LAYERS ];
 	int idx;
 } frame;
@@ -23,5 +22,6 @@ SDL_Surface * compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r);
 frame* getActiveFrame();
 
 unsigned int frame_has_content(int idx);
+unsigned int frame_has_layer_keyframe(int idx, int layer_idx);
 frame* frame_find_held_frame(int idx, int layer);
 #endif

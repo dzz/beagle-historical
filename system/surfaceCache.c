@@ -19,11 +19,14 @@ void allocateLayersForNewFrame(frame *fr) {
 		if(fr->layerKeyFrames[i]==1) {
 				unsigned int coord = fr->idx + (i*current_frame_storage);
 				if(surface_cache[coord] != 0) {
-					printf("error! tried to initialize coord %d already allocated in framestash",coord);
+					printf(
+					"error! tried to initialize coord %d already allocated in framestash"
+					,coord );
+					exit(1);
+
 				} else {
 					surface_cache[coord]=allocateCompositeLayer(COMPOSITOR_DEFAULT_W,
 																COMPOSITOR_DEFAULT_H);
-
 					surface_cache[coord]->mode=layers[i].mode;
 
 					//clear to background colour

@@ -17,22 +17,3 @@ SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_
 COMPOSITE_LAYER* getCompositeLayerFromFrame(frame *fr, unsigned int layerIndex);
 
 #endif
-
-/****  reference for pointers
- 
-struct foo
-{
-  int x;
-  float y;
-};
-
-struct foo var;
-struct foo* pvar;
-
-var.x = 5;
-(&var)->y = 14.3;
-pvar->y = 22.4;
-(*pvar).x = 6;
-
-
- ****/
