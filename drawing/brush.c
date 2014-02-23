@@ -28,9 +28,9 @@ static double brush_pressure_dynamics = 0;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
-inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
-inline unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
-inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
+ unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
+ unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
+ unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
 
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
@@ -69,9 +69,9 @@ unsigned int dither_kernel[DITHER_KERNEL_SIZE];
 
 
 void initBrush( SDL_Surface* context ) {
-	active_mixing_function = &mix_char;
-
 	int i;
+
+	active_mixing_function = &mix_char;
 	gContext = context;
 	for(i = 0; i< DITHER_KERNEL_SIZE; ++i) {
 		dither_kernel[i] = (unsigned int)(((float)rand()/RAND_MAX)*112);
@@ -85,7 +85,7 @@ void brushPaint(stylusState a, stylusState b) {
 }
 
 unsigned int dither = 0;
-inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
+unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
 /*	float blend = (float)idx/255;
 
 	float final = (float)l * blend + (float)r * (1-blend);
@@ -96,13 +96,13 @@ inline unsigned char mix_char(unsigned char l, unsigned char r, unsigned char id
 	return yolo;
 }
 
-inline unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
+unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
 		unsigned int yolo = ((l*idx)+(r*255))/255;
 		if(yolo>255) yolo=255;
 		return yolo;
 }
 
-inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
+unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
 
 		float a = (float)l/255;
 		float b = (float)r/255;
@@ -119,7 +119,7 @@ inline unsigned char dark_char(unsigned char l, unsigned char r, unsigned char i
 
 pixMap mixed;
 
-inline unsigned int* erase(pixMap src,pixMap dst) {
+unsigned int* erase(pixMap src,pixMap dst) {
 
 	mixed.p.r = dst.p.r;
 	mixed.p.g = dst.p.g;
@@ -129,7 +129,7 @@ inline unsigned int* erase(pixMap src,pixMap dst) {
 	return &mixed.pix;
 }
 
-inline unsigned int*  mix(pixMap src, pixMap dst) {
+unsigned int*  mix(pixMap src, pixMap dst) {
 	unsigned int alpha;
 
 	mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
@@ -172,7 +172,7 @@ float squareRoot(float x)
   return *(float*) &i;
 }
 
-inline float map_intensity(float x,float y,float p) {
+float map_intensity(float x,float y,float p) {
 		double d = squareRoot((x*x)+(y*y));
 		if(d>1) return 0; else return ((1-d))*(brush_power*p*(1+brush_pressure_dynamics));
 }

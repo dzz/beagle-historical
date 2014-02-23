@@ -11,6 +11,7 @@
 
 
 void allocateLayersForNewFrame(frame *fr);
+void replaceLayerForExistingFrame(frame *fr, int layer, SDL_Surface *newLayer);
 void destroySurfaceCache(void);
 void initSurfaceCache(void);
 SDL_Surface* compositeFrame(frame *fr, SDL_Rect r);

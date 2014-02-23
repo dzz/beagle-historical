@@ -44,6 +44,8 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 		int i;
 		float h = 0;
 		SDL_Rect marker;
+		SDL_Rect aF_marker;
+
 		marker.h = layer_size;
 		marker.w = jmp;
 		for( i=0; i<frame_ticks;++i) {
@@ -68,7 +70,7 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 				h+=jmp;
 		}
 
-		SDL_Rect aF_marker;
+
 		aF_marker.y = full_timeline.y;
 		aF_marker.h = full_timeline.h;
 		aF_marker.w = 5;

@@ -46,7 +46,6 @@ void createFrame( unsigned int addr, unsigned int idx) {
 			frameArr[addr]->layerKeyFrames[1] = 1;
 		}
 
-
 		allocateLayersForNewFrame(frameArr[addr]);
 		frameMap[idx] = addr;
 }
@@ -74,7 +73,9 @@ void initFrames(void) {
 			}
 		}
 
+
 		activeFrame = find_implicit_create(0);
+		animation_load();
 }
 
 /*find stored frame object for idx. If nothing found, return pointer
@@ -95,7 +96,7 @@ unsigned int findFreeAddr() {
 frame* find_implicit_create(int idx) {
 		int idx_origin_plus_one = idx+1;
 
-		if( (idx_origin_plus_one) > animation_total_frames ) {
+		if( (idx_origin_plus_one) > (unsigned int)animation_total_frames ) {
 			animation_total_frames = idx_origin_plus_one;
 		}
 
@@ -162,7 +163,7 @@ void anim_nav(SDL_Surface * drawingContext, int delta, int commit) {
 	COMPOSITE_LAYER* activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer(), COMP_RESOLVE_VIRTUAL	);
 
 	if((activeFrame->idx==0) && (delta<0)) {
-		return; 
+		return;
 	}
 
 	if(commit == 1) {
@@ -183,8 +184,51 @@ void dropFrames(void) {
 		destroySurfaceCache();
 }
 
+
+typedef struct {
+	unsigned int idx;
+	unsigned int layer;
+} keyframe_file_record;
+
+
+static void load_kfr(keyframe_file_record kfr) {
+		
+	char fname[2048];
+	SDL_Surface* loadedImage;
+	frame *fr;
+
+	fr = find_implicit_create( kfr.idx );
+    sprintf(fname,"c:\\res\\tmpout\\%u_%u.png",kfr.idx,kfr.layer);
+	loadedImage = IMG_Load(fname);
+	fr->layerKeyFrames[ kfr.layer ] = 1;
+	replaceLayerForExistingFrame(fr, kfr.layer, loadedImage );
+	SDL_FreeSurface(loadedImage);
+	printf("loaded frame %u layer %u\n",kfr.idx,kfr.layer);
+
+}
+
+void animation_load() {
+		FILE *kf_index_file = fopen("c:\\res\\tmpout\\keyframe_idx","r");
+		keyframe_file_record kfr;
+
+		for (;;) {
+			fread(&kfr, sizeof(keyframe_file_record), 1, kf_index_file);
+			printf("found frame in index: %u %u\n",kfr.idx,kfr.layer);
+			//break out if we match a terminating record
+			if( kfr.idx == 0xFFFFFFFF ) {
+					printf("found terminator frame, finished loading index.\n");
+					break;
+			}
+			load_kfr(kfr); 
+		}
+		fclose(kf_index_file);
+
+} 
+
 void animation_save() {
-		int i;
+		unsigned int i;
+		FILE* kf_index_file = fopen("c:\\res\\tmpout\\keyframe_idx","wb");
+
 		for(i=0; i<animation_total_frames; ++i) {
 				if( frame_has_content(i) == 1 ) {
 						int j;
@@ -192,14 +236,27 @@ void animation_save() {
 						char fname [2048];
 						for(j=0; j<MAX_LAYERS; ++j) {
 								if( fr->layerKeyFrames[j] == 1 ) {
+										keyframe_file_record kfr;
 										COMPOSITE_LAYER* image = getCompositeLayerFromFrame(fr,j,COMP_RESOLVE_ACTUAL);
+
+										kfr.idx = i;
+										kfr.layer = j;
+										fwrite(&kfr, sizeof(keyframe_file_record), 1, kf_index_file);
 										sprintf(fname,"c:\\res\\tmpout\\%u_%u.png",i,j);
 										printf("%s\n",fname);
 										IMG_SavePNG( image->data, fname);
+
 								}
 						}
 				}
 		}
+
+		{
+			keyframe_file_record terminator;
+			terminator.idx = 0xFFFFFFFF;
+			terminator.layer = 0xFFFFFFFF;
+			fwrite(&terminator,sizeof(keyframe_file_record), 1, kf_index_file);
+		}
+
+		fclose(kf_index_file);
 }
-#include <SDL_image.h>
-#include <SDL_image.h>

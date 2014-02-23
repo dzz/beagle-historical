@@ -7,11 +7,20 @@
 #include <malloc.h>
 #include <SDL.h>
 #include <string.h>
-
 COMPOSITE_LAYER** surface_cache;
 
 unsigned int surface_cache_size = SURFACE_CACHE_INITIAL_FRAMESTORAGE * MAX_LAYERS;
 unsigned int current_frame_storage = SURFACE_CACHE_INITIAL_FRAMESTORAGE;
+
+void replaceLayerForExistingFrame(frame *fr, int layer, SDL_Surface *newLayer) {
+	unsigned int coord = (unsigned int)fr->idx + (layer*current_frame_storage);
+	if(surface_cache[coord]==0) {
+		printf("error, tried to replace frame that has not been created\n");
+		exit(1);
+	}
+
+	SDL_BlitSurface(newLayer,NULL,surface_cache[coord]->data,NULL);
+}
 
 void allocateLayersForNewFrame(frame *fr) {
 	unsigned int i = 0;

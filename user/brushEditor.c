@@ -25,6 +25,8 @@ double get_brusheditor_value(int idx) {
 void redraw_stroke_sample() {
 	//285 to 385, and same height as sliders
 	SDL_Surface *brushSample = createDrawingSurface(100,244);
+	SDL_Rect rect;
+	
 	SDL_BlitSurface(preview_bg,NULL,brushSample,NULL);
 	brush_setValuesFromUI();
 	{
@@ -37,7 +39,7 @@ void redraw_stroke_sample() {
 		}
 	}
 
-	SDL_Rect rect;
+
 	rect.x = 295;
 	rect.y = 6;
 	rect.w = 100;

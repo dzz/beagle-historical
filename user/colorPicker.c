@@ -307,10 +307,11 @@ void colorpicker_mouseup(int x,int y, UI_AREA *area) {
 }
 
 void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
-	editing = 1;
 	int h2 = COLORPICKER_HEIGHT/2;
 	int w2 = COLORPICKER_WIDTH/2;
 	int h4 = h2/2;
+
+	editing = 1;
 	if(y<h2) {
 			double unit_x = ((double)x - (double)w2)/(double)w2;
 			double unit_y = ((double)y - (double)h4)/(double)h4;

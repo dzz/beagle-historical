@@ -48,7 +48,7 @@ HCTX hctx = 0;
 AXIS gPressure = {0};
 int drawingContextInvalid = 1;
 void postBootstrap(void);
-FILE *logfile;
+FILE* logfile;
 
 void startLog() {
 	logfile = fopen("log.txt","w+");
@@ -88,9 +88,9 @@ void invalidateDrawingContext() {
 
 static char field_mode = 0;
 void updateDrawingContext() {
-	field_mode = (field_mode +1) % 2;
+	SDL_Rect r = getDirtyRect();\
 
-	SDL_Rect r = getDirtyRect();
+	field_mode = (field_mode +1) % 2;
 	{
 		SDL_Surface *comp = compositeFrameWithContext( drawingContext, getActiveFrame() , r ,field_mode );
 		SDL_BlitSurface( comp,NULL, screenSurface,&r);
