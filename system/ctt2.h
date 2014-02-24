@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <SDL.h>
 
-__declspec( dllexport) void __stdcall makewin();
-__declspec( dllexport) void __stdcall origin_init();
 void startLog();
 FILE *getLogfile();
 void closeLog();
