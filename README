@@ -2,14 +2,38 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.0.1.5
+      ctt2 0.0.1.6
 -------------------------------------------------------------------------------
 an obscurely named animation and painting tool  
 
-questions / comments:
-	devon.zachary@gmail.com
+1) how to build/run:
 
-resources:
+This can be built with Visual Studio 2012 express, and has been succesfully
+compiled with GCC via Code::Blocks. 
+
+The binary should be run with the working directory the same as this source
+tree. You'll need the SDL and SDL_Image/associated (libpng etc.) dlls in 
+your system or working folder.
+
+2) project-data:
+
+Frame pngs and the keyframe index file are stored in the project-dir/ folder.
+You can delete the keyframe_idx file to create a new project.
+
+3) usage:
+
+Q 	- Move frame cursor left
+E 	- Move frame cursor right
+
+1 	- Edit background layer
+2 	- Edit foreground layer
+
+C 	- Switch primary/secondary colors in brush editor
+TAB - Toggle UI on/off
+
+ESC - Exit
+
+4) build resources:
 
 WINTAB SDK
 http://www.wacomeng.com/windows/index.html
@@ -19,18 +43,9 @@ http://www.libsdl.org/
 
 SDL_image 2.0
 https://www.libsdl.org/projects/SDL_image/
-                                                                         
 
-usage:
-
-Q - Move frame left
-E - Move frame right
-
-W - Edit top layer
-S - Edit bottom layer
-
-C - Switch primary/secondary colors in brush editor
-Z - Toggle UI on/off
+5) contact:
+devon.zachary@gmail.com
 
 -------------------------------------------------------------------------------
 Copright (c) 2014 Devon Zachary

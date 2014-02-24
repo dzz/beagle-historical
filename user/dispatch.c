@@ -18,7 +18,7 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 		if(mode==1) {
 				//keydown handlers
 				switch(sym) {
-						case SDLK_z:
+						case SDLK_TAB:
 								togglePanels();
 								break;
 						case SDLK_s:
