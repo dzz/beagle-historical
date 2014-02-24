@@ -2,6 +2,7 @@
 #include "colorPicker.h"
 #include "../document/animation.h"
 #include "panels.h"
+#include "../system/dirty.h"
 
 int pointInArea(int x, int y, UI_AREA area) {
 	if( (x > area.x0) &&
@@ -29,9 +30,15 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 								break;
 						case SDLK_k:
 								animation_insert_keyframe_at_cursor();
+								animation_cursor_move( getDrawingContext(), 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
+								invalidateDirty(0,0,1920,1080);
+								updateDrawingContext();
 								break;
 						case SDLK_d:
 								animation_delete_keyframe_at_cursor();
+								animation_cursor_move( getDrawingContext(), 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
+								invalidateDirty(0,0,1920,1080);
+								updateDrawingContext();
 								break;
 				}
 		}

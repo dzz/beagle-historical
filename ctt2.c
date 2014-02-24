@@ -48,6 +48,9 @@ HCTX hctx = 0;
 AXIS gPressure = {0};
 int drawingContextInvalid = 1;
 
+SDL_Surface *getDrawingContext() {
+	return drawingContext;
+}
 
 FILE* logfile;
 
