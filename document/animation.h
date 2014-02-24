@@ -5,6 +5,10 @@
 #include "../compositor/compositor.h"
 #include "../document/layers.h"
 
+
+#define COMMIT_DRAWING_CONTEXT 1
+#define DO_NOT_COMMIT_DRAWING_CONTEXT 0
+
 typedef struct {
 	int layerKeyFrames [ MAX_LAYERS ];
 	int idx;
@@ -14,7 +18,7 @@ void initFrames(void);
 void dropFrames(void);
 
 //controller methods
-void anim_nav(SDL_Surface * drawingContext, int delta, int commit);
+void animation_cursor_move(SDL_Surface * drawingContext, int delta, int commit);
 void anim_commit(void);
 
 //debug methods

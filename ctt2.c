@@ -77,6 +77,7 @@ __declspec( dllexport) void __stdcall origin_init() {
 void initDrawingContext() {
 	drawingContext = createDrawingSurface(1920,1080);
 	initBrush(drawingContext);
+	animation_cursor_move(drawingContext,0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 }
 
 void dropDrawingContext() {
@@ -281,8 +282,8 @@ __declspec( dllexport) void __stdcall makewin() {
 		initSDLSystems(&window, SCREEN_WIDTH,SCREEN_HEIGHT);
 		initCompositor();
 		initLayers();
-		initDrawingContext();
 		initFrames();
+		initDrawingContext();
 		initTablet(window);
 
 		screenSurface = SDL_GetWindowSurface( window );
@@ -361,23 +362,27 @@ int local_dispatch(SDL_Keycode sym) {
 			case SDLK_p:
 					return 1;
 			case SDLK_q:
-					anim_nav(drawingContext,-1, 1);
+					animation_cursor_move(drawingContext,-1, 
+									COMMIT_DRAWING_CONTEXT);
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_e:
-					anim_nav(drawingContext,1, 1);
+					animation_cursor_move(drawingContext,1, 
+									COMMIT_DRAWING_CONTEXT);
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_w:
-					anim_nav(drawingContext,0, 1);
+					animation_cursor_move(drawingContext,0, 
+									COMMIT_DRAWING_CONTEXT);
 					setActiveLayer(1);
-					anim_nav(drawingContext,0, 0);
+					animation_cursor_move(drawingContext,0, 0);
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_s:
-					anim_nav(drawingContext,0, 1);
+					animation_cursor_move(drawingContext,0, 
+									COMMIT_DRAWING_CONTEXT);
 					setActiveLayer(0);
-					anim_nav(drawingContext,0, 0);
+					animation_cursor_move(drawingContext,0, 0);
 					invalidateDirty(0,0,1920,1080);
 					break;
 	}
