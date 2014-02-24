@@ -29,7 +29,7 @@ E 	- Move frame cursor right
 2 	- Edit foreground layer
 
 K	- Insert keyframe on active layer
-D   - Delete keyframe on active layer
+D	- Delete keyframe on active layer
 
 C 	- Switch primary/secondary colors in brush editor
 TAB - Toggle UI on/off
