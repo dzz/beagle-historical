@@ -8,6 +8,8 @@ an obscurely named animation and painting tool
 
 1) how to build/run:
 
+*Requires a Wacom compatible tablet
+
 This can be built with Visual Studio 2012 express, and has been succesfully
 compiled with GCC via Code::Blocks. 
 
