@@ -27,6 +27,12 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_c:
 								cp_toggle_primary_secondary();
 								break;
+						case SDLK_k:
+								animation_insert_keyframe_at_cursor();
+								break;
+						case SDLK_d:
+								animation_delete_keyframe_at_cursor();
+								break;
 				}
 		}
 }

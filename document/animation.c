@@ -26,27 +26,21 @@ frame *getActiveFrame() {
 }
 
 void createFrame( unsigned int addr, unsigned int idx) {
-
 		unsigned int i = 0;
 
 		frameArr[addr] = malloc(sizeof(frame));
 		frameArr[addr]->idx = idx;
 
-
 		for(i=0; i< numLayers; ++i) {
-			frameArr[addr]->layerKeyFrames[i]=0;
+			frameArr[addr]->layerKeyFrames[i]= 0;
 		}
 
-		if(idx==0) {
-			frameArr[addr]->layerKeyFrames[0] = 1;
-			frameArr[addr]->layerKeyFrames[1] = 1;
-		} //testing hack, background for first frame, rest don't get one
-		else {
-			frameArr[addr]->layerKeyFrames[0] = 0;
-			frameArr[addr]->layerKeyFrames[1] = 1;
+		if(idx==0){
+			for(i=0; i< numLayers; ++i) {
+				frameArr[addr]->layerKeyFrames[i]= 1;
+			}
 		}
-
-		allocateLayersForNewFrame(frameArr[addr]);
+		allocateUninitializedLayers(frameArr[addr]);
 		frameMap[idx] = addr;
 }
 
@@ -101,7 +95,7 @@ frame* find_implicit_create(int idx) {
 		}
 
         if(frameArr[frameMap[idx]] == 0){
-				createFrame(findFreeAddr(), idx);
+				createFrame(findFreeAddr(), idx,0);
 				return frameArr[frameMap[idx]];
 		}
 		return frameArr[frameMap[idx]];
@@ -204,10 +198,23 @@ static void load_kfr(keyframe_file_record kfr) {
     sprintf(fname,document_image_output_pattern,kfr.idx,kfr.layer);
 	loadedImage = IMG_Load(fname);
 	fr->layerKeyFrames[ kfr.layer ] = 1;
+	allocateUninitializedLayers(fr);
 	replaceLayerForExistingFrame(fr, kfr.layer, loadedImage );
 	SDL_FreeSurface(loadedImage);
 	printf("loaded frame %u layer %u\n",kfr.idx,kfr.layer);
 
+}
+
+void animation_insert_keyframe_at_cursor() {
+	activeFrame->layerKeyFrames[ getActiveLayer() ] = 1;
+	allocateUninitializedLayers(activeFrame);
+}
+
+void animation_delete_keyframe_at_cursor() {
+	if( getActiveFrame()->idx !=0) {
+		activeFrame->layerKeyFrames[ getActiveLayer() ] = 0;
+		cleanupUnusedLayers(activeFrame);
+	}
 }
 
 void animation_load() {

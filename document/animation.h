@@ -6,9 +6,6 @@
 #include "../document/layers.h"
 
 
-#define COMMIT_DRAWING_CONTEXT 1
-#define DO_NOT_COMMIT_DRAWING_CONTEXT 0
-
 typedef struct {
 	int layerKeyFrames [ MAX_LAYERS ];
 	int idx;
@@ -18,11 +15,15 @@ void initFrames(void);
 void dropFrames(void);
 
 //controller methods
+#define COMMIT_DRAWING_CONTEXT 1
+#define DO_NOT_COMMIT_DRAWING_CONTEXT 0
 void animation_cursor_move(SDL_Surface * drawingContext, int delta, int commit);
+
+void animation_insert_keyframe_at_cursor();
+void animation_delete_keyframe_at_cursor();
+
 void anim_commit(void);
 
-//debug methods
-SDL_Surface * compositeWithContext(SDL_Surface * drawingContext, SDL_Rect r);
 frame* getActiveFrame();
 
 unsigned int frame_has_content(int idx);

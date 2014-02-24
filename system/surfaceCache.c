@@ -22,17 +22,26 @@ void replaceLayerForExistingFrame(frame *fr, int layer, SDL_Surface *newLayer) {
 	SDL_BlitSurface(newLayer,NULL,surface_cache[coord]->data,NULL);
 }
 
-void allocateLayersForNewFrame(frame *fr) {
+void cleanupUnusedLayers(frame *fr) {
+	unsigned int i = 0;
+	for(i=0; i< MAX_LAYERS;++i) {
+		unsigned int coord = fr->idx + (i*current_frame_storage);
+		if(fr->layerKeyFrames[i]==0) {
+			if(surface_cache[coord]!=0) {
+				destroyCompositeLayer( *surface_cache[coord] );
+				free(surface_cache[coord]);
+				surface_cache[coord] = 0;
+			}
+		}
+	}
+}
+void allocateUninitializedLayers(frame *fr) {
 	unsigned int i = 0;
 	for(i=0; i<MAX_LAYERS; ++i) {
 		if(fr->layerKeyFrames[i]==1) {
 				unsigned int coord = fr->idx + (i*current_frame_storage);
 				if(surface_cache[coord] != 0) {
-					printf(
-					"error! tried to initialize coord %d already allocated in framestash"
-					,coord );
-					exit(1);
-
+					printf("found existing layer in cache. Skipping");
 				} else {
 					surface_cache[coord]=allocateCompositeLayer(COMPOSITOR_DEFAULT_W,
 																COMPOSITOR_DEFAULT_H);

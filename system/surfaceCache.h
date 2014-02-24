@@ -10,7 +10,7 @@
 #include <SDL.h>
 
 
-void allocateLayersForNewFrame(frame *fr);
+void allocateUninitializedLayers(frame *fr);
 void replaceLayerForExistingFrame(frame *fr, int layer, SDL_Surface *newLayer);
 void destroySurfaceCache(void);
 void initSurfaceCache(void);

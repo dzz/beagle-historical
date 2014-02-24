@@ -63,17 +63,6 @@ void closeLog() {
 	fclose(logfile);
 }
 
-__declspec( dllexport) void __stdcall origin_init() {
-		LoadWintab();
-		if(!gpWTInfoA(0,0, NULL)) {
-			printf("failure to load wintab");
-			return;
-		}
-		makewin();
-		UnloadWintab();
-		return;
-}
-
 void initDrawingContext() {
 	drawingContext = createDrawingSurface(1920,1080);
 	initBrush(drawingContext);
@@ -89,6 +78,7 @@ void invalidateDrawingContext() {
 }
 
 static char field_mode = 0;
+
 void updateDrawingContext() {
 	SDL_Rect r = getDirtyRect();\
 
@@ -195,7 +185,13 @@ void initTablet(SDL_Window* window) {
 		return;
 }
 
-void dropTablet() { if(hctx>0) {gpWTClose(hctx);printf("dropped tablet context:%u",(unsigned int)hctx); }}
+void dropTablet() { 
+		if(hctx>0) 
+		{
+				gpWTClose(hctx);
+				printf("dropped tablet context:%u",(unsigned int)hctx); 
+		}
+}
 
 
 void handle_wt_packet(PACKET pkt) {
@@ -258,7 +254,7 @@ void initSDLSystems(SDL_Window** window,int SCREEN_WIDTH, int SCREEN_HEIGHT) {
 
 }
 
-__declspec( dllexport) void __stdcall makewin() {
+void createCTT2Window() {
 
 #ifndef CTT2_SCREENMODE_DEBUG
 		const int SCREEN_WIDTH = 1920;
@@ -354,6 +350,7 @@ __declspec( dllexport) void __stdcall makewin() {
 		SDL_Quit();
 		closeLog();
 }
+
 //low level hook for debugging, return 1 to signal
 // program exit
 
@@ -390,4 +387,13 @@ int local_dispatch(SDL_Keycode sym) {
 	return 0;
 }
 
-int main(int argc, char **argv){ origin_init(); return 0; }
+int main(int argc, char **argv){ 
+		LoadWintab();
+		if(!gpWTInfoA(0,0, NULL)) {
+			printf("failure to load wintab");
+			return;
+		}
+		createCTT2Window();
+		UnloadWintab();
+		return;
+}
