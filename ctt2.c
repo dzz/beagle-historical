@@ -47,7 +47,8 @@ SDL_Surface *screenSurface = NULL;
 HCTX hctx = 0;
 AXIS gPressure = {0};
 int drawingContextInvalid = 1;
-void postBootstrap(void);
+
+
 FILE* logfile;
 
 void startLog() {
@@ -65,7 +66,7 @@ void closeLog() {
 __declspec( dllexport) void __stdcall origin_init() {
 		LoadWintab();
 		if(!gpWTInfoA(0,0, NULL)) {
-			printf("fail");
+			printf("failure to load wintab");
 			return;
 		}
 		makewin();
@@ -239,10 +240,25 @@ void handle_wm_event(SDL_Event event) {
 
 int local_dispatch(SDL_Keycode sym);
 
+void initSDLSystems(SDL_Window** window,int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+		//Initialize SDL
+		if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+				printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+				exit(1);
+		} 
+		//Create window
+		*window = SDL_CreateWindow( "ctt2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		if( window == NULL ) {
+				printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+				exit(1);
+		}
+		
+		SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+
+}
+
 __declspec( dllexport) void __stdcall makewin() {
-		SDL_Event event;
-		/* controls how many mainloops pass before an invalid context is
-		 * reupdated, for a small performance increase */
+
 #ifndef CTT2_SCREENMODE_DEBUG
 		const int SCREEN_WIDTH = 1920;
 		const int SCREEN_HEIGHT = 1080;
@@ -250,6 +266,8 @@ __declspec( dllexport) void __stdcall makewin() {
 		const int SCREEN_WIDTH = 920;
 		const int SCREEN_HEIGHT = 508;
 #endif
+
+
 		const int CYCLES_BETWEEN_RECOMPOSITE = 12;
 		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 2;
 
@@ -257,79 +275,72 @@ __declspec( dllexport) void __stdcall makewin() {
 		int screenbuffer_cycles = 0;
 
 		SDL_Window* window = NULL;
-		int fin = 0;
+		int finished = 0;
 
 		startLog();
+		initSDLSystems(&window, SCREEN_WIDTH,SCREEN_HEIGHT);
+		initCompositor();
+		initLayers();
+		initDrawingContext();
+		initFrames();
+		initTablet(window);
 
-		//Initialize SDL
-		if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
-				printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-		} else {
-				//Create window
-				window = SDL_CreateWindow( "ctt2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-				if( window == NULL ) {
-						printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-				}
-				else {
-						SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
-						initCompositor();
-						initLayers();
-						initFrames();
-						initDrawingContext();
-						initTablet(window);
+		screenSurface = SDL_GetWindowSurface( window );
+		SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+		SDL_UpdateWindowSurface( window );
+		
 
-						screenSurface = SDL_GetWindowSurface( window );
-						SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-						SDL_UpdateWindowSurface( window );
-				}
-		}
+		initPanels(screenSurface);
+		invalidateDirty(0,0,1920,1080);
 
-		postBootstrap();
+		{
+				SDL_Event event;
+				while(finished == 0) {
+						if(SDL_PollEvent(&event)) {
+								switch (event.type) {
+										case SDL_QUIT:
+												finished = 1;
+												break;
+										case SDL_SYSWMEVENT:
+												handle_wm_event(event);
+												break;
+										case SDL_KEYDOWN:
+												finished = local_dispatch(event.key.keysym.sym);
+												dispatch_key(event.key.keysym.sym,1);
+												break;
+										case SDL_KEYUP:
+												dispatch_key(event.key.keysym.sym,0);
+												break;
+										case SDL_MOUSEBUTTONDOWN:
+												dispatch_mousedown(event.button.button,
+																event.button.x,
+																event.button.y );
+												break;
+										case SDL_MOUSEBUTTONUP:
+												dispatch_mouseup(event.button.button,
+																event.button.x,
+																event.button.y );
+										case SDL_MOUSEMOTION:
+												dispatch_mousemotion(event.motion.x, 
+																event.motion.y );
+												break;
 
-		while(!fin) {
-				if(SDL_PollEvent(&event)) {
-						switch (event.type) {
-								case SDL_QUIT:
-										fin = 1;
-										break;
-								case SDL_SYSWMEVENT:
-										handle_wm_event(event);
-										break;
-								case SDL_KEYDOWN:
-										dispatch_key(event.key.keysym.sym,1);
-										fin = local_dispatch(event.key.keysym.sym);
-										break;
-								case SDL_KEYUP:
-										dispatch_key(event.key.keysym.sym,0);
-										break;
-								case SDL_MOUSEBUTTONDOWN:
-										dispatch_mousedown(event.button.button,
-															event.button.x,
-															event.button.y );
-										break;
-								case SDL_MOUSEBUTTONUP:
-										dispatch_mouseup(event.button.button,
-															event.button.x,
-															event.button.y );
-								case SDL_MOUSEMOTION:
-										dispatch_mousemotion(event.motion.x, event.motion.y );
-										break;
-
+								}
 						}
-				}
-				recomposite_cycles++;
-				if(recomposite_cycles > CYCLES_BETWEEN_RECOMPOSITE ) {
-					recomposite_cycles = 0;
-					if(drawingContextInvalid == 1) {
-						updateDrawingContext();
-					}
-				}
-				screenbuffer_cycles++;
-				if(screenbuffer_cycles > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
-					screenbuffer_cycles = 0;
-					renderPanels(screenSurface);
-					invalidateDrawingContext();
-					SDL_UpdateWindowSurface( window );
+						recomposite_cycles++;
+						if(recomposite_cycles > CYCLES_BETWEEN_RECOMPOSITE ) {
+								recomposite_cycles = 0;
+								if(drawingContextInvalid == 1) {
+										updateDrawingContext();
+								}
+						}
+						screenbuffer_cycles++;
+						if(screenbuffer_cycles > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
+								screenbuffer_cycles = 0;
+								renderPanels(screenSurface);
+								invalidateDrawingContext();
+								SDL_UpdateWindowSurface( window );
+						}
 				}
 		}
 
@@ -358,21 +369,16 @@ int local_dispatch(SDL_Keycode sym) {
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_w:
-
 					anim_nav(drawingContext,0, 1);
 					setActiveLayer(1);
 					anim_nav(drawingContext,0, 0);
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_s:
-
 					anim_nav(drawingContext,0, 1);
 					setActiveLayer(0);
 					anim_nav(drawingContext,0, 0);
 					invalidateDirty(0,0,1920,1080);
-					break;
-			case SDLK_c:
-					cp_toggle_primary_secondary();
 					break;
 	}
 	updateDrawingContext();
@@ -380,8 +386,3 @@ int local_dispatch(SDL_Keycode sym) {
 }
 
 int main(int argc, char **argv){ origin_init(); return 0; }
-
-void postBootstrap(void) {
-	initPanels(screenSurface);
-	invalidateDirty(0,0,1920,1080);
-}

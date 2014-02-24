@@ -15,15 +15,19 @@ int pointInArea(int x, int y, UI_AREA area) {
 /* this is where we'll dispatch to the rest of the ui */
 /* mode is 0 for keyup 1 for keydown */
 void dispatch_key(SDL_Keycode sym, int mode) {
-		switch(sym) {
-			case SDLK_z:
-					if(mode==1) 
-							togglePanels();
-					break;
-			case SDLK_s:
-					if(mode==1)
-							animation_save();
-					break;
+		if(mode==1) {
+				//keydown handlers
+				switch(sym) {
+						case SDLK_z:
+								togglePanels();
+								break;
+						case SDLK_s:
+								animation_save();
+								break;
+						case SDLK_c:
+								cp_toggle_primary_secondary();
+								break;
+				}
 		}
 }
 
