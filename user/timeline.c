@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "timeline.h"
 
+#include "../system/ctt2.h"
 #include "../document/layers.h"
 #include "../document/animation.h"
 
@@ -32,16 +33,22 @@ void renderTimelineBackground(SDL_Surface* target) {
 			int i;
 			for( i = 0; i< num_layers;++i) {
 				{
-						if( i != getActiveLayer() )
+						if( i == getActiveLayer() )
+						{
+							unsigned int color = getKeyframingMode() ? 
+								SDL_MapRGB(target->format,0xDD,0x11,0x11) :
+								SDL_MapRGB(target->format, 0xEE,0xEE,0xFF);
+
 						SDL_FillRect(
 										target,
 										&layer_row,
-										SDL_MapRGB(target->format, 0x66,0x66,0x66 )); 
+										color); 
+						}
 						else
 						SDL_FillRect(
 										target,
 										&layer_row,
-										SDL_MapRGB(target->format, 0xEE,0xEE,0xFF )); 
+										SDL_MapRGB(target->format, 0x55,0x44,0x55 )); 
 						layer_row.y+=layer_size;
 				}
 			}

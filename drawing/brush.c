@@ -35,8 +35,8 @@ unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned cha
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
 	const double brush_max = 80.0;
-	const double brush_pow_min = 16;
-	const double brush_pow_max = 512.0;
+	const double brush_pow_min = 8;
+	const double brush_pow_max = 256.0;
 
 	brush_size_base = get_brusheditor_value(0);
 	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
@@ -272,11 +272,11 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 	//these are just some sketched in values for a better
 	//optimized curve later on
 	if( brush_size_base > 0.33)
-			spacing = 10;
+			spacing = 4;
 	if( brush_size_base > 0.4 )
-			spacing = 24;
+			spacing = 11;
 	if( brush_size_base > 0.6 )
-			spacing = 26;
+			spacing = 20;
 
 		SDL_LockSurface(ctxt);
     	for(;;){
@@ -298,6 +298,10 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 														((p0*pD) +
 														 (1-pD))*3.14
 															)*brush_size),p1, ctxt);*/
+					plotSplat((x0+j_x),(y0+j_y),(int)((
+														(((p0*p0)*pD) +
+														 (1-pD))
+															)*brush_size),p1, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;
     	}

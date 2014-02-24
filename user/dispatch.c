@@ -1,8 +1,10 @@
+#include "../system/dirty.h"
+#include "../system/ctt2.h"
+#include "../document/animation.h"
+
 #include "dispatch.h"
 #include "colorPicker.h"
-#include "../document/animation.h"
 #include "panels.h"
-#include "../system/dirty.h"
 
 int pointInArea(int x, int y, UI_AREA area) {
 	if( (x > area.x0) &&
@@ -42,6 +44,9 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 								break;
 						case SDLK_x:
 								animation_export();
+								break;
+						case SDLK_r:
+								toggleKeyframingMode();
 								break;
 				}
 		}

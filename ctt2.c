@@ -357,18 +357,43 @@ void createCTT2Window() {
 //low level hook for debugging, return 1 to signal
 // program exit
 
+static unsigned int ctt2_keyframe_mode = 0;
+
+void toggleKeyframingMode() {
+	ctt2_keyframe_mode = !ctt2_keyframe_mode;
+}
+
+unsigned int getKeyframingMode() {
+	return ctt2_keyframe_mode;
+}
+
+void ctt2_insertkeyframe() {
+		animation_insert_keyframe_at_cursor();
+		animation_cursor_move( getDrawingContext(), 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
+		invalidateDirty(0,0,1920,1080);
+		updateDrawingContext();
+}
+
 int local_dispatch(SDL_Keycode sym) {
 	switch(sym) {
 			case SDLK_ESCAPE:
 					return 1;
+			case SDLK_r:
+					//hack
+					ctt2_insertkeyframe();
+					break;
 			case SDLK_q:
 					animation_cursor_move(drawingContext,-1, 
 									COMMIT_DRAWING_CONTEXT);
+					if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
+							ctt2_insertkeyframe();
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_e:
 					animation_cursor_move(drawingContext,1, 
 									COMMIT_DRAWING_CONTEXT);
+					if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
+							ctt2_insertkeyframe();
 					invalidateDirty(0,0,1920,1080);
 					break;
 			case SDLK_1:
