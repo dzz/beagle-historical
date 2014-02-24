@@ -11,6 +11,7 @@
 
 
 void allocateUninitializedLayers(frame *fr);
+void cleanupUnusedLayers(frame *fr);
 void replaceLayerForExistingFrame(frame *fr, int layer, SDL_Surface *newLayer);
 void destroySurfaceCache(void);
 void initSurfaceCache(void);

@@ -40,6 +40,9 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 								invalidateDirty(0,0,1920,1080);
 								updateDrawingContext();
 								break;
+						case SDLK_x:
+								animation_export();
+								break;
 				}
 		}
 }

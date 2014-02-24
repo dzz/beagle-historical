@@ -8,8 +8,8 @@ unsigned int numLayers;
 unsigned int activeLayer;
 
 void initLayers(void) {
-	char * colName = "colors";
-	char * lineName = "lines";
+	char * colName = "background";
+	char * lineName = "foreground";
 
 	layers[0].mode = CMP_ADD;
 	layers[1].mode = CMP_ALPHA_OVER;

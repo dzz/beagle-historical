@@ -187,6 +187,7 @@ typedef struct {
 
 const char *document_file_keyframe_index = "project-data\\keyframe_idx";
 const char *document_image_output_pattern = "project-data\\%u_%u.png";
+const char *export_image_output_pattern = "project-data\\export\\frame_%04u.png";
 
 static void load_kfr(keyframe_file_record kfr) {
 		
@@ -240,6 +241,25 @@ void animation_load() {
 		}
 
 } 
+
+void animation_export() {
+	unsigned int i;
+	SDL_Rect export_area;
+
+	export_area.x = 0;
+	export_area.y = 0;
+	export_area.w = 1920;
+	export_area.h = 1080;
+
+	for(i=0; i<animation_total_frames;++i) {
+		char fname [1024];
+		frame*fr = find_implicit_create(i);
+		SDL_Surface *composited = compositeFrame(fr, export_area);
+		sprintf( fname, export_image_output_pattern, i);
+		IMG_SavePNG( composited, fname);
+		SDL_FreeSurface(composited);
+	}
+}
 
 void animation_save() {
 		unsigned int i;

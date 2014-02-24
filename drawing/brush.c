@@ -294,10 +294,10 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 				/* TODO: This tanhf is more expensive than it's worth */
 				if(space_ctr==0){
-					plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
+					/*plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
 														((p0*pD) +
 														 (1-pD))*3.14
-															)*brush_size),p1, ctxt);
+															)*brush_size),p1, ctxt);*/
 				}
 				space_ctr = (space_ctr+1) % spacing;
     	}
