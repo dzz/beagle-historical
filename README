@@ -2,7 +2,7 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.0.1.8
+      ctt2 0.0.1.10
 -------------------------------------------------------------------------------
 an obscurely named animation and painting tool  
 
@@ -14,6 +14,8 @@ compiled with GCC via Code::Blocks.
 The binary should be run with the working directory the same as this source
 tree. You'll need the SDL and SDL_Image/associated (libpng etc.) dlls in 
 your system or working folder.
+
+No guarantees that included binary will work. 
 
 2) project-data:
 
@@ -44,16 +46,22 @@ X	- Export project data as png sequence
 
 ESC - Exit
 
-4) build resources:
+4) build/run resources:
 
-WINTAB SDK
-http://www.wacomeng.com/windows/index.html
+You'll need the DLLs from these projects to run
 
 SDL 2.0
 http://www.libsdl.org/
 
 SDL_image 2.0
 https://www.libsdl.org/projects/SDL_image/
+
+
+Wintab SDK is required to build, however if you have a Wacom tablet,
+the libraries should already be installed on your system.
+
+WINTAB SDK
+http://www.wacomeng.com/windows/index.html
 
 5) contact:
 devon.zachary@gmail.com
