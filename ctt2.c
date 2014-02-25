@@ -379,36 +379,8 @@ int local_dispatch(SDL_Keycode sym) {
 			case SDLK_ESCAPE:
 					return 1;
 			case SDLK_r:
-					//hack
+					//TODO: HAX
 					ctt2_insertkeyframe();
-					break;
-			case SDLK_q:
-					animation_cursor_move(drawingContext,-1, 
-									COMMIT_DRAWING_CONTEXT);
-					if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
-							ctt2_insertkeyframe();
-					invalidateDirty(0,0,1920,1080);
-					break;
-			case SDLK_e:
-					animation_cursor_move(drawingContext,1, 
-									COMMIT_DRAWING_CONTEXT);
-					if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
-							ctt2_insertkeyframe();
-					invalidateDirty(0,0,1920,1080);
-					break;
-			case SDLK_1:
-					animation_cursor_move(drawingContext,0, 
-									COMMIT_DRAWING_CONTEXT);
-					setActiveLayer(0);
-					animation_cursor_move(drawingContext,0, 0);
-					invalidateDirty(0,0,1920,1080);
-					break;
-			case SDLK_2:
-					animation_cursor_move(drawingContext,0, 
-									COMMIT_DRAWING_CONTEXT);
-					setActiveLayer(1);
-					animation_cursor_move(drawingContext,0, 0);
-					invalidateDirty(0,0,1920,1080);
 					break;
 	}
 	updateDrawingContext();
