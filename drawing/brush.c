@@ -192,67 +192,67 @@ void getMixedPaint(pixMap *pix, float p) {
 }
 
 void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
-	signed int i;
-	signed int j;
-	const signed int r2 = r+r;
-	const float pi = 2;
-	const float piov_2 = 1;
-	const float delta = pi / (float)(r2);
-	float plotX = -piov_2;
-	float plotY = -piov_2;
-	float intensity;
-	unsigned char v = 0;
-	int coord = (x-r)+((y-r) * ctxt->w);
-	const unsigned int jmp = (ctxt->w - ((r*2)));
-	unsigned int ucoord;
-	pixMap dest;
-	pixMap current;
-	unsigned int* pixels = (unsigned int*)ctxt->pixels;
-	int clipped_x = ctxt->w -(x+r);
-	const int end = ctxt->w*ctxt->h;
-	float noise = 1;
-	unsigned int* (*mixer)(pixMap,pixMap);
-	double buf;
+		signed int i;
+		signed int j;
+		const signed int r2 = r+r;
+		const float pi = 2;
+		const float piov_2 = 1;
+		const float delta = pi / (float)(r2);
+		float plotX = -piov_2;
+		float plotY = -piov_2;
+		float intensity;
+		unsigned char v = 0;
+		int coord = (x-r)+((y-r) * ctxt->w);
+		const unsigned int jmp = (ctxt->w - ((r*2)));
+		unsigned int ucoord;
+		pixMap dest;
+		pixMap current;
+		unsigned int* pixels = (unsigned int*)ctxt->pixels;
+		int clipped_x = ctxt->w -(x+r);
+		const int end = ctxt->w*ctxt->h;
+		float noise = 1;
+		unsigned int* (*mixer)(pixMap,pixMap);
+		double buf;
 
-   	clipped_x = clipped_x	< 0 ? r2 + clipped_x : r2;
+		clipped_x = clipped_x < 0 ? r2 + clipped_x : r2;
 
-	if(brush_erase == 1) {
-			mixer = &erase;
-	} else {
-		mixer = &mix;
-	}
-
-	getMixedPaint(&current,p);
-
-	for( i=0; i<clipped_x; ++i) {
-		for( j=0; j<r2; ++j) {
-			plotX += delta;
-
-			//if(brush_noise > 0.1) {
-				noise = 1-(((float)rand()/RAND_MAX)*brush_noise);
-			//}
-
-			if(coord>0 && coord<end) {
-					ucoord = (unsigned int)coord;
-					intensity = map_intensity(plotX,plotY,p);
-					buf = intensity*brush_alpha*noise;
-					v = (unsigned char)(buf);
-					dest.pix =pixels[ucoord];
-					current.p.a = v;
-					pixels[ucoord] = *(*mixer)(current,dest);
-			}
-			coord++;
+		if(brush_erase == 1) {
+				mixer = &erase;
+		} else {
+				mixer = &mix;
 		}
-		plotX = -piov_2;
-		plotY += delta;
-		coord += jmp;
-	}
-	//if we're rendering directly to the active drawing context,
-	//invalidate the dirty rect. Othewise, we're in use somewhere
-	//else not tied to the global dirty rect manager
-	if(ctxt == gContext) {
-		invalidateDirty(x-r,y-r,x+r,y+r);
-	}
+
+		getMixedPaint(&current,p);
+
+		for( i=0; i<clipped_x; ++i) {
+				for( j=0; j<r2; ++j) {
+						plotX += delta;
+						if(( x + (j-r) ) < (signed int)ctxt->w)
+						{
+								noise = 1-(((float)rand()/RAND_MAX)*brush_noise);
+
+								if(coord>0 && coord<end) {
+										ucoord = (unsigned int)coord;
+										intensity = map_intensity(plotX,plotY,p);
+										buf = intensity*brush_alpha*noise;
+										v = (unsigned char)(buf);
+										dest.pix =pixels[ucoord];
+										current.p.a = v;
+										pixels[ucoord] = *(*mixer)(current,dest);
+								}
+						}
+						coord++;
+				}
+				plotX = -piov_2;
+				plotY += delta;
+				coord += jmp;
+		}
+		//if we're rendering directly to the active drawing context,
+		//invalidate the dirty rect. Othewise, we're in use somewhere
+		//else not tied to the global dirty rect manager
+		if(ctxt == gContext) {
+				invalidateDirty(x-r,y-r,x+r,y+r);
+		}
 }
 
 void brushReset() {
@@ -280,25 +280,14 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		SDL_LockSurface(ctxt);
     	for(;;){
-
-				/* TODO: Optimize jitter */
-				double j_size = brush_size*p0*brush_jitter*10;
-				double j_x = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
-				double j_y = ((double)rand() / RAND_MAX)*brush_jitter*j_size;
-
     			if (x0==x1 && y0==y1) break;
     			e2 = err;
     			if (e2 >-dx) { err -= dy; x0 += sx; }
     			if (e2 < dy) { err += dx; y0 += sy; }
 
 
-				/* TODO: This tanhf is more expensive than it's worth */
 				if(space_ctr==0){
-					/*plotSplat((x0+j_x),(y0+j_y),(int)(tanhf(
-														((p0*pD) +
-														 (1-pD))*3.14
-															)*brush_size),p1, ctxt);*/
-					plotSplat((x0+j_x),(y0+j_y),(int)((
+					plotSplat((x0),(y0),(int)((
 														(((p0*p0)*pD) +
 														 (1-pD))
 															)*brush_size),p1, ctxt);
