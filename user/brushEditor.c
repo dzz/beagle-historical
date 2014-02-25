@@ -28,7 +28,6 @@ void redraw_stroke_sample() {
 	SDL_Rect rect;
 	
 	SDL_BlitSurface(preview_bg,NULL,brushSample,NULL);
-	brush_setValuesFromUI();
 	{
 		int v;
 		for( v = 0; v< 50; ++v ) {
@@ -116,6 +115,7 @@ void initBrushEditor() {
 	button_images[8] = SDL_LoadBMP("ui_gen/button_4_up.bmp");
 	button_images[9] = SDL_LoadBMP("ui_gen/button_4_down.bmp");
 
+	brush_setValuesFromUI();
 	redraw_stroke_sample();
 	draw_buttons_to_bg();
 }
@@ -211,6 +211,7 @@ void brusheditor_mousemotion(int x,int y, UI_AREA *area) {
 		map_to_slider_value(&x,&y,&value);
 		sVals[lockedSlider] = value;
 		if(motion_redraw_step == 0 ) {
+			brush_setValuesFromUI();
 			redraw_stroke_sample();
 		}
 	}
@@ -219,6 +220,7 @@ void brusheditor_mousedown(int x,int y, UI_AREA *area) {
 		SDL_Rect r = get_buttons_rect();
 		if(x>r.x) {
 				handle_mousedown_for_buttons(x,y,area);
+				brush_setValuesFromUI();
 				return;
 		}
 
@@ -230,6 +232,7 @@ void brusheditor_mousedown(int x,int y, UI_AREA *area) {
 				{
 						lockedSlider = x;
 						sVals[x] = value;
+						brush_setValuesFromUI();
 						redraw_stroke_sample();
 				}
 		}

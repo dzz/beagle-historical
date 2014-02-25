@@ -37,6 +37,7 @@ void brush_setValuesFromUI() {
 	const double brush_max = 255.0;
 	const double brush_pow_min = 0.25;
 	const double brush_pow_max = 1;
+	const double brush_jitter_max = 4; 
 
 	brush_size_base = get_brusheditor_value(0);
 	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
@@ -44,7 +45,7 @@ void brush_setValuesFromUI() {
 	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
 	brush_alpha = get_brusheditor_value(2);
 	brush_pressure_dynamics = get_brusheditor_value(3);
-	brush_jitter = get_brusheditor_value(4);
+	brush_jitter = get_brusheditor_value(4)*brush_jitter_max;
 	brush_noise = get_brusheditor_value(5);
 
 	brush_mixpaint = get_brusheditor_toggle(0);
@@ -80,7 +81,6 @@ void initBrush( SDL_Surface* context ) {
 
 
 void brushPaint(stylusState a, stylusState b) {
-	brush_setValuesFromUI();
 	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, gContext);
 }
 
@@ -277,42 +277,49 @@ void brushReset() {
 
 void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
 
-	int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
-   	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
-   	int err = (dx>dy ? dx : -dy)/2, e2;
+		int initX = x0;
+		int initY = y0;
 
-	int space_ctr = 0;
+		int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+		int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
+		int err = (dx>dy ? dx : -dy)/2, e2;
 
-	float pD = brush_pressure_dynamics;
-	int radius = (int)(( (((p0*p0)*pD) + (1-pD)))*brush_size);
-	int spacing = 
-			(radius > 24 ) ?	
-			4 + ( (radius*radius) / 255 ) :
-			1;
+		int space_ctr = 0;
 
-
-
-	//these are just some sketched in values for a better
-	//optimized curve later on
-	/*if( brush_size_base > 0.33)
-			spacing = 4;
-	if( brush_size_base > 0.4 )
-			spacing = 11;
-	if( brush_size_base > 0.6 )
-			spacing = 20;*/
+		float pD = brush_pressure_dynamics;
 
 		SDL_LockSurface(ctxt);
-    	for(;;){
-    			if (x0==x1 && y0==y1) break;
-    			e2 = err;
-    			if (e2 >-dx) { err -= dy; x0 += sx; }
-    			if (e2 < dy) { err += dx; y0 += sy; }
+		for(;;){
+				double px;
+				double py;
+				double computed_p;
+				double interp_p;
 
+				int radius;
+				int spacing = 
+						(radius > 24 ) ?	
+						4 + ( (radius*radius) / 255 ) :
+						1;
+
+				if(x1 - initX == 0) px = 1; else px = (x0 - initX) / (x1 - initX);
+				if(y1 - initY == 0) py = 1; else py = (y0 - initY) / (y1 - initY);
+
+				computed_p = px*py;
+				interp_p = p0 * (1-computed_p) + p1*computed_p;
+
+				if (x0==x1 && y0==y1) break;
+				e2 = err;
+				if (e2 >-dx) { err -= dy; x0 += sx; }
+				if (e2 < dy) { err += dx; y0 += sy; }
+
+ 				radius = (int)((interp_p*pD)*brush_size);
 
 				if(space_ctr==0){
-					plotSplat((x0),(y0),radius,p1, ctxt);
+						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
+						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
+						plotSplat((x0+jtr_x),(y0+jtr_y),radius,interp_p, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;
-    	}
+		}
 		SDL_UnlockSurface(ctxt);
 }
