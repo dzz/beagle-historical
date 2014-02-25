@@ -123,7 +123,7 @@ static void commitColor(void) {
 
 	{
 		double r = 0.6;
-		double hr = ((h+180)/180)*3.14;
+		double hr = ((h+180)/180)*M_PI;
 		double wx = ((cos(hr)*r)+1.0)/2.0;
 		double wy = ((sin(hr)*r)+1.0)/2.0;
 		wheel_x = (int)(wx * COLORPICKER_WIDTH);
@@ -182,7 +182,7 @@ void drawColorWheel(int w,int h) {
 				double unit_x = ((double)x - (double)w2)/(double)w2;
 				double unit_y = ((double)y - (double)h4)/(double)h4;
 				double d= sqrt(((unit_x)*(unit_x))+((unit_y)*(unit_y)));
-				double calc_h = atan2(unit_y,unit_x)*(350/(3.14*2))+180;
+				double calc_h = atan2(unit_y,unit_x)*(350/(M_PI*2))+180;
 
 				if(h == 0) h = 0.0001;
 				if(h == 360) h = 359.999;
@@ -316,7 +316,7 @@ void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
 			double unit_x = ((double)x - (double)w2)/(double)w2;
 			double unit_y = ((double)y - (double)h4)/(double)h4;
 			double d= sqrt(((unit_x)*(unit_x))+((unit_y)*(unit_y)));
-			h = atan2(unit_y,unit_x)*(350/(3.14*2))+180;
+			h = atan2(unit_y,unit_x)*(350/(M_PI*2))+180;
 			if(h<0.0001) h = 0.0001;
 			if(h>359.999) h = 359.999;
 			//s = sqrt(d)
