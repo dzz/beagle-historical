@@ -8,7 +8,7 @@ an obscurely named animation and painting tool
 
 1) how to build/run:
 
-*Requires a Wacom compatible tablet
+*Requires a WINTAB (e.g. Wacom) compatible tablet
 
 This can be built with Visual Studio 2012 express, and has been succesfully
 compiled with GCC via Code::Blocks. 
@@ -28,23 +28,23 @@ If you export your data, it will be placed in project-data/export/ folder
 
 3) usage:
 
-Q 	- Move frame cursor left
-E 	- Move frame cursor right
+Q     - Move frame cursor left
+E     - Move frame cursor right
 
-1 	- Edit background layer
-2 	- Edit foreground layer
+1     - Edit background layer
+2     - Edit foreground layer
 
-K	- Insert keyframe on active layer
-D	- Delete keyframe on active layer
+K    - Insert keyframe on active layer
+D    - Delete keyframe on active layer
 
-R	- Toggle keyframe recording (automatically inserts keyframes on 
-	  active layer when navigating 
+R    - Toggle keyframe recording (automatically inserts keyframes on 
+      active layer when navigating 
 
-C 	- Switch primary/secondary colors in brush editor
-TAB - Toggle UI on/off
+C     - Switch primary/secondary colors in brush editor
+TAB   - Toggle UI on/off
 
-S	- Save project data
-X	- Export project data as png sequence
+S    - Save project data
+X    - Export project data as png sequence
 
 ESC - Exit
 
@@ -71,3 +71,18 @@ devon.zachary@gmail.com
 -------------------------------------------------------------------------------
 Copright (c) 2014 Devon Zachary
 except items in vendor/ from WINTAB SDK
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
