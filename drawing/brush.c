@@ -34,9 +34,9 @@ unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned cha
 
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
-	const double brush_max = 80.0;
-	const double brush_pow_min = 8;
-	const double brush_pow_max = 256.0;
+	const double brush_max = 255.0;
+	const double brush_pow_min = 0.25;
+	const double brush_pow_max = 1;
 
 	brush_size_base = get_brusheditor_value(0);
 	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
@@ -172,9 +172,19 @@ float squareRoot(float x)
   return *(float*) &i;
 }
 
-float map_intensity(float x,float y,float p) {
-		double d = squareRoot((x*x)+(y*y));
+
+__inline float map_intensity(float x,float y,float p) {
+		double d = 1 - squareRoot((x*x)+(y*y));
+		double factor = d+(brush_power*d);
+		if( d<0) return 0;
+	
+		return d*factor*255;
+		
+/*		 d = squareRoot((x*x)+(y*y));
+
 		if(d>1) return 0; else return ((1-d))*(brush_power*p*(1+brush_pressure_dynamics));
+
+		//return 255;*/
 }
 
 void getMixedPaint(pixMap *pix, float p) {
@@ -191,7 +201,14 @@ void getMixedPaint(pixMap *pix, float p) {
 		}
 }
 
-void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
+int g_seed = 0;
+
+__inline int fastrand() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
+
+__inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		signed int i;
 		signed int j;
 		const signed int r2 = r+r;
@@ -212,7 +229,7 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		const int end = ctxt->w*ctxt->h;
 		float noise = 1;
 		unsigned int* (*mixer)(pixMap,pixMap);
-		double buf;
+		float buf;
 
 		clipped_x = clipped_x < 0 ? r2 + clipped_x : r2;
 
@@ -229,7 +246,7 @@ void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 						plotX += delta;
 						if(( x + (j-r) ) < (signed int)ctxt->w)
 						{
-								noise = 1-(((float)rand()/RAND_MAX)*brush_noise);
+								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise);
 
 								if(coord>0 && coord<end) {
 										ucoord = (unsigned int)coord;
@@ -264,19 +281,25 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
    	int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
    	int err = (dx>dy ? dx : -dy)/2, e2;
 
-	int spacing = 2;
 	int space_ctr = 0;
 
 	float pD = brush_pressure_dynamics;
+	int radius = (int)(( (((p0*p0)*pD) + (1-pD)))*brush_size);
+	int spacing = 
+			(radius > 24 ) ?	
+			4 + ( (radius*radius) / 255 ) :
+			1;
+
+
 
 	//these are just some sketched in values for a better
 	//optimized curve later on
-	if( brush_size_base > 0.33)
+	/*if( brush_size_base > 0.33)
 			spacing = 4;
 	if( brush_size_base > 0.4 )
 			spacing = 11;
 	if( brush_size_base > 0.6 )
-			spacing = 20;
+			spacing = 20;*/
 
 		SDL_LockSurface(ctxt);
     	for(;;){
@@ -287,10 +310,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 
 				if(space_ctr==0){
-					plotSplat((x0),(y0),(int)((
-														(((p0*p0)*pD) +
-														 (1-pD))
-															)*brush_size),p1, ctxt);
+					plotSplat((x0),(y0),radius,p1, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;
     	}
