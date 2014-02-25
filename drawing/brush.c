@@ -18,7 +18,7 @@ static SDL_Surface* gContext;
 
 static float brush_size;
 static float brush_size_base;
-static double brush_power; // "hardness"
+static double brush_power; 
 static float brush_alpha;
 static int brush_mixpaint = 0;
 static int brush_erase = 0;
@@ -65,18 +65,11 @@ void brush_setValuesFromUI() {
 
 }
 
-#define DITHER_KERNEL_SIZE 256
-unsigned int dither_kernel[DITHER_KERNEL_SIZE];
-
-
 void initBrush( SDL_Surface* context ) {
 	int i;
 
 	active_mixing_function = &mix_char;
 	gContext = context;
-	for(i = 0; i< DITHER_KERNEL_SIZE; ++i) {
-		dither_kernel[i] = (unsigned int)(((float)rand()/RAND_MAX)*112);
-	}
 }
 
 
@@ -84,16 +77,8 @@ void brushPaint(stylusState a, stylusState b) {
 	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, gContext);
 }
 
-unsigned int dither = 0;
 unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
-/*	float blend = (float)idx/255;
-
-	float final = (float)l * blend + (float)r * (1-blend);
-	return (unsigned char)final; */
-
-	unsigned int yolo = (double)(((l*idx+r*((255-idx))/*+dither_kernel[(dither%DITHER_KERNEL_SIZE)]*/)/255));
-//	dither ++;
-	return yolo;
+	return (((l*idx+r*((255-idx)))/255));
 }
 
 unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
@@ -160,7 +145,7 @@ unsigned int*  mix(pixMap src, pixMap dst) {
 	//return &mixed.pix;
 }
 
-float squareRoot(float x)
+__inline float squareRoot(float x)
 {
   unsigned int i = *(unsigned int*) &x;
 
@@ -174,10 +159,10 @@ float squareRoot(float x)
 
 
 __inline float map_intensity(float x,float y,float p) {
-		double d = 1 - squareRoot((x*x)+(y*y));
-		double factor = d+(brush_power*d);
+		float d = 1 - squareRoot((x*x)+(y*y));
+
+		float factor = d+(brush_power*d);
 		if( d<0) return 0;
-	
 		return d*factor*255;
 		
 /*		 d = squareRoot((x*x)+(y*y));
@@ -305,6 +290,8 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				if(y1 - initY == 0) py = 1; else py = (y0 - initY) / (y1 - initY);
 
 				computed_p = px*py;
+				fprintf( getLogfile(), "%d", computed_p);
+
 				interp_p = p0 * (1-computed_p) + p1*computed_p;
 
 				if (x0==x1 && y0==y1) break;
