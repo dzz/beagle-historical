@@ -181,6 +181,7 @@ void handle_mousedown_for_buttons(int x, int y, UI_AREA *area) {
 									break;
 					}
 			}
+			brush_setValuesFromUI();
 			redraw_stroke_sample();
 			draw_buttons_to_bg();
 		}
@@ -203,6 +204,11 @@ void map_to_slider_value(int *x, int *y,double *p) {
 	if((*p)<0) (*p)=0;
 		(*p) = 1-(*p);
 }
+
+void brusheditor_mouseleave() {
+	lockedSlider = -1;
+}
+
 void brusheditor_mousemotion(int x,int y, UI_AREA *area) {
 	motion_redraw_step++;
 	motion_redraw_step %= motion_redraw_cycles;
@@ -220,7 +226,6 @@ void brusheditor_mousedown(int x,int y, UI_AREA *area) {
 		SDL_Rect r = get_buttons_rect();
 		if(x>r.x) {
 				handle_mousedown_for_buttons(x,y,area);
-				brush_setValuesFromUI();
 				return;
 		}
 

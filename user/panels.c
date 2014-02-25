@@ -110,9 +110,11 @@ void panels_dispatch_mousemotion(int x, int y) {
 	switch(route.panel_id) {
 			case PANEL_BRUSHEDITOR:
 					brusheditor_mousemotion(x,y,area);
+					colorpicker_mouseleave();
 					break;
 			case PANEL_COLORPICKER:
 					colorpicker_mousemotion(x,y,area);
+					brusheditor_mouseleave();
 					break;
 	}
 }

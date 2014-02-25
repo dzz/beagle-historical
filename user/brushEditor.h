@@ -12,6 +12,7 @@ void renderBrushEditor(SDL_Surface *target, UI_AREA *area);
 void brusheditor_mousedown(int x,int y, UI_AREA *area);
 void brusheditor_mouseup(int x,int y, UI_AREA *area);
 void brusheditor_mousemotion(int x, int y,UI_AREA *area);
+void brusheditor_mouseleave();
 
 void brusheditor_redraw_stroke();
 
