@@ -35,7 +35,7 @@ unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned cha
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
 	const double brush_max = 255.0;
-	const double brush_pow_min = 0.25;
+	const double brush_pow_min = 0.01;
 	const double brush_pow_max = 1;
 	const double brush_jitter_max = 4; 
 
@@ -161,9 +161,11 @@ __inline float squareRoot(float x)
 __inline float map_intensity(float x,float y,float p) {
 		float d = 1 - squareRoot((x*x)+(y*y));
 
-		float factor = d+(brush_power*d);
+
 		if( d<0) return 0;
-		return d*factor*255;
+		d *= 1 / brush_power;
+		if(d>1) d = 1;
+		return d*255;
 		
 /*		 d = squareRoot((x*x)+(y*y));
 
@@ -234,13 +236,12 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise);
 
 								if(coord>0 && coord<end) {
-										ucoord = (unsigned int)coord;
 										intensity = map_intensity(plotX,plotY,p);
 										buf = intensity*brush_alpha*noise;
 										v = (unsigned char)(buf);
-										dest.pix =pixels[ucoord];
+										dest.pix =pixels[coord];
 										current.p.a = v;
-										pixels[ucoord] = *(*mixer)(current,dest);
+										pixels[coord] = *(*mixer)(current,dest);
 								}
 						}
 						coord++;
