@@ -291,8 +291,6 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				if(y1 - initY == 0) py = 1; else py = (y0 - initY) / (y1 - initY);
 
 				computed_p = px*py;
-				fprintf( getLogfile(), "%d", computed_p);
-
 				interp_p = p0 * (1-computed_p) + p1*computed_p;
 
 				if (x0==x1 && y0==y1) break;
