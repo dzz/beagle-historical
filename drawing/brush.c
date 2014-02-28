@@ -261,11 +261,38 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 void brushReset() {
 }
 
+
 void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
+		float pD = brush_pressure_dynamics;
 
-		int initX = x0;
-		int initY = y0;
+		double dX = (x1-x0);
+		double dY = (y1-y0);
+		double dP = (p1-p0);
+		double len = squareRoot(dX*dX+dY*dY);
 
+		int iLen = (int)len;
+		int i = 0;
+
+		double x = x0;
+		double y = y0;
+
+		dX/=len;
+		dY/=len;
+		dP/=len;
+
+		SDL_LockSurface(ctxt);
+		for(i=0; i< iLen; ++i) {
+				int radius;	
+				x+=dX;
+				y+=dY;
+				p0+=dP;
+ 				radius = (int)((p0*pD)*brush_size);
+				plotSplat((int)x,(int)y,radius,p0, ctxt);
+		}
+		SDL_UnlockSurface(ctxt);
+}
+
+void brush_drawStrokeSegment_fast(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
 		int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 		int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
 		int err = (dx>dy ? dx : -dy)/2, e2;
@@ -276,10 +303,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		SDL_LockSurface(ctxt);
 		for(;;){
-				double px;
-				double py;
-				double computed_p;
-				double interp_p;
+				
 
 				int radius;
 				int spacing = 
@@ -287,23 +311,17 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 						4 + ( (radius*radius) / 255 ) :
 						1;
 
-				if(x1 - initX == 0) px = 1; else px = (x0 - initX) / (x1 - initX);
-				if(y1 - initY == 0) py = 1; else py = (y0 - initY) / (y1 - initY);
-
-				computed_p = px*py;
-				interp_p = p0 * (1-computed_p) + p1*computed_p;
-
 				if (x0==x1 && y0==y1) break;
 				e2 = err;
 				if (e2 >-dx) { err -= dy; x0 += sx; }
 				if (e2 < dy) { err += dx; y0 += sy; }
 
- 				radius = (int)((interp_p*pD)*brush_size);
+ 				radius = (int)((p0*pD)*brush_size);
 
 				if(space_ctr==0){
 						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
 						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
-						plotSplat((x0+jtr_x),(y0+jtr_y),radius,interp_p, ctxt);
+						plotSplat((x0+jtr_x),(y0+jtr_y),radius,p0, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;
 		}
