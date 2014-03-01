@@ -65,13 +65,26 @@ void brush_setValuesFromUI() {
 
 }
 
+double dab[(64*64)+64];
+
 void initBrush( SDL_Surface* context ) {
 	int i;
-
+	SDL_Surface *dabBmp = SDL_LoadBMP("dabs/dab0.bmp");
 	active_mixing_function = &mix_char;
 	gContext = context;
+
+	SDL_LockSurface(dabBmp);
+	for(i=0; i<64*64;++i) {
+		unsigned char* dabData = dabBmp->pixels;
+		dab[i] = (double)255-dabData[i];
+	}
+
+	SDL_UnlockSurface(dabBmp);
+	SDL_FreeSurface(dabBmp);
 }
 
+void destroyBrush() {
+}
 
 void brushPaint(stylusState a, stylusState b) {
 	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, gContext);
@@ -157,21 +170,39 @@ __inline float squareRoot(float x)
   return *(float*) &i;
 }
 
-
-__inline float map_intensity(float x,float y,float p) {
+__inline float map_intensity_square(float x,float y,float p) {
 		float d = 1 - squareRoot((x*x)+(y*y));
-
-
 		if( d<0) return 0;
 		d *= 1 / brush_power;
 		if(d>1) d = 1;
 		return d*255;
-		
-/*		 d = squareRoot((x*x)+(y*y));
+}
+float map_intensity(float x,float y,float p) {
+		float  xc_d = (x*32)+32;
+		float  yc_d = (y*32)+32;
 
-		if(d>1) return 0; else return ((1-d))*(brush_power*p*(1+brush_pressure_dynamics));
+		int xc=(int)xc_d;
+		int yc=(int)yc_d;
 
-		//return 255;*/
+		unsigned int dab_v[4];
+
+		unsigned int x_f = (double)(xc_d - xc)*255;
+		unsigned int y_f = (double)(yc_d - yc)*255;
+
+		double top,bottom,mid;
+
+		dab_v[0] = dab[(yc*64)+xc];
+		dab_v[1] = dab[(yc*64)+xc+1];
+		dab_v[2] = dab[((yc+1)*64)+xc];
+		dab_v[3] = dab[((yc+1)*64)+xc+1];
+
+		top = dab_v[0]*(255-x_f)+dab_v[1]*(x_f);
+		bottom = dab_v[2]*(255-x_f)+dab_v[3]*(x_f);
+		mid = (top*(255-y_f) + bottom*y_f)/(255*255);
+
+
+		return (unsigned char)mid;
+		//return (unsigned char)dab[(yc*64)+xc];
 }
 
 void getMixedPaint(pixMap *pix, float p) {
@@ -262,13 +293,14 @@ void brushReset() {
 }
 
 
-void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
+void brush_drawStrokeSegment_experimental(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
 		float pD = brush_pressure_dynamics;
 
 		double dX = (x1-x0);
 		double dY = (y1-y0);
 		double dP = (p1-p0);
-		double len = squareRoot(dX*dX+dY*dY);
+ 		double baseRadius = ((p0*pD)*brush_size);
+		double len = squareRoot(dX*dX+dY*dY) / 2;
 
 		int iLen = (int)len;
 		int i = 0;
@@ -292,9 +324,15 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 		SDL_UnlockSurface(ctxt);
 }
 
-void brush_drawStrokeSegment_fast(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
+void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
+
+		int origin_x = x0;
+		int origin_y = y0;
+
+	
 		int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 		int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
+
 		int err = (dx>dy ? dx : -dy)/2, e2;
 
 		int space_ctr = 0;
@@ -303,7 +341,7 @@ void brush_drawStrokeSegment_fast(int x0, int y0, int x1, int y1,float p0,float 
 
 		SDL_LockSurface(ctxt);
 		for(;;){
-				
+				double p = p0;
 
 				int radius;
 				int spacing = 
@@ -316,12 +354,13 @@ void brush_drawStrokeSegment_fast(int x0, int y0, int x1, int y1,float p0,float 
 				if (e2 >-dx) { err -= dy; x0 += sx; }
 				if (e2 < dy) { err += dx; y0 += sy; }
 
- 				radius = (int)((p0*pD)*brush_size);
+
+ 				radius = (int)((p*pD)*brush_size);
 
 				if(space_ctr==0){
 						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
 						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
-						plotSplat((x0+jtr_x),(y0+jtr_y),radius,p0, ctxt);
+						plotSplat((x0+jtr_x),(y0+jtr_y),radius,p, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;
 		}
