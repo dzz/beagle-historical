@@ -3,6 +3,8 @@
 #include "panels.h"
 #include <SDL.h>
 #include <math.h>
+#include <stdlib.h>
+
 #include "../drawing/drawingSurfaces.h"
 
 
@@ -44,7 +46,11 @@ unsigned int get_cp_secondary(void) {
 	return secondary_toggle;
 }
 
+void drawSVTriangle(int w,int hgt);
+void drawColorWheel(int w,int hgt);
+
 void cp_toggle_primary_secondary(void) {
+	cp_color tmpc;
 	int tmp;
 	tmp = wheel_x; wheel_x = buffered_wheel_x; buffered_wheel_x = tmp;
 	tmp = wheel_y; wheel_y = buffered_wheel_y; buffered_wheel_y = tmp;
@@ -62,6 +68,7 @@ void cp_toggle_primary_secondary(void) {
 			v = primary.v;
 	}
 	commitColor();
+	drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 }
 
 cp_color rgb_from_dbl(double r,double g, double b) {
@@ -112,6 +119,7 @@ cp_color rgb_from_hsv(double h, double s, double v)
 }
 
 
+
 static void commitColor(void) {
 	if(secondary_toggle == 1) {
 		secondary.h = h;
@@ -138,6 +146,7 @@ static void commitColor(void) {
 	}
 	brusheditor_redraw_stroke();
 }
+
 
 static SDL_Surface * interfaceSurface;
 static SDL_Surface * if_buffer;
@@ -202,6 +211,14 @@ void drawColorWheel(int w,int h) {
 	SDL_UnlockSurface(interfaceSurface);
 }
 
+void randomizeColor() {
+		h = rand()%360;
+		s = (double)rand()/RAND_MAX;
+		v = (double)rand()/RAND_MAX;
+
+		if(s<0.5) s = 0.5;
+		if(v<0.5) v = 0.5;
+}
 
 void initColorPicker(void) {
 		cur_color.r=100;
@@ -210,22 +227,21 @@ void initColorPicker(void) {
 		cur_color.a=255;
 
 
-		h = 15;
-		s = 1;
-		v = 1;
-		commitColor();
-		cp_toggle_primary_secondary();
-		h = 180;
-		s = 1;
-		v = 1;
-		commitColor();
-		cp_toggle_primary_secondary();
-
 		interfaceSurface = createDrawingSurface(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 		if_buffer = createDrawingSurface(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 
+
+		s = 1;
+		v = 1;
 		drawColorWheel(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
-		drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
+
+		randomizeColor();
+		commitColor();
+		randomizeColor();
+		cp_toggle_primary_secondary();
+		commitColor();
+		cp_toggle_primary_secondary();
+
 }
 
 
@@ -234,11 +250,12 @@ cp_color getCurColor(void) {
 }
 
 cp_color getPrimaryColor(void) {
-	return primary_rgb;
+	
+	return secondary_toggle == 0 ? primary_rgb : secondary_rgb;
 }
 
 cp_color getSecondaryColor(void) {
-	return secondary_rgb;
+	return secondary_toggle == 1 ? primary_rgb : secondary_rgb;
 }
 
 void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
@@ -258,9 +275,30 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 		y_end = y_end> target->h ? target->h : y_end;
 
 		SDL_BlitSurface(interfaceSurface,NULL,if_buffer,NULL);
+		
+		{
+			SDL_Rect r;
+			int rad = 12;
+			r.x = (COLORPICKER_WIDTH / 2) - rad;
+			r.w = rad;
+			r.h = rad*2;
+			r.y = (COLORPICKER_HEIGHT / 4) - rad;
+
+			if(secondary_toggle==0) {
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
+			r.x+=rad;	
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
+			} else {
+
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
+			r.x+=rad;	
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
+			}
+
+		}
 
 		if(wheel_x !=-1 ) {
-			int rad = 3;
+			int rad = 7;
 			SDL_Rect r;
 			r.x = (wheel_x-rad);
 			r.y = (wheel_y-rad);
@@ -273,10 +311,23 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 			r.w = rad*2;
 			r.h = rad*2;
 			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 255,255,255));
+
+			rad -=2;
+			r.x+=2;
+			r.y+=2;
+			r.w = rad*2;
+			r.h = rad*2;
+
+			if(secondary_toggle==0)	
+				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
+			else
+				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
+
 		}
 
+
 		if(buffered_wheel_x !=-1 ) {
-			int rad = 3;
+			int rad = 4;
 			SDL_Rect r;
 			r.x = (buffered_wheel_x-rad);
 			r.y = (buffered_wheel_y-rad);
@@ -289,6 +340,17 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 			r.w = rad*2;
 			r.h = rad*2;
 			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 0,0,0));
+
+			rad -=1;
+			r.x+=1;
+			r.y+=1;
+			r.w = rad*2;
+			r.h = rad*2;
+
+			if(secondary_toggle==1)	
+				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
+			else
+				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
 		}
 
 		SDL_BlitSurface(if_buffer,NULL,target,(SDL_Rect *)area);
@@ -320,8 +382,8 @@ void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
 			double unit_x = ((double)x - (double)w2)/(double)w2;
 			double unit_y = ((double)y - (double)h4)/(double)h4;
 			h = atan2(unit_y,unit_x)*(350/(M_PI*2))+180;
-			if(h<0.0001) h = 0.0001;
-			if(h>359.999) h = 359.999;
+			if(h<0) h = 0;
+			if(h>360) h =360; 
 
 	} else {
 		y-=h2;
@@ -337,7 +399,8 @@ void colorpicker_color_selection_mousedown(int x,int y, UI_AREA *area) {
 }
 
 void colorpicker_mousedown(int x,int y, UI_AREA *area) {
-		if( x<20 && y<20 ) {
+		if( (x> (64-12)) && (y>(64-12)) &&
+		  (x<(64+12)) &&  (y<64+12)) {
 			cp_toggle_primary_secondary();
 		} else{
 			   	colorpicker_color_selection_mousedown(x,y,area);

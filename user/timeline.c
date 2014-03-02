@@ -6,13 +6,13 @@
 #include "../document/animation.h"
 
 static const int num_layers = 2;
-static const int layer_size = 60;
+static const int layer_size = 45;
 static const int length = 1920;
 
 static SDL_Rect full_timeline;
 static SDL_Rect layer_row;
 
-static int frame_ticks = 24*4;
+static int frame_ticks = 24*6;
 
 void initTimeline() {
 	full_timeline.x=0;

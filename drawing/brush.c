@@ -3,8 +3,13 @@
 //  	#define BRUSH_SPEED_HACK   	- not a great speed hack, but skips some
 //  								bilinear interp for dabs
 //
-//  	#define BRUSH_FANCT			- secret noise and dithering
+//  	#define BRUSH_FANCY			- secret noise and dithering
 //
+//      #ifdef BRUSH_INTENSITY_TO_COLOR_MAPPING
+//      							- looks cool but needs work to be useful
+
+
+//#define BRUSH_INTENSITY_TO_COLOR_MAPPING
 //#define BRUSH_SPEED_HACK
 #define BRUSH_FANCY
 
@@ -221,7 +226,6 @@ __inline float map_intensity(float x,float y,float p) {
 #ifdef BRUSH_SPEED_HACK
 		return dabs[brush_dab_index][(yc*64)+xc];
 #else
-
 		unsigned int dab_v[4];
 
 		unsigned int x_f = (double)(xc_d - xc)*255;
@@ -248,7 +252,6 @@ __inline float map_intensity(float x,float y,float p) {
 				if( fastrand() < (RAND_MAX/2) )
 						mid-=1;
 #endif
-
 		return (unsigned char)mid;
 #endif
 		//return (unsigned char)dab[(yc*64)+xc];
@@ -319,6 +322,10 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 						{
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise);
 								intensity = map_intensity(plotX,plotY,p);
+
+#ifdef BRUSH_INTENSITY_TO_COLOR_MAPPING
+								getMixedPaint(&current,(intensity*p)/255.0);
+#endif
 								if(coord>0 && coord<end && intensity>0) {
 										buf = intensity*brush_alpha*noise;
 										v = (unsigned char)(buf);
@@ -408,7 +415,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 				int spacing = 
 						(radius > 24 ) ?	
-						4 + ( (radius*radius) / 255 ) :
+						4 + ( (radius*radius) / 512 ) :
 						1;
 
 				if (x0==x1 && y0==y1) break;

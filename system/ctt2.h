@@ -16,5 +16,9 @@ void updateDrawingContext();
 unsigned int getKeyframingMode();
 void toggleKeyframingMode();
 
+int client_get_screen_mousex();
+int client_get_screen_mousey();
+
+
 #endif
 

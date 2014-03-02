@@ -33,5 +33,6 @@ void dropPanels(void);
 void panels_dispatch_mouseup(int x,int y);
 void panels_dispatch_mousedown(int x,int y);
 void panels_dispatch_mousemotion(int x,int y);
+void panels_dispatch_mouseleave();
 #endif
 

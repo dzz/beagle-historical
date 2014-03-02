@@ -48,6 +48,13 @@ HCTX hctx = 0;
 AXIS gPressure = {0};
 int drawingContextInvalid = 1;
 
+static int client_mousex = 0;
+static int client_mousey = 0;
+
+int client_get_screen_mousex() { return client_mousex;}
+int client_get_screen_mousey() { return client_mousey;}
+
+
 SDL_Surface *getDrawingContext() {
 	return drawingContext;
 }
@@ -196,7 +203,6 @@ void dropTablet() {
 		}
 }
 
-
 void handle_wt_packet(PACKET pkt) {
 		int shouldUpdateStylus = 1;
 		double pressureNorm = (double)pkt.pkNormalPressure / (double)gPressure.axMax;
@@ -288,10 +294,9 @@ void createCTT2Window() {
 		screenSurface = SDL_GetWindowSurface( window );
 		SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
 		SDL_UpdateWindowSurface( window );
-		
 
 		initPanels(screenSurface);
-		invalidateDirty(0,0,1920,1080);
+		invalidateDirty(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 		{
 				SDL_Event event;
@@ -321,6 +326,10 @@ void createCTT2Window() {
 																event.button.x,
 																event.button.y );
 										case SDL_MOUSEMOTION:
+
+												client_mousex = event.motion.x;
+												client_mousey = event.motion.y;
+
 												dispatch_mousemotion(event.motion.x, 
 																event.motion.y );
 												break;

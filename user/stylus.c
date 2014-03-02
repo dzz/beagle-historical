@@ -35,7 +35,6 @@ void updateStylus(stylusPacket packet) {
 void runStylusLogic( void ) {
 		if( (gSSLastFrame.pressure>0) && (gStylusState.pressure > 0)) {
 			brushPaint(gSSLastFrame, gStylusState);
-
 		} else {
 				brushReset();
 		}

@@ -33,11 +33,11 @@ void redraw_stroke_sample() {
 	SDL_BlitSurface(preview_bg,NULL,brushSample,NULL);
 	{
 		int v;
-		for( v = 0; v< 50; ++v ) {
-				float p = (float)v/50;
+		for( v = 0; v< 25; ++v ) {
+				float p = (float)v/25;
 				int x = (int)((cosf((p*3.14*4)))*10) + 57;
 				brush_drawStrokeSegment(
-								x,(v*4),x,(v*4)+4,p,p,brushSample);
+								x,(v*8),x,(v*8)+8,p,p,brushSample);
 		}
 	}
 
@@ -192,8 +192,6 @@ void handle_mousedown_for_buttons(int x, int y, UI_AREA *area) {
 }
 
 static int lockedSlider = -1;
-
-
 static int motion_redraw_step = 0;
 static const int motion_redraw_cycles = 4;
 
