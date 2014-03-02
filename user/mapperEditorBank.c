@@ -1,5 +1,7 @@
 #include "../system/ctt2.h"
 #include "mapperEditorBank.h"
+#include "brushEditor.h"
+
 #include <SDL.h>
 
 #define NUM_MAPPERS 5
@@ -13,7 +15,8 @@
 static int editing_idx = NOT_EDITING_MAPPERS;
 static int editing_node = NOT_EDITING_MAPPERS;
 
-static mapping_function* mappers;
+static mapping_function* mappers = 0;
+
 static SDL_Rect computedDisplayRects[NUM_MAPPERS];
 static SDL_Surface **mapperBmps;
 static SDL_Surface *bgBmp;
@@ -25,10 +28,10 @@ void initMapperEditorBank(void) {
 		int i;
 		for(i = 0; i < NUM_MAPPERS; ++i) {
 				char fname[1024];
-				mappers[i].min_x = 0;
-				mappers[i].max_x = 1;
-				mappers[i].min_y = 0;
-				mappers[i].max_y = 1;
+				mappers[i].min_x = 0.15;
+				mappers[i].max_x = 0.75;
+				mappers[i].min_y = 0.5;
+				mappers[i].max_y = 0.9;
 				mappers[i]._idx = i;
 
 				sprintf(fname,"ui_gen/mapper_%d.bmp",i);
@@ -54,6 +57,14 @@ double mapperbank_compute_mapping(mapping_function* function,double input){
 	input+=function->min_y;
 
 	return input;
+}
+
+double mapperbank_get_mapping(int idx, double input) {
+		// shouldn't need this but the brush wants this
+		// and it boots before we do
+		if(mappers!=0)
+			return mapperbank_compute_mapping( &mappers[idx], input);
+		return 1.0;
 }
 
 void destroyMapperEditorBank(void) {
@@ -159,7 +170,7 @@ unsigned int pointInMapper(int x, int y, int i,UI_AREA *area) {
 }
 
 void mapperbank_mousedown(int x, int y, UI_AREA *area){
-		const int md_threshold = 1024;
+		const int md_threshold = 666;
 		int i;
 
 		// 
@@ -186,13 +197,22 @@ void mapperbank_mousedown(int x, int y, UI_AREA *area){
 void mapperbank_mouseup(int x, int y, UI_AREA *area){
 		editing_idx = NOT_EDITING_MAPPERS;
 		editing_node = NOT_EDITING_MAPPERS;
+		brusheditor_redraw_stroke();
 }
 
 void mapperbank_mousemotion(int x, int y, UI_AREA *area){
+
 		x = client_get_screen_mousex();
 		y = client_get_screen_mousey();
 
 		if( editing_idx != NOT_EDITING_MAPPERS ) {
+
+				if(pointInMapper(x,y,editing_idx,area) == 0) {
+					editing_idx = NOT_EDITING_MAPPERS;
+					editing_node = NOT_EDITING_MAPPERS;
+					return;
+				}
+
 				if ( editing_node != NOT_EDITING_MAPPERS ) {
 						double* node_points = &mappers[editing_idx];
 						double t_x = (double)(x - computedDisplayRects[editing_idx].x)/ (double)computedDisplayRects[editing_idx].w;

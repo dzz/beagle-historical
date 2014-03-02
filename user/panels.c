@@ -44,7 +44,7 @@ void movePanel(int x, int y) {
 
 void togglePanels(void) {
 	stylusState ss = getStylusState();
-//	movePanel(ss.x,ss.y);
+	movePanel(ss.x,ss.y);
 	panelsEnabled = !panelsEnabled;
 	invalidateDirty(0,0,screenWidth,screenHeight);
 }

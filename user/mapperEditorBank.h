@@ -3,6 +3,12 @@
 
 #define MAPPER_BANK_HEIGHT (128*3)
 
+#define MAPPER_COLOR 0
+#define MAPPER_ALPHA 1
+#define MAPPER_SIZE 2
+#define MAPPER_JITTER 3
+#define MAPPER_NOISE 4
+
 #include "panels.h"
 
 typedef struct {
@@ -24,6 +30,7 @@ void renderMapperEditorBank(SDL_Surface* target,UI_AREA* area);
 
 mapping_function* mapperbank_get_functions(void);
 double mapperbank_compute_mapping(mapping_function* function,double input);
+double mapperbank_get_mapping(int idx,double input);
 
 void mapperbank_mousedown(int x, int y, UI_AREA *area);
 void mapperbank_mouseup(int x, int y, UI_AREA *area);

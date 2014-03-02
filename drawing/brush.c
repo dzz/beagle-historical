@@ -25,6 +25,7 @@
 #include "../user/stylus.h"
 #include "../user/colorPicker.h"
 #include "../user/brushEditor.h"
+#include "../user/mapperEditorBank.h"
 #include "../system/dirty.h"
 #include "../colors/pixmap.h"
 #include "../compositor/compositor.h"
@@ -35,9 +36,8 @@ static float brush_alpha_mod;
 static float brush_size_mod;
 static double brush_jitter_mod = 0;
 static double brush_noise_mod = 0;
-static double brush_color_mix = 0;
+static double brush_color_mix_mod = 0;
 
-static float brush_alpha_base;
 static float brush_size_base;
 static double brush_jitter_base = 0;
 static double brush_noise_base = 0;
@@ -59,11 +59,12 @@ void brush_toggleMixMode() {
 }
 
 void brush_modulate_values(double pressure) {
-  brush_color_mix = pressure;
-  brush_alpha_mod = brush_alpha_base;
-  brush_size_mod = brush_size_base;
-  brush_jitter_mod = brush_jitter_base;
-  brush_noise_mod = brush_noise_base;
+		const double jitter_max = 4;
+		brush_color_mix_mod = mapperbank_get_mapping(MAPPER_COLOR,pressure);
+		brush_alpha_mod = mapperbank_get_mapping(MAPPER_ALPHA,pressure);
+		brush_size_mod = brush_size_base * mapperbank_get_mapping(MAPPER_SIZE,pressure);
+		brush_jitter_mod = mapperbank_get_mapping(MAPPER_JITTER,pressure) * jitter_max;
+		brush_noise_mod = mapperbank_get_mapping(MAPPER_NOISE,pressure);
 }
 
 void brush_setValuesFromUI() {
@@ -71,13 +72,9 @@ void brush_setValuesFromUI() {
 	const double brush_max = 255.0;
 	const double brush_pow_min = 0.01;
 	const double brush_pow_max = 1;
-	const double brush_jitter_max = 4; 
 
 	brush_size_base = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
 	brush_dab_index = (int) (get_brusheditor_value(1) * brush_loaded_dabs);
-	brush_alpha_base = get_brusheditor_value(2);
-	brush_jitter_base = get_brusheditor_value(4)*brush_jitter_max;
-	brush_noise_base = get_brusheditor_value(5);
 
 	brush_mixpaint = get_brusheditor_toggle(0);
 	brush_erase = get_brusheditor_toggle(1);
@@ -326,7 +323,7 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		}
 
 		brush_modulate_values(p);
-		getMixedPaint(&current,p);
+		getMixedPaint(&current,brush_color_mix_mod);
 
 		for( i=0; i<clipped_x; ++i) {
 				for( j=0; j<r2; ++j) {
@@ -417,7 +414,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				// should use the supplied value.
 				double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
-				int radius = (int)(((p*pD))*brush_size_mod)
+				int radius = (int)(brush_size_mod)
 
 #ifdef BRUSH_FANCY	
 						+(int)(1.33*((float)fastrand() / RAND_MAX));
