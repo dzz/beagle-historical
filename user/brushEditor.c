@@ -27,6 +27,9 @@ void redraw_stroke_sample() {
 	SDL_Surface *brushSample = createDrawingSurface(100,244);
 	SDL_Rect rect;
 	
+
+	brush_reset_random();
+
 	SDL_BlitSurface(preview_bg,NULL,brushSample,NULL);
 	{
 		int v;

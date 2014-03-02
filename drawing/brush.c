@@ -19,18 +19,25 @@ static SDL_Surface* gContext;
 static float brush_size;
 static float brush_size_base;
 static double brush_power; 
+static int brush_dab_index = 0;
 static float brush_alpha;
 static int brush_mixpaint = 0;
 static int brush_erase = 0;
 static double brush_jitter = 0;
 static double brush_noise = 0;
 static double brush_pressure_dynamics = 0;
+unsigned static int brush_mix_mode = 0;
+static int brush_loaded_dabs = 0;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
- unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
- unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
- unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
+unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
+unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
+unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
+
+void brush_toggleMixMode() {
+	brush_mix_mode = !brush_mix_mode;
+}
 
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
@@ -42,7 +49,9 @@ void brush_setValuesFromUI() {
 	brush_size_base = get_brusheditor_value(0);
 	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
 
-	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
+//	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
+
+	brush_dab_index = (int) (get_brusheditor_value(1) * brush_loaded_dabs);
 	brush_alpha = get_brusheditor_value(2);
 	brush_pressure_dynamics = get_brusheditor_value(3);
 	brush_jitter = get_brusheditor_value(4)*brush_jitter_max;
@@ -65,22 +74,36 @@ void brush_setValuesFromUI() {
 
 }
 
-double dab[(64*64)+64];
+#define MAX_DABS 32
+double dabs[MAX_DABS][(64*64)+64];
 
 void initBrush( SDL_Surface* context ) {
 	int i;
-	SDL_Surface *dabBmp = SDL_LoadBMP("dabs/dab0.bmp");
-	active_mixing_function = &mix_char;
-	gContext = context;
+	int idx;
 
-	SDL_LockSurface(dabBmp);
-	for(i=0; i<64*64;++i) {
-		unsigned char* dabData = dabBmp->pixels;
-		dab[i] = (double)255-dabData[i];
+	for(idx = 0; idx< MAX_DABS; ++idx) {
+			char dab_fname[1024];
+			SDL_Surface *dabBmp;
+
+			sprintf(dab_fname,"dabs/dab%02d.bmp",idx);
+			dabBmp = SDL_LoadBMP(dab_fname);
+
+			if(dabBmp == 0) {
+				break;
+			}
+			active_mixing_function = &mix_char;
+			gContext = context;
+
+			SDL_LockSurface(dabBmp);
+			for(i=0; i<64*64;++i) {
+					unsigned char* dabData = dabBmp->pixels;
+					dabs[idx][i] = (double)255-dabData[i];
+			}
+
+			SDL_UnlockSurface(dabBmp);
+			SDL_FreeSurface(dabBmp);
+			brush_loaded_dabs++;
 	}
-
-	SDL_UnlockSurface(dabBmp);
-	SDL_FreeSurface(dabBmp);
 }
 
 void destroyBrush() {
@@ -177,6 +200,7 @@ __inline float map_intensity_square(float x,float y,float p) {
 		if(d>1) d = 1;
 		return d*255;
 }
+
 float map_intensity(float x,float y,float p) {
 		float  xc_d = (x*32)+32;
 		float  yc_d = (y*32)+32;
@@ -191,10 +215,10 @@ float map_intensity(float x,float y,float p) {
 
 		double top,bottom,mid;
 
-		dab_v[0] = dab[(yc*64)+xc];
-		dab_v[1] = dab[(yc*64)+xc+1];
-		dab_v[2] = dab[((yc+1)*64)+xc];
-		dab_v[3] = dab[((yc+1)*64)+xc+1];
+		dab_v[0] = dabs[brush_dab_index][(yc*64)+xc];
+		dab_v[1] = dabs[brush_dab_index][(yc*64)+xc+1];
+		dab_v[2] = dabs[brush_dab_index][((yc+1)*64)+xc];
+		dab_v[3] = dabs[brush_dab_index][((yc+1)*64)+xc+1];
 
 		top = dab_v[0]*(255-x_f)+dab_v[1]*(x_f);
 		bottom = dab_v[2]*(255-x_f)+dab_v[3]*(x_f);
@@ -225,6 +249,10 @@ __inline int fastrand() {
   g_seed = (214013*g_seed+2531011); 
   return (g_seed>>16)&0x7FFF; 
 } 
+
+void brush_reset_random() {
+	g_seed = 0;
+}
 
 __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		signed int i;

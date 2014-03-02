@@ -97,10 +97,16 @@ unsigned char comp_zero(unsigned char l, unsigned char r,unsigned char src_a) {
 	return 0;
 }
 
-unsigned char comp_alpha_over(unsigned char l, unsigned char r,unsigned char src_a) {
+unsigned char comp_alpha_over_ref(unsigned char l, unsigned char r,unsigned char src_a) {
 		float blend = (float)src_a/255;
 		float computed = ((float)l * blend)+((float)r * (1.0f-blend));
 		return (unsigned char)(computed);
+}
+
+unsigned char comp_alpha_over(unsigned char l, unsigned char r,unsigned char src_a) {
+		//float blend = (float)src_a;
+		unsigned int computed = (l * src_a)+(r * (255-src_a));
+		return (unsigned char)(computed/255);
 }
 
 COMPOSITE compositeLayers_(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {

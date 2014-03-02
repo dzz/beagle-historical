@@ -268,8 +268,8 @@ void createCTT2Window() {
 #endif
 
 
-		const int CYCLES_BETWEEN_RECOMPOSITE = 12;
-		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 2;
+		const int CYCLES_BETWEEN_RECOMPOSITE = 20;
+		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 3;
 
 		int recomposite_cycles = 0;
 		int screenbuffer_cycles = 0;
@@ -345,6 +345,7 @@ void createCTT2Window() {
 		}
 
 		SDL_DestroyWindow( window );
+		destroyBrush();
 		dropTablet();
 		dropDrawingContext();
 		dropFrames();
