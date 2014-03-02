@@ -31,16 +31,20 @@
 
 static SDL_Surface* gContext;
 
-static float brush_size;
+static float brush_alpha_mod;
+static float brush_size_mod;
+static double brush_jitter_mod = 0;
+static double brush_noise_mod = 0;
+static double brush_color_mix = 0;
+
+static float brush_alpha_base;
 static float brush_size_base;
-static double brush_power; 
+static double brush_jitter_base = 0;
+static double brush_noise_base = 0;
+
 static int brush_dab_index = 0;
-static float brush_alpha;
 static int brush_mixpaint = 0;
 static int brush_erase = 0;
-static double brush_jitter = 0;
-static double brush_noise = 0;
-static double brush_pressure_dynamics = 0;
 unsigned static int brush_mix_mode = 0;
 static int brush_loaded_dabs = 0;
 
@@ -54,6 +58,14 @@ void brush_toggleMixMode() {
 	brush_mix_mode = !brush_mix_mode;
 }
 
+void brush_modulate_values(double pressure) {
+  brush_alpha_mod = brush_alpha_base;
+  brush_size_mod = brush_size_base;
+  brush_jitter_mod = brush_jitter_base;
+  brush_noise_mod = brush_noise_base;
+  brush_color_mix = pressure;
+}
+
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
 	const double brush_max = 255.0;
@@ -61,16 +73,11 @@ void brush_setValuesFromUI() {
 	const double brush_pow_max = 1;
 	const double brush_jitter_max = 4; 
 
-	brush_size_base = get_brusheditor_value(0);
-	brush_size = (float)(brush_min+((brush_max-brush_min) * brush_size_base));
-
-//	brush_power = (float)(brush_pow_min+((brush_pow_max-brush_pow_min) * get_brusheditor_value(1)));
-
+	brush_size_base = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
 	brush_dab_index = (int) (get_brusheditor_value(1) * brush_loaded_dabs);
-	brush_alpha = get_brusheditor_value(2);
-	brush_pressure_dynamics = get_brusheditor_value(3);
-	brush_jitter = get_brusheditor_value(4)*brush_jitter_max;
-	brush_noise = get_brusheditor_value(5);
+	brush_alpha_base = get_brusheditor_value(2);
+	brush_jitter_base = get_brusheditor_value(4)*brush_jitter_max;
+	brush_noise_base = get_brusheditor_value(5);
 
 	brush_mixpaint = get_brusheditor_toggle(0);
 	brush_erase = get_brusheditor_toggle(1);
@@ -208,6 +215,10 @@ __inline float squareRoot(float x)
   return *(float*) &i;
 }
 
+/*
+
+	brush_power == photoshop "hardness"
+
 __inline float map_intensity_square(float x,float y,float p) {
 		float d = 1 - squareRoot((x*x)+(y*y));
 		if( d<0) return 0;
@@ -215,6 +226,7 @@ __inline float map_intensity_square(float x,float y,float p) {
 		if(d>1) d = 1;
 		return d*255;
 }
+*/
 
 __inline float map_intensity(float x,float y,float p) {
 		float  xc_d = (x*32)+32;
@@ -313,6 +325,7 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 				mixer = &mix;
 		}
 
+		brush_modulate_values(p);
 		getMixedPaint(&current,p);
 
 		for( i=0; i<clipped_x; ++i) {
@@ -320,14 +333,14 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 						plotX += delta;
 						if(( x + (j-r) ) < (signed int)ctxt->w)
 						{
-								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise);
+								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise_mod);
 								intensity = map_intensity(plotX,plotY,p);
 
 #ifdef BRUSH_INTENSITY_TO_COLOR_MAPPING
 								getMixedPaint(&current,(intensity*p)/255.0);
 #endif
 								if(coord>0 && coord<end && intensity>0) {
-										buf = intensity*brush_alpha*noise;
+										buf = intensity*brush_alpha_mod*noise;
 										v = (unsigned char)(buf);
 										dest.pix =pixels[coord];
 										current.p.a = v;
@@ -351,14 +364,14 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 void brushReset() {
 }
 
-
+/*
 void brush_drawStrokeSegment_experimental(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
-		float pD = brush_pressure_dynamics;
+		float pD = 1;
 
 		double dX = (x1-x0);
 		double dY = (y1-y0);
 		double dP = (p1-p0);
- 		double baseRadius = ((p0*pD)*brush_size);
+ 		double baseRadius = ((p0*pD)*brush_size_mod);
 		double len = squareRoot(dX*dX+dY*dY) / 2;
 
 		int iLen = (int)len;
@@ -377,14 +390,13 @@ void brush_drawStrokeSegment_experimental(int x0, int y0, int x1, int y1,float p
 				x+=dX;
 				y+=dY;
 				p0+=dP;
- 				radius = (int)((p0*pD)*brush_size);
+ 				radius = (int)((p0*pD)*brush_size_mod);
 				plotSplat((int)x,(int)y,radius,p0, ctxt);
 		}
 		SDL_UnlockSurface(ctxt);
-}
+}*/
 
 void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
-
 		int origin_x = x0;
 		int origin_y = y0;
 
@@ -396,7 +408,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		int space_ctr = 0;
 
-		float pD = brush_pressure_dynamics;
+		float pD = 1;
 
 		SDL_LockSurface(ctxt);
 		for(;;){
@@ -405,7 +417,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				// should use the supplied value.
 				double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
-				int radius = (int)(((p*pD))*brush_size)
+				int radius = (int)(((p*pD))*brush_size_mod)
 
 #ifdef BRUSH_FANCY	
 						+(int)(1.33*((float)fastrand() / RAND_MAX));
@@ -423,11 +435,9 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				if (e2 >-dx) { err -= dy; x0 += sx; }
 				if (e2 < dy) { err += dx; y0 += sy; }
 
-
-
 				if(space_ctr==0){
-						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
-						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
+						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
+						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
 						plotSplat((x0+jtr_x),(y0+jtr_y),radius,p, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;

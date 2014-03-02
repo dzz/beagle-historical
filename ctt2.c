@@ -292,7 +292,7 @@ void createCTT2Window() {
 		initTablet(window);
 
 		screenSurface = SDL_GetWindowSurface( window );
-		SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+		SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0x00, 0x00, 0x00 ) );
 		SDL_UpdateWindowSurface( window );
 
 		initPanels(screenSurface);
@@ -364,11 +364,12 @@ void createCTT2Window() {
 		closeLog();
 }
 
-//low level hook for debugging, return 1 to signal
-// program exit
 
 static unsigned int ctt2_keyframe_mode = 0;
 
+
+
+// should live in animation, these are just hacks for now
 void toggleKeyframingMode() {
 	ctt2_keyframe_mode = !ctt2_keyframe_mode;
 }
@@ -384,6 +385,8 @@ void ctt2_insertkeyframe() {
 		updateDrawingContext();
 }
 
+//low level hook for debugging, return 1 to signal
+//program exit
 int local_dispatch(SDL_Keycode sym) {
 	switch(sym) {
 			case SDLK_ESCAPE:
