@@ -34,6 +34,16 @@ void initMapperEditorBank(void) {
 				mappers[i].max_y = 0.9;
 				mappers[i]._idx = i;
 
+				if( (i==MAPPER_NOISE) ||
+					(i==MAPPER_JITTER) ){
+						mappers[i].min_x = 0.01;
+						mappers[i].min_y = 0;
+						mappers[i].max_x = 0.9;
+						mappers[i].max_y = 0.1;
+				}
+
+
+
 				sprintf(fname,"ui_gen/mapper_%d.bmp",i);
 				mapperBmps[i] = SDL_LoadBMP(fname);
 		}

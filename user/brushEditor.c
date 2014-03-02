@@ -62,7 +62,7 @@ SDL_Rect get_buttons_rect() {
 	SDL_Rect r;
 	r.w = 45;
 	r.h = 20;
-	r.x = 230;
+	r.x = 100;
 	r.y = 7;
 	return r;
 }
@@ -144,10 +144,7 @@ void renderBrushEditor(SDL_Surface *target, UI_AREA *area) {
 
 		SDL_BlitSurface(bg,NULL,target,(SDL_Rect*)area);
 
-		//our slider images are 30x244 and we have a
-		// 400x256 area to fill with sliders
-
-		for(i=0; i<6; ++i) {
+		for(i=0; i<2; ++i) {
 			spos.x = (area->x + (i*35))+10; //5px margin
 			spos.y = area->y + 6; //12px margin
 			spos.w = 30;
