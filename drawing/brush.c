@@ -1,3 +1,13 @@
+//  brush engine specific defines:
+//
+//  	#define BRUSH_SPEED_HACK   	- not a great speed hack, but skips some
+//  								bilinear interp for dabs
+//
+//  	#define BRUSH_FANCT			- secret noise and dithering
+//
+//#define BRUSH_SPEED_HACK
+#define BRUSH_FANCY
+
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
@@ -201,12 +211,16 @@ __inline float map_intensity_square(float x,float y,float p) {
 		return d*255;
 }
 
-float map_intensity(float x,float y,float p) {
+__inline float map_intensity(float x,float y,float p) {
 		float  xc_d = (x*32)+32;
 		float  yc_d = (y*32)+32;
 
 		int xc=(int)xc_d;
 		int yc=(int)yc_d;
+
+#ifdef BRUSH_SPEED_HACK
+		return dabs[brush_dab_index][(yc*64)+xc];
+#else
 
 		unsigned int dab_v[4];
 
@@ -224,8 +238,19 @@ float map_intensity(float x,float y,float p) {
 		bottom = dab_v[2]*(255-x_f)+dab_v[3]*(x_f);
 		mid = (top*(255-y_f) + bottom*y_f)/(255*255);
 
+#ifdef BRUSH_FANCY
+		if(mid>128)
+				if(mid<192)
+				if( fastrand() < (RAND_MAX/2) )
+						mid+=32;
+		if(mid>1)
+				if(mid<8)
+				if( fastrand() < (RAND_MAX/2) )
+						mid-=1;
+#endif
 
 		return (unsigned char)mid;
+#endif
 		//return (unsigned char)dab[(yc*64)+xc];
 }
 
@@ -293,9 +318,8 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 						if(( x + (j-r) ) < (signed int)ctxt->w)
 						{
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise);
-
-								if(coord>0 && coord<end) {
-										intensity = map_intensity(plotX,plotY,p);
+								intensity = map_intensity(plotX,plotY,p);
+								if(coord>0 && coord<end && intensity>0) {
 										buf = intensity*brush_alpha*noise;
 										v = (unsigned char)(buf);
 										dest.pix =pixels[coord];
@@ -369,9 +393,19 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		SDL_LockSurface(ctxt);
 		for(;;){
-				double p = p0;
+				// if we're drawing to the user's drawing context, we're going to use the fancy
+				// filtered pressure, otherwise, we're rendering for some other reason, and
+				// should use the supplied value.
+				double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
-				int radius;
+				int radius = (int)(((p*pD))*brush_size)
+
+#ifdef BRUSH_FANCY	
+						+(int)(1.33*((float)fastrand() / RAND_MAX));
+#else
+						;
+#endif
+
 				int spacing = 
 						(radius > 24 ) ?	
 						4 + ( (radius*radius) / 255 ) :
@@ -383,7 +417,6 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				if (e2 < dy) { err += dx; y0 += sy; }
 
 
- 				radius = (int)((p*pD)*brush_size);
 
 				if(space_ctr==0){
 						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter);
