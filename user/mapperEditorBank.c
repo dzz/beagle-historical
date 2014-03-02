@@ -1,9 +1,17 @@
+#include "../system/ctt2.h"
 #include "mapperEditorBank.h"
 #include <SDL.h>
 
 #define NUM_MAPPERS 5
 #define MAPPER_BANK_HEIGHT (128*3)
 
+
+#define NOT_EDITING_MAPPERS -1
+#define MAPPER_NODE_MIN 0
+#define MAPPER_NODE_MAX 1
+
+static int editing_idx = NOT_EDITING_MAPPERS;
+static int editing_node = NOT_EDITING_MAPPERS;
 
 static mapping_function* mappers;
 static SDL_Rect computedDisplayRects[NUM_MAPPERS];
@@ -63,9 +71,18 @@ void destroyMapperEditorBank(void) {
 void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rect *r) {
 		unsigned int color_a = SDL_MapRGB( target->format, 0x00,0xFF,0x00);
 		unsigned int color_b = SDL_MapRGB( target->format, 0x11,0xAA,0x11);
+
 		int margin = 12;
 
 		SDL_Rect inner_r;
+
+		if(function->_idx == editing_idx){
+				color_a = SDL_MapRGB( target->format, 0xFF,0x00,0x00 );	
+				if(editing_node != NOT_EDITING_MAPPERS ) {
+						color_b = SDL_MapRGB( target->format, 0xFF,0xFF,0xFF );
+				}
+		}
+
 
 		inner_r.w=r->w - (margin*2);
 		inner_r.h=r->h - (margin*2);
@@ -92,15 +109,25 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 		}	
 
 		{
+			int hw = 3;
+			int fw = hw*2;
+
 			SDL_Rect handle_r;
-			handle_r.x = inner_r.x + (function->min_x)*inner_r.w;
-			handle_r.y = inner_r.y + (1 - function->min_y)*inner_r.h;
-			handle_r.w = 4;
-			handle_r.h = 4;
+			handle_r.x = inner_r.x + (function->min_x)*inner_r.w-hw;
+			handle_r.y = inner_r.y + (1 - function->min_y)*inner_r.h-hw;
+			handle_r.w = fw;
+			handle_r.h = fw;
+
+			function->_min_render_x = handle_r.x;
+			function->_min_render_y = handle_r.y;
+
 			SDL_FillRect(target,&handle_r,color_a);
-			handle_r.x = inner_r.x + (function->max_x)*inner_r.w;
-			handle_r.y = inner_r.y + (1 - function->max_y)*inner_r.h;
+			handle_r.x = inner_r.x + (function->max_x)*inner_r.w-hw;
+			handle_r.y = inner_r.y + (1 - function->max_y)*inner_r.h-hw;
 			SDL_FillRect(target,&handle_r,color_a);
+
+			function->_max_render_x = handle_r.x;
+			function->_max_render_y = handle_r.y;
 		}
 }
 
@@ -120,4 +147,78 @@ void renderMapperEditorBank(SDL_Surface* target, UI_AREA* area) {
 			SDL_BlitSurface(mapperBmps[i],NULL,target,&r);
 			renderMapperInRect(target,&mappers[i],&r);
 		}
+}
+
+
+unsigned int pointInMapper(int x, int y, int i,UI_AREA *area) {
+		if( ( x > computedDisplayRects[i].x ) && ( y > computedDisplayRects[i].y ) &&
+			( x < computedDisplayRects[i].x + computedDisplayRects[i].w ) && (y < computedDisplayRects[i].y + computedDisplayRects[i].h ) ) {
+				return 1;
+		}
+		return 0;
+}
+
+void mapperbank_mousedown(int x, int y, UI_AREA *area){
+		const int md_threshold = 1024;
+		int i;
+
+		// 
+		x = client_get_screen_mousex();
+		y = client_get_screen_mousey();
+
+		for(i=0; i< NUM_MAPPERS; ++i) {
+				if(pointInMapper(x,y,i,area) == 1) {
+						struct { unsigned int x, y; }* nodes = &mappers[i]._min_render_x;
+						int node_idx;
+						editing_idx = i;
+						for(node_idx=0; node_idx <2; ++node_idx) {
+								int dx = x - nodes[node_idx].x;
+								int dy = y - nodes[node_idx].y;
+								int md = dx*dx+dy*dy;
+								if( md < md_threshold ) {
+										editing_node = node_idx; // this will correspond to MAPPER_NODE_MIN or MAPPER_NODE_MAX
+								}
+						}
+				}
+		}
+}
+
+void mapperbank_mouseup(int x, int y, UI_AREA *area){
+		editing_idx = NOT_EDITING_MAPPERS;
+		editing_node = NOT_EDITING_MAPPERS;
+}
+
+void mapperbank_mousemotion(int x, int y, UI_AREA *area){
+		x = client_get_screen_mousex();
+		y = client_get_screen_mousey();
+
+		if( editing_idx != NOT_EDITING_MAPPERS ) {
+				if ( editing_node != NOT_EDITING_MAPPERS ) {
+						double* node_points = &mappers[editing_idx];
+						double t_x = (double)(x - computedDisplayRects[editing_idx].x)/ (double)computedDisplayRects[editing_idx].w;
+						double t_y = (double)(y - computedDisplayRects[editing_idx].y)/ (double)computedDisplayRects[editing_idx].h;
+
+						t_y = 1 - t_y;
+
+						if( editing_node == MAPPER_NODE_MIN ) {
+								node_points[2] = t_y;
+
+								if(t_x < node_points[1] ){
+										node_points[0] = t_x;
+								}
+						}
+
+						if( editing_node == MAPPER_NODE_MAX ) {
+								node_points[3] = t_y;
+
+								if(t_x > node_points[0] )
+										node_points[1] = t_x;
+						}
+				}
+		}
+}
+
+void mapperbank_mouseleave(){
+		editing_idx = NOT_EDITING_MAPPERS;
+		editing_node = NOT_EDITING_MAPPERS;
 }

@@ -88,6 +88,7 @@ static int mouse_y;
 
 #define PANEL_COLORPICKER 0
 #define PANEL_BRUSHEDITOR 1
+#define PANEL_MAPPERBANK 2
 
 typedef struct {
 	int offset_x;
@@ -96,6 +97,11 @@ typedef struct {
 } mouse_route;
 
 void get_mouse_route(mouse_route* mr, int *x, int *y){
+	if( *y > COLORPICKER_HEIGHT ) {
+		mr->panel_id = PANEL_MAPPERBANK;
+		mr->offset_y = COLORPICKER_HEIGHT;
+		mr->offset_x = 0;
+	} else
 	if( *x < COLORPICKER_WIDTH ) {
 		mr->offset_x = 0;
 		mr->offset_y = 0;
@@ -127,10 +133,20 @@ void panels_dispatch_mousemotion(int x, int y) {
 	switch(route.panel_id) {
 			case PANEL_BRUSHEDITOR:
 					brusheditor_mousemotion(x,y,area);
+					/**/
 					colorpicker_mouseleave();
+					mapperbank_mouseleave();
 					break;
 			case PANEL_COLORPICKER:
 					colorpicker_mousemotion(x,y,area);
+
+					brusheditor_mouseleave();
+					mapperbank_mouseleave();
+					break;
+			case PANEL_MAPPERBANK:
+					mapperbank_mousemotion(x,y,area);
+
+					colorpicker_mouseleave();
 					brusheditor_mouseleave();
 					break;
 	}
@@ -146,6 +162,9 @@ void panels_dispatch_mouseup(int x,int y) {
 		case PANEL_BRUSHEDITOR:
 			brusheditor_mouseup(x,y,area);
 			break;
+		case PANEL_MAPPERBANK:
+			mapperbank_mouseup(x,y,area);
+			break;
 	}
 }
 
@@ -159,6 +178,9 @@ void panels_dispatch_mousedown(int x, int y) {
 			break;
 		case PANEL_BRUSHEDITOR:
 			brusheditor_mousedown(x,y,area);
+			break;
+		case PANEL_MAPPERBANK:
+			mapperbank_mousedown(x,y,area);
 			break;
 	}
 

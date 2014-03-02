@@ -3,6 +3,7 @@
 #include "panels.h"
 #include <SDL.h>
 #include <math.h>
+#include <time.h>
 #include <stdlib.h>
 
 #include "../drawing/drawingSurfaces.h"
@@ -212,6 +213,7 @@ void drawColorWheel(int w,int h) {
 }
 
 void randomizeColor() {
+		srand((unsigned int)time(0)*256);
 		h = rand()%360;
 		s = (double)rand()/RAND_MAX;
 		v = (double)rand()/RAND_MAX;
