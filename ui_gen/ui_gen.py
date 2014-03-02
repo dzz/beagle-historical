@@ -1,6 +1,6 @@
 import os
 
-sliders = [ "size", "dab shape", "alpha", "pressure", "jitter", "noise" ]
+sliders = [ "size", "dab shape", "alpha", "~ nothing ~", "jitter", "noise" ]
 make_slider_command = "convert -background black -fill white -font Consolas -pointsize 12 label:\" {$slider_name} \" -rotate 90 label_{$slider_name}.bmp & composite -gravity Center label_{$slider_name}.bmp be_slider.bmp slider_{$slider_idx}.bmp"
 
 idx = 0;
@@ -25,4 +25,12 @@ for button_name in buttons:
 	idx += 1;
 
 
+mappers = [ "colormix", "alpha", "size", "jitter", "noise" ]
+make_mapper_command = "convert -background transparent -fill lime -font Consolas -pointsize 11 label:\" {$mapper_name} \" label_{$mapper_name}.bmp & composite -gravity SouthEast label_{$mapper_name}.bmp mapper.bmp mapper_{$slider_idx}.bmp"
 
+idx = 0;
+for mapper_name in mappers:
+	command = make_mapper_command.replace("{$mapper_name}",mapper_name);
+	command = command.replace("{$slider_idx}","%d" % idx);
+	os.system(command);
+	idx += 1;

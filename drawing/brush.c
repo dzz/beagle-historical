@@ -59,11 +59,11 @@ void brush_toggleMixMode() {
 }
 
 void brush_modulate_values(double pressure) {
+  brush_color_mix = pressure;
   brush_alpha_mod = brush_alpha_base;
   brush_size_mod = brush_size_base;
   brush_jitter_mod = brush_jitter_base;
   brush_noise_mod = brush_noise_base;
-  brush_color_mix = pressure;
 }
 
 void brush_setValuesFromUI() {

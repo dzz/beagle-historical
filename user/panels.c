@@ -4,18 +4,22 @@
 #include "colorPicker.h"
 #include "brushEditor.h"
 #include "timeline.h"
+#include "mapperEditorBank.h"
+
 #include <malloc.h>
 
 int panelsEnabled = 1;
 
 #define BRUSHPICKER_WIDTH 400
-const int panelHeight = COLORPICKER_HEIGHT;
+
+const int panelHeight = COLORPICKER_HEIGHT + MAPPER_BANK_HEIGHT;
 const int panelWidth = COLORPICKER_WIDTH + BRUSHPICKER_WIDTH;
 const int screenHeight = 1080;
 const int screenWidth = 1920;
 
 UI_AREA *area;
 UI_AREA *be_area;
+UI_AREA *meb_area;
 
 void movePanel(int x, int y) {
 	(*area).x0 = x;
@@ -31,6 +35,11 @@ void movePanel(int x, int y) {
 	be_area->y = area->y;
 	be_area->w = area->w-COLORPICKER_WIDTH;
 	be_area->h = area->h;
+
+	meb_area->x = area->x;
+	meb_area->y = area->y+COLORPICKER_HEIGHT;
+	meb_area->w = area->w;
+	meb_area->h = area->h;
 }
 
 void togglePanels(void) {
@@ -57,8 +66,10 @@ UI_AREA getPanelsArea(void) {
 unsigned int panelColor;
 
 void initPanels(SDL_Surface *target) {
+
 	area = malloc(sizeof(UI_AREA));
 	be_area = malloc(sizeof(UI_AREA));
+	meb_area = malloc(sizeof(UI_AREA));
 	movePanel(0,0);
 
 	panelColor = SDL_MapRGB(target->format,
@@ -69,6 +80,7 @@ void initPanels(SDL_Surface *target) {
 	initColorPicker();
 	initBrushEditor();
 	initTimeline();
+	initMapperEditorBank();
 }
 
 static int mouse_x;
@@ -188,6 +200,7 @@ void renderPanels(SDL_Surface *target) {
 				renderBrushEditor(target,be_area);
 				renderColorPicker(target,area);
 				renderTimeline(target);
+				renderMapperEditorBank(target,meb_area);
 		}
 
 }
@@ -195,8 +208,11 @@ void renderPanels(SDL_Surface *target) {
 void dropPanels() {
 	destroyColorPicker();
 	destroyBrushEditor();
+	destroyMapperEditorBank();
+
 	if(area!=NULL){
 		free(area);
 		free(be_area);
+		free(meb_area);
 	}
 }

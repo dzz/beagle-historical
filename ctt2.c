@@ -272,8 +272,6 @@ void createCTT2Window() {
 		const int SCREEN_WIDTH = 920;
 		const int SCREEN_HEIGHT = 508;
 #endif
-
-
 		const int CYCLES_BETWEEN_RECOMPOSITE = 20;
 		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 3;
 
