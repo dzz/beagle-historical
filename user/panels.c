@@ -86,6 +86,10 @@ void movePanel(int x, int y) {
 	mapperbank_area->w = area->w;
 	mapperbank_area->h = area->h;
 
+	toolbar_area->x = 800;
+	toolbar_area->y = 0;
+	toolbar_area->w = 48*8;
+	toolbar_area->h = 48;
 	//normalize our convenience variables
 	{
 		int i;
@@ -153,6 +157,18 @@ void get_mouse_route(mouse_route* mr, int *x, int *y){
 
 		*x = *x - mr->offset_x;
 		*y = *y - mr->offset_y;
+}
+
+unsigned int panels_point_in_clients(int x, int y){
+		int i;
+		for(i=0; i<TOTAL_PANELS; ++i) 
+		{
+			if(pointInArea( x + area->x, y + area->y, *route_map[i]) == 1 ) 
+			{
+					return 1;
+			}
+		}
+		return 0;
 }
 
 void panels_dispatch_mouseleave() {

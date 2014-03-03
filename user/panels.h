@@ -34,5 +34,6 @@ void panels_dispatch_mouseup(int x,int y);
 void panels_dispatch_mousedown(int x,int y);
 void panels_dispatch_mousemotion(int x,int y);
 void panels_dispatch_mouseleave();
+unsigned int panels_point_in_clients(int x, int y);
 #endif
 

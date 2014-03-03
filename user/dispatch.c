@@ -86,10 +86,7 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 
 void dispatch_mousemotion(int x, int y) {
 	if( getPanelsEnabled() ) {
-		UI_AREA panelArea = getPanelsArea();
-		if(pointInArea(x,y,panelArea) == 1)	{
-			x -= panelArea.x;
-			y -= panelArea.y;
+		if( panels_point_in_clients(x,y) ) {
 			panels_dispatch_mousemotion(x,y);	
 		} else {
 			panels_dispatch_mouseleave();
@@ -99,10 +96,7 @@ void dispatch_mousemotion(int x, int y) {
 
 void dispatch_mousedown( int button,int x,int y) {
 	if( getPanelsEnabled() ) {
-		UI_AREA panelArea = getPanelsArea();
-		if(pointInArea(x,y,panelArea) == 1)	{
-			x -= panelArea.x;
-			y -= panelArea.y;
+		if( panels_point_in_clients(x,y) )	{
 			panels_dispatch_mousedown(x,y);	
 		}
 	}
@@ -110,10 +104,7 @@ void dispatch_mousedown( int button,int x,int y) {
 
 void dispatch_mouseup(int button,int x, int y) {
 	if( getPanelsEnabled() ) {
-		UI_AREA panelArea = getPanelsArea();
-		if(pointInArea(x,y,panelArea) == 1)	{
-			x -= panelArea.x;
-			y -= panelArea.y;
+		if( panels_point_in_clients(x,y)){
 			panels_dispatch_mouseup(x,y);		
 		}
 	}

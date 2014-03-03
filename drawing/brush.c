@@ -183,6 +183,7 @@ unsigned int*  mix(pixMap src, pixMap dst) {
 				dst.p.g = mixed.p.g;
 				dst.p.b = mixed.p.b;
 		}
+
 		mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
 		mixed.p.g = (*active_mixing_function)(src.p.g,dst.p.g,src.p.a);
 		mixed.p.b = (*active_mixing_function)(src.p.b,dst.p.b,src.p.a);
@@ -428,7 +429,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 				int spacing = 
 						(radius > 24 ) ?	
-						4 + ( (radius*radius) / 512 ) :
+						2 + ( (radius*radius) / 700 ) :
 						1;
 
 				if (x0==x1 && y0==y1) break;
