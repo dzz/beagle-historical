@@ -11,7 +11,7 @@ void initLayers(void) {
 	char * colName = "background";
 	char * lineName = "foreground";
 
-	layers[0].mode = CMP_ADD;
+	layers[0].mode = CMP_SRC;
 	layers[1].mode = CMP_ALPHA_OVER;
 
 	strcpy(layers[0].name, colName);

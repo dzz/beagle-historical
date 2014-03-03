@@ -17,7 +17,5 @@ void brusheditor_mouseleave();
 void brusheditor_redraw_stroke();
 
 double get_brusheditor_value(int idx);
-int get_brusheditor_toggle(int idx);
-int get_brusheditor_radio();
 
 #endif

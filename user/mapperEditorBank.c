@@ -22,6 +22,9 @@ static SDL_Surface **mapperBmps;
 static SDL_Surface *bgBmp;
 
 void initMapperEditorBank(void) {
+	if(mappers!=0) 
+			return;
+
 	mappers =(mapping_function*)malloc(sizeof(mapping_function)*NUM_MAPPERS);
 	mapperBmps = (SDL_Surface**)malloc(sizeof(SDL_Surface*)*NUM_MAPPERS);
 	{
@@ -39,10 +42,8 @@ void initMapperEditorBank(void) {
 						mappers[i].min_x = 0.01;
 						mappers[i].min_y = 0;
 						mappers[i].max_x = 0.9;
-						mappers[i].max_y = 0.1;
+						mappers[i].max_y = 0.01;
 				}
-
-
 
 				sprintf(fname,"ui_gen/mapper_%d.bmp",i);
 				mapperBmps[i] = SDL_LoadBMP(fname);
@@ -72,9 +73,10 @@ double mapperbank_compute_mapping(mapping_function* function,double input){
 double mapperbank_get_mapping(int idx, double input) {
 		// shouldn't need this but the brush wants this
 		// and it boots before we do
-		if(mappers!=0)
-			return mapperbank_compute_mapping( &mappers[idx], input);
-		return 1.0;
+		if(mappers==0)
+				initMapperEditorBank();
+
+		return mapperbank_compute_mapping( &mappers[idx], input);
 }
 
 void destroyMapperEditorBank(void) {
@@ -98,9 +100,9 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 		SDL_Rect inner_r;
 
 		if(function->_idx == editing_idx){
-				color_a = SDL_MapRGB( target->format, 0xFF,0x00,0x00 );	
+				color_a = SDL_MapRGB( target->format, 0x11,0xFF,0x11 );	
 				if(editing_node != NOT_EDITING_MAPPERS ) {
-						color_b = SDL_MapRGB( target->format, 0xFF,0xFF,0xFF );
+						color_b = SDL_MapRGB( target->format, 0x00,0xFF,0x00 );
 				}
 		}
 
@@ -114,13 +116,13 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 
 		{
 			int i;
-			int tesselation = 25;
+			int tesselation = 30;
 
 			for(i=0; i< tesselation; ++i) {
 				double input = (double) i / (double)tesselation;
 				SDL_Rect plot;
 				plot.w=2;
-				plot.h=2;
+				plot.h=1;
 				plot.x=inner_r.x + (int)(input*(double)inner_r.w);
 				input = 1 - mapperbank_compute_mapping(function,input);
 				plot.y=inner_r.y + (int)(input*(double)inner_r.h);
@@ -130,7 +132,7 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 		}	
 
 		{
-			int hw = 3;
+			int hw = 2;
 			int fw = hw*2;
 
 			SDL_Rect handle_r;
@@ -154,7 +156,7 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 
 void renderMapperEditorBank(SDL_Surface* target, UI_AREA* area) {
 		int i;
-		int per_row = 4;
+		int per_row = 3;
 		SDL_BlitSurface(bgBmp,NULL,target,area);
 		for(i=0; i<NUM_MAPPERS; ++i) {
 			int column = i % per_row;

@@ -212,8 +212,8 @@ void drawColorWheel(int w,int h) {
 	SDL_UnlockSurface(interfaceSurface);
 }
 
-void randomizeColor() {
-		srand((unsigned int)time(0)*256);
+void randomizeColor(int seed) {
+		srand(seed);
 		h = rand()%360;
 		s = (double)rand()/RAND_MAX;
 		v = (double)rand()/RAND_MAX;
@@ -223,6 +223,8 @@ void randomizeColor() {
 }
 
 void initColorPicker(void) {
+		int seed = time(0) * 256;
+
 		cur_color.r=100;
 		cur_color.g=128;
 		cur_color.b=64;
@@ -237,13 +239,15 @@ void initColorPicker(void) {
 		v = 1;
 		drawColorWheel(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 
-		randomizeColor();
-		commitColor();
-		randomizeColor();
-		cp_toggle_primary_secondary();
+
+		randomizeColor(seed);
 		commitColor();
 		cp_toggle_primary_secondary();
 
+		randomizeColor(seed+1024);
+		commitColor();
+
+		cp_toggle_primary_secondary();
 }
 
 

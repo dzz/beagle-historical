@@ -59,11 +59,11 @@ void brush_toggleMixMode() {
 }
 
 void brush_modulate_values(double pressure) {
-		const double jitter_max = 4;
+		const double jitter_max = 8;
 		brush_color_mix_mod = mapperbank_get_mapping(MAPPER_COLOR,pressure);
 		brush_alpha_mod = mapperbank_get_mapping(MAPPER_ALPHA,pressure);
-		brush_size_mod = brush_size_base * mapperbank_get_mapping(MAPPER_SIZE,pressure);
-		brush_jitter_mod = mapperbank_get_mapping(MAPPER_JITTER,pressure) * jitter_max;
+		brush_size_mod = brush_size_base * pow(mapperbank_get_mapping(MAPPER_SIZE,pressure),2);
+		brush_jitter_mod = pow(mapperbank_get_mapping(MAPPER_JITTER,pressure),2) * jitter_max;
 		brush_noise_mod = mapperbank_get_mapping(MAPPER_NOISE,pressure);
 }
 
@@ -73,24 +73,13 @@ void brush_setValuesFromUI() {
 	const double brush_pow_min = 0.01;
 	const double brush_pow_max = 1;
 
-	brush_size_base = (float)(brush_min+((brush_max-brush_min) * get_brusheditor_value(0)));
+	brush_size_base = (float)(brush_min+((brush_max-brush_min) * pow(get_brusheditor_value(0),2)));
 	brush_dab_index = (int) (get_brusheditor_value(1) * brush_loaded_dabs);
 
-	brush_mixpaint = get_brusheditor_toggle(0);
-	brush_erase = get_brusheditor_toggle(1);
+	brush_mixpaint = 1;
+	brush_erase = 0;
 
-	switch(get_brusheditor_radio()) {
-		case 1:
-			active_mixing_function=&mix_char;
-			break;
-		case 2:
-			active_mixing_function=&bright_char;
-			break;
-		case 3:
-			active_mixing_function=&dark_char;
-			break;
-	}
-
+	active_mixing_function=&mix_char;
 }
 
 #define MAX_DABS 32
@@ -322,13 +311,13 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 				mixer = &mix;
 		}
 
-		brush_modulate_values(p);
 		getMixedPaint(&current,brush_color_mix_mod);
 
-		for( i=0; i<clipped_x; ++i) {
+		for( i=0; i<r2; ++i) {
 				for( j=0; j<r2; ++j) {
 						plotX += delta;
 						if(( x + (j-r) ) < (signed int)ctxt->w)
+						if(( y + (i-r) ) < (signed int)ctxt->h)
 						{
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise_mod);
 								intensity = map_intensity(plotX,plotY,p);
@@ -353,7 +342,7 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		//if we're rendering directly to the active drawing context,
 		//invalidate the dirty rect. Othewise, we're in use somewhere
 		//else not tied to the global dirty rect manager
-		if(ctxt == gContext) {
+		if(ctxt == getDrawingContext() ) {
 				invalidateDirty(x-r,y-r,x+r,y+r);
 		}
 }
@@ -407,12 +396,15 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		float pD = 1;
 
+		double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
+
+		brush_modulate_values(p);
 		SDL_LockSurface(ctxt);
+
 		for(;;){
 				// if we're drawing to the user's drawing context, we're going to use the fancy
 				// filtered pressure, otherwise, we're rendering for some other reason, and
 				// should use the supplied value.
-				double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
 				int radius = (int)(brush_size_mod)
 

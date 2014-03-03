@@ -13,8 +13,8 @@ void runStylusLogic( void );
 static double filteredPressure = 0;
 
 void stylusFilter_apply_pressure_impulse(double p) {
-			const double a = 0.8;
-			const double b = 0.2;
+			const double a = 0.4;
+			const double b = 0.6;
 			filteredPressure = filteredPressure *a +p*b;
 }
 
@@ -43,6 +43,7 @@ void runStylusLogic( void ) {
 void resetStylusState(void) {
 		gStylusState.pressure = 0;
 		gSSLastFrame.pressure = 0;
+		filteredPressure = 0;
 		brushReset();
 }
 
