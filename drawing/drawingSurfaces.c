@@ -23,6 +23,10 @@ SDL_Surface* createDrawingSurface(int w, int h) {
 		return canvas;
 }
 
+drawing_surface_restore_default_blending( SDL_Surface* drawingSurface) {
+		SDL_SetSurfaceBlendMode(drawingSurface, SDL_BLENDMODE_NONE);
+}
+
 SDL_Surface * getConvertedForBlit(SDL_Surface *drawingContext, SDL_Surface *screenSurface) {
 	if(convertedContext != 0) {
 		SDL_FreeSurface(convertedContext);

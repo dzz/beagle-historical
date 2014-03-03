@@ -150,7 +150,6 @@ unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
 }
 
 unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
-
 		float a = (float)l/255;
 		float b = (float)r/255;
 		float c = (float)idx/255;
@@ -177,34 +176,26 @@ unsigned int* erase(pixMap src,pixMap dst) {
 }
 
 unsigned int*  mix(pixMap src, pixMap dst) {
-	unsigned int alpha;
+		unsigned int alpha;
 
-	mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
-	mixed.p.g = (*active_mixing_function)(src.p.g,dst.p.g,src.p.a);
-	mixed.p.b = (*active_mixing_function)(src.p.b,dst.p.b,src.p.a);
+		if(dst.p.a == 0) {
+				dst.p.r = mixed.p.r;
+				dst.p.g = mixed.p.g;
+				dst.p.b = mixed.p.b;
+		}
+		mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
+		mixed.p.g = (*active_mixing_function)(src.p.g,dst.p.g,src.p.a);
+		mixed.p.b = (*active_mixing_function)(src.p.b,dst.p.b,src.p.a);
 
-	//this seemed right but gives undesirable results (weird overflow-esque
-	//artifacts when compositing brushes on blank canavses. Without the first
-	//block we get a "wet edges" effect due to gradiating to the drawing surface's
-	//base colour.
-	//
-	//will this out correctly at some point
+		{
+				alpha = src.p.a+dst.p.a;
+				if(alpha>255)
+						alpha = 255;
 
-	/*
-	if(src.p.a > dst.p.a) {
-			alpha = src.p.a;
-	}
-	else
-	*/
-	{
-    	alpha = src.p.a+dst.p.a;
-		if(alpha>255)
-				alpha = 255;
+		}
+		mixed.p.a = (unsigned char)alpha;
+		return &mixed.pix;
 
-	}
-	mixed.p.a = (unsigned char)alpha;
-	return &mixed.pix;
-	//return &mixed.pix;
 }
 
 __inline float squareRoot(float x)

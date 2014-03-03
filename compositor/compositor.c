@@ -109,14 +109,6 @@ unsigned char comp_alpha_over(unsigned char l, unsigned char r,unsigned char src
 		return (unsigned char)(computed/255);
 }
 
-COMPOSITE compositeLayers_(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {
-	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);
-	return flat;
-}
-
-int field_toggle = 0;
-
-
 unsigned char (*functab[5])(unsigned char,unsigned char,unsigned char);
 void initCompositor(void) {
 	functab[CMP_ADD] = &clamp_add;
@@ -126,7 +118,18 @@ void initCompositor(void) {
 	functab[CMP_ALPHA_OVER] = &comp_alpha_over;
 }
 
-COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {
+COMPOSITE compositeLayers(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area){
+	COMPOSITE flat = createFlatCompositeTarget(area.w,area.h);	
+	int i;
+	for(i=0; i<len;++i) {
+		SDL_SetSurfaceBlendMode(stack[i].data, SDL_BLENDMODE_BLEND);
+		SDL_BlitSurface(stack[i].data, (SDL_Rect*)&area, flat, NULL);
+		drawing_surface_restore_default_blending( stack[i].data);
+	}
+	return flat;
+}
+
+COMPOSITE compositeLayers_full_effects(COMPOSITE_LAYER *stack, int len, COMPOSITE_AREA area) {
 	COMPOSITE flat=createFlatCompositeTarget(area.w,area.h);
 	int start = area.y * stack[0].w + area.x;
 	int end = (area.y+area.h) * stack[0].w;

@@ -9,4 +9,6 @@ SDL_Surface* createDrawingSurface(int w, int h);
 void dropDrawingSurfaces();
 SDL_Surface * getConvertedForBlit(SDL_Surface *drawingContext, SDL_Surface *screenSurface);
 
+drawing_surface_restore_default_blending( SDL_Surface* drawingSurface);
+
 #endif

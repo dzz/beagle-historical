@@ -13,12 +13,13 @@
 
 int panelsEnabled = 1;
 
-#define BRUSHPICKER_WIDTH 256
+#define BRUSHEDITOR_WIDTH 256
+#define BRUSHEDITOR_HEIGHT 256
 
-const int panelHeight = COLORPICKER_HEIGHT + MAPPER_BANK_HEIGHT;
-const int panelWidth = COLORPICKER_WIDTH + BRUSHPICKER_WIDTH;
 const int screenHeight = 1080;
 const int screenWidth = 1920;
+const int panelHeight = COLORPICKER_HEIGHT + MAPPER_BANK_HEIGHT;
+const int panelWidth = COLORPICKER_WIDTH + BRUSHEDITOR_WIDTH;
 
 
 static UI_AREA *area;
@@ -78,7 +79,7 @@ void movePanel(int x, int y) {
 	brusheditor_area->x = area->x+colorpicker_area->w;
 	brusheditor_area->y = area->y;
 	brusheditor_area->w = area->w-colorpicker_area->w;
-	brusheditor_area->h = area->h;
+	brusheditor_area->h = BRUSHEDITOR_HEIGHT;
 
 	mapperbank_area->x = area->x;
 	mapperbank_area->y = area->y+colorpicker_area->h;
@@ -115,19 +116,11 @@ UI_AREA getPanelsArea(void) {
 		return (*area);
 }
 
-unsigned int panelColor;
 
 
 void initPanels(SDL_Surface *target) {
-
 	initUIAreas();
-	movePanel(1920-panelWidth,1080-panelHeight-TIMELINE_HEIGHT);
-
-	panelColor = SDL_MapRGB(target->format,
-					0xA8,
-					0xA7,
-					0xFF );
-
+	movePanel(0,0);
 	initColorPicker();
 	initBrushEditor();
 	initTimeline();
@@ -146,26 +139,6 @@ typedef struct {
 } mouse_route;
 
 void get_mouse_route(mouse_route* mr, int *x, int *y){
-/*
-	if( *y > COLORPICKER_HEIGHT ) {
-		mr->panel_id = PANEL_MAPPERBANK;
-		mr->offset_y = COLORPICKER_HEIGHT;
-		mr->offset_x = 0;
-	} else
-	if( *x < COLORPICKER_WIDTH ) {
-		mr->offset_x = 0;
-		mr->offset_y = 0;
-		mr->panel_id = PANEL_COLORPICKER;
-	} else {
-		mr->offset_x = COLORPICKER_WIDTH;
-		mr->offset_y = 0;
-		mr->panel_id = PANEL_BRUSHEDITOR;
-	}
-
-	*x = *x - mr->offset_x;
-	*y = *y - mr->offset_y;
-	*/
-
 		int i;
 		for(i=0; i<TOTAL_PANELS; ++i) 
 		{
@@ -177,6 +150,7 @@ void get_mouse_route(mouse_route* mr, int *x, int *y){
 				break;	
 			}
 		}
+
 		*x = *x - mr->offset_x;
 		*y = *y - mr->offset_y;
 }
@@ -291,8 +265,8 @@ void renderPanels(SDL_Surface *target) {
 				renderColorPicker(target,area);
 				renderTimeline(target);
 				renderMapperEditorBank(target,mapperbank_area);
+				renderToolbar(target,toolbar_area);
 		}
-		renderToolbar(target,area);
 }
 
 void dropPanels() {
