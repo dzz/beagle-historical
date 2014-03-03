@@ -1,12 +1,15 @@
-#include "panels.h"
+#include <malloc.h>
+
 #include "../system/dirty.h"
+
+#include "panels.h"
+#include "dispatch.h"
 #include "stylus.h"
 #include "colorPicker.h"
 #include "brushEditor.h"
 #include "timeline.h"
 #include "mapperEditorBank.h"
 
-#include <malloc.h>
 
 int panelsEnabled = 1;
 
@@ -17,11 +20,47 @@ const int panelWidth = COLORPICKER_WIDTH + BRUSHPICKER_WIDTH;
 const int screenHeight = 1080;
 const int screenWidth = 1920;
 
-UI_AREA *area;
-UI_AREA *be_area;
-UI_AREA *meb_area;
+
+static UI_AREA *area;
+static UI_AREA *brusheditor_area;
+static UI_AREA *mapperbank_area;
+static UI_AREA *colorpicker_area;
+static UI_AREA *toolbar_area;
+
+#define TOTAL_PANELS 4
+#define PANEL_COLORPICKER 0
+#define PANEL_BRUSHEDITOR 1
+#define PANEL_MAPPERBANK 2
+#define PANEL_TOOLBAR 3
+
+static UI_AREA* route_map[TOTAL_PANELS];
+void initUIAreas() {
+	#define NEW_AREA (UI_AREA*)malloc(sizeof(UI_AREA));
+	area = NEW_AREA;
+	colorpicker_area = NEW_AREA;
+	brusheditor_area = NEW_AREA;
+	mapperbank_area = NEW_AREA;
+	toolbar_area = NEW_AREA;
+	#undef NEW_AREA
+
+	route_map[PANEL_COLORPICKER] = colorpicker_area;
+	route_map[PANEL_BRUSHEDITOR] = brusheditor_area;
+	route_map[PANEL_MAPPERBANK] = mapperbank_area;
+	route_map[PANEL_TOOLBAR] = toolbar_area;
+}
+
+
+void normalize_UI_area_extra_vars( UI_AREA *p) {
+	p->x0 = p->x;
+	p->x1 = p->x+p->w;
+	p->y0 = p->y;
+	p->y1 = p->y+p->h;
+}
 
 void movePanel(int x, int y) {
+	//TODO create a layout manager to autostack these
+	// want the user to be able to organize these at
+	// somepoint
 	(*area).x0 = x;
 	(*area).y0 = y;
 	(*area).x1 = x+panelWidth;
@@ -31,15 +70,28 @@ void movePanel(int x, int y) {
 	(*area).w = (*area).x1 - (*area).x0;
 	(*area).h = (*area).y1 - (*area).y0;
 
-	be_area->x = area->x+COLORPICKER_WIDTH;
-	be_area->y = area->y;
-	be_area->w = area->w-COLORPICKER_WIDTH;
-	be_area->h = area->h;
+	colorpicker_area->x = area->x;
+	colorpicker_area->y = area->y;
+	colorpicker_area->w = COLORPICKER_WIDTH;
+	colorpicker_area->h = COLORPICKER_HEIGHT;
 
-	meb_area->x = area->x;
-	meb_area->y = area->y+COLORPICKER_HEIGHT;
-	meb_area->w = area->w;
-	meb_area->h = area->h;
+	brusheditor_area->x = area->x+colorpicker_area->w;
+	brusheditor_area->y = area->y;
+	brusheditor_area->w = area->w-colorpicker_area->w;
+	brusheditor_area->h = area->h;
+
+	mapperbank_area->x = area->x;
+	mapperbank_area->y = area->y+colorpicker_area->h;
+	mapperbank_area->w = area->w;
+	mapperbank_area->h = area->h;
+
+	//normalize our convenience variables
+	{
+		int i;
+		for(i = 0; i< TOTAL_PANELS; ++i) {
+			normalize_UI_area_extra_vars(route_map[i]);
+		}
+	}
 }
 
 void togglePanels(void) {
@@ -65,11 +117,10 @@ UI_AREA getPanelsArea(void) {
 
 unsigned int panelColor;
 
+
 void initPanels(SDL_Surface *target) {
 
-	area = malloc(sizeof(UI_AREA));
-	be_area = malloc(sizeof(UI_AREA));
-	meb_area = malloc(sizeof(UI_AREA));
+	initUIAreas();
 	movePanel(1920-panelWidth,1080-panelHeight-TIMELINE_HEIGHT);
 
 	panelColor = SDL_MapRGB(target->format,
@@ -81,14 +132,12 @@ void initPanels(SDL_Surface *target) {
 	initBrushEditor();
 	initTimeline();
 	initMapperEditorBank();
+	initToolbar();
 }
 
 static int mouse_x;
 static int mouse_y;
 
-#define PANEL_COLORPICKER 0
-#define PANEL_BRUSHEDITOR 1
-#define PANEL_MAPPERBANK 2
 
 typedef struct {
 	int offset_x;
@@ -97,6 +146,7 @@ typedef struct {
 } mouse_route;
 
 void get_mouse_route(mouse_route* mr, int *x, int *y){
+/*
 	if( *y > COLORPICKER_HEIGHT ) {
 		mr->panel_id = PANEL_MAPPERBANK;
 		mr->offset_y = COLORPICKER_HEIGHT;
@@ -114,6 +164,21 @@ void get_mouse_route(mouse_route* mr, int *x, int *y){
 
 	*x = *x - mr->offset_x;
 	*y = *y - mr->offset_y;
+	*/
+
+		int i;
+		for(i=0; i<TOTAL_PANELS; ++i) 
+		{
+			if(pointInArea( *x + area->x, *y + area->y, *route_map[i]) == 1 ) 
+			{
+				mr->offset_x = route_map[i]->x - area->x;
+				mr->offset_y = route_map[i]->y - area->y;
+				mr->panel_id = i;
+				break;	
+			}
+		}
+		*x = *x - mr->offset_x;
+		*y = *y - mr->offset_y;
 }
 
 void panels_dispatch_mouseleave() {
@@ -182,6 +247,9 @@ void panels_dispatch_mousedown(int x, int y) {
 		case PANEL_MAPPERBANK:
 			mapperbank_mousedown(x,y,area);
 			break;
+		case PANEL_TOOLBAR:
+			toolbar_mousedown(x,y,area);
+			break;
 	}
 
 }
@@ -219,22 +287,23 @@ void renderColorSwatch(SDL_Surface *target) {
 void renderPanels(SDL_Surface *target) {
 		if(panelsEnabled == 1) {
 				renderColorSwatch(target);
-				renderBrushEditor(target,be_area);
+				renderBrushEditor(target,brusheditor_area);
 				renderColorPicker(target,area);
 				renderTimeline(target);
-				renderMapperEditorBank(target,meb_area);
+				renderMapperEditorBank(target,mapperbank_area);
 		}
-
+		renderToolbar(target,area);
 }
 
 void dropPanels() {
 	destroyColorPicker();
 	destroyBrushEditor();
 	destroyMapperEditorBank();
+	destroyToolbar();
 
 	if(area!=NULL){
 		free(area);
-		free(be_area);
-		free(meb_area);
+		free(brusheditor_area);
+		free(mapperbank_area);
 	}
 }

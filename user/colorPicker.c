@@ -257,11 +257,11 @@ cp_color getCurColor(void) {
 
 cp_color getPrimaryColor(void) {
 	
-	return secondary_toggle == 0 ? primary_rgb : secondary_rgb;
+	return primary_rgb;
 }
 
 cp_color getSecondaryColor(void) {
-	return secondary_toggle == 1 ? primary_rgb : secondary_rgb;
+	return secondary_rgb;
 }
 
 void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
@@ -290,16 +290,10 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 			r.h = rad*2;
 			r.y = (COLORPICKER_HEIGHT / 4) - rad;
 
-			if(secondary_toggle==0) {
 			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
 			r.x+=rad;	
 			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
-			} else {
-
-			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
-			r.x+=rad;	
-			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
-			}
+			 
 
 		}
 

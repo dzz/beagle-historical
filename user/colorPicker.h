@@ -5,7 +5,7 @@
 #define COLORPICKER_HEIGHT 256
 
 #include "panels.h"
-#include <SDL.H>
+#include <SDL.h>
 
 typedef struct {
 	unsigned char r;
@@ -17,11 +17,11 @@ typedef struct {
 void initColorPicker(void);
 void destroyColorPicker(void);
 
-void renderColorPicker(SDL_Surface *target, UI_AREA *area);
+void renderColorPicker(SDL_Surface* target, UI_AREA* area);
 
-void colorpicker_mousedown(int x,int y, UI_AREA *area);
-void colorpicker_mouseup(int x,int y, UI_AREA *area);
-void colorpicker_mousemotion(int x,int y, UI_AREA *area);
+void colorpicker_mousedown(int x,int y, UI_AREA* area);
+void colorpicker_mouseup(int x,int y, UI_AREA* area);
+void colorpicker_mousemotion(int x,int y, UI_AREA* area);
 void colorpicker_mouseleave();
 
 cp_color getCurColor(void);

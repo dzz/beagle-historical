@@ -182,7 +182,7 @@ unsigned int pointInMapper(int x, int y, int i,UI_AREA *area) {
 }
 
 void mapperbank_mousedown(int x, int y, UI_AREA *area){
-		const int md_threshold = 666;
+		const int md_threshold = 400;
 		int i;
 
 		// 
