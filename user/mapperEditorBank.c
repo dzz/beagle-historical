@@ -31,9 +31,9 @@ void initMapperEditorBank(void) {
 		int i;
 		for(i = 0; i < NUM_MAPPERS; ++i) {
 				char fname[1024];
-				mappers[i].min_x = 0.15;
-				mappers[i].max_x = 0.75;
-				mappers[i].min_y = 0.5;
+				mappers[i].min_x = 0.1;
+				mappers[i].max_x = 0.9;
+				mappers[i].min_y = 0.1;
 				mappers[i].max_y = 0.9;
 				mappers[i]._idx = i;
 
@@ -95,7 +95,7 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 		unsigned int color_a = SDL_MapRGB( target->format, 0x00,0xFF,0x00);
 		unsigned int color_b = SDL_MapRGB( target->format, 0x11,0xAA,0x11);
 
-		int margin = 12;
+		int margin = 4;
 
 		SDL_Rect inner_r;
 
@@ -116,7 +116,7 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 
 		{
 			int i;
-			int tesselation = 30;
+			int tesselation = 20;
 
 			for(i=0; i< tesselation; ++i) {
 				double input = (double) i / (double)tesselation;
@@ -156,7 +156,7 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 
 void renderMapperEditorBank(SDL_Surface* target, UI_AREA* area) {
 		int i;
-		int per_row = 3;
+		int per_row = 5;
 		SDL_BlitSurface(bgBmp,NULL,target,area);
 		for(i=0; i<NUM_MAPPERS; ++i) {
 			int column = i % per_row;

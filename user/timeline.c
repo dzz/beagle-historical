@@ -9,6 +9,7 @@ static const int num_layers = 2;
 static const int layer_size = 45;
 static const int length = 1920;
 
+#define TIMELINE_HEIGHT 90
 static SDL_Rect full_timeline;
 static SDL_Rect layer_row;
 

@@ -1,7 +1,7 @@
 #ifndef __MAPPER_EDITOR_BANK__
 #define __MAPPER_EDITOR_BANK__
 
-#define MAPPER_BANK_HEIGHT (128*2)
+#define MAPPER_BANK_HEIGHT 100
 
 #define MAPPER_COLOR 0
 #define MAPPER_ALPHA 1

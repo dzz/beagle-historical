@@ -29,6 +29,13 @@ void redraw_stroke_sample() {
 	brush_reset_random();
 
 	SDL_BlitSurface(preview_bg,NULL,brushSample,NULL);
+
+	rect.x = 64-4;
+	rect.y = 4;
+	rect.w = 64;
+	rect.h = 64;
+
+	SDL_BlitSurface(brush_get_active_dab_bmp(),NULL,brushSample,&rect);
 	{
 		int v;
 		for( v = 0; v< 25; ++v ) {
@@ -49,6 +56,7 @@ void redraw_stroke_sample() {
 
 	SDL_BlitSurface(brushSample,NULL,bg,&rect);
 	SDL_FreeSurface(brushSample);
+
 }
 
 void brusheditor_redraw_stroke() {

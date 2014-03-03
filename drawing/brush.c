@@ -75,6 +75,8 @@ void brush_setValuesFromUI() {
 
 	brush_size_base = (float)(brush_min+((brush_max-brush_min) * pow(get_brusheditor_value(0),2)));
 	brush_dab_index = (int) (get_brusheditor_value(1) * brush_loaded_dabs);
+	if(brush_dab_index>(brush_loaded_dabs-1))
+		brush_dab_index = brush_loaded_dabs-1;
 
 	brush_mixpaint = 1;
 	brush_erase = 0;
@@ -84,6 +86,15 @@ void brush_setValuesFromUI() {
 
 #define MAX_DABS 32
 double dabs[MAX_DABS][(64*64)+64];
+SDL_Surface* dab_bmps[MAX_DABS];
+
+SDL_Surface* brush_get_active_dab_bmp() {
+	if(dab_bmps[brush_dab_index]!=0)
+			return dab_bmps[brush_dab_index];
+	else
+			//hax
+			return dab_bmps[0];
+}
 
 void initBrush( SDL_Surface* context ) {
 	int i;
@@ -99,6 +110,8 @@ void initBrush( SDL_Surface* context ) {
 			if(dabBmp == 0) {
 				break;
 			}
+			dab_bmps[idx] = dabBmp;
+
 			active_mixing_function = &mix_char;
 			gContext = context;
 
@@ -109,12 +122,17 @@ void initBrush( SDL_Surface* context ) {
 			}
 
 			SDL_UnlockSurface(dabBmp);
-			SDL_FreeSurface(dabBmp);
 			brush_loaded_dabs++;
 	}
 }
 
 void destroyBrush() {
+		int i;
+		for( i=0; i< MAX_DABS; ++i) {
+			if(dab_bmps[i]!=0) {
+				SDL_FreeSurface(dab_bmps[i]);
+			}
+		}
 }
 
 void brushPaint(stylusState a, stylusState b) {
@@ -316,8 +334,11 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		for( i=0; i<r2; ++i) {
 				for( j=0; j<r2; ++j) {
 						plotX += delta;
+						//hax until i properly fix clipping
 						if(( x + (j-r) ) < (signed int)ctxt->w)
 						if(( y + (i-r) ) < (signed int)ctxt->h)
+						if(( x + (j-r) ) > 0)
+						if(( y + (i-r) ) > 0)
 						{
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise_mod);
 								intensity = map_intensity(plotX,plotY,p);

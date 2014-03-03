@@ -10,7 +10,7 @@
 
 int panelsEnabled = 1;
 
-#define BRUSHPICKER_WIDTH 400
+#define BRUSHPICKER_WIDTH 256
 
 const int panelHeight = COLORPICKER_HEIGHT + MAPPER_BANK_HEIGHT;
 const int panelWidth = COLORPICKER_WIDTH + BRUSHPICKER_WIDTH;
@@ -44,7 +44,7 @@ void movePanel(int x, int y) {
 
 void togglePanels(void) {
 	stylusState ss = getStylusState();
-	movePanel(ss.x,ss.y);
+	//movePanel(ss.x,ss.y);
 	panelsEnabled = !panelsEnabled;
 	invalidateDirty(0,0,screenWidth,screenHeight);
 }
@@ -70,7 +70,7 @@ void initPanels(SDL_Surface *target) {
 	area = malloc(sizeof(UI_AREA));
 	be_area = malloc(sizeof(UI_AREA));
 	meb_area = malloc(sizeof(UI_AREA));
-	movePanel(0,0);
+	movePanel(1920-panelWidth,1080-panelHeight-TIMELINE_HEIGHT);
 
 	panelColor = SDL_MapRGB(target->format,
 					0xA8,

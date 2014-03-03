@@ -13,5 +13,6 @@ void brush_drawStrokeSegment(int x0,int y0,int x1,int y1,float p0,float p1, SDL_
 void brush_setValuesFromUI();
 void brush_toggleMixMode();
 void brush_reset_random();
+SDL_Surface *brush_get_active_dab_bmp();
 
 #endif
