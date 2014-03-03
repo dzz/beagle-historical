@@ -4,6 +4,8 @@
 #include "panels.h"
 #include <SDL.h>
 
+#define TOOLBAR_WIDTH (48*4)
+
 void initToolbar(void);
 void destroyToolbar(void);
 void renderToolbar(SDL_Surface* target, UI_AREA* area);

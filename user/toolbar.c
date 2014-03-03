@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#define MAX_BUTTONS 8
+#define MAX_BUTTONS 4
 #define BUTTON_SIZE 48
 
 SDL_Surface* toolbarBmps[MAX_BUTTONS*2];
@@ -45,9 +45,9 @@ void renderToolbar(SDL_Surface* target, UI_AREA* area) {
 		r.h = BUTTON_SIZE;
 
 		if(i==selected_tool) {
-			SDL_BlitSurface(toolbarBmps[i],NULL,target,&r);
-		} else {
 			SDL_BlitSurface(toolbarBmps[i+MAX_BUTTONS],NULL,target,&r);
+		} else {
+			SDL_BlitSurface(toolbarBmps[i],NULL,target,&r);
 		}
 	}
 }

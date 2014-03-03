@@ -1,4 +1,5 @@
 #include <malloc.h>
+#include <math.h>
 
 #include "../system/dirty.h"
 
@@ -9,6 +10,7 @@
 #include "brushEditor.h"
 #include "timeline.h"
 #include "mapperEditorBank.h"
+#include "toolbar.h"
 
 
 int panelsEnabled = 1;
@@ -33,6 +35,8 @@ static UI_AREA *toolbar_area;
 #define PANEL_BRUSHEDITOR 1
 #define PANEL_MAPPERBANK 2
 #define PANEL_TOOLBAR 3
+
+static unsigned int dragging_panel_id = -1;
 
 static UI_AREA* route_map[TOTAL_PANELS];
 void initUIAreas() {
@@ -88,7 +92,7 @@ void movePanel(int x, int y) {
 
 	toolbar_area->x = 800;
 	toolbar_area->y = 0;
-	toolbar_area->w = 48*8;
+	toolbar_area->w = TOOLBAR_WIDTH;
 	toolbar_area->h = 48;
 	//normalize our convenience variables
 	{
@@ -100,10 +104,23 @@ void movePanel(int x, int y) {
 }
 
 void togglePanels(void) {
-	stylusState ss = getStylusState();
+	//stylusState ss = getStylusState();
 	//movePanel(ss.x,ss.y);
 	panelsEnabled = !panelsEnabled;
 	invalidateDirty(0,0,screenWidth,screenHeight);
+}
+
+static unsigned int dragmode = 0;
+static unsigned int dragstart_x = 0;
+static unsigned int dragstart_y = 0;
+
+void panels_enable_dragmode() {
+	dragmode = 1;
+}
+
+void panels_disable_dragmode() {
+	dragmode = 0;
+	dragging_panel_id = -1;
 }
 
 int getPanelsEnabled(void) {
@@ -132,15 +149,12 @@ void initPanels(SDL_Surface *target) {
 	initToolbar();
 }
 
-static int mouse_x;
-static int mouse_y;
-
-
 typedef struct {
 	int offset_x;
 	int offset_y;
 	int panel_id;
 } mouse_route;
+
 
 void get_mouse_route(mouse_route* mr, int *x, int *y){
 		int i;
@@ -176,14 +190,30 @@ void panels_dispatch_mouseleave() {
 	colorpicker_mouseleave();
 }
 
+
+void execute_drag(int x, int y) {
+	invalidateDirty(
+					route_map[dragging_panel_id]->x0,
+					route_map[dragging_panel_id]->y0,
+					route_map[dragging_panel_id]->x1,
+					route_map[dragging_panel_id]->y1);
+
+	route_map[dragging_panel_id]->x+=(client_get_screen_mousex()-dragstart_x);
+	route_map[dragging_panel_id]->y+=(client_get_screen_mousey()-dragstart_y);
+	dragstart_x = client_get_screen_mousex();
+	dragstart_y = client_get_screen_mousey();
+
+	normalize_UI_area_extra_vars(route_map[dragging_panel_id]);
+}
+
 void panels_dispatch_mousemotion(int x, int y) {
 	mouse_route route;
-
-	mouse_x = x;
-	mouse_y = y;
-
 	get_mouse_route(&route,&x,&y);
 
+
+	if(dragging_panel_id != -1) {
+		execute_drag(x,y,dragging_panel_id);
+	}
 
 	switch(route.panel_id) {
 			case PANEL_BRUSHEDITOR:
@@ -210,6 +240,11 @@ void panels_dispatch_mouseup(int x,int y) {
 	mouse_route route;
 	get_mouse_route(&route,&x,&y);
 
+	if(dragmode) {
+		dragging_panel_id = -1;
+		return;
+	}
+
 	switch(route.panel_id) {
 		case PANEL_COLORPICKER:
 			colorpicker_mouseup(x,y,area);
@@ -223,25 +258,37 @@ void panels_dispatch_mouseup(int x,int y) {
 	}
 }
 
+void panels_dispatch_mousedown_dragmode(int x, int y) {
+		mouse_route route;
+		dragstart_x = client_get_screen_mousex();
+		dragstart_y = client_get_screen_mousey();
+		get_mouse_route(&route,&x,&y);
+		dragging_panel_id = route.panel_id;
+}
+
 void panels_dispatch_mousedown(int x, int y) {
-	mouse_route route;
-	get_mouse_route(&route,&x,&y);
 
-	switch(route.panel_id) {
-		case PANEL_COLORPICKER:
-			colorpicker_mousedown(x,y,area);
-			break;
-		case PANEL_BRUSHEDITOR:
-			brusheditor_mousedown(x,y,area);
-			break;
-		case PANEL_MAPPERBANK:
-			mapperbank_mousedown(x,y,area);
-			break;
-		case PANEL_TOOLBAR:
-			toolbar_mousedown(x,y,area);
-			break;
-	}
+		if(dragmode) {
+				panels_dispatch_mousedown_dragmode(x,y);
+		} else {
+				mouse_route route;
+				get_mouse_route(&route,&x,&y);
 
+				switch(route.panel_id) {
+						case PANEL_COLORPICKER:
+								colorpicker_mousedown(x,y,area);
+								break;
+						case PANEL_BRUSHEDITOR:
+								brusheditor_mousedown(x,y,area);
+								break;
+						case PANEL_MAPPERBANK:
+								mapperbank_mousedown(x,y,area);
+								break;
+						case PANEL_TOOLBAR:
+								toolbar_mousedown(x,y,area);
+								break;
+				}
+		}
 }
 
 void renderColorSwatch(SDL_Surface *target) {
@@ -276,12 +323,21 @@ void renderColorSwatch(SDL_Surface *target) {
 
 void renderPanels(SDL_Surface *target) {
 		if(panelsEnabled == 1) {
-				renderColorSwatch(target);
-				renderBrushEditor(target,brusheditor_area);
-				renderColorPicker(target,area);
-				renderTimeline(target);
-				renderMapperEditorBank(target,mapperbank_area);
-				renderToolbar(target,toolbar_area);
+				if( dragmode == 0 ) {
+						renderColorSwatch(target);
+						renderBrushEditor(target,brusheditor_area);
+						renderColorPicker(target,colorpicker_area);
+						renderTimeline(target);
+						renderMapperEditorBank(target,mapperbank_area);
+						renderToolbar(target,toolbar_area);
+				} else {
+						int i;
+						for(i=0; i<TOTAL_PANELS; ++i) {
+								unsigned int color = SDL_MapRGB(target->format,
+												i*30,(10-i)*20,128-(i*40));
+								SDL_FillRect(target,route_map[i],color);
+						}
+				}
 		}
 }
 

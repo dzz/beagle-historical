@@ -18,9 +18,19 @@ int pointInArea(int x, int y, UI_AREA area) {
 /* this is where we'll dispatch to the rest of the ui */
 /* mode is 0 for keyup 1 for keydown */
 void dispatch_key(SDL_Keycode sym, int mode) {
+		if(mode==0) {
+				switch(sym) {
+						case SDLK_SPACE:
+								panels_disable_dragmode();
+				}
+		}
+
 		if(mode==1) {
 				//keydown handlers
 				switch(sym) {
+						case SDLK_SPACE:
+								panels_enable_dragmode();
+								break;
 						case SDLK_TAB:
 								togglePanels();
 								break;

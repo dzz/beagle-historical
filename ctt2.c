@@ -54,7 +54,6 @@ static int client_mousey = 0;
 int client_get_screen_mousex() { return client_mousex;}
 int client_get_screen_mousey() { return client_mousey;}
 
-
 SDL_Surface *getDrawingContext() {
 	return drawingContext;
 }
@@ -214,11 +213,7 @@ void handle_wt_packet(PACKET pkt) {
 		sPkt.pressure = pressureNorm;
 
 		if (getPanelsEnabled() == 1) {
-				UI_AREA panelArea = getPanelsArea();
-				if( (sPkt.x > panelArea.x0) &&
-								(sPkt.y > panelArea.y0) &&
-								(sPkt.x < panelArea.x1) &&
-								(sPkt.y < panelArea.y1) ) {
+				if(panels_point_in_clients(sPkt.x,sPkt.y)==1){
 						panelsDispatchPacket(sPkt);
 						shouldUpdateStylus = 0;
 				}

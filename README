@@ -2,7 +2,7 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.1.14.0
+      ctt2 0.1.16.0
 -------------------------------------------------------------------------------
 an obscurely named animation and painting tool  
 
@@ -46,9 +46,13 @@ TAB   - Toggle UI on/off
 S    - Save project data
 X    - Export project data as png sequence
 
+SPACE - Drag UI panels 
+
 ESC - Exit
 
 4) build/run resources:
+
+To generate the UI images, you'll need python and imagemagick
 
 You'll need the DLLs from these projects to run
 
