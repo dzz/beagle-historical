@@ -7,7 +7,6 @@
 void startLog();
 FILE *getLogfile();
 void closeLog();
-SDL_Surface *getDrawingContext();
 void updateDrawingContext();
 
 #define KEYFRAME_MODE_RECORD 1
@@ -18,7 +17,6 @@ void toggleKeyframingMode();
 
 int client_get_screen_mousex();
 int client_get_screen_mousey();
-
 
 #endif
 

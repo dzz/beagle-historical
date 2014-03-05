@@ -30,6 +30,7 @@
 #include "document/animation.h"
 
 #include "drawing/brush.h"
+#include "drawing/drawingContext.h"
 #include "drawing/drawingSurfaces.h"
 
 #include "compositor/compositor.h"
@@ -42,7 +43,6 @@
 
 HWND gWnd;
 char* gpszProgramName = "ctt22";
-SDL_Surface *drawingContext;
 SDL_Surface *screenSurface = NULL;
 HCTX hctx = 0;
 AXIS gPressure = {0};
@@ -50,13 +50,9 @@ int drawingContextInvalid = 1;
 
 static int client_mousex = 0;
 static int client_mousey = 0;
-
 int client_get_screen_mousex() { return client_mousex;}
 int client_get_screen_mousey() { return client_mousey;}
 
-SDL_Surface *getDrawingContext() {
-	return drawingContext;
-}
 
 FILE* logfile;
 
@@ -72,16 +68,6 @@ void closeLog() {
 	fclose(logfile);
 }
 
-void initDrawingContext() {
-	drawingContext = createDrawingSurface(1920,1080);
-	initBrush(drawingContext);
-	animation_cursor_move(drawingContext,0,DO_NOT_COMMIT_DRAWING_CONTEXT);
-}
-
-void dropDrawingContext() {
-	SDL_FreeSurface(drawingContext);
-}
-
 void invalidateDrawingContext() {
 	drawingContextInvalid = 1;
 }
@@ -93,7 +79,7 @@ void updateDrawingContext() {
 
 	field_mode = (field_mode +1) % 2;
 	{
-		SDL_Surface *comp = compositeFrameWithContext( drawingContext, getActiveFrame() , r ,field_mode );
+		SDL_Surface *comp = compositeFrameWithContext( getDrawingContext() , getActiveFrame() , r ,field_mode );
 		SDL_BlitSurface( comp,NULL, screenSurface,&r);
 		SDL_FreeSurface(comp);
 	}
@@ -280,8 +266,10 @@ void createCTT2Window() {
 		initSDLSystems(&window, SCREEN_WIDTH,SCREEN_HEIGHT);
 		initCompositor();
 		initLayers();
-		initFrames();
+		initAnimation();
 		initDrawingContext();
+		initBrush( getDrawingContext() );
+		animation_cursor_move(getDrawingContext(),0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 		initYankPut();
 		initTablet(window);
 

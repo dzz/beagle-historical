@@ -44,7 +44,7 @@ void createFrame( unsigned int addr, unsigned int idx) {
 		frameMap[idx] = addr;
 }
 
-void initFrames(void) {
+void initAnimation(void) {
 
 		initSurfaceCache();
 
