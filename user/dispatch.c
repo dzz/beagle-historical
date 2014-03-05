@@ -6,6 +6,7 @@
 #include "colorPicker.h"
 #include "panels.h"
 
+//find better home
 int pointInArea(int x, int y, UI_AREA area) {
 	if( (x > area.x0) &&
 		(x < area.x1) &&
@@ -15,19 +16,23 @@ int pointInArea(int x, int y, UI_AREA area) {
 		}
 	return 0;
 }
-/* this is where we'll dispatch to the rest of the ui */
-/* mode is 0 for keyup 1 for keydown */
-void dispatch_key(SDL_Keycode sym, int mode) {
-		if(mode==0) {
+
+#define KEYMODE_DOWN 1
+#define KEYMODE_UP 0
+
+SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
+		if(mode==KEYMODE_UP) {
 				switch(sym) {
 						case SDLK_SPACE:
 								panels_disable_dragmode();
 				}
 		}
 
-		if(mode==1) {
+		if(mode==KEYMODE_DOWN) {
 				//keydown handlers
 				switch(sym) {
+						case SDLK_ESCAPE:
+								return SYSSIG_QUIT_CTT2;
 						case SDLK_SPACE:
 								panels_enable_dragmode();
 								break;
@@ -56,6 +61,10 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 								animation_export();
 								break;
 						case SDLK_r:
+								if(getKeyframingMode() != KEYFRAME_MODE_RECORD) {
+									//hax plz 2 fix
+									ctt2_insertkeyframe();
+								}
 								toggleKeyframingMode();
 								break;
 						case SDLK_q:
@@ -95,12 +104,21 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_p:
 								putDrawingContext();
 								break;
+
 				}
 		}
 }
 
 
+static int client_mousex = 0;
+static int client_mousey = 0;
+int client_get_screen_mousex() { return client_mousex;}
+int client_get_screen_mousey() { return client_mousey;}
+
 void dispatch_mousemotion(int x, int y) {
+	client_mousex = x;
+	client_mousey = y;
+
 	if( getPanelsEnabled() ) {
 		if( panels_point_in_clients(x,y) ) {
 			panels_dispatch_mousemotion(x,y);	

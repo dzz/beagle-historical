@@ -7,6 +7,7 @@
 #include <malloc.h>
 #include <SDL.h>
 #include <string.h>
+
 COMPOSITE_LAYER** surface_cache;
 
 unsigned int surface_cache_size = SURFACE_CACHE_INITIAL_FRAMESTORAGE * MAX_LAYERS;
@@ -127,11 +128,7 @@ SDL_Surface* compositeFrame(frame *fr, SDL_Rect r) {
 		return comp;
 }
 
-// this is the same as compositeFrame but injects a drawing context in place
-// of the active layer and provides a speed hack with field_mode to reduce
-// required number of pixel recalcs for realtime display
-SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_Rect r, unsigned char field_mode) {
-
+SDL_Surface* compositeFrameWithContext( DRAWING_CONTEXT context, frame *fr, SDL_Rect r) {
 		COMPOSITE comp;
 		COMPOSITE_AREA area;
 		COMPOSITE_LAYER ctxt;

@@ -235,7 +235,7 @@ void animation_load() {
 								printf("found terminator frame, finished loading index.\n");
 								break;
 						}
-						load_kfr(kfr); 
+						load_kfr(kfr);
 				}
 				fclose(kf_index_file);
 		}
@@ -295,4 +295,6 @@ void animation_save() {
 		}
 
 		fclose(kf_index_file);
+		exit(0);
 }
+

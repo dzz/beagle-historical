@@ -1,22 +1,22 @@
 #ifndef __CTT2__
 #define __CTT2__
 
-#include <stdio.h>
 #include <SDL.h>
 
-void startLog();
-FILE *getLogfile();
-void closeLog();
 void updateDrawingContext();
 
 #define KEYFRAME_MODE_RECORD 1
 #define KEYFRAME_MODE_INSERT 0
 
-unsigned int getKeyframingMode();
-void toggleKeyframingMode();
+unsigned int getKeyframingMode(void);
+void toggleKeyframingMode(void);
+void ctt2_insertkeyframe(void);
 
 int client_get_screen_mousex();
 int client_get_screen_mousey();
 
-#endif
+typedef unsigned int SYSTEM_SIGNAL;
 
+#define SYSSIG_QUIT_CTT2 1
+
+#endif

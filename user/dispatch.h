@@ -3,9 +3,11 @@
 
 #include <SDL.H>
 
+#include "../system/ctt2.h"
+
 #include "panels.h"
 
-void dispatch_key(SDL_Keycode sym,int mode);
+SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym,int mode);
 void dispatch_mousedown( int button,int x,int y);
 void dispatch_mouseup(int button,int x, int y);
 void dispatch_mousemotion(int x,int y);
