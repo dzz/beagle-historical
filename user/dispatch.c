@@ -107,6 +107,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 
 				}
 		}
+		return 0;
 }
 
 
