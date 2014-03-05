@@ -1,7 +1,7 @@
 #include "../system/dirty.h"
 #include "../system/ctt2.h"
 #include "../document/animation.h"
-
+#include "../user/yank_put.h"
 #include "dispatch.h"
 #include "colorPicker.h"
 #include "panels.h"
@@ -88,6 +88,12 @@ void dispatch_key(SDL_Keycode sym, int mode) {
 								break;
 						case SDLK_m:
 								brush_toggleMixMode();
+								break;
+						case SDLK_y:
+								yankDrawingContext();
+								break;
+						case SDLK_p:
+								putDrawingContext();
 								break;
 				}
 		}

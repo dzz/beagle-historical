@@ -282,6 +282,7 @@ void createCTT2Window() {
 		initLayers();
 		initFrames();
 		initDrawingContext();
+		initYankPut();
 		initTablet(window);
 
 		screenSurface = SDL_GetWindowSurface( window );
@@ -353,14 +354,12 @@ void createCTT2Window() {
 		dropFrames();
 		dropPanels();
 		dropDrawingSurfaces();
+		dropYankPut();
 		SDL_Quit();
 		closeLog();
 }
 
-
 static unsigned int ctt2_keyframe_mode = 0;
-
-
 
 // should live in animation, these are just hacks for now
 void toggleKeyframingMode() {

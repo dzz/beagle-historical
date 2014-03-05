@@ -35,8 +35,8 @@ for mapper_name in mappers:
 	os.system(command);
 	idx += 1;
 
-buttons = [ "eyedrop","erase", "smudge" ];
-make_button_command = "convert -background transparent -fill {$color} -font Consolas -pointsize 11 {$boldmode} label:\"{$button_name}\" label_{$button_name}.bmp & composite -gravity Center label_{$button_name}.bmp toolbar_{$mode}.bmp toolbar_{$button_idx}_{$mode}.bmp"
+buttons = [ "brush","erase", "smudge","eyedrop" ];
+make_button_command = "convert -background transparent -fill {$color} -font Consolas {$boldmode} -pointsize 11 label:\"{$button_name}\" label_{$button_name}.bmp & composite -gravity Center label_{$button_name}.bmp toolbar_{$mode}.bmp toolbar_{$button_idx}_{$mode}.bmp"
 
 idx = 0;
 for button_name in buttons:
@@ -44,7 +44,7 @@ for button_name in buttons:
 	command = command.replace("{$button_idx}","%d" % idx);
 
 	up_command = command.replace("{$mode}","up").replace("{$color}","black").replace("{$boldmode}","");
-	down_command = command.replace("{$mode}","down").replace("{$color}","black").replace("$boldmode}","-weight bold");
+	down_command = command.replace("{$mode}","down").replace("{$color}","white").replace("$boldmode}","-weight bold");
 	os.system(up_command);
 	os.system(down_command);
 	idx += 1;

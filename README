@@ -2,7 +2,7 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.1.16.0
+      ctt2 0.1.17.0
 -------------------------------------------------------------------------------
 an obscurely named animation and painting tool  
 
@@ -46,13 +46,17 @@ TAB   - Toggle UI on/off
 S    - Save project data
 X    - Export project data as png sequence
 
+Y	 - Yank Current active layer/keyframe to buffer
+P    - Put buffer to current keyframe
+
 SPACE - Drag UI panels 
 
 ESC - Exit
 
 4) build/run resources:
 
-To generate the UI images, you'll need python and imagemagick
+To generate the UI images, you'll need python and imagemagick,
+run the ui_gen.py script from within that directory
 
 You'll need the DLLs from these projects to run
 
