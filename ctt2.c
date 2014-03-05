@@ -30,9 +30,17 @@
 #include "user/colorPicker.h"
 #include "user/dispatch.h"
 
+SDL_Window *window = NULL;
 SDL_Surface *screenSurface = NULL;
-int drawingContextInvalid = 1;
 
+int drawingContextInvalid = 1;
+void updateViewingSurface() {
+	SDL_UpdateWindowSurface( window );
+}
+
+SDL_Surface* getViewingSurface(){
+	return screenSurface;
+}
 
 static unsigned int ctt2_keyframe_mode = 0;
 
@@ -98,7 +106,6 @@ int main(int argc, char **argv){
 		int recomposite_cycles = 0;
 		int screenbuffer_cycles = 0;
 
-		SDL_Window* window = NULL;
 		int finished = 0;
 
 		initLog();
@@ -164,7 +171,7 @@ int main(int argc, char **argv){
 								screenbuffer_cycles = 0;
 								renderPanels(screenSurface);
 								invalidateDrawingContext();
-								SDL_UpdateWindowSurface( window );
+								updateViewingSurface();
 						}
 				}
 		}

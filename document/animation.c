@@ -261,6 +261,25 @@ void animation_export() {
 	}
 }
 
+void animation_preview() {
+	unsigned int i;
+	SDL_Rect render_area;
+
+	render_area.x = 0;
+	render_area.y = 0;
+	render_area.w = 1920;
+	render_area.h = 1080;
+	for(i=0; i<animation_total_frames;++i) {
+		frame*fr = find_implicit_create(i);
+
+		SDL_Surface *composited = compositeFrame(fr, render_area);
+		SDL_BlitSurface(composited,NULL,getViewingSurface(),NULL);
+		updateViewingSurface();
+		SDL_PumpEvents();
+		SDL_FreeSurface(composited);
+	}
+}
+
 void animation_save() {
 		unsigned int i;
 		FILE* kf_index_file = fopen(document_file_keyframe_index,"wb");

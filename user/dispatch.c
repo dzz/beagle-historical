@@ -31,6 +31,9 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 		if(mode==KEYMODE_DOWN) {
 				//keydown handlers
 				switch(sym) {
+						case SDLK_0:
+								animation_preview();
+								break;
 						case SDLK_ESCAPE:
 								return SYSSIG_QUIT_CTT2;
 						case SDLK_SPACE:
@@ -109,7 +112,6 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 		}
 		return 0;
 }
-
 
 static int client_mousex = 0;
 static int client_mousey = 0;

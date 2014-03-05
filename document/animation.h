@@ -30,5 +30,6 @@ frame* frame_find_held_frame(int idx, int layer);
 
 void animation_save();
 void animation_load();
+void animation_preview();
 
 #endif

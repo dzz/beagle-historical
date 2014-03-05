@@ -4,6 +4,8 @@
 #include <SDL.h>
 
 void updateDrawingContext();
+void updateViewingSurface();
+SDL_Surface *getViewingSurface();
 
 #define KEYFRAME_MODE_RECORD 1
 #define KEYFRAME_MODE_INSERT 0
