@@ -23,7 +23,6 @@ const int screenWidth = 1920;
 const int panelHeight = COLORPICKER_HEIGHT + MAPPER_BANK_HEIGHT;
 const int panelWidth = COLORPICKER_WIDTH + BRUSHEDITOR_WIDTH;
 
-
 static UI_AREA *area;
 static UI_AREA *brusheditor_area;
 static UI_AREA *mapperbank_area;
@@ -132,12 +131,9 @@ void panelsDispatchPacket(stylusPacket sPkt) {
 	//in the panel UI
 }
 
-
 UI_AREA getPanelsArea(void) {
 		return (*area);
 }
-
-
 
 void initPanels(SDL_Surface *target) {
 	initUIAreas();
@@ -154,7 +150,6 @@ typedef struct {
 	int offset_y;
 	int panel_id;
 } mouse_route;
-
 
 void get_mouse_route(mouse_route* mr, int *x, int *y){
 		int i;
@@ -189,7 +184,6 @@ void panels_dispatch_mouseleave() {
 	brusheditor_mouseleave();
 	colorpicker_mouseleave();
 }
-
 
 void execute_drag(int x, int y) {
 	invalidateDirty(
@@ -236,6 +230,7 @@ void panels_dispatch_mousemotion(int x, int y) {
 					break;
 	}
 }
+
 void panels_dispatch_mouseup(int x,int y) {
 	mouse_route route;
 	get_mouse_route(&route,&x,&y);

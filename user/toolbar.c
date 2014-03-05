@@ -1,6 +1,7 @@
-#include "toolbar.h"
-
 #include <SDL.h>
+
+#include "../drawing/brush.h"
+#include "toolbar.h"
 
 #define MAX_BUTTONS 4
 #define BUTTON_SIZE 48
@@ -33,6 +34,7 @@ void toolbar_mousedown(int x,int y, UI_AREA* area) {
 	if( idx<=loaded_tools ) {
 		selected_tool = idx;
 	}	
+	brush_setValuesFromUI();
 }
 
 void renderToolbar(SDL_Surface* target, UI_AREA* area) {

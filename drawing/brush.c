@@ -1,4 +1,4 @@
-//  brush engine specific defines:
+//   dopey - paint synthesizer
 //
 //  	#define BRUSH_SPEED_HACK   	- not a great speed hack, but skips some
 //  								bilinear interp for dabs
@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include "brush.h"
+#include "../user/toolbar.h"
 #include "../user/stylus.h"
 #include "../user/colorPicker.h"
 #include "../user/brushEditor.h"
@@ -47,6 +48,7 @@ static int brush_mixpaint = 0;
 static int brush_erase = 0;
 unsigned static int brush_mix_mode = 0;
 static int brush_loaded_dabs = 0;
+static int brush_smudge = 0;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
@@ -79,7 +81,12 @@ void brush_setValuesFromUI() {
 		brush_dab_index = brush_loaded_dabs-1;
 
 	brush_mixpaint = 1;
-	brush_erase = 0;
+
+#define TOOL_ERASE 1
+#define TOOL_SMUDGE 2
+
+	brush_erase =  (get_selected_tool() == TOOL_ERASE ) ? 1 : 0;
+	brush_smudge = (get_selected_tool() == TOOL_SMUDGE) ? 1 : 0;
 
 	active_mixing_function=&mix_char;
 }
@@ -265,18 +272,10 @@ __inline float map_intensity(float x,float y,float p) {
 		//return (unsigned char)dab[(yc*64)+xc];
 }
 
-void getMixedPaint(pixMap *pix, float p) {
-		cp_color prim = getPrimaryColor();
-		if( brush_mixpaint == 0) {
-				pix->p.r = prim.r;
-				pix->p.g = prim.g;
-				pix->p.b = prim.b;
-		} else {
-				cp_color secon = getSecondaryColor();
-				pix->p.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
-				pix->p.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
-				pix->p.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
-		}
+void getMixedPaint(pixMap *pix, float p, cp_color prim, cp_color secon) {
+		pix->p.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
+		pix->p.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
+		pix->p.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
 }
 
 int g_seed = 0;
@@ -289,6 +288,8 @@ __inline int fastrand() {
 void brush_reset_random() {
 	g_seed = 0;
 }
+
+static pixMap smudge_sample;
 
 __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		signed int i;
@@ -321,8 +322,11 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 				mixer = &mix;
 		}
 
-		getMixedPaint(&current,brush_color_mix_mod);
-
+		if( brush_smudge != 1) {
+			getMixedPaint(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
+		} else {
+			current = smudge_sample;
+		}
 		for( i=0; i<r2; ++i) {
 				for( j=0; j<r2; ++j) {
 						plotX += delta;
@@ -395,10 +399,29 @@ void brush_drawStrokeSegment_experimental(int x0, int y0, int x1, int y1,float p
 		SDL_UnlockSurface(ctxt);
 }*/
 
+void set_smudge_sample(SDL_Surface* ctxt, int x0, int y0, int x1, int y1) {
+		unsigned int sample_a = x0+(y0*ctxt->w);
+		unsigned int sample_b = x1+(y1*ctxt->w);
+		unsigned int * pixels = ctxt->pixels;
+		if( (sample_a>0) &&
+			(sample_b>0) ){
+
+				pixMap a;
+				pixMap b;
+
+				a.pix = pixels[sample_a];
+				b.pix = pixels[sample_b];
+
+				smudge_sample.p.r = (char)((unsigned int)(a.p.r+b.p.r)/2);
+				smudge_sample.p.g = (char)((unsigned int)(a.p.g+b.p.g)/2);
+				smudge_sample.p.b = (char)((unsigned int)(a.p.b+b.p.b)/2);
+				smudge_sample.p.a = (char)((unsigned int)(a.p.a+b.p.a)/2);
+		}
+}
+
 void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
 		int origin_x = x0;
 		int origin_y = y0;
-
 	
 		int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 		int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
@@ -413,7 +436,8 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		brush_modulate_values(p);
 		SDL_LockSurface(ctxt);
-
+		
+		set_smudge_sample(ctxt,x0,y0,x1,y1);
 		for(;;){
 				// if we're drawing to the user's drawing context, we're going to use the fancy
 				// filtered pressure, otherwise, we're rendering for some other reason, and
