@@ -1,2 +1,4 @@
 project-data/*.png
+project-data/*.idx
+project-data/export/*.png
 *.bmp
