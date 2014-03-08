@@ -28,8 +28,9 @@
 #include "../user/brushEditor.h"
 #include "../user/mapperEditorBank.h"
 #include "../system/dirty.h"
-#include "../colors/pixmap.h"
+#include "../colors/colors.h"
 #include "../compositor/compositor.h"
+#include "../system/ctt2.h"
 
 static SDL_Surface* gContext;
 
@@ -170,39 +171,39 @@ unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
 		return yolo;
 }
 
-pixMap mixed;
+uint_rgba_map mixed;
 
-unsigned int* erase(pixMap src,pixMap dst) {
+unsigned int* erase(uint_rgba_map src,uint_rgba_map dst) {
 
-	mixed.p.r = dst.p.r;
-	mixed.p.g = dst.p.g;
-	mixed.p.b = dst.p.b;
+	mixed.rgba.r = dst.rgba.r;
+	mixed.rgba.g = dst.rgba.g;
+	mixed.rgba.b = dst.rgba.b;
 
-	if(dst.p.a<src.p.a) mixed.p.a = 0; else mixed.p.a=dst.p.a-src.p.a;
-	return &mixed.pix;
+	if(dst.rgba.a<src.rgba.a) mixed.rgba.a = 0; else mixed.rgba.a=dst.rgba.a-src.rgba.a;
+	return &mixed.packed;
 }
 
-unsigned int*  mix(pixMap src, pixMap dst) {
+unsigned int*  mix(uint_rgba_map src, uint_rgba_map dst) {
 		unsigned int alpha;
 
-		if(dst.p.a == 0) {
-				dst.p.r = mixed.p.r;
-				dst.p.g = mixed.p.g;
-				dst.p.b = mixed.p.b;
+		if(dst.rgba.a == 0) {
+				dst.rgba.r = mixed.rgba.r;
+				dst.rgba.g = mixed.rgba.g;
+				dst.rgba.b = mixed.rgba.b;
 		}
 
-		mixed.p.r = (*active_mixing_function)(src.p.r,dst.p.r,src.p.a);
-		mixed.p.g = (*active_mixing_function)(src.p.g,dst.p.g,src.p.a);
-		mixed.p.b = (*active_mixing_function)(src.p.b,dst.p.b,src.p.a);
+		mixed.rgba.r = (*active_mixing_function)(src.rgba.r,dst.rgba.r,src.rgba.a);
+		mixed.rgba.g = (*active_mixing_function)(src.rgba.g,dst.rgba.g,src.rgba.a);
+		mixed.rgba.b = (*active_mixing_function)(src.rgba.b,dst.rgba.b,src.rgba.a);
 
 		{
-				alpha = src.p.a+dst.p.a;
+				alpha = src.rgba.a+dst.rgba.a;
 				if(alpha>255)
 						alpha = 255;
 
 		}
-		mixed.p.a = (unsigned char)alpha;
-		return &mixed.pix;
+		mixed.rgba.a = (unsigned char)alpha;
+		return &mixed.packed;
 
 }
 
@@ -272,10 +273,10 @@ __inline float map_intensity(float x,float y,float p) {
 		//return (unsigned char)dab[(yc*64)+xc];
 }
 
-void getMixedPaint(pixMap *pix, float p, cp_color prim, cp_color secon) {
-		pix->p.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
-		pix->p.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
-		pix->p.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
+void getMixedPaint(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
+		pix->rgba.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
+		pix->rgba.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
+		pix->rgba.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
 }
 
 int g_seed = 0;
@@ -289,7 +290,7 @@ void brush_reset_random() {
 	g_seed = 0;
 }
 
-static pixMap smudge_sample;
+static uint_rgba_map smudge_sample;
 
 __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		signed int i;
@@ -305,13 +306,13 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		int coord = (x-r)+((y-r) * ctxt->w);
 		const unsigned int jmp = (ctxt->w - ((r*2)));
 		unsigned int ucoord;
-		pixMap dest;
-		pixMap current;
+		uint_rgba_map dest;
+		uint_rgba_map current;
 		unsigned int* pixels = (unsigned int*)ctxt->pixels;
 		int clipped_x = ctxt->w -(x+r);
 		const int end = ctxt->w*ctxt->h;
 		float noise = 1;
-		unsigned int* (*mixer)(pixMap,pixMap);
+		unsigned int* (*mixer)(uint_rgba_map,uint_rgba_map);
 		float buf;
 
 		clipped_x = clipped_x < 0 ? r2 + clipped_x : r2;
@@ -345,8 +346,8 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 								if(coord>0 && coord<end && intensity>0) {
 										buf = intensity*brush_alpha_mod*noise;
 										v = (unsigned char)(buf);
-										dest.pix =pixels[coord];
-										current.p.a = v;
+										dest.packed =pixels[coord];
+										current.rgba.a = v;
 										pixels[coord] = *(*mixer)(current,dest);
 								}
 						}
@@ -406,16 +407,16 @@ void set_smudge_sample(SDL_Surface* ctxt, int x0, int y0, int x1, int y1) {
 		if( (sample_a>0) &&
 			(sample_b>0) ){
 
-				pixMap a;
-				pixMap b;
+				uint_rgba_map a;
+				uint_rgba_map b;
 
-				a.pix = pixels[sample_a];
-				b.pix = pixels[sample_b];
+				a.packed = pixels[sample_a];
+				b.packed = pixels[sample_b];
 
-				smudge_sample.p.r = (char)((unsigned int)(a.p.r+b.p.r)/2);
-				smudge_sample.p.g = (char)((unsigned int)(a.p.g+b.p.g)/2);
-				smudge_sample.p.b = (char)((unsigned int)(a.p.b+b.p.b)/2);
-				smudge_sample.p.a = (char)((unsigned int)(a.p.a+b.p.a)/2);
+				smudge_sample.rgba.r = (char)((unsigned int)(a.rgba.r+b.rgba.r)/2);
+				smudge_sample.rgba.g = (char)((unsigned int)(a.rgba.g+b.rgba.g)/2);
+				smudge_sample.rgba.b = (char)((unsigned int)(a.rgba.b+b.rgba.b)/2);
+				smudge_sample.rgba.a = (char)((unsigned int)(a.rgba.a+b.rgba.a)/2);
 		}
 }
 

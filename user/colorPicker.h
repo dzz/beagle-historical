@@ -4,15 +4,9 @@
 #define COLORPICKER_WIDTH 128
 #define COLORPICKER_HEIGHT 256
 
+#include "../colors/colors.h"
 #include "panels.h"
 #include <SDL.h>
-
-typedef struct {
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
-	unsigned char a;
-} cp_color;
 
 void initColorPicker(void);
 void destroyColorPicker(void);
@@ -25,7 +19,6 @@ void colorpicker_mousemotion(int x,int y, UI_AREA* area);
 void colorpicker_mouseleave();
 
 cp_color getCurColor(void);
-
 cp_color getPrimaryColor(void);
 cp_color getSecondaryColor(void);
 

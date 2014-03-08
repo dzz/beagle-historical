@@ -152,6 +152,7 @@ void handle_wt_packet(PACKET pkt) {
 }
 
 void handle_wm_event(SDL_Event event) {
+
 	PACKET pkt;
 	UINT msg = event.syswm.msg->msg.win.msg;
 	WPARAM wParam = event.syswm.msg->msg.win.wParam;

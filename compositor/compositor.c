@@ -8,7 +8,7 @@
 
 #include "../system/ctt2.h"
 #include "../drawing/drawingSurfaces.h"
-#include "../colors/pixmap.h"
+#include "../colors/colors.h"
 
 
 const int CMP_ADD=0;
@@ -142,9 +142,9 @@ COMPOSITE compositeLayers_full_effects(COMPOSITE_LAYER *stack, int len, COMPOSIT
 	unsigned int * dest = getCompositeData(flat);
 	unsigned int * source;
 	unsigned char (*func)(unsigned char, unsigned char, unsigned char);
-	pixMap src;
-	pixMap dst;
-	pixMap acc;
+	uint_rgba_map src;
+	uint_rgba_map dst;
+	uint_rgba_map acc;
 
 
 	if (start<0) start = 0;
@@ -160,13 +160,13 @@ COMPOSITE compositeLayers_full_effects(COMPOSITE_LAYER *stack, int len, COMPOSIT
 					func = functab[stack[l].mode];
 					source = getLayerData(stack[l]);
 					{
-							src.pix = source[read];
-							dst.pix = dest[put];
-							acc.p.r = (*func)(src.p.r,dst.p.r,src.p.a);
-							acc.p.g = (*func)(src.p.g,dst.p.g,src.p.a);
-							acc.p.b = (*func)(src.p.b,dst.p.b,src.p.a);
-							acc.p.a = 255;
-							dest[put] = acc.pix;
+							src.packed = source[read];
+							dst.packed = dest[put];
+							acc.rgba.r = (*func)(src.rgba.r,dst.rgba.r,src.rgba.a);
+							acc.rgba.g = (*func)(src.rgba.g,dst.rgba.g,src.rgba.a);
+							acc.rgba.b = (*func)(src.rgba.b,dst.rgba.b,src.rgba.a);
+							acc.rgba.a = 255;
+							dest[put] = acc.packed;
 					}
 			}
 			scan ++;
