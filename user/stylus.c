@@ -1,10 +1,15 @@
 #include <stdio.h>
 
-#include "stylus.h"
-#include "../hardware/hw_run_vars.h"
 #include "../system/ctt2.h"
+
+#include "../hardware/hw_run_vars.h"
+
 #include "../drawing/brush.h"
+#include "../drawing/node_mapper.h"
+
 #include "../document/animation.h"
+
+#include "stylus.h"
 
 static stylusState current_stylus_frame = {0};
 static stylusState previous_stylus_frame = {0};
@@ -41,6 +46,7 @@ void updateStylus(stylusPacket packet) {
 	current_stylus_frame.timestamp = packet.timestamp;
 	stylusFilter_apply_pressure_impulse( packet.pressure );
 
+	node_mapper_apply_input( stylusFilter_getFilteredPressure() );
 	run_stroke_logic();
 }
 

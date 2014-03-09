@@ -7,6 +7,7 @@
 //
 
 //#define BRUSH_SPEED_HACK
+
 #define BRUSH_FANCY
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
@@ -31,6 +32,7 @@
 #include "drawingContext.h"
 
 #include "brush.h"
+#include "node_mapper.h"
 
 static SDL_Surface* brush_drawing_context;
 static SDL_Surface* smudge_buffer;
@@ -66,9 +68,14 @@ double test_modulate(unsigned int time_ms) {
 
 void brush_modulate_values(double pressure, unsigned int time_ms) {
 		const double jitter_max = 8;
+
+
+		//brush_size_mod = brush_size_base * pow(mapperbank_get_mapping(MAPPER_SIZE,pressure),2) * test_modulate(time_ms);
+
+		brush_size_mod = brush_size_base * node_mapper_get_output_at(NODE_MAPPER_BRUSH_SIZE);
+
 		brush_color_mix_mod = mapperbank_get_mapping(MAPPER_COLOR,pressure);
 		brush_alpha_mod = mapperbank_get_mapping(MAPPER_ALPHA,pressure);
-		brush_size_mod = brush_size_base * pow(mapperbank_get_mapping(MAPPER_SIZE,pressure),2) * test_modulate(time_ms);
 		brush_jitter_mod = pow(mapperbank_get_mapping(MAPPER_JITTER,pressure),2) * jitter_max;
 		brush_noise_mod = mapperbank_get_mapping(MAPPER_NOISE,pressure);
 }
@@ -109,6 +116,7 @@ void initBrush( SDL_Surface* context ) {
 	int i;
 	int idx;
 
+	initNodeMapper();
 	for(idx = 0; idx< MAX_DABS; ++idx) {
 			char dab_fname[1024];
 			SDL_Surface *dabBmp;
@@ -334,7 +342,6 @@ void brush_begin_stroke( stylusState a ) {
 }
 
 void brush_render_stylus_stroke(stylusState a, stylusState b) {
-	printf("timestamp: %d\n", a.timestamp);
 	brush_tesselate_stroke(a.x,a.y,b.x,b.y,
 					(float)a.pressure,(float)b.pressure, 
 					a.timestamp,b.timestamp,

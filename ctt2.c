@@ -1,4 +1,4 @@
-//#define CTT2_SCREENMODE_DEBUG
+#define CTT2_SCREENMODE_DEBUG
 
 #include <stdio.h>
 #include <stdlib.h>
