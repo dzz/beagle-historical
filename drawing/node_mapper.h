@@ -1,6 +1,7 @@
 #ifndef __NODE_MAPPER__
 #define __NODE_MAPPER__
 
+#define MAX_NODES 32
 #define MAX_NODE_CHANNELS 8
 
 #define NODE_STALE 1
@@ -9,6 +10,7 @@
 typedef struct mapper_node mapper_node;
 
 struct mapper_node{
+		//data
 		mapper_node* inputs[MAX_NODE_CHANNELS];
 		int foreign_channels[MAX_NODE_CHANNELS];
 		void (*update_cascade)(mapper_node* node);
@@ -20,6 +22,10 @@ struct mapper_node{
 		char* input_names[MAX_NODE_CHANNELS];
 		char* output_names[MAX_NODE_CHANNELS];
 		unsigned int calculation_status;
+		
+		//display
+		unsigned int x;
+		unsigned int y;
 };
 
 void initNodeMapper(void);
@@ -31,5 +37,6 @@ void initNodeMapper(void);
 #define BRUSH_CHANNEL_NOISE 4
 
 mapper_node* nodemapper_get_brush_controller();
+mapper_node** nodemapper_get_node_array();
 
 #endif

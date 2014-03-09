@@ -47,7 +47,9 @@ void new_node(mapper_node* node) {
 	node->calculation_status = NODE_STALE;
 }
 
+/*******************/
 
+mapper_node** node_array[MAX_NODES] = {0};
 mapper_node output_node;
 mapper_node stylus_input;
 
@@ -62,7 +64,6 @@ mapper_node* nodemapper_get_brush_controller() {
 		node_update_cascade(&output_node);
 		return &output_node;
 }
-
 
 void create_brush_controller() {
 		int i;
@@ -81,6 +82,9 @@ void create_brush_controller() {
 		for(i=0; i< output_node.input_channels; ++i) {
 			output_node.inputs[i] = &stylus_input;
 		}
+
+		output_node.x = 200;
+		output_node.y = 200;
 }
 
 void create_stylus_input() {
@@ -89,9 +93,18 @@ void create_stylus_input() {
 		stylus_input.name="stylus";
 		stylus_input.output_names[0] = "pressure";
 		stylus_input.output_names[1] = "time";
+
+		stylus_input.x = 10;
+		stylus_input.y = 10;
 }
 
 void initNodeMapper() {
 		create_stylus_input();
 		create_brush_controller();
+		node_array[0] = &stylus_input;
+		node_array[1] = &output_node;
+}
+
+mapper_node** nodemapper_get_node_array() {
+	return node_array;
 }

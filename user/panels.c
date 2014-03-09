@@ -9,7 +9,6 @@
 #include "colorPicker.h"
 #include "brushEditor.h"
 #include "timeline.h"
-#include "mapperEditorBank.h"
 #include "toolbar.h"
 #include "nodeMapEditor.h"
 
@@ -20,24 +19,20 @@ int panelsEnabled = 1;
 
 const int screenHeight = 1080;
 const int screenWidth = 1920;
-const int panelHeight = COLORPICKER_HEIGHT + MAPPER_BANK_HEIGHT;
-const int panelWidth = COLORPICKER_WIDTH + BRUSHEDITOR_WIDTH;
+
+static unsigned int dragging_panel_id = -1;
 
 static UI_AREA *area;
 static UI_AREA *brusheditor_area;
-static UI_AREA *mapperbank_area;
 static UI_AREA *colorpicker_area;
 static UI_AREA *toolbar_area;
 static UI_AREA *nodemapeditor_area;
 
-#define TOTAL_PANELS 5
+#define TOTAL_PANELS 4
 #define PANEL_COLORPICKER 0
 #define PANEL_BRUSHEDITOR 1
-#define PANEL_MAPPERBANK 2
-#define PANEL_TOOLBAR 3
-#define PANEL_NODEMAPEDITOR 4
-
-static unsigned int dragging_panel_id = -1;
+#define PANEL_TOOLBAR 2
+#define PANEL_NODEMAPEDITOR 3
 
 static UI_AREA* route_map[TOTAL_PANELS];
 static mouse_handler mouse_handlers[TOTAL_PANELS];
@@ -47,14 +42,12 @@ void initUIAreas() {
 	area = NEW_AREA;
 	colorpicker_area = NEW_AREA;
 	brusheditor_area = NEW_AREA;
-	mapperbank_area = NEW_AREA;
 	toolbar_area = NEW_AREA;
 	nodemapeditor_area = NEW_AREA;
 	#undef NEW_AREA
 
 	route_map[PANEL_COLORPICKER] = colorpicker_area;
 	route_map[PANEL_BRUSHEDITOR] = brusheditor_area;
-	route_map[PANEL_MAPPERBANK] = mapperbank_area;
 	route_map[PANEL_TOOLBAR] = toolbar_area;
 	route_map[PANEL_NODEMAPEDITOR] = nodemapeditor_area;
 }
@@ -63,6 +56,7 @@ void dummy_xy_mousehandler(int x, int y) {}
 void dummy_void_mousehandler() {}
 
 void bind_mouse_handlers() {
+
 	mouse_handlers[PANEL_COLORPICKER].bound_mousedown_handler = &colorpicker_mousedown;
 	mouse_handlers[PANEL_COLORPICKER].bound_mouseup_handler = &colorpicker_mouseup;
 	mouse_handlers[PANEL_COLORPICKER].bound_mouseleave_handler = &colorpicker_mouseleave;
@@ -72,11 +66,6 @@ void bind_mouse_handlers() {
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mouseup_handler = &brusheditor_mouseup;
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mouseleave_handler = &brusheditor_mouseleave;
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mousemotion_handler = &brusheditor_mousemotion;
-
-	mouse_handlers[PANEL_MAPPERBANK].bound_mousedown_handler = &mapperbank_mousedown;
-	mouse_handlers[PANEL_MAPPERBANK].bound_mouseup_handler = &mapperbank_mouseup;
-	mouse_handlers[PANEL_MAPPERBANK].bound_mouseleave_handler = &mapperbank_mouseleave;
-	mouse_handlers[PANEL_MAPPERBANK].bound_mousemotion_handler = &mapperbank_mousemotion;
 
 	mouse_handlers[PANEL_TOOLBAR].bound_mousedown_handler = &toolbar_mousedown;
 	mouse_handlers[PANEL_TOOLBAR].bound_mouseup_handler = &dummy_xy_mousehandler;
@@ -97,14 +86,14 @@ void normalize_UI_area_extra_vars( UI_AREA *p) {
 	p->y1 = p->y+p->h;
 }
 
-void movePanel(int x, int y) {
+void layoutPanels() {
 	//TODO create a layout manager to autostack these
 	// want the user to be able to organize these at
 	// somepoint
-	(*area).x0 = x;
-	(*area).y0 = y;
-	(*area).x1 = x+panelWidth;
-	(*area).y1 = y+panelHeight;
+	(*area).x0 = 0;
+	(*area).y0 = 0;
+	(*area).x1 = 1920;
+	(*area).y1 = 1080;
 	(*area).x = (*area).x0;
 	(*area).y = (*area).y0;
 	(*area).w = (*area).x1 - (*area).x0;
@@ -119,11 +108,6 @@ void movePanel(int x, int y) {
 	brusheditor_area->y = area->y;
 	brusheditor_area->w = area->w-colorpicker_area->w;
 	brusheditor_area->h = BRUSHEDITOR_HEIGHT;
-
-	mapperbank_area->x = area->x;
-	mapperbank_area->y = area->y+colorpicker_area->h;
-	mapperbank_area->w = area->w;
-	mapperbank_area->h = mapperbank_get_height();
 
 	toolbar_area->x = 800;
 	toolbar_area->y = 0;
@@ -183,7 +167,7 @@ void initPanels(SDL_Surface *target) {
 	initTimeline();
 	initMapperEditorBank();
 	initToolbar();
-	movePanel(0,0);
+	layoutPanels();
 }
 
 typedef struct {
@@ -329,7 +313,6 @@ void renderPanels(SDL_Surface *target) {
 						renderBrushEditor(target,brusheditor_area);
 						renderColorPicker(target,colorpicker_area);
 						renderTimeline(target);
-						renderMapperEditorBank(target,mapperbank_area);
 						renderToolbar(target,toolbar_area);
 						renderNodeMapEditor(target,nodemapeditor_area);
 				} else {
