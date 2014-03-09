@@ -348,3 +348,13 @@ void dropPanels() {
 		free(mapperbank_area);
 	}
 }
+
+int pointInArea(int x, int y, UI_AREA area) {
+	if( (x > area.x0) &&
+		(x < area.x1) &&
+		(y > area.y0) &&
+		(y < area.y1) ) {
+			return 1;
+		}
+	return 0;
+}

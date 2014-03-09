@@ -12,6 +12,5 @@ void dispatch_mousedown( int button,int x,int y);
 void dispatch_mouseup(int button,int x, int y);
 void dispatch_mousemotion(int x,int y);
 
-int pointInArea(int x, int y, UI_AREA area);
 
 #endif

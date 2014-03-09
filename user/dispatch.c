@@ -6,16 +6,6 @@
 #include "colorPicker.h"
 #include "panels.h"
 
-//find better home
-int pointInArea(int x, int y, UI_AREA area) {
-	if( (x > area.x0) &&
-		(x < area.x1) &&
-		(y > area.y0) &&
-		(y < area.y1) ) {
-			return 1;
-		}
-	return 0;
-}
 
 #define KEYMODE_DOWN 1
 #define KEYMODE_UP 0
