@@ -5,11 +5,7 @@
 //
 //  	#define BRUSH_FANCY			- secret noise and dithering
 //
-//      #ifdef BRUSH_INTENSITY_TO_COLOR_MAPPING
-//      							- looks cool but needs work to be useful
 
-
-//#define BRUSH_INTENSITY_TO_COLOR_MAPPING
 //#define BRUSH_SPEED_HACK
 #define BRUSH_FANCY
 
@@ -273,13 +269,13 @@ __inline float map_intensity(float x,float y,float p) {
 		//return (unsigned char)dab[(yc*64)+xc];
 }
 
-void getMixedPaint(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
+void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
 		pix->rgba.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
 		pix->rgba.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
 		pix->rgba.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
 }
 
-int g_seed = 0;
+static int g_seed = 0;
 
 __inline int fastrand() { 
   g_seed = (214013*g_seed+2531011); 
@@ -324,12 +320,12 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		}
 
 		if( brush_smudge != 1) {
-			getMixedPaint(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
-		} else {
-			current = smudge_sample;
-		}
+			mix_rgb_by_float(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
+		} 
+
 		for( i=0; i<r2; ++i) {
 				for( j=0; j<r2; ++j) {
+
 						plotX += delta;
 						//hax until i properly fix clipping
 						if(( x + (j-r) ) < (signed int)ctxt->w)
@@ -337,12 +333,13 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 						if(( x + (j-r) ) > 0)
 						if(( y + (i-r) ) > 0)
 						{
+								if( brush_smudge == 1) {
+													
+								}
+
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise_mod);
 								intensity = map_intensity(plotX,plotY,p);
 
-#ifdef BRUSH_INTENSITY_TO_COLOR_MAPPING
-								getMixedPaint(&current,(intensity*p)/255.0);
-#endif
 								if(coord>0 && coord<end && intensity>0) {
 										buf = intensity*brush_alpha_mod*noise;
 										v = (unsigned char)(buf);
@@ -367,38 +364,6 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 
 void brushReset() {
 }
-
-/*
-void brush_drawStrokeSegment_experimental(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
-		float pD = 1;
-
-		double dX = (x1-x0);
-		double dY = (y1-y0);
-		double dP = (p1-p0);
- 		double baseRadius = ((p0*pD)*brush_size_mod);
-		double len = squareRoot(dX*dX+dY*dY) / 2;
-
-		int iLen = (int)len;
-		int i = 0;
-
-		double x = x0;
-		double y = y0;
-
-		dX/=len;
-		dY/=len;
-		dP/=len;
-
-		SDL_LockSurface(ctxt);
-		for(i=0; i< iLen; ++i) {
-				int radius;	
-				x+=dX;
-				y+=dY;
-				p0+=dP;
- 				radius = (int)((p0*pD)*brush_size_mod);
-				plotSplat((int)x,(int)y,radius,p0, ctxt);
-		}
-		SDL_UnlockSurface(ctxt);
-}*/
 
 void set_smudge_sample(SDL_Surface* ctxt, int x0, int y0, int x1, int y1) {
 		unsigned int sample_a = x0+(y0*ctxt->w);
@@ -435,27 +400,26 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
+		int	radius = (int)(brush_size_mod);
+		int spacing = (radius > 24 ) ?	2 + ( (radius*radius) / 700 ) : 1;
+
 		brush_modulate_values(p);
 		SDL_LockSurface(ctxt);
 		
 		set_smudge_sample(ctxt,x0,y0,x1,y1);
+
 		for(;;){
 				// if we're drawing to the user's drawing context, we're going to use the fancy
 				// filtered pressure, otherwise, we're rendering for some other reason, and
 				// should use the supplied value.
 
-				int radius = (int)(brush_size_mod)
-
+				radius = (int)(brush_size_mod)
 #ifdef BRUSH_FANCY	
 						+(int)(1.33*((float)fastrand() / RAND_MAX));
 #else
 						;
 #endif
 
-				int spacing = 
-						(radius > 24 ) ?	
-						2 + ( (radius*radius) / 700 ) :
-						1;
 
 				if (x0==x1 && y0==y1) break;
 				e2 = err;

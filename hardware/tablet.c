@@ -8,16 +8,17 @@
 #define PACKETMODE PK_BUTTONS
 #include <pktdef.h>
 
-
-#include "tablet.h"
-#include "../system/log.h"
-#include "vendor/wintab_utils.h"
 #include "../user/stylus.h"
+#include "../system/log.h"
+
+#include "vendor/wintab_utils.h"
+#include "tablet.h"
+#include "hw_run_vars.h"
 
 char* gpszProgramName = "ctt2_windows_tablet";
 HCTX hctx = 0;
-AXIS gPressure = {0};
-HWND gWnd;
+AXIS pressure_axis = {0};
+HWND window_handle;
 
 void initTablet(SDL_Window* window) {
 		HCTX hCtx;
@@ -41,11 +42,10 @@ void initTablet(SDL_Window* window) {
 			return;
 		}
 
-		/* grab the hWnd */ /*move somewhere smarter*/
 		SDL_VERSION(&data.version);
 		SDL_GetWindowWMInfo(window,&data);
 		hWnd = data.info.win.window;
-		gWnd = hWnd;
+		window_handle = hWnd;
 
 		gpWTInfoA(WTI_INTERFACE, IFC_NDEVICES, &numDevices);
 		{
@@ -65,6 +65,8 @@ void initTablet(SDL_Window* window) {
 						wWTInfoRetVal = gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_X, &TabletX );
 						if (  wWTInfoRetVal != sizeof( AXIS ) )
 						{
+								HW_RUN_VAR_TABLET_CONNECTED = TABLET_CONNECTED;
+								printf("TABLET_CONNECTED\n");
 								WacomTrace("This context should not be opened.\n");
 								return;
 						}
@@ -96,7 +98,7 @@ void initTablet(SDL_Window* window) {
 						if ( hCtx )
 						{
 							hctx = hCtx;
-							gPressure = Pressure;
+							pressure_axis = Pressure;
     						printf("context:%u\n",(unsigned int)hctx);
 						}
 						else
@@ -129,12 +131,12 @@ void dropTablet() {
 
 void handle_wt_packet(PACKET pkt) {
 		int shouldUpdateStylus = 1;
-		double pressureNorm = (double)pkt.pkNormalPressure / (double)gPressure.axMax;
+		double pressureNorm = (double)pkt.pkNormalPressure / (double)pressure_axis.axMax;
 		stylusPacket sPkt = {0};
 
 		sPkt.x = pkt.pkX;
 		sPkt.y = pkt.pkY;
-		ScreenToClient(gWnd,(LPPOINT)&sPkt);
+		ScreenToClient(window_handle,(LPPOINT)&sPkt);
 		sPkt.pressure = pressureNorm;
 
 		if (getPanelsEnabled() == 1) {
