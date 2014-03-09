@@ -7,7 +7,8 @@
 #define BUTTON_SIZE 48
 
 SDL_Surface* toolbarBmps[MAX_BUTTONS*2];
-static unsigned int selected_tool = 2;
+static unsigned int selected_tool = 0;
+static unsigned int previous_tool = 0;
 static unsigned int loaded_tools = 0;
 
 unsigned int get_selected_tool(void){
@@ -29,9 +30,14 @@ void initToolbar(void) {
 		}
 }
 
+void toolbar_revert_to_previous_tool() {
+	selected_tool = previous_tool;
+}
+
 void toolbar_mousedown(int x,int y, UI_AREA* area) {
 	int idx = x / BUTTON_SIZE;
 	if( idx<=loaded_tools ) {
+		previous_tool = selected_tool;
 		selected_tool = idx;
 	}	
 	brush_setValuesFromUI();

@@ -24,7 +24,6 @@ static int sv_y = -1;
 static int buffered_sv_x = -1;
 static int buffered_sv_y = -1;
 
-
 static hsv primary;
 static hsv secondary;
 
@@ -200,6 +199,11 @@ void initColorPicker(void) {
 
 cp_color getCurColor(void) {
 	return rgb_from_hsv(h,s,v);
+}
+
+void setCurColor(uint_rgba_map color) {
+	hsv_from_rgb(color, &h,&s,&v);
+	commitColor();
 }
 
 cp_color getPrimaryColor(void) {

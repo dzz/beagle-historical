@@ -35,6 +35,7 @@ void panels_dispatch_mousedown(int x,int y);
 void panels_dispatch_mousemotion(int x,int y);
 void panels_dispatch_mouseleave(void);
 void panels_toggle_dragmode(void);
+
 unsigned int panels_point_in_clients(int x, int y);
 
 int pointInArea(int x, int y, UI_AREA area);

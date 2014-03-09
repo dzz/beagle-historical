@@ -78,8 +78,6 @@ void brush_setValuesFromUI() {
 
 	brush_mixpaint = 1;
 
-#define TOOL_ERASE 1
-#define TOOL_SMUDGE 2
 
 	brush_erase =  (get_selected_tool() == TOOL_ERASE ) ? 1 : 0;
 	brush_smudge = (get_selected_tool() == TOOL_SMUDGE) ? 1 : 0;
@@ -324,7 +322,7 @@ void brush_begin_stroke( stylusState a ) {
 		if( brush_smudge == 1 ) {
 			SDL_BlitSurface( getDrawingContext() , NULL, smudge_buffer, NULL);
 			SDL_LockSurface( smudge_buffer );
-		}
+		} 
 }
 
 void brush_render_stylus_stroke(stylusState a, stylusState b) {

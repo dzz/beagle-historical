@@ -7,6 +7,7 @@
 #include "dispatch.h"
 #include "colorPicker.h"
 #include "panels.h"
+#include "canvas.h"
 
 #define KEYMODE_DOWN 1
 #define KEYMODE_UP 0
@@ -138,9 +139,11 @@ void dispatch_mousedown( int button,int x,int y) {
 						panels_point_in_clients(x,y) )	{
 				panels_dispatch_mousedown(x,y);	
 		} else {
-				if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_NOT_CONNECTED ) {
-						updateStylus( _spacket( x,y, 1 ) );
-				}	
+				if( canvas_dispatch_mousedown(x,y) == CANVAS_DISPATCH_CONTINUE ) {
+						if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_NOT_CONNECTED ) {
+								updateStylus( _spacket( x,y, 1 ) );
+						}	
+				}
 		}
 }
 

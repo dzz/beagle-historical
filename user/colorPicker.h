@@ -17,8 +17,8 @@ void colorpicker_mousedown(int x,int y, UI_AREA* area);
 void colorpicker_mouseup(int x,int y, UI_AREA* area);
 void colorpicker_mousemotion(int x,int y, UI_AREA* area);
 void colorpicker_mouseleave();
-
 cp_color getCurColor(void);
+void setCurColor(uint_rgba_map color);
 cp_color getPrimaryColor(void);
 cp_color getSecondaryColor(void);
 

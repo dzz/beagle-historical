@@ -44,7 +44,6 @@ void updateStylus(stylusPacket packet) {
 }
 
 void run_stroke_logic( void ) {
-
 		if (current_stylus_frame.pressure > 0) {
 
 				if(previous_stylus_frame.pressure == 0) 
