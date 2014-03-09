@@ -17,7 +17,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "brush.h"
 #include "../user/toolbar.h"
 #include "../user/stylus.h"
 #include "../user/colorPicker.h"
@@ -27,7 +26,11 @@
 #include "../colors/colors.h"
 #include "../compositor/compositor.h"
 #include "../system/ctt2.h"
+
 #include "drawingSurfaces.h"
+#include "drawingContext.h"
+
+#include "brush.h"
 
 static SDL_Surface* brush_drawing_context;
 static SDL_Surface* smudge_buffer;
@@ -56,11 +59,16 @@ unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
 unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
 unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
 
-void brush_modulate_values(double pressure) {
+double test_modulate(unsigned int time_ms) {
+	//return cos( ((double)time_ms/1000)*25*3.14 );
+	return 1;
+}
+
+void brush_modulate_values(double pressure, unsigned int time_ms) {
 		const double jitter_max = 8;
 		brush_color_mix_mod = mapperbank_get_mapping(MAPPER_COLOR,pressure);
 		brush_alpha_mod = mapperbank_get_mapping(MAPPER_ALPHA,pressure);
-		brush_size_mod = brush_size_base * pow(mapperbank_get_mapping(MAPPER_SIZE,pressure),2);
+		brush_size_mod = brush_size_base * pow(mapperbank_get_mapping(MAPPER_SIZE,pressure),2) * test_modulate(time_ms);
 		brush_jitter_mod = pow(mapperbank_get_mapping(MAPPER_JITTER,pressure),2) * jitter_max;
 		brush_noise_mod = mapperbank_get_mapping(MAPPER_NOISE,pressure);
 }
@@ -118,7 +126,7 @@ void initBrush( SDL_Surface* context ) {
 
 			SDL_LockSurface(dabBmp);
 			for(i=0; i<64*64;++i) {
-					unsigned char* dabData = dabBmp->pixels;
+					unsigned char* dabData = (unsigned char*)dabBmp->pixels;
 					dabs[idx][i] = (double)255-dabData[i];
 			}
 
@@ -326,8 +334,10 @@ void brush_begin_stroke( stylusState a ) {
 }
 
 void brush_render_stylus_stroke(stylusState a, stylusState b) {
+	printf("timestamp: %d\n", a.timestamp);
 	brush_tesselate_stroke(a.x,a.y,b.x,b.y,
 					(float)a.pressure,(float)b.pressure, 
+					a.timestamp,b.timestamp,
 					brush_drawing_context);
 }
 
@@ -335,7 +345,7 @@ void brush_end_stroke() {
 		SDL_UnlockSurface( smudge_buffer );
 }
 
-void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
+void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, unsigned int t0, unsigned int t1, SDL_Surface* ctxt) {
 		int origin_x = x0;
 		int origin_y = y0;
 	
@@ -359,7 +369,7 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, SD
 		int	radius = (int)(brush_size_mod);
 		int spacing = (radius > 24 ) ?	2 + ( (radius*radius) / 700 ) : 1;
 
-		brush_modulate_values(p);
+		brush_modulate_values(p, t0);
 		SDL_LockSurface(ctxt);
 		
 		//set_smudge_sample(ctxt,x0,y0,x1,y1);

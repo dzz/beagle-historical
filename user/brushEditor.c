@@ -39,12 +39,13 @@ void redraw_stroke_sample() {
 	{
 		int v;
 		for( v = 0; v< 25; ++v ) {
+				unsigned int t0 = (1000/25)*v;
 				float p = (float)v/25;
 				int x1 = (int)((cosf((p*3.14*4)))*10) + 57;
 				int x2 = (int)((cosf(((p+(1.0/25))*3.14*4)))*10) + 57;
 
 				brush_tesselate_stroke(
-								x1,(v*8)+15,x2,(v*8)+8+15,p,p,brushSample);
+								x1,(v*8)+15,x2,(v*8)+8+15,p,p,t0,t0,brushSample);
 
 		}
 	}

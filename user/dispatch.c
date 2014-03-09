@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include "../system/dirty.h"
 #include "../system/ctt2.h"
 #include "../document/animation.h"
@@ -8,6 +10,7 @@
 #include "colorPicker.h"
 #include "panels.h"
 #include "canvas.h"
+
 
 #define KEYMODE_DOWN 1
 #define KEYMODE_UP 0
@@ -109,12 +112,15 @@ int client_get_screen_mousey() { return client_mousey;}
 
 static double emulated_stylus_pressure = 0;
 
-stylusPacket _spacket(int x, int y, double pressure ){
+const unsigned int clock_conv_to_millis = CLOCKS_PER_SEC / 1000;
+
+__inline stylusPacket _spacket(int x, int y, double pressure ){
 		stylusPacket sp;
 		sp.x = x;
 		sp.y = y;
 		sp.pressure = pressure;
 		emulated_stylus_pressure = pressure;
+		sp.timestamp = clock() / clock_conv_to_millis;
 		return sp;
 }
 

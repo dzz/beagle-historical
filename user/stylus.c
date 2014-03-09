@@ -6,6 +6,7 @@
 #include "../drawing/brush.h"
 #include "../document/animation.h"
 
+
 static stylusState current_stylus_frame = {0};
 static stylusState previous_stylus_frame = {0};
 
@@ -32,12 +33,13 @@ void stylusFilter_apply_pressure_impulse(double p) {
 double stylusFilter_getFilteredPressure() {
 	return filteredPressure;
 }
-void updateStylus(stylusPacket packet) {
 
+void updateStylus(stylusPacket packet) {
 	previous_stylus_frame = current_stylus_frame;
 	current_stylus_frame.x = packet.x;
 	current_stylus_frame.y = packet.y;
 	current_stylus_frame.pressure = packet.pressure;
+	current_stylus_frame.timestamp = packet.timestamp;
 	stylusFilter_apply_pressure_impulse( packet.pressure );
 
 	run_stroke_logic();
