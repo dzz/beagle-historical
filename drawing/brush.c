@@ -69,15 +69,24 @@ double test_modulate(unsigned int time_ms) {
 void brush_modulate_values(double pressure, unsigned int time_ms) {
 		const double jitter_max = 8;
 
+		mapper_node* brush_controller = nodemapper_get_brush_controller();
 
-		//brush_size_mod = brush_size_base * pow(mapperbank_get_mapping(MAPPER_SIZE,pressure),2) * test_modulate(time_ms);
+		brush_size_mod = 
+				brush_size_base * 
+				brush_controller->outputs[BRUSH_CHANNEL_SIZE];
 
-		brush_size_mod = brush_size_base * node_mapper_get_output_at(NODE_MAPPER_BRUSH_SIZE);
+		brush_color_mix_mod = 
+				brush_controller->outputs[BRUSH_CHANNEL_COLOR];
 
-		brush_color_mix_mod = mapperbank_get_mapping(MAPPER_COLOR,pressure);
-		brush_alpha_mod = mapperbank_get_mapping(MAPPER_ALPHA,pressure);
-		brush_jitter_mod = pow(mapperbank_get_mapping(MAPPER_JITTER,pressure),2) * jitter_max;
-		brush_noise_mod = mapperbank_get_mapping(MAPPER_NOISE,pressure);
+		brush_alpha_mod = 
+				brush_controller->outputs[BRUSH_CHANNEL_ALPHA];
+
+		brush_jitter_mod = 
+				brush_controller->outputs[BRUSH_CHANNEL_JITTER] * jitter_max;
+
+		brush_noise_mod = 
+				brush_controller->outputs[BRUSH_CHANNEL_NOISE];
+
 }
 
 void brush_setValuesFromUI() {
@@ -323,7 +332,7 @@ __inline void plot_dab(int x, int y, int r, float p, SDL_Surface* ctxt) {
 				plotY += delta;
 				coord += jmp;
 		}
-		//if we're rctxt_endering directly to the active drawing context,
+		//if we're rendering directly to the active drawing context,
 		//invalidate the dirty rect. Othewise, we're in use somewhere
 		//else not tied to the global dirty rect manager
 		if(ctxt == getDrawingContext() ) {
