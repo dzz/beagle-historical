@@ -87,7 +87,7 @@ void movePanel(int x, int y) {
 	mapperbank_area->x = area->x;
 	mapperbank_area->y = area->y+colorpicker_area->h;
 	mapperbank_area->w = area->w;
-	mapperbank_area->h = area->h;
+	mapperbank_area->h = mapperbank_get_height();
 
 	toolbar_area->x = 800;
 	toolbar_area->y = 0;
@@ -137,12 +137,12 @@ UI_AREA getPanelsArea(void) {
 
 void initPanels(SDL_Surface *target) {
 	initUIAreas();
-	movePanel(0,0);
 	initColorPicker();
 	initBrushEditor();
 	initTimeline();
 	initMapperEditorBank();
 	initToolbar();
+	movePanel(0,0);
 }
 
 typedef struct {

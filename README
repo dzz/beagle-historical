@@ -2,13 +2,11 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.1.19.0
+      ctt2 0.1.20.0
 -------------------------------------------------------------------------------
 an obscurely named animation and painting tool  
 
 1) how to build/run:
-
-*Requires a WINTAB (e.g. Wacom) compatible tablet
 
 This can be built with Visual Studio 2012 express, and has been succesfully
 compiled with GCC via Code::Blocks. 
@@ -16,8 +14,6 @@ compiled with GCC via Code::Blocks.
 The binary should be run with the working directory the same as this source
 tree. You'll need the SDL and SDL_Image/associated (libpng etc.) dlls in 
 your system or working folder.
-
-No guarantees that included binary will work. 
 
 2) project-data:
 
@@ -27,6 +23,11 @@ You can delete the keyframe_idx file to create a new project.
 If you export your data, it will be placed in project-data/export/ folder
 
 3) usage:
+
+The program will use the first available plugged in tablet it can find.
+
+If it cnanot find a tablet, it will run in tablet-emulation mode and you can
+draw with the mouse.
 
 Q     - Move frame cursor left
 E     - Move frame cursor right
@@ -67,7 +68,6 @@ http://www.libsdl.org/
 
 SDL_image 2.0
 https://www.libsdl.org/projects/SDL_image/
-
 
 Wintab SDK is required to build, however if you have a Wacom tablet,
 the libraries should already be installed on your system.

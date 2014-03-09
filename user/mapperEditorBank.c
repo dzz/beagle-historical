@@ -5,8 +5,6 @@
 #include <SDL.h>
 
 #define NUM_MAPPERS 5
-#define MAPPER_BANK_HEIGHT (128*3)
-
 
 #define NOT_EDITING_MAPPERS -1
 #define MAPPER_NODE_MIN 0
@@ -68,6 +66,10 @@ double mapperbank_compute_mapping(mapping_function* function,double input){
 	input+=function->min_y;
 
 	return input;
+}
+
+unsigned int mapperbank_get_height() {
+	return mapperBmps[0]->h;
 }
 
 double mapperbank_get_mapping(int idx, double input) {

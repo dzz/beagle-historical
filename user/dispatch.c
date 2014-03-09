@@ -2,10 +2,11 @@
 #include "../system/ctt2.h"
 #include "../document/animation.h"
 #include "../user/yank_put.h"
+#include "../hardware/hw_run_vars.h"
+
 #include "dispatch.h"
 #include "colorPicker.h"
 #include "panels.h"
-
 
 #define KEYMODE_DOWN 1
 #define KEYMODE_UP 0
@@ -108,31 +109,50 @@ static int client_mousey = 0;
 int client_get_screen_mousex() { return client_mousex;}
 int client_get_screen_mousey() { return client_mousey;}
 
-void dispatch_mousemotion(int x, int y) {
-	client_mousex = x;
-	client_mousey = y;
+static double emulated_stylus_pressure = 0;
 
-	if( getPanelsEnabled() ) {
-		if( panels_point_in_clients(x,y) ) {
-			panels_dispatch_mousemotion(x,y);	
+stylusPacket _spacket(int x, int y, double pressure ){
+		stylusPacket sp;
+		sp.x = x;
+		sp.y = y;
+		sp.pressure = pressure;
+		emulated_stylus_pressure = pressure;
+		return sp;
+}
+
+
+void dispatch_mousemotion(int x, int y) {
+		client_mousex = x;
+		client_mousey = y;
+
+		if( getPanelsEnabled() && 
+						panels_point_in_clients(x,y) ) {
+				panels_dispatch_mousemotion(x,y);	
 		} else {
-			panels_dispatch_mouseleave();
+				panels_dispatch_mouseleave();
+				if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_NOT_CONNECTED ) {
+						updateStylus( _spacket( x,y, emulated_stylus_pressure ) );
+				}	
 		}
-	}
 }
 
 void dispatch_mousedown( int button,int x,int y) {
-	if( getPanelsEnabled() ) {
-		if( panels_point_in_clients(x,y) )	{
-			panels_dispatch_mousedown(x,y);	
+		if( getPanelsEnabled() && 
+						panels_point_in_clients(x,y) )	{
+				panels_dispatch_mousedown(x,y);	
+		} else {
+				if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_NOT_CONNECTED ) {
+						updateStylus( _spacket( x,y, 1 ) );
+				}	
 		}
-	}
 }
 
 void dispatch_mouseup(int button,int x, int y) {
-	if( getPanelsEnabled() ) {
-		if( panels_point_in_clients(x,y)){
-			panels_dispatch_mouseup(x,y);		
-		}
-	}
+		if( getPanelsEnabled() && panels_point_in_clients(x,y) ){
+				panels_dispatch_mouseup(x,y);		
+		} 
+
+		if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_NOT_CONNECTED ) {
+				updateStylus( _spacket( x,y, 0 ) );
+		}	
 }

@@ -36,5 +36,6 @@ void mapperbank_mousedown(int x, int y, UI_AREA *area);
 void mapperbank_mouseup(int x, int y, UI_AREA *area);
 void mapperbank_mousemotion(int x, int y, UI_AREA *area);
 void mapperbank_mouseleave();
+unsigned int mapperbank_get_height();
 
 #endif
