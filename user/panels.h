@@ -30,6 +30,18 @@ void renderPanels(SDL_Surface *target);
 void initPanels(SDL_Surface *);
 void dropPanels(void);
 
+typedef void (*mouseup_handler)(int x,int y);
+typedef void (*mousedown_handler)(int x, int y);
+typedef void (*mousemotion_handler)(int x, int y);
+typedef void (*mouseleave_handler)(void);
+
+typedef struct {
+	mouseup_handler bound_mouseup_handler;
+	mousedown_handler bound_mousedown_handler;
+	mousemotion_handler bound_mousemotion_handler;
+	mouseleave_handler bound_mouseleave_handler;
+} mouse_handler;
+
 void panels_dispatch_mouseup(int x,int y);
 void panels_dispatch_mousedown(int x,int y);
 void panels_dispatch_mousemotion(int x,int y);

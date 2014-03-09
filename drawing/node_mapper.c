@@ -1,11 +1,5 @@
 #include "node_mapper.h"
 
-static double p = 0;
-
-
-
-
-
 void node_stale_cascade(mapper_node* node) {
 		int i;
 		for( i=0; i < node->input_channels; ++i) {
@@ -72,7 +66,6 @@ mapper_node* nodemapper_get_brush_controller() {
 
 void create_brush_controller() {
 		int i;
-
 		new_node(&output_node);
 		output_node.inputs[0] = &stylus_input;
 		output_node.recalc = &node_passthrough;
