@@ -28,7 +28,8 @@
 #include "../compositor/compositor.h"
 #include "../system/ctt2.h"
 
-static SDL_Surface* gContext;
+static SDL_Surface* brush_drawing_context;
+static SDL_Surface* smudge_buffer;
 
 static float brush_alpha_mod;
 static float brush_size_mod;
@@ -117,7 +118,7 @@ void initBrush( SDL_Surface* context ) {
 			dab_bmps[idx] = dabBmp;
 
 			active_mixing_function = &mix_char;
-			gContext = context;
+			brush_drawing_context = context;
 
 			SDL_LockSurface(dabBmp);
 			for(i=0; i<64*64;++i) {
@@ -137,10 +138,11 @@ void destroyBrush() {
 				SDL_FreeSurface(dab_bmps[i]);
 			}
 		}
+		SDL_FreeSurface(smudge_buffer);
 }
 
 void brushPaint(stylusState a, stylusState b) {
-	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, gContext);
+	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, brush_drawing_context);
 }
 
 unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
@@ -216,7 +218,6 @@ __inline float squareRoot(float x)
 }
 
 /*
-
 	brush_power == photoshop "hardness"
 
 __inline float map_intensity_square(float x,float y,float p) {
@@ -255,6 +256,7 @@ __inline float map_intensity(float x,float y,float p) {
 		mid = (top*(255-y_f) + bottom*y_f)/(255*255);
 
 #ifdef BRUSH_FANCY
+		// dopey dither
 		if(mid>128)
 				if(mid<192)
 				if( fastrand() < (RAND_MAX/2) )
@@ -266,7 +268,6 @@ __inline float map_intensity(float x,float y,float p) {
 #endif
 		return (unsigned char)mid;
 #endif
-		//return (unsigned char)dab[(yc*64)+xc];
 }
 
 void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
@@ -398,6 +399,12 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 
 		float pD = 1;
 
+		// if we're drawing to the user's drawing context, we're going to use the fancy
+		// filtered pressure, otherwise, we're rendering for some other reason, and
+		// should use the supplied value.
+		//
+		//this is not ideal coupling
+
 		double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
 		int	radius = (int)(brush_size_mod);
@@ -409,16 +416,12 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 		set_smudge_sample(ctxt,x0,y0,x1,y1);
 
 		for(;;){
-				// if we're drawing to the user's drawing context, we're going to use the fancy
-				// filtered pressure, otherwise, we're rendering for some other reason, and
-				// should use the supplied value.
 
 				radius = (int)(brush_size_mod)
 #ifdef BRUSH_FANCY	
-						+(int)(1.33*((float)fastrand() / RAND_MAX));
-#else
-						;
+						+(int)(1.27*((float)fastrand() / RAND_MAX)) // noise 
 #endif
+						;
 
 
 				if (x0==x1 && y0==y1) break;

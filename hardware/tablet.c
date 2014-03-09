@@ -54,6 +54,7 @@ void initTablet(SDL_Window* window) {
 
 				if ( contextOpen > 0 )
 				{
+
 						lcMine.lcPktData = PACKETDATA;
 						lcMine.lcOptions |= CXO_MESSAGES;
 						lcMine.lcOptions |= CXO_SYSTEM;
@@ -65,8 +66,6 @@ void initTablet(SDL_Window* window) {
 						wWTInfoRetVal = gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_X, &TabletX );
 						if (  wWTInfoRetVal != sizeof( AXIS ) )
 						{
-								HW_RUN_VAR_TABLET_CONNECTED = TABLET_CONNECTED;
-								printf("TABLET_CONNECTED\n");
 								WacomTrace("This context should not be opened.\n");
 								return;
 						}
@@ -74,7 +73,6 @@ void initTablet(SDL_Window* window) {
 						wWTInfoRetVal = gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_Y, &TabletY );
 
 						gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_NPRESSURE, &Pressure );
-						WacomTrace("Pressure: %i, %i\n", Pressure.axMin, Pressure.axMax);
 
 						lcMine.lcInOrgX = 0;
 						lcMine.lcInOrgY = 0;
@@ -154,13 +152,13 @@ void handle_wt_packet(PACKET pkt) {
 }
 
 void handle_wm_event(SDL_Event event) {
-
 	PACKET pkt;
 	UINT msg = event.syswm.msg->msg.win.msg;
 	WPARAM wParam = event.syswm.msg->msg.win.wParam;
 	LPARAM lParam = event.syswm.msg->msg.win.lParam;
 
 	if(msg == WT_PACKET) {
+			HW_RUN_VAR_TABLET_CONNECTED = TABLET_CONNECTED;
 			if(gpWTPacket(hctx, wParam, &pkt)) {
 				handle_wt_packet(pkt);
 			}
