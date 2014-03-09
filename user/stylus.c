@@ -6,7 +6,6 @@
 #include "../drawing/brush.h"
 #include "../document/animation.h"
 
-
 static stylusState current_stylus_frame = {0};
 static stylusState previous_stylus_frame = {0};
 

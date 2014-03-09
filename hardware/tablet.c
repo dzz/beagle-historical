@@ -9,13 +9,12 @@
 #include <pktdef.h>
 
 #include "../user/stylus.h"
+#include "../user/panels.h"
 #include "../system/log.h"
-
 #include "vendor/wintab_utils.h"
 #include "tablet.h"
 #include "hw_run_vars.h"
 
-char* gpszProgramName = "ctt2_windows_tablet";
 HCTX hctx = 0;
 AXIS pressure_axis = {0};
 HWND window_handle;
@@ -26,7 +25,7 @@ void initTablet(SDL_Window* window) {
 		SDL_SysWMinfo data;
 
 		LOGCONTEXTA lcMine = {{0}};
-		UINT wWTInfoRetVal = 0;
+		unsigned int wWTInfoRetVal = 0;
 		AXIS TabletX = {0};
 		AXIS TabletY = {0};
 		AXIS Pressure = {0};
@@ -36,8 +35,8 @@ void initTablet(SDL_Window* window) {
 		int nOpenContexts = 0;
 		int nAttachedDevices = 0;
 
-		LoadWintab();
-		if(!gpWTInfoA(0,0, NULL)) {
+		initWintab();
+		if(!_wt_InfoA(0,0, NULL)) {
 			log_msg("could not load wintab.");
 			return;
 		}
@@ -47,10 +46,10 @@ void initTablet(SDL_Window* window) {
 		hWnd = data.info.win.window;
 		window_handle = hWnd;
 
-		gpWTInfoA(WTI_INTERFACE, IFC_NDEVICES, &numDevices);
+		_wt_InfoA(WTI_INTERFACE, IFC_NDEVICES, &numDevices);
 		{
 				printf("Getting info on contextIndex: %i ...\n", ctxIndex);
-				contextOpen = gpWTInfoA(WTI_DDCTXS + ctxIndex, 0, &lcMine);
+				contextOpen = _wt_InfoA(WTI_DDCTXS + ctxIndex, 0, &lcMine);
 
 				if ( contextOpen > 0 )
 				{
@@ -63,16 +62,16 @@ void initTablet(SDL_Window* window) {
 						lcMine.lcBtnUpMask = lcMine.lcBtnDnMask;
 
 						// Set the entire tablet as active
-						wWTInfoRetVal = gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_X, &TabletX );
+						wWTInfoRetVal = _wt_InfoA( WTI_DEVICES + ctxIndex, DVC_X, &TabletX );
 						if (  wWTInfoRetVal != sizeof( AXIS ) )
 						{
-								WacomTrace("This context should not be opened.\n");
+								printf("This context should not be opened.\n");
 								return;
 						}
 
-						wWTInfoRetVal = gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_Y, &TabletY );
+						wWTInfoRetVal = _wt_InfoA( WTI_DEVICES + ctxIndex, DVC_Y, &TabletY );
 
-						gpWTInfoA( WTI_DEVICES + ctxIndex, DVC_NPRESSURE, &Pressure );
+						_wt_InfoA( WTI_DEVICES + ctxIndex, DVC_NPRESSURE, &Pressure );
 
 						lcMine.lcInOrgX = 0;
 						lcMine.lcInOrgY = 0;
@@ -92,7 +91,7 @@ void initTablet(SDL_Window* window) {
 						// lcSysOrgX, lcSysOrgY, lcSysExtX, lcSysExtY
 
 						// Open the context enabled.
-						hCtx = gpWTOpenA(hWnd, &lcMine, TRUE);
+						hCtx = _wt_OpenA(hWnd, &lcMine, TRUE);
 						if ( hCtx )
 						{
 							hctx = hCtx;
@@ -121,10 +120,10 @@ void initTablet(SDL_Window* window) {
 
 void dropTablet() { 
 		if(hctx>0) {
-				gpWTClose(hctx);
+				_wt_Close(hctx);
 				printf("dropped tablet context:%u",(unsigned int)hctx); 
 		}
-		UnloadWintab();
+		dropWintab();
 }
 
 void handle_wt_packet(PACKET pkt) {
@@ -160,7 +159,7 @@ void handle_wm_event(SDL_Event event) {
 
 	if(msg == WT_PACKET) {
 			HW_RUN_VAR_TABLET_CONNECTED = TABLET_CONNECTED;
-			if(gpWTPacket(hctx, wParam, &pkt)) {
+			if(_wt_Packet(hctx, wParam, &pkt)) {
 				handle_wt_packet(pkt);
 			}
 	}

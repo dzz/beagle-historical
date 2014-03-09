@@ -16,4 +16,7 @@ void dropLog() {
 
 void log_msg(char* message) {
 		fprintf(logfile, message);
+#ifdef LOG_MESSAGE_TO_STDOUT
+		printf(message);
+#endif
 }

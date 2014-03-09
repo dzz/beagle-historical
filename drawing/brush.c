@@ -60,8 +60,8 @@ unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
 unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
 
 double test_modulate(unsigned int time_ms) {
-	//return cos( ((double)time_ms/1000)*25*3.14 );
-	return 1;
+	return cos( ((double)time_ms/1000)*25*3.14 );
+	//return 1;
 }
 
 void brush_modulate_values(double pressure, unsigned int time_ms) {
@@ -161,7 +161,7 @@ unsigned int* erase(uint_rgba_map src,uint_rgba_map dst) {
 	return &mixed.packed;
 }
 
-unsigned int*  mix(uint_rgba_map src, uint_rgba_map dst) {
+unsigned int* mix(uint_rgba_map src, uint_rgba_map dst) {
 		unsigned int alpha;
 
 		if(dst.rgba.a == 0) {
