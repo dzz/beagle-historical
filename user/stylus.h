@@ -4,6 +4,7 @@ typedef struct {
 		int x;
 		int y;
 		double pressure;
+		unsigned int timestamp;
 } stylusState;
 
 typedef stylusState stylusPacket;

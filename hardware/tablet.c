@@ -4,7 +4,7 @@
 #include <WindowsX.h>
 #include <msgpack.h>
 #include <wintab.h>
-#define PACKETDATA (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE)
+#define PACKETDATA (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_TIME )
 #define PACKETMODE PK_BUTTONS
 #include <pktdef.h>
 
@@ -136,6 +136,7 @@ void handle_wt_packet(PACKET pkt) {
 		sPkt.y = pkt.pkY;
 		ScreenToClient(window_handle,(LPPOINT)&sPkt);
 		sPkt.pressure = pressureNorm;
+		sPkt.timestamp = pkt.pkTime;
 
 		if (getPanelsEnabled() == 1) {
 				if(panels_point_in_clients(sPkt.x,sPkt.y)==1){
