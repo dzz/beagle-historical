@@ -7,7 +7,7 @@
 #define BUTTON_SIZE 48
 
 SDL_Surface* toolbarBmps[MAX_BUTTONS*2];
-static unsigned int selected_tool = 0;
+static unsigned int selected_tool = 2;
 static unsigned int loaded_tools = 0;
 
 unsigned int get_selected_tool(void){

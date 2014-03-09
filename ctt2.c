@@ -2,7 +2,7 @@
 //     
 //     CTT2_SCREENMODE_DEBUG
 
-#define CTT2_SCREENMODE_DEBUG
+//#define CTT2_SCREENMODE_DEBUG
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,10 +30,11 @@
 #include "user/colorPicker.h"
 #include "user/dispatch.h"
 
-SDL_Window *window = NULL;
-SDL_Surface *screenSurface = NULL;
+static SDL_Window *window = NULL;
+static SDL_Surface *screenSurface = NULL;
 
-int drawingContextInvalid = 1;
+static int drawingContextInvalid = 1;
+
 void updateViewingSurface() {
 	SDL_UpdateWindowSurface( window );
 }

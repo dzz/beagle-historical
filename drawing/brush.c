@@ -27,6 +27,7 @@
 #include "../colors/colors.h"
 #include "../compositor/compositor.h"
 #include "../system/ctt2.h"
+#include "drawingSurfaces.h"
 
 static SDL_Surface* brush_drawing_context;
 static SDL_Surface* smudge_buffer;
@@ -44,19 +45,16 @@ static double brush_noise_base = 0;
 static int brush_dab_index = 0;
 static int brush_mixpaint = 0;
 static int brush_erase = 0;
-unsigned static int brush_mix_mode = 0;
 static int brush_loaded_dabs = 0;
 static int brush_smudge = 0;
+
+static stylusState stroke_origin;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
 unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
 unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
 unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
-
-void brush_toggleMixMode() {
-	brush_mix_mode = !brush_mix_mode;
-}
 
 void brush_modulate_values(double pressure) {
 		const double jitter_max = 8;
@@ -129,6 +127,8 @@ void initBrush( SDL_Surface* context ) {
 			SDL_UnlockSurface(dabBmp);
 			brush_loaded_dabs++;
 	}
+
+	smudge_buffer = createDrawingSurface( context->w, context->h );
 }
 
 void destroyBrush() {
@@ -138,38 +138,12 @@ void destroyBrush() {
 				SDL_FreeSurface(dab_bmps[i]);
 			}
 		}
+
 		SDL_FreeSurface(smudge_buffer);
 }
 
-void brushPaint(stylusState a, stylusState b) {
-	brush_drawStrokeSegment(a.x,a.y,b.x,b.y,(float)a.pressure,(float)b.pressure, brush_drawing_context);
-}
 
-unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
-	return (((l*idx+r*((255-idx)))/255));
-}
-
-unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
-		unsigned int yolo = ((l*idx)+(r*255))/255;
-		if(yolo>255) yolo=255;
-		return yolo;
-}
-
-unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
-		float a = (float)l/255;
-		float b = (float)r/255;
-		float c = (float)idx/255;
-
-		float mix_amt = 1-c;
-		float mul_v = a*b;
-
-		float result = (mul_v*c) + (mix_amt*b);
-
-		unsigned int yolo = (unsigned int)( (result) * 255);
-		return yolo;
-}
-
-uint_rgba_map mixed;
+static uint_rgba_map mixed;
 
 unsigned int* erase(uint_rgba_map src,uint_rgba_map dst) {
 
@@ -204,30 +178,6 @@ unsigned int*  mix(uint_rgba_map src, uint_rgba_map dst) {
 		return &mixed.packed;
 
 }
-
-__inline float squareRoot(float x)
-{
-  unsigned int i = *(unsigned int*) &x;
-
-  // adjust bias
-  i  += 127 << 23;
-  // approximation of square root
-  i >>= 1;
-
-  return *(float*) &i;
-}
-
-/*
-	brush_power == photoshop "hardness"
-
-__inline float map_intensity_square(float x,float y,float p) {
-		float d = 1 - squareRoot((x*x)+(y*y));
-		if( d<0) return 0;
-		d *= 1 / brush_power;
-		if(d>1) d = 1;
-		return d*255;
-}
-*/
 
 __inline float map_intensity(float x,float y,float p) {
 		float  xc_d = (x*32)+32;
@@ -276,20 +226,8 @@ void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon
 		pix->rgba.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
 }
 
-static int g_seed = 0;
 
-__inline int fastrand() { 
-  g_seed = (214013*g_seed+2531011); 
-  return (g_seed>>16)&0x7FFF; 
-} 
-
-void brush_reset_random() {
-	g_seed = 0;
-}
-
-static uint_rgba_map smudge_sample;
-
-__inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
+__inline void plot_dab(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		signed int i;
 		signed int j;
 		const signed int r2 = r+r;
@@ -306,23 +244,28 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		uint_rgba_map dest;
 		uint_rgba_map current;
 		unsigned int* pixels = (unsigned int*)ctxt->pixels;
+		unsigned int* smudge_pixels = (unsigned int*)smudge_buffer->pixels;
 		int clipped_x = ctxt->w -(x+r);
-		const int end = ctxt->w*ctxt->h;
+		const int ctxt_end = ctxt->w*ctxt->h;
 		float noise = 1;
 		unsigned int* (*mixer)(uint_rgba_map,uint_rgba_map);
 		float buf;
+
 
 		clipped_x = clipped_x < 0 ? r2 + clipped_x : r2;
 
 		if(brush_erase == 1) {
 				mixer = &erase;
-		} else {
+		} 
+		else {
 				mixer = &mix;
 		}
 
 		if( brush_smudge != 1) {
 			mix_rgb_by_float(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
-		} 
+		} else {
+			current = sample_surface( ctxt, x,y );
+		}
 
 		for( i=0; i<r2; ++i) {
 				for( j=0; j<r2; ++j) {
@@ -334,14 +277,25 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 						if(( x + (j-r) ) > 0)
 						if(( y + (i-r) ) > 0)
 						{
-								if( brush_smudge == 1) {
-													
+								if( brush_smudge == 1 ) {
+										if( ctxt == brush_drawing_context ) {
+
+											int smudge_coord = 
+													  (i-r) + 
+													  ( (j-r) * smudge_buffer->w) +
+													  (stroke_origin.x) +
+													  (stroke_origin.y * smudge_buffer->w);
+
+											if(smudge_coord>0 && smudge_coord < ctxt_end ) {
+												current.packed = smudge_pixels[(unsigned int)smudge_coord];
+											}
+										}
 								}
 
 								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise_mod);
 								intensity = map_intensity(plotX,plotY,p);
 
-								if(coord>0 && coord<end && intensity>0) {
+								if(coord>0 && coord<ctxt_end && intensity>0) {
 										buf = intensity*brush_alpha_mod*noise;
 										v = (unsigned char)(buf);
 										dest.packed =pixels[coord];
@@ -355,7 +309,7 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 				plotY += delta;
 				coord += jmp;
 		}
-		//if we're rendering directly to the active drawing context,
+		//if we're rctxt_endering directly to the active drawing context,
 		//invalidate the dirty rect. Othewise, we're in use somewhere
 		//else not tied to the global dirty rect manager
 		if(ctxt == getDrawingContext() ) {
@@ -363,30 +317,27 @@ __inline void plotSplat(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		}
 }
 
-void brushReset() {
-}
 
-void set_smudge_sample(SDL_Surface* ctxt, int x0, int y0, int x1, int y1) {
-		unsigned int sample_a = x0+(y0*ctxt->w);
-		unsigned int sample_b = x1+(y1*ctxt->w);
-		unsigned int * pixels = ctxt->pixels;
-		if( (sample_a>0) &&
-			(sample_b>0) ){
+void brush_begin_stroke( stylusState a ) {
+		stroke_origin = a;
 
-				uint_rgba_map a;
-				uint_rgba_map b;
-
-				a.packed = pixels[sample_a];
-				b.packed = pixels[sample_b];
-
-				smudge_sample.rgba.r = (char)((unsigned int)(a.rgba.r+b.rgba.r)/2);
-				smudge_sample.rgba.g = (char)((unsigned int)(a.rgba.g+b.rgba.g)/2);
-				smudge_sample.rgba.b = (char)((unsigned int)(a.rgba.b+b.rgba.b)/2);
-				smudge_sample.rgba.a = (char)((unsigned int)(a.rgba.a+b.rgba.a)/2);
+		if( brush_smudge == 1 ) {
+			SDL_BlitSurface( getDrawingContext() , NULL, smudge_buffer, NULL);
+			SDL_LockSurface( smudge_buffer );
 		}
 }
 
-void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
+void brush_render_stylus_stroke(stylusState a, stylusState b) {
+	brush_tesselate_stroke(a.x,a.y,b.x,b.y,
+					(float)a.pressure,(float)b.pressure, 
+					brush_drawing_context);
+}
+
+void brush_end_stroke() {
+		SDL_UnlockSurface( smudge_buffer );
+}
+
+void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, SDL_Surface* ctxt) {
 		int origin_x = x0;
 		int origin_y = y0;
 	
@@ -413,7 +364,7 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 		brush_modulate_values(p);
 		SDL_LockSurface(ctxt);
 		
-		set_smudge_sample(ctxt,x0,y0,x1,y1);
+		//set_smudge_sample(ctxt,x0,y0,x1,y1);
 
 		for(;;){
 
@@ -432,9 +383,68 @@ void brush_drawStrokeSegment(int x0, int y0, int x1, int y1,float p0,float p1, S
 				if(space_ctr==0){
 						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
 						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
-						plotSplat((x0+jtr_x),(y0+jtr_y),radius,p, ctxt);
+						plot_dab((x0+jtr_x),(y0+jtr_y),radius,p, ctxt);
 				}
 				space_ctr = (space_ctr+1) % spacing;
 		}
 		SDL_UnlockSurface(ctxt);
+}
+
+__inline float cheap_sqrt(float x)
+{
+  unsigned int i = *(unsigned int*) &x;
+
+  // adjust bias
+  i  += 127 << 23;
+  // approximation of square root
+  i >>= 1;
+
+  return *(float*) &i;
+}
+
+/*
+	brush_power == photoshop "hardness"
+
+__inline float map_intensity_square(float x,float y,float p) {
+		float d = 1 - cheap_sqrt((x*x)+(y*y));
+		if( d<0) return 0;
+		d *= 1 / brush_power;
+		if(d>1) d = 1;
+		return d*255;
+}
+*/
+
+unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
+	return (((l*idx+r*((255-idx)))/255));
+}
+
+unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
+		unsigned int yolo = ((l*idx)+(r*255))/255;
+		if(yolo>255) yolo=255;
+		return yolo;
+}
+
+unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
+		float a = (float)l/255;
+		float b = (float)r/255;
+		float c = (float)idx/255;
+
+		float mix_amt = 1-c;
+		float mul_v = a*b;
+
+		float result = (mul_v*c) + (mix_amt*b);
+
+		unsigned int yolo = (unsigned int)( (result) * 255);
+		return yolo;
+}
+
+static int g_seed = 0;
+
+__inline int fastrand() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
+
+void brush_reset_random() {
+	g_seed = 0;
 }

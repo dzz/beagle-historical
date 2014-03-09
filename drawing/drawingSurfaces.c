@@ -1,7 +1,8 @@
-#include "drawingSurfaces.h"
 #include <stdio.h>
 
-SDL_Surface *convertedContext = 0;
+#include "drawingSurfaces.h"
+
+SDL_Surface *conversion_buffer = 0;
 
 //32 bit surface
 SDL_Surface* createDrawingSurface(int w, int h) {
@@ -23,21 +24,31 @@ SDL_Surface* createDrawingSurface(int w, int h) {
 		return canvas;
 }
 
-drawing_surface_restore_default_blending( SDL_Surface* drawingSurface) {
+void drawing_surface_restore_default_blending( SDL_Surface* drawingSurface) {
 		SDL_SetSurfaceBlendMode(drawingSurface, SDL_BLENDMODE_NONE);
 }
 
 SDL_Surface * getConvertedForBlit(SDL_Surface *drawingContext, SDL_Surface *screenSurface) {
-	if(convertedContext != 0) {
-		SDL_FreeSurface(convertedContext);
+	if(conversion_buffer != 0) {
+		SDL_FreeSurface(conversion_buffer);
 	}
-	convertedContext = SDL_ConvertSurface(drawingContext, screenSurface->format, 0);
-	return convertedContext;
+	conversion_buffer = SDL_ConvertSurface(drawingContext, screenSurface->format, 0);
+	return conversion_buffer;
 }
 
 void dropDrawingSurfaces() {
-	if(convertedContext == 0) {
-		SDL_FreeSurface(convertedContext);
+	if(conversion_buffer == 0) {
+		SDL_FreeSurface(conversion_buffer);
 	}
 }
 
+uint_rgba_map sample_surface(SDL_Surface* ctxt, int x0, int y0) {
+		unsigned int sample_a = x0+(y0*ctxt->w);
+		unsigned int * pixels = ctxt->pixels;
+		uint_rgba_map sample;
+
+		if(sample_a>0) {
+				sample.packed = pixels[sample_a];
+		}
+		return sample;
+}

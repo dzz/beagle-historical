@@ -9,7 +9,7 @@
 static stylusState current_stylus_frame = {0};
 static stylusState previous_stylus_frame = {0};
 
-void runStylusLogic( void );
+void run_stroke_logic( void );
 
 static double filteredPressure = 0;
 
@@ -40,14 +40,24 @@ void updateStylus(stylusPacket packet) {
 	current_stylus_frame.pressure = packet.pressure;
 	stylusFilter_apply_pressure_impulse( packet.pressure );
 
-	runStylusLogic();
+	run_stroke_logic();
 }
 
-void runStylusLogic( void ) {
-		if( (previous_stylus_frame.pressure>0) && (current_stylus_frame.pressure > 0)) {
-			brushPaint(previous_stylus_frame, current_stylus_frame);
-		} else {
-				brushReset();
+void run_stroke_logic( void ) {
+
+		if (current_stylus_frame.pressure > 0) {
+
+				if(previous_stylus_frame.pressure == 0) 
+						brush_begin_stroke(current_stylus_frame);
+
+				if(previous_stylus_frame.pressure>0) 
+						brush_render_stylus_stroke(previous_stylus_frame, current_stylus_frame);
+		} 
+
+		if (current_stylus_frame.pressure ==0) {	 
+				if(previous_stylus_frame.pressure>0)
+					brush_end_stroke();
+
 		}
 }
 
@@ -55,7 +65,7 @@ void resetStylusState(void) {
 		current_stylus_frame.pressure = 0;
 		previous_stylus_frame.pressure = 0;
 		filteredPressure = 0;
-		brushReset();
+		brush_end_stroke();
 }
 
 stylusState getStylusState() {

@@ -89,9 +89,6 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								animation_cursor_move(getDrawingContext(),0, 0);
 								invalidateDirty(0,0,1920,1080);
 								break;
-						case SDLK_m:
-								brush_toggleMixMode();
-								break;
 						case SDLK_y:
 								yankDrawingContext();
 								break;
