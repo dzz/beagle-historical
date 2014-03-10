@@ -48,3 +48,17 @@ for button_name in buttons:
 	os.system(up_command);
 	os.system(down_command);
 	idx += 1;
+
+titles = [ "stylus","brush_controller" ]
+make_title_command = "convert -background rgb(72,72,72) -fill white -font Consolas -size 100x16 label:\" {$title_name} \" title_{$title_name}.bmp"
+
+for title_name in titles:
+		command = make_title_command.replace("{$title_name}",title_name);
+		os.system(command);
+
+titles = [ "pressure","time","size","color","alpha","jitter","noise" ]
+make_title_command = "convert -background rgb(64,64,64) -fill white -font Consolas -size 100x16  label:\" {$title_name} \" title_{$title_name}.bmp"
+
+for title_name in titles:
+		command = make_title_command.replace("{$title_name}",title_name);
+		os.system(command);
