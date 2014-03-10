@@ -3,8 +3,10 @@
 #include "../system/dirty.h"
 #include "../system/ctt2.h"
 #include "../document/animation.h"
+#include "../user/panels.h"
 #include "../user/yank_put.h"
 #include "../hardware/hw_run_vars.h"
+#include "../drawing/node_mapper.h"
 
 #include "dispatch.h"
 #include "colorPicker.h"
@@ -20,6 +22,8 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 				switch(sym) {
 						case SDLK_SPACE:
 								panels_disable_dragmode();
+						case SDLK_n:
+								nodemapper_add_node();
 				}
 		}
 

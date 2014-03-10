@@ -160,7 +160,6 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 
 					SDL_BlitSurface( labels[ nodes[i]->node_label ], NULL, target, &titlebar );
 				}
-
 				/** channel input/outputs **/
 				{
 						const int label_w = 100;
@@ -236,7 +235,7 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 																  MAX_NODE_CHANNELS ];
 
 
-									draw_line(target,chan_in->x,chan_in->y,chan_out->x,chan_out->y);
+									draw_line(target,chan_in->x,chan_in->y,chan_out->x+chan_out->w,chan_out->y+chan_out->h);
 							}
 						}
 			}

@@ -1,5 +1,7 @@
 #include "node_mapper.h"
 
+static unsigned int top_node_id = 0;
+
 void node_stale_cascade(mapper_node* node) {
 		int i;
 		for( i=0; i < node->input_channels; ++i) {
@@ -47,6 +49,8 @@ void new_node(mapper_node* node) {
 	node->recalc=&node_no_recalc;
 	node->calculation_status = NODE_STALE;
 	node->binding_mode = BINDING_MODE_USER;
+	node->x = 25;
+	node->y = 10;
 }
 
 /*******************/
@@ -66,6 +70,24 @@ void node_mapper_apply_input( double pressure, double time ) {
 mapper_node* nodemapper_get_brush_controller() {
 		node_update_cascade(&output_node);
 		return &output_node;
+}
+
+void nodemapper_add_node() {
+	if(top_node_id+1 < MAX_NODES ) {
+		top_node_id++;
+		{
+			mapper_node* node = (mapper_node*)malloc(sizeof(mapper_node));
+			new_node(node);
+			node->id=top_node_id;
+			node->recalc=&node_passthrough;	
+			node->input_channels = 1;
+			node->output_channels = 1;
+			node->input_labels[0] = LABEL_ALPHA;
+			node->output_labels[0] = LABEL_ALPHA;
+			node->node_label = LABEL_ALPHA;
+			node_array[top_node_id] = node;
+		}
+	}
 }
 
 void create_brush_controller() {
@@ -96,7 +118,7 @@ void create_brush_controller() {
 
 void create_stylus_input() {
 		new_node(&stylus_input);
-		stylus_input.output_channels = 3;
+		stylus_input.output_channels = 2;
 
 		stylus_input.node_label = LABEL_STYLUS;
 		stylus_input.output_labels[0] = LABEL_PRESSURE;
@@ -114,6 +136,17 @@ void initNodeMapper() {
 		create_brush_controller();
 		node_array[NODE_ID_STYLUS_INPUT] = &stylus_input;
 		node_array[NODE_ID_BRUSH_CONTROLLER] = &output_node;
+		top_node_id = 1;
+}
+
+void dropNodeMapper() {
+	int i;
+	//first two nodes are special nodes
+	for(i=2; i< MAX_NODES; ++i) {
+		if( node_array[i] != 0 ) {
+			free(node_array[i]);
+		}
+	}
 }
 
 mapper_node** nodemapper_get_node_array() {

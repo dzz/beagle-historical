@@ -157,6 +157,7 @@ void destroyBrush() {
 		}
 
 		SDL_FreeSurface(smudge_buffer);
+		dropNodeMapper();
 }
 
 

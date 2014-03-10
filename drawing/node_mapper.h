@@ -39,6 +39,7 @@ struct mapper_node{
 };
 
 void initNodeMapper(void);
+void dropNodeMapper(void);
 
 #define BRUSH_CHANNEL_SIZE 0
 #define BRUSH_CHANNEL_COLOR 1
@@ -48,6 +49,6 @@ void initNodeMapper(void);
 
 mapper_node* nodemapper_get_brush_controller();
 mapper_node** nodemapper_get_node_array();
-
+void nodemapper_add_node();
 
 #endif

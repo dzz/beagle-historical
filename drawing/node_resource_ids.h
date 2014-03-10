@@ -13,4 +13,8 @@
 
 #define NUM_LABELS 9
 
+#define LABEL_MODULATOR
+#define LABEL_MAPPER
+
+
 #endif
