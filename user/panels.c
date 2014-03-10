@@ -99,25 +99,25 @@ void layoutPanels() {
 	(*area).w = (*area).x1 - (*area).x0;
 	(*area).h = (*area).y1 - (*area).y0;
 
-	colorpicker_area->x = area->x;
+	colorpicker_area->x = 1920-COLORPICKER_WIDTH;
 	colorpicker_area->y = area->y;
 	colorpicker_area->w = COLORPICKER_WIDTH;
 	colorpicker_area->h = COLORPICKER_HEIGHT;
 
-	brusheditor_area->x = area->x+colorpicker_area->w;
-	brusheditor_area->y = area->y;
+	brusheditor_area->x = 1920-BRUSHEDITOR_WIDTH;
+	brusheditor_area->y = colorpicker_area->y+colorpicker_area->h;
 	brusheditor_area->w = area->w-colorpicker_area->w;
 	brusheditor_area->h = BRUSHEDITOR_HEIGHT;
 
-	toolbar_area->x = 800;
-	toolbar_area->y = 0;
+	toolbar_area->x = 1920 -TOOLBAR_WIDTH;
+	toolbar_area->y = brusheditor_area->y+brusheditor_area->h;
 	toolbar_area->w = TOOLBAR_WIDTH;
 	toolbar_area->h = 48;
 	
-	nodemapeditor_area->x=(1920/2)-200;
-	nodemapeditor_area->y=400;
-	nodemapeditor_area->h=500;
-	nodemapeditor_area->w=500;
+	nodemapeditor_area->x=0;
+	nodemapeditor_area->y=0;
+	nodemapeditor_area->h=1080-TIMELINE_HEIGHT;
+	nodemapeditor_area->w=600;
 
 	//normalize our convenience variables
 	{
@@ -167,6 +167,7 @@ void initPanels(SDL_Surface *target) {
 	initTimeline();
 	initMapperEditorBank();
 	initToolbar();
+	initNodeMapEditor();
 	layoutPanels();
 }
 
@@ -178,6 +179,7 @@ typedef struct {
 
 void get_mouse_route(mouse_route* mr, int *x, int *y){
 		int i;
+		mr->panel_id=-1;
 		for(i=0; i<TOTAL_PANELS; ++i) 
 		{
 			if(pointInArea( *x + area->x, *y + area->y, *route_map[i]) == 1 ) 
@@ -232,7 +234,6 @@ void panels_dispatch_mousemotion(int x, int y) {
 	mouse_route route;
 	get_mouse_route(&route,&x,&y);
 
-
 	if(dragging_panel_id != -1) {
 		execute_drag(x,y);
 	}
@@ -241,7 +242,8 @@ void panels_dispatch_mousemotion(int x, int y) {
 
 	if(mousemotion_previous_panel != route.panel_id && 
 	   mousemotion_previous_panel != -1) {
-		mouse_handlers[mousemotion_previous_panel].bound_mouseleave_handler();
+			if(route.panel_id!=-1)
+					mouse_handlers[mousemotion_previous_panel].bound_mouseleave_handler();
 	}
 
 	mousemotion_previous_panel = route.panel_id;
@@ -263,7 +265,8 @@ void panels_dispatch_mouseup(int x,int y) {
 		dragging_panel_id = -1;
 		return;
 	}
-	mouse_handlers[route.panel_id].bound_mouseup_handler(x,y);
+	if( route.panel_id!=-1)
+		mouse_handlers[route.panel_id].bound_mouseup_handler(x,y);
 }
 
 void panels_dispatch_mousedown(int x, int y) {
@@ -272,7 +275,8 @@ void panels_dispatch_mousedown(int x, int y) {
 		} else {
 				mouse_route route;
 				get_mouse_route(&route,&x,&y);
-				mouse_handlers[route.panel_id].bound_mousedown_handler(x,y);
+				if( route.panel_id!=-1)
+						mouse_handlers[route.panel_id].bound_mousedown_handler(x,y);
 		}
 }
 

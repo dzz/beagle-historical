@@ -23,9 +23,7 @@ void node_update_cascade(mapper_node* node) {
 		}
 }
 
-void node_no_recalc(mapper_node* node) {
-
-}
+void node_no_recalc(mapper_node* node) { }
 
 void node_passthrough(mapper_node* node) {
 	int i;
@@ -45,6 +43,7 @@ void new_node(mapper_node* node) {
 	node->update_cascade=&node_update_cascade;
 	node->recalc=&node_no_recalc;
 	node->calculation_status = NODE_STALE;
+	node->binding_mode = BINDING_MODE_USER;
 }
 
 /*******************/
@@ -72,12 +71,12 @@ void create_brush_controller() {
 		output_node.recalc = &node_passthrough;
 		output_node.input_channels = 5;
 		output_node.output_channels = 5;
-		output_node.name = "brush_controller";
-		output_node.input_names[0] = "size";
-		output_node.input_names[1] = "color";
-		output_node.input_names[2] = "alpha";
-		output_node.input_names[3] = "jitter";
-		output_node.input_names[4] = "noise";
+		output_node.node_label = LABEL_BRUSH_CONTROLLER;
+		output_node.input_labels[0] = LABEL_SIZE;
+		output_node.input_labels[1] = LABEL_COLOR;
+		output_node.input_labels[2] = LABEL_ALPHA;
+		output_node.input_labels[3] = LABEL_JITTER;
+		output_node.input_labels[4] = LABEL_NOISE;
 
 		for(i=0; i< output_node.input_channels; ++i) {
 			output_node.inputs[i] = &stylus_input;
@@ -85,17 +84,22 @@ void create_brush_controller() {
 
 		output_node.x = 200;
 		output_node.y = 200;
+
+		output_node.binding_mode = BINDING_MODE_OUTPUT_DRIVER;
 }
 
 void create_stylus_input() {
 		new_node(&stylus_input);
 		stylus_input.output_channels = 2;
-		stylus_input.name="stylus";
-		stylus_input.output_names[0] = "pressure";
-		stylus_input.output_names[1] = "time";
 
-		stylus_input.x = 10;
-		stylus_input.y = 10;
+		stylus_input.node_label = LABEL_STYLUS;
+		stylus_input.output_labels[0] = LABEL_PRESSURE;
+		stylus_input.output_labels[1] = LABEL_TIME;
+
+		stylus_input.x = 20;
+		stylus_input.y = 20;
+
+		stylus_input.binding_mode = BINDING_MODE_INPUT_DRIVER;
 }
 
 void initNodeMapper() {
@@ -106,5 +110,5 @@ void initNodeMapper() {
 }
 
 mapper_node** nodemapper_get_node_array() {
-	return node_array;
+	return (mapper_node**)node_array;
 }

@@ -67,8 +67,6 @@ double test_modulate(unsigned int time_ms) {
 }
 
 void brush_modulate_values(double pressure, unsigned int time_ms) {
-		const double jitter_max = 8;
-
 		mapper_node* brush_controller = nodemapper_get_brush_controller();
 
 		brush_size_mod = 
@@ -82,7 +80,7 @@ void brush_modulate_values(double pressure, unsigned int time_ms) {
 				brush_controller->outputs[BRUSH_CHANNEL_ALPHA];
 
 		brush_jitter_mod = 
-				brush_controller->outputs[BRUSH_CHANNEL_JITTER] * jitter_max;
+				brush_controller->outputs[BRUSH_CHANNEL_JITTER];
 
 		brush_noise_mod = 
 				brush_controller->outputs[BRUSH_CHANNEL_NOISE];

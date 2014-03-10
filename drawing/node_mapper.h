@@ -1,6 +1,8 @@
 #ifndef __NODE_MAPPER__
 #define __NODE_MAPPER__
 
+#include "node_resource_ids.h"
+
 #define MAX_NODES 32
 #define MAX_NODE_CHANNELS 8
 
@@ -8,6 +10,10 @@
 #define NODE_FRESH 0
 
 typedef struct mapper_node mapper_node;
+
+#define BINDING_MODE_USER 0
+#define BINDING_MODE_INPUT_DRIVER 1
+#define BINDING_MODE_OUTPUT_DRIVER 2
 
 struct mapper_node{
 		//data
@@ -18,11 +24,11 @@ struct mapper_node{
 		double outputs[MAX_NODE_CHANNELS];
 		int input_channels;
 		int output_channels;
-		char* name;
-		char* input_names[MAX_NODE_CHANNELS];
-		char* output_names[MAX_NODE_CHANNELS];
+		unsigned int node_label;
+		unsigned int input_labels[MAX_NODE_CHANNELS];
+		unsigned int output_labels[MAX_NODE_CHANNELS];
 		unsigned int calculation_status;
-		
+		unsigned int binding_mode;
 		//display
 		unsigned int x;
 		unsigned int y;
@@ -38,5 +44,6 @@ void initNodeMapper(void);
 
 mapper_node* nodemapper_get_brush_controller();
 mapper_node** nodemapper_get_node_array();
+
 
 #endif
