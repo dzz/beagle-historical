@@ -308,6 +308,9 @@ void nodemapeditor_mousedown(int x,int y){
 
 							interaction_mode = INTERACTION_MODE_WIRING;
 							wiring_from_connection = &connection_mouse_targets[i];
+							if(wiring_from_connection->type == CONNECTION_INPUT) {
+								wiring_from_connection->owner->inputs[ wiring_from_connection->index ] = 0;
+							}
 					}
 				}
 		}
