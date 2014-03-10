@@ -36,6 +36,7 @@ struct mapper_node{
 		//display
 		unsigned int x;
 		unsigned int y;
+		void* data;
 };
 
 void initNodeMapper(void);

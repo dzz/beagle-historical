@@ -1,9 +1,11 @@
 #include <SDL.h>
 #include <math.h>
+#include <malloc.h>
 
 #include "../system/ctt2.h"
 
 #include "../drawing/node_mapper.h"
+#include "../drawing/node_resource_ids.h"
 
 #include "panels.h"
 #include "nodeMapEditor.h"
@@ -47,15 +49,8 @@ void add_input_mouse_target(SDL_Rect* r, mapper_node *t, unsigned int con_type, 
 }
 
 void initNodeMapEditor(){
-	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/title_brush_controller.bmp");
-	labels[LABEL_SIZE]=SDL_LoadBMP("ui_gen/title_size.bmp");
-	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/title_color.bmp");
-	labels[LABEL_ALPHA]=SDL_LoadBMP("ui_gen/title_alpha.bmp");
-	labels[LABEL_JITTER]=SDL_LoadBMP("ui_gen/title_jitter.bmp");
-	labels[LABEL_NOISE]=SDL_LoadBMP("ui_gen/title_noise.bmp");
-	labels[LABEL_STYLUS]=SDL_LoadBMP("ui_gen/title_stylus.bmp");
-	labels[LABEL_PRESSURE]=SDL_LoadBMP("ui_gen/title_pressure.bmp");
-	labels[LABEL_TIME]=SDL_LoadBMP("ui_gen/title_time.bmp");
+		//node_resource_ids.h
+		LOAD_NODE_IMAGE_RESOURCES
 }
 
 void destroyNodeMapEditor(){
@@ -66,10 +61,17 @@ void destroyNodeMapEditor(){
 	}
 }
 
+#define MAPPER_SIZE 150
 int get_node_gui_height(mapper_node* node) {
+	if(node->node_label == LABEL_MAPPER ) {
+			return MAPPER_SIZE;
+	}
 	return 0;
 }
 int get_node_gui_width(mapper_node* node) {
+	if(node->node_label == LABEL_MAPPER ) {
+			return MAPPER_SIZE;
+	}
 	return 150;
 }
 
@@ -191,6 +193,7 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 						}
 
 						for(j=0; j< output_channels;++j) {
+								int label_w;
 								SDL_Rect chan_rect;
 								chan_rect.x = (r.x + r.w) - channel_height + channel_border;
 								chan_rect.y = (channel_height * input_channels) + r.y + ( channel_height*j ) + (channel_border);
@@ -205,6 +208,7 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 														j);
 								connection_locations[(i*MAX_NODE_CHANNELS*2)+MAX_NODE_CHANNELS+j] = chan_rect;
 
+								label_w = labels[ nodes[i]->output_labels[j] ]->w;
 								chan_rect.x -= channel_pin_size + label_w;
 								chan_rect.y -= channel_border;
 								chan_rect.w = label_w;

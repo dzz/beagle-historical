@@ -25,6 +25,8 @@ void node_update_cascade(mapper_node* node) {
 		}
 }
 
+/* node calculation functions */
+
 void node_no_recalc(mapper_node* node) { }
 
 void node_passthrough(mapper_node* node) {
@@ -82,9 +84,9 @@ void nodemapper_add_node() {
 			node->recalc=&node_passthrough;	
 			node->input_channels = 1;
 			node->output_channels = 1;
-			node->input_labels[0] = LABEL_ALPHA;
-			node->output_labels[0] = LABEL_ALPHA;
-			node->node_label = LABEL_ALPHA;
+			node->input_labels[0] = LABEL_X;
+			node->output_labels[0] = LABEL_Y;
+			node->node_label = LABEL_MAPPER;
 			node_array[top_node_id] = node;
 		}
 	}
