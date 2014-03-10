@@ -39,11 +39,11 @@ node_rect connection_locations[MAX_NODES*MAX_NODE_CHANNELS*2];
 
 
 void add_input_mouse_target(SDL_Rect* r, mapper_node *t, unsigned int con_type, unsigned int index) {
-	visible_connections+=1;
 	connection_mouse_targets[visible_connections].owner = t;
 	connection_mouse_targets[visible_connections].type = con_type;
 	connection_mouse_targets[visible_connections].index = index;
 	connection_mouse_targets[visible_connections].location = *r;
+	visible_connections++;
 }
 
 void initNodeMapEditor(){
