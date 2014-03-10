@@ -56,7 +56,14 @@ void dummy_xy_mousehandler(int x, int y) {}
 void dummy_void_mousehandler() {}
 
 void bind_mouse_handlers() {
-
+	
+	//the spec for handlers does not include passing the
+	//UI_AREA for the sub panel, and everything seems to be
+	//working so may want to clean up those function
+	//declarations. The x,y's passed should be relative
+	//to the mouse_route so the sub panels shouldn't need that
+	//context
+	
 	mouse_handlers[PANEL_COLORPICKER].bound_mousedown_handler = &colorpicker_mousedown;
 	mouse_handlers[PANEL_COLORPICKER].bound_mouseup_handler = &colorpicker_mouseup;
 	mouse_handlers[PANEL_COLORPICKER].bound_mouseleave_handler = &colorpicker_mouseleave;
@@ -73,9 +80,9 @@ void bind_mouse_handlers() {
 	mouse_handlers[PANEL_TOOLBAR].bound_mousemotion_handler = &dummy_xy_mousehandler;
 
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mousedown_handler = &nodemapeditor_mousedown;
-	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseup_handler = &dummy_xy_mousehandler;
-	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseleave_handler = &dummy_void_mousehandler;
-	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mousemotion_handler = &dummy_xy_mousehandler;
+	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseup_handler = &nodemapeditor_mouseup;
+	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseleave_handler = &nodemapeditor_mouseleave;
+	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mousemotion_handler = &nodemapeditor_mousemotion;
 }
 
 

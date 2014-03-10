@@ -1,3 +1,5 @@
+#define CTT2_SCREENMODE_DEBUG
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
@@ -93,7 +95,7 @@ int main(int argc, char **argv){
 		const int SCREEN_HEIGHT = 1080;
 #else
 		const int SCREEN_WIDTH = 920;
-		const int SCREEN_HEIGHT = 508;
+		const int SCREEN_HEIGHT = 1080;
 #endif
 		const int CYCLES_BETWEEN_RECOMPOSITE = 20;
 		const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 3;

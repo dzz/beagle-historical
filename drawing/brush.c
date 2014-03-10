@@ -1,12 +1,8 @@
 //   dopey - paint synthesizer
 //
-//  	#define BRUSH_SPEED_HACK   	- not a great speed hack, but skips some
-//  								bilinear interp for dabs
-//
 //  	#define BRUSH_FANCY			- secret noise and dithering
 //
 
-//#define BRUSH_SPEED_HACK
 
 #define BRUSH_FANCY
 
@@ -207,9 +203,6 @@ __inline float map_intensity(float x,float y,float p) {
 		int xc=(int)xc_d;
 		int yc=(int)yc_d;
 
-#ifdef BRUSH_SPEED_HACK
-		return dabs[brush_dab_index][(yc*64)+xc];
-#else
 		unsigned int dab_v[4];
 
 		unsigned int x_f = (double)(xc_d - xc)*255;
@@ -238,7 +231,6 @@ __inline float map_intensity(float x,float y,float p) {
 						mid-=1;
 #endif
 		return (unsigned char)mid;
-#endif
 }
 
 void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {

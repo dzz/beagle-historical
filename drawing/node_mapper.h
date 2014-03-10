@@ -15,8 +15,12 @@ typedef struct mapper_node mapper_node;
 #define BINDING_MODE_INPUT_DRIVER 1
 #define BINDING_MODE_OUTPUT_DRIVER 2
 
+#define NODE_ID_STYLUS_INPUT 0
+#define NODE_ID_BRUSH_CONTROLLER 1
+
 struct mapper_node{
 		//data
+		unsigned int id;
 		mapper_node* inputs[MAX_NODE_CHANNELS];
 		int foreign_channels[MAX_NODE_CHANNELS];
 		void (*update_cascade)(mapper_node* node);
