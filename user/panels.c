@@ -6,11 +6,12 @@
 #include "panels.h"
 #include "dispatch.h"
 #include "stylus.h"
-#include "colorPicker.h"
-#include "brushEditor.h"
-#include "timeline.h"
-#include "toolbar.h"
-#include "nodeMapEditor.h"
+
+#include "editors/colorPicker.h"
+#include "editors/brushEditor.h"
+#include "editors/timeline.h"
+#include "editors/toolbar.h"
+#include "editors/nodeMapEditor.h"
 
 int panelsEnabled = 1;
 

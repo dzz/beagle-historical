@@ -9,7 +9,6 @@
 #include "system/dirty.h"
 #include "system/surfaceCache.h"
 
-#include "user/stylus.h"
 #include "document/animation.h"
 
 #include "drawing/brush.h"
@@ -20,9 +19,11 @@
 
 #include "document/layers.h"
 
+#include "user/stylus.h"
 #include "user/panels.h"
-#include "user/colorPicker.h"
 #include "user/dispatch.h"
+
+#include "user/editors/colorPicker.h"
 
 static SDL_Window *window = NULL;
 static SDL_Surface *screenSurface = NULL;

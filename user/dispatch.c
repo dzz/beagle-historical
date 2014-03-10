@@ -9,9 +9,10 @@
 #include "../drawing/node_mapper.h"
 
 #include "dispatch.h"
-#include "colorPicker.h"
 #include "panels.h"
 #include "canvas.h"
+
+#include "editors/colorPicker.h"
 
 
 #define KEYMODE_DOWN 1

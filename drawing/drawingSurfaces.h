@@ -1,8 +1,9 @@
 #ifndef __DRAWING_SURFACES__
 #define __DRAWING_SURFACES__
-#include <SDL.h>
 
 #include "../colors/colors.h"
+
+#include <SDL.h>
 
 typedef SDL_Surface* DRAWING_CONTEXT;
 typedef SDL_Surface* DRAWING_SURFACE;

@@ -14,21 +14,25 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "../user/toolbar.h"
-#include "../user/stylus.h"
-#include "../user/colorPicker.h"
-#include "../user/brushEditor.h"
-#include "../user/mapperEditorBank.h"
+#include "../system/ctt2.h"
 #include "../system/dirty.h"
+
 #include "../colors/colors.h"
 #include "../compositor/compositor.h"
-#include "../system/ctt2.h"
+
+#include "../user/stylus.h"
+
+#include "../user/editors/toolbar.h"
+#include "../user/editors/colorPicker.h"
+#include "../user/editors/brushEditor.h"
+#include "../user/editors/mapperEditorBank.h"
 
 #include "drawingSurfaces.h"
 #include "drawingContext.h"
 
-#include "brush.h"
 #include "node_mapper.h"
+
+#include "brush.h"
 
 static SDL_Surface* brush_drawing_context;
 static SDL_Surface* smudge_buffer;

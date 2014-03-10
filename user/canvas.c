@@ -1,6 +1,8 @@
 #include "canvas.h"
-#include "toolbar.h"
-#include "colorPicker.h"
+
+#include "editors/toolbar.h"
+#include "editors/colorPicker.h"
+
 #include "../drawing/drawingSurfaces.h"
 #include "../drawing/drawingContext.h"
 

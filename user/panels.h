@@ -1,8 +1,9 @@
 #ifndef __PANELS__
 #define __PANELS__
 
-#include "../user/stylus.h"
 #include <SDL.H>
+
+#include "../user/stylus.h"
 
 
 void togglePanels(void);

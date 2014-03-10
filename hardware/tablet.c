@@ -8,12 +8,16 @@
 #define PACKETMODE PK_BUTTONS
 #include <pktdef.h>
 
+
 #include "../user/stylus.h"
 #include "../user/panels.h"
 #include "../system/log.h"
-#include "vendor/wintab_utils.h"
-#include "tablet.h"
+
 #include "hw_run_vars.h"
+
+#include "vendor/wintab_utils.h"
+
+#include "tablet.h"
 
 HCTX hctx = 0;
 AXIS pressure_axis = {0};
