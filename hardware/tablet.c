@@ -1,5 +1,8 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
+
+#ifdef _WIN32
+
 #include <Windows.h>
 #include <WindowsX.h>
 #include <msgpack.h>
@@ -7,6 +10,9 @@
 #define PACKETDATA (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_TIME )
 #define PACKETMODE PK_BUTTONS
 #include <pktdef.h>
+#include "vendor/wintab_utils.h"
+
+#endif
 
 
 #include "../user/stylus.h"
@@ -15,9 +21,10 @@
 
 #include "hw_run_vars.h"
 
-#include "vendor/wintab_utils.h"
 
 #include "tablet.h"
+
+#ifdef _WIN32
 
 HCTX hctx = 0;
 AXIS pressure_axis = {0};
@@ -168,3 +175,14 @@ void handle_wm_event(SDL_Event event) {
 			}
 	}
 }
+
+#endif
+
+#ifdef __linux__
+
+void initTablet() {};
+void dropTablet() {};
+void handle_wm_event(SDL_Event event) {};
+
+#endif
+
