@@ -129,7 +129,7 @@ void drawSVTriangle(int w,int hgt) {
 }
 
 void drawColorWheel(int w,int h) {
-	SDL_Surface *bg = SDL_LoadBMP("cp_bg.bmp");
+	SDL_Surface *bg = SDL_LoadBMP("ui_gen/generated/cp_bg.bmp");
 
 	int h2 = h/2;
 	int h4 = h/4;

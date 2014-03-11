@@ -66,20 +66,20 @@ void brusheditor_redraw_stroke() {
 }
 
 void initBrushEditor() {
-	bg = SDL_LoadBMP("ui_gen/be_bg.bmp");
-	slider = SDL_LoadBMP("ui_gen/be_slider.bmp");
-	handle = SDL_LoadBMP("be_handle.bmp");
-	preview_bg = SDL_LoadBMP("be_preview.bmp");
+	bg = SDL_LoadBMP("ui_gen/generated/be_bg.bmp");
+	slider = SDL_LoadBMP("ui_gen/generated/be_slider.bmp");
+	handle = SDL_LoadBMP("ui_gen/generated/be_handle.bmp");
+	preview_bg = SDL_LoadBMP("ui_gen/generated/be_preview.bmp");
 
 	sVals[0] = 0.25; //size
 	sVals[1] = 0.0; //dab
 
-	slider_images[0] = SDL_LoadBMP("ui_gen/slider_0.bmp");
-	slider_images[1] = SDL_LoadBMP("ui_gen/slider_1.bmp");
-	slider_images[2] = SDL_LoadBMP("ui_gen/slider_2.bmp");
-	slider_images[3] = SDL_LoadBMP("ui_gen/slider_3.bmp");
-	slider_images[4] = SDL_LoadBMP("ui_gen/slider_4.bmp");
-	slider_images[5] = SDL_LoadBMP("ui_gen/slider_5.bmp");
+	slider_images[0] = SDL_LoadBMP("ui_gen/generated/slider_0.bmp");
+	slider_images[1] = SDL_LoadBMP("ui_gen/generated/slider_1.bmp");
+	slider_images[2] = SDL_LoadBMP("ui_gen/generated/slider_2.bmp");
+	slider_images[3] = SDL_LoadBMP("ui_gen/generated/slider_3.bmp");
+	slider_images[4] = SDL_LoadBMP("ui_gen/generated/slider_4.bmp");
+	slider_images[5] = SDL_LoadBMP("ui_gen/generated/slider_5.bmp");
 
 	brush_setValuesFromUI();
 	redraw_stroke_sample();

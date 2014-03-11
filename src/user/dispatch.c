@@ -25,8 +25,10 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 				switch(sym) {
 						case SDLK_SPACE:
 								panels_disable_dragmode();
+								break;
 						case SDLK_n:
 								nodemapper_add_node();
+								break;
 				}
 		}
 

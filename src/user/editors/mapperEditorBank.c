@@ -43,11 +43,11 @@ void initMapperEditorBank(void) {
 						mappers[i].max_y = 0.01;
 				}
 
-				sprintf(fname,"ui_gen/mapper_%d.bmp",i);
+				sprintf(fname,"ui_gen/generated/mapper_%d.bmp",i);
 				mapperBmps[i] = SDL_LoadBMP(fname);
 		}
 	}
-	bgBmp = SDL_LoadBMP("ui_gen/mapper_bank_bg.bmp");
+	bgBmp = SDL_LoadBMP("ui_gen/generated/mapper_bank_bg.bmp");
 }
 
 
