@@ -18,17 +18,17 @@
 
 
 #define LOAD_NODE_IMAGE_RESOURCES \
-	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/title_brush_controller.bmp");\
-	labels[LABEL_SIZE]=SDL_LoadBMP("ui_gen/title_size.bmp");\
-	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/title_color.bmp");\
-	labels[LABEL_ALPHA]=SDL_LoadBMP("ui_gen/title_alpha.bmp");\
-	labels[LABEL_JITTER]=SDL_LoadBMP("ui_gen/title_jitter.bmp");\
-	labels[LABEL_NOISE]=SDL_LoadBMP("ui_gen/title_noise.bmp");\
-	labels[LABEL_STYLUS]=SDL_LoadBMP("ui_gen/title_stylus.bmp");\
-	labels[LABEL_PRESSURE]=SDL_LoadBMP("ui_gen/title_pressure.bmp");\
-	labels[LABEL_TIME]=SDL_LoadBMP("ui_gen/title_time.bmp");\
-	labels[LABEL_MAPPER]=SDL_LoadBMP("ui_gen/title_mapper.bmp");\
-	labels[LABEL_X]=SDL_LoadBMP("ui_gen/title_input.bmp");\
-	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/title_output.bmp");
+	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/generated/title_brush_controller.bmp");\
+	labels[LABEL_SIZE]=SDL_LoadBMP("ui_gen/generated/title_size.bmp");\
+	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");\
+	labels[LABEL_ALPHA]=SDL_LoadBMP("ui_gen/generated/title_alpha.bmp");\
+	labels[LABEL_JITTER]=SDL_LoadBMP("ui_gen/generated/title_jitter.bmp");\
+	labels[LABEL_NOISE]=SDL_LoadBMP("ui_gen/generated/title_noise.bmp");\
+	labels[LABEL_STYLUS]=SDL_LoadBMP("ui_gen/generated/title_stylus.bmp");\
+	labels[LABEL_PRESSURE]=SDL_LoadBMP("ui_gen/generated/title_pressure.bmp");\
+	labels[LABEL_TIME]=SDL_LoadBMP("ui_gen/generated/title_time.bmp");\
+	labels[LABEL_MAPPER]=SDL_LoadBMP("ui_gen/generated/title_mapper.bmp");\
+	labels[LABEL_X]=SDL_LoadBMP("ui_gen/generated/title_input.bmp");\
+	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/generated/title_output.bmp");
 	
 #endif
