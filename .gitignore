@@ -1,1 +1,3 @@
 ui_gen/generated/*
+project-data/*.png
+project-data/export/*.png
