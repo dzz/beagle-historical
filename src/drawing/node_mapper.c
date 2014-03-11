@@ -149,12 +149,12 @@ void initNodeMapper() {
 
 void dropNodeMapper() {
 	int i;
-	//first two nodes are special nodes
 	for(i=2; i< MAX_NODES; ++i) {
 		if( node_array[i] != 0 ) {
-	/*		mapper_node* node = &node_array[i];
-			if(node->data!=0) 
-					free(node->data);*/
+			mapper_node* node = node_array[i];
+			if(node->data != 0) {
+				free(node->data);
+			}
 			free(node_array[i]);
 		}
 	}
