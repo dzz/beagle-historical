@@ -62,8 +62,8 @@ void new_node(mapper_node* node) {
 	node->recalc=&node_no_recalc;
 	node->calculation_status = NODE_STALE;
 	node->binding_mode = BINDING_MODE_USER;
-	node->x = 65;
-	node->y = 540;
+	node->x = 25;
+	node->y = 25;
 }
 
 /*******************/
@@ -92,7 +92,7 @@ void nodemapper_add_node() {
 			mapper_node* node = (mapper_node*)malloc(sizeof(mapper_node));
 			new_node(node);
 			node->id=top_node_id;
-			node->recalc=&node_passthrough;	
+			node->recalc=&node_recalc_mapper;
 			node->input_channels = 1;
 			node->output_channels = 1;
 			node->input_labels[0] = LABEL_X;

@@ -70,7 +70,10 @@
 	
 	If it cannot find a tablet, it will run in an emulation mode and you can
 	draw with the mouse.
-	
+
+	KEYBOARD COMMANDS
+	-----------------
+
 		Q     - Move frame cursor left
 		E     - Move frame cursor right
 		
@@ -93,6 +96,8 @@
 		P    - Put buffer to current keyframe
 		
 		0    - Animation preview
+		
+		N    - Add new brush node (parameter mapping)
 		
 		SPACE - Drag UI panels 
 		

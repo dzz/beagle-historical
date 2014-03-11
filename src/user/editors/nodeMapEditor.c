@@ -13,6 +13,8 @@
 
 #include "nodeMapEditor.h"
 
+#include "node_interaction/node_interaction.h"
+
 #define INTERACTION_MODE_NONE 0
 #define INTERACTION_MODE_MOVING_NODE 1
 #define INTERACTION_MODE_WIRING 2
@@ -318,9 +320,6 @@ void wire_inputs( connection_mouse_target* a, connection_mouse_target* b) {
 
 unsigned int focused_node = -1;
 
-void node_mousedown(mapper_node* node, int cmx, int cmy) {}
-void node_mouseup(mapper_node* node){}
-void node_mousemotion(mapper_node* node, int cmx,int cmy) {}
 
 void nodemapeditor_mousedown(int x,int y){
 		unsigned int cmx = client_get_screen_mousex();

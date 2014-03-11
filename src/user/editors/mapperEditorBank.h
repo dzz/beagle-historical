@@ -9,6 +9,11 @@
 #define MAPPER_JITTER 3
 #define MAPPER_NOISE 4
 
+#define MAPPER_NODE_MIN 0
+#define MAPPER_NODE_MAX 1
+
+#include <SDL.h>
+
 #include "../panels.h"
 
 typedef struct {
@@ -21,6 +26,8 @@ typedef struct {
 	unsigned int _min_render_y;
 	unsigned int _max_render_x;
 	unsigned int _max_render_y;
+    SDL_Rect _rendered_at;
+
 } mapping_function;
 
 

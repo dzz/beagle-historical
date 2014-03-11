@@ -7,8 +7,6 @@
 #define NUM_MAPPERS 5
 
 #define NOT_EDITING_MAPPERS -1
-#define MAPPER_NODE_MIN 0
-#define MAPPER_NODE_MAX 1
 
 static int editing_idx = NOT_EDITING_MAPPERS;
 static int editing_node = NOT_EDITING_MAPPERS;
@@ -156,6 +154,7 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 			function->_max_render_y = handle_r.y;
 		}
 }
+
 void render_mapping_function(SDL_Surface *target, mapping_function *function, SDL_Rect *r) {
 		unsigned int color_a = SDL_MapRGB( target->format, 0x00,0x00,0x00);
 		unsigned int color_b = SDL_MapRGB( target->format, 0x33,0x33,0x33);
@@ -168,6 +167,8 @@ void render_mapping_function(SDL_Surface *target, mapping_function *function, SD
 		inner_r.h=r->h - (margin*2);
 		inner_r.x=r->x + margin;
 		inner_r.y=r->y + margin;
+
+		function->_rendered_at = inner_r;
 
 		{
 			int i;

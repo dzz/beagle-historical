@@ -19,12 +19,12 @@ void initToolbar(void) {
 		int idx;
 		for(idx=0; idx< MAX_BUTTONS; ++idx) {
 			char fname[1024];
-			sprintf(fname,"ui_gen/toolbar_%d_up.bmp",idx);
+			sprintf(fname,"ui_gen/generated/toolbar_%d_up.bmp",idx);
 			toolbarBmps[idx] = SDL_LoadBMP(fname);
 			if(toolbarBmps[idx]==0){
 					break;
 			}
-			sprintf(fname,"ui_gen/toolbar_%d_down.bmp",idx);
+			sprintf(fname,"ui_gen/generated/toolbar_%d_down.bmp",idx);
 			toolbarBmps[idx+MAX_BUTTONS] = SDL_LoadBMP(fname);
 			loaded_tools++;
 		}
