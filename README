@@ -84,7 +84,7 @@
 		D    - Delete keyframe on active layer
 		
 		R    - Toggle keyframe recording (automatically inserts keyframes on 
-		      active layer when navigating 
+		      active layer when navigating)
 		
 		C     - Switch primary/secondary colors in brush editor
 		TAB   - Toggle UI on/off
@@ -92,7 +92,7 @@
 		S    - Save project data
 		X    - Export project data as png sequence
 		
-		Y	 - Yank Current active layer/keyframe to buffer
+		Y    - Yank Current active layer/keyframe to buffer
 		P    - Put buffer to current keyframe
 		
 		0    - Animation preview
