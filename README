@@ -2,81 +2,117 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.1.20.1
--------------------------------------------------------------------------------
-an obscurely named animation and painting tool  
+      ctt2 0.2.00.0
 
-1) how to build/run:
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-This can be built with Visual Studio 2012 express, and has been succesfully
-compiled with GCC via Code::Blocks. 
+(0) what is this
 
-The binary should be run with the working directory the same as this source
-tree. You'll need the SDL and SDL_Image/associated (libpng etc.) dlls in 
-your system or working folder.
+	an animation and painting application.
 
-2) project-data:
+(1) how to build/run:
 
-Frame pngs and the keyframe index file are stored in the project-data/ folder.
-You can delete the keyframe_idx file to create a new project.
+	WINDOWS
+	-------
 
-If you export your data, it will be placed in project-data/export/ folder
+	- visual studio settings:
 
-3) usage:
+			- include dir set to find the following headers:
+					WINTAB.H
+					SDL.H
+					SDL_image.h
 
-The program will use the first available plugged in tablet it can find.
+			- libs dir to find:
+					SDL2.lib
+					SDL2main.lib
+					SDL2_image.dll
 
-If it cnanot find a tablet, it will run in tablet-emulation mode and you can
-draw with the mouse.
+			- linker subsystem: console (/SUBSYSTEM:CONSOLE)
 
-Q     - Move frame cursor left
-E     - Move frame cursor right
+			- executable in same directory as this file
 
-1     - Edit background layer
-2     - Edit foreground layer
+			- following DLLs in executable directory:
+					SDL2.dll
+					SDL2_image.dll
+					libjpeg-9.dll
+					libpng16-16.dll
+					libtiff-5.dll
+					libwebp-4.dll
+					zlib1.dll
 
-K    - Insert keyframe on active layer
-D    - Delete keyframe on active layer
 
-R    - Toggle keyframe recording (automatically inserts keyframes on 
-      active layer when navigating 
+	To generate the resources required to render the UI, you'll require 
+	an installation of imageMagick and python 2.7. cd into the ui-gen directory 
+	and run: 
 
-C     - Switch primary/secondary colors in brush editor
-TAB   - Toggle UI on/off
+			 python ui_gen.py
+	
+	to generate the images.
 
-S    - Save project data
-X    - Export project data as png sequence
+	LINUX
+	-----
 
-Y	 - Yank Current active layer/keyframe to buffer
-P    - Put buffer to current keyframe
+	- I have compiled with gcc succesfully under linux but the source may not 
+	remain compatible with gcc as I'm primarily doing my development with the
+	microsoft compilers. There is no tablet support under linux presently.
+	  
 
-0    - Animation preview
+(2) project-data:
 
-SPACE - Drag UI panels 
+	Frame pngs and the keyframe index file are stored in the project-data/ folder.
+	You can delete the keyframe_idx file to create a new project.
 
-ESC - Exit
+	If you export your data, it will be placed in project-data/export/ folder
 
-4) build/run resources:
+(3) usage:
 
-To generate the UI images, you'll need python and imagemagick,
-run the ui_gen.py script from within that directory
+	The program will use the first available plugged in tablet it can find.
+	
+	If it cannot find a tablet, it will run in an emulation mode and you can
+	draw with the mouse.
+	
+		Q     - Move frame cursor left
+		E     - Move frame cursor right
+		
+		1     - Edit background layer
+		2     - Edit foreground layer
+		
+		K    - Insert keyframe on active layer
+		D    - Delete keyframe on active layer
+		
+		R    - Toggle keyframe recording (automatically inserts keyframes on 
+		      active layer when navigating 
+		
+		C     - Switch primary/secondary colors in brush editor
+		TAB   - Toggle UI on/off
+		
+		S    - Save project data
+		X    - Export project data as png sequence
+		
+		Y	 - Yank Current active layer/keyframe to buffer
+		P    - Put buffer to current keyframe
+		
+		0    - Animation preview
+		
+		SPACE - Drag UI panels 
+		
+		ESC - Exit
+	
+(4) links
 
-You'll need the DLLs from these projects to run
+	SDL 2.0
+	http://www.libsdl.org/
+	
+	SDL_image 2.0
+	https://www.libsdl.org/projects/SDL_image/
+	
+	WINTAB SDK
+	http://www.wacomeng.com/windows/index.html
 
-SDL 2.0
-http://www.libsdl.org/
+(5) contact:
 
-SDL_image 2.0
-https://www.libsdl.org/projects/SDL_image/
+	devon.zachary@gmail.com
 
-Wintab SDK is required to build, however if you have a Wacom tablet,
-the libraries should already be installed on your system.
-
-WINTAB SDK
-http://www.wacomeng.com/windows/index.html
-
-5) contact:
-devon.zachary@gmail.com
 
 -------------------------------------------------------------------------------
 Copright (c) 2014 Devon Zachary
@@ -94,4 +130,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
