@@ -1,4 +1,5 @@
 #include "node_mapper.h"
+#include "../user/mapperEditorBank.h"
 
 static unsigned int top_node_id = 0;
 
@@ -26,6 +27,10 @@ void node_update_cascade(mapper_node* node) {
 }
 
 /* node calculation functions */
+
+void node_recalc_mapper(mapper_node* node) {
+
+}
 
 void node_no_recalc(mapper_node* node) { }
 
@@ -87,6 +92,7 @@ void nodemapper_add_node() {
 			node->input_labels[0] = LABEL_X;
 			node->output_labels[0] = LABEL_Y;
 			node->node_label = LABEL_MAPPER;
+			node->data = malloc(sizeof(mapping_function));
 			node_array[top_node_id] = node;
 		}
 	}
@@ -146,6 +152,9 @@ void dropNodeMapper() {
 	//first two nodes are special nodes
 	for(i=2; i< MAX_NODES; ++i) {
 		if( node_array[i] != 0 ) {
+	/*		mapper_node* node = &node_array[i];
+			if(node->data!=0) 
+					free(node->data);*/
 			free(node_array[i]);
 		}
 	}
