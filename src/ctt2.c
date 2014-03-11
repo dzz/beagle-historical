@@ -22,6 +22,7 @@
 #include "user/stylus.h"
 #include "user/panels.h"
 #include "user/dispatch.h"
+#include "user/yank_put.h"
 
 #include "user/editors/colorPicker.h"
 
@@ -181,5 +182,6 @@ int main(int argc, char **argv){
 		dropYankPut();
 		dropLog();
 		SDL_Quit();
+		return 0;
 }
 
