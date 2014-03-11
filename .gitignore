@@ -1,4 +1,1 @@
-project-data/*.png
-project-data/*.idx
-project-data/export/*.png
-*.bmp
+ui_gen/generated/*
