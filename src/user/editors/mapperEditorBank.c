@@ -93,6 +93,7 @@ void destroyMapperEditorBank(void) {
 		SDL_FreeSurface(bgBmp);
 }
 
+
 void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rect *r) {
 		unsigned int color_a = SDL_MapRGB( target->format, 0x00,0xFF,0x00);
 		unsigned int color_b = SDL_MapRGB( target->format, 0x11,0xAA,0x11);
@@ -135,6 +136,58 @@ void renderMapperInRect(SDL_Surface *target, mapping_function *function, SDL_Rec
 
 		{
 			int hw = 2;
+			int fw = hw*2;
+
+			SDL_Rect handle_r;
+			handle_r.x = inner_r.x + (function->min_x)*inner_r.w-hw;
+			handle_r.y = inner_r.y + (1 - function->min_y)*inner_r.h-hw;
+			handle_r.w = fw;
+			handle_r.h = fw;
+
+			function->_min_render_x = handle_r.x;
+			function->_min_render_y = handle_r.y;
+
+			SDL_FillRect(target,&handle_r,color_a);
+			handle_r.x = inner_r.x + (function->max_x)*inner_r.w-hw;
+			handle_r.y = inner_r.y + (1 - function->max_y)*inner_r.h-hw;
+			SDL_FillRect(target,&handle_r,color_a);
+
+			function->_max_render_x = handle_r.x;
+			function->_max_render_y = handle_r.y;
+		}
+}
+void render_mapping_function(SDL_Surface *target, mapping_function *function, SDL_Rect *r) {
+		unsigned int color_a = SDL_MapRGB( target->format, 0x00,0x00,0x00);
+		unsigned int color_b = SDL_MapRGB( target->format, 0x33,0x33,0x33);
+
+		int margin = 4;
+
+		SDL_Rect inner_r;
+
+		inner_r.w=r->w - (margin*2);
+		inner_r.h=r->h - (margin*2);
+		inner_r.x=r->x + margin;
+		inner_r.y=r->y + margin;
+
+		{
+			int i;
+			int tesselation = 40;
+
+			for(i=0; i< tesselation; ++i) {
+				double input = (double) i / (double)tesselation;
+				SDL_Rect plot;
+				plot.w=2;
+				plot.h=2;
+				plot.x=inner_r.x + (int)(input*(double)inner_r.w);
+				input = 1 - mapperbank_compute_mapping(function,input);
+				plot.y=inner_r.y + (int)(input*(double)inner_r.h);
+
+				SDL_FillRect(target,&plot,color_b);
+			}
+		}	
+
+		{
+			int hw = 3;
 			int fw = hw*2;
 
 			SDL_Rect handle_r;

@@ -27,6 +27,7 @@ typedef struct {
 void initMapperEditorBank(void);
 void destroyMapperEditorBank(void);
 void renderMapperEditorBank(SDL_Surface* target,UI_AREA* area);
+void render_mapping_function(SDL_Surface *target, mapping_function *function, SDL_Rect *r);
 
 mapping_function* mapperbank_get_functions(void);
 double mapperbank_compute_mapping(mapping_function* function,double input);

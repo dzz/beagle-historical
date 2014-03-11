@@ -29,7 +29,13 @@ void node_update_cascade(mapper_node* node) {
 /* node calculation functions */
 
 void node_recalc_mapper(mapper_node* node) {
+	if(node->inputs[0] != 0) {
 
+		node->outputs[0] =
+			   	mapperbank_compute_mapping( node->data, 
+								node->inputs[0]-> outputs[ node->foreign_channels[0] ] );	
+
+	}
 }
 
 void node_no_recalc(mapper_node* node) { }
@@ -56,8 +62,8 @@ void new_node(mapper_node* node) {
 	node->recalc=&node_no_recalc;
 	node->calculation_status = NODE_STALE;
 	node->binding_mode = BINDING_MODE_USER;
-	node->x = 25;
-	node->y = 10;
+	node->x = 65;
+	node->y = 540;
 }
 
 /*******************/
@@ -93,6 +99,14 @@ void nodemapper_add_node() {
 			node->output_labels[0] = LABEL_Y;
 			node->node_label = LABEL_MAPPER;
 			node->data = malloc(sizeof(mapping_function));
+
+			{
+					mapping_function* mf = node->data;
+					mf->min_x = 0;
+					mf->max_x = 1;
+					mf->min_y = 0;
+					mf->max_y = 1;
+			}
 			node_array[top_node_id] = node;
 		}
 	}

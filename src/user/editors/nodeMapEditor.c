@@ -9,6 +9,8 @@
 
 #include "../panels.h"
 
+#include "mapperEditorBank.h"
+
 #include "nodeMapEditor.h"
 
 #define INTERACTION_MODE_NONE 0
@@ -21,6 +23,7 @@ static SDL_Surface* labels[NUM_LABELS] = {0};
 typedef SDL_Rect node_rect;
 
 node_rect node_titlebars[MAX_NODES];
+node_rect node_guiareas[MAX_NODES];
 
 static int visible_connections = 0;
 
@@ -110,6 +113,15 @@ void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 				}
 }
 
+void render_node_gui( SDL_Surface* target, mapper_node* node, node_rect* r) {
+		if(node->node_label == LABEL_MAPPER ) {
+				unsigned int mapper_bg = SDL_MapRGB(target->format,
+								200,200,200 );
+				SDL_FillRect( target, r, mapper_bg);
+				render_mapping_function(target, node->data, r);		
+		}
+}
+
 void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 		unsigned int channel_input_color = SDL_MapRGB(target->format,
 						40,40,40);
@@ -127,7 +139,7 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 		visible_connections = 0;
 
 		if(interaction_mode == INTERACTION_MODE_WIRING )
-				bg_color = SDL_MapRGB(target->format, 255,0,0);
+				bg_color = SDL_MapRGB(target->format, 17,16,19 );
 
 		SDL_FillRect(target, (SDL_Rect*) area, bg_color);
 
@@ -170,7 +182,8 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 						const int channel_pin_size = 12;
 						const int channel_border = (channel_height-channel_pin_size) / 2;
 						int j;
-
+						int k = 0;
+						
 						for(j=0; j< input_channels;++j) {
 								SDL_Rect chan_rect;
 								chan_rect.x = r.x + ( channel_border  );
@@ -191,13 +204,15 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 								chan_rect.w = label_w;
 								SDL_BlitSurface( labels[ nodes[i]->input_labels[j] ],
 												NULL, target, &chan_rect );
+
+								k++; //see gui rendering after next for block
 						}
 
 						for(j=0; j< output_channels;++j) {
 								int label_w;
 								SDL_Rect chan_rect;
 								chan_rect.x = (r.x + r.w) - channel_height + channel_border;
-								chan_rect.y = (channel_height * input_channels) + r.y + ( channel_height*j ) + (channel_border);
+								chan_rect.y = /*(channel_height * input_channels) + */r.y + ( channel_height*j ) + (channel_border);
 
 								chan_rect.w = channel_pin_size;
 								chan_rect.h = channel_pin_size;
@@ -216,6 +231,18 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 								SDL_BlitSurface( labels[ nodes[i]->output_labels[j] ],
 												NULL, target, &chan_rect );
 
+								//no increment of k here, we check max in next block
+						}
+
+						{
+							node_rect gui_location;
+							k = j>k ? j : k;
+							gui_location.x=r.x;
+							gui_location.y=r.y + (channel_height*k);
+							gui_location.w=gui_width;
+							gui_location.h=gui_height;
+							render_node_gui( target, nodes[i], &gui_location );
+							node_guiareas[i] = gui_location;
 						}
 				}
 			}
@@ -286,6 +313,15 @@ void wire_inputs( connection_mouse_target* a, connection_mouse_target* b) {
 	a->owner->foreign_channels[ a->index ] = b->index;
 }
 
+
+#define MOUSE_IN_TARGET 1
+
+unsigned int focused_node = -1;
+
+void node_mousedown(mapper_node* node, int cmx, int cmy) {}
+void node_mouseup(mapper_node* node){}
+void node_mousemotion(mapper_node* node, int cmx,int cmy) {}
+
 void nodemapeditor_mousedown(int x,int y){
 		unsigned int cmx = client_get_screen_mousex();
 		unsigned int cmy = client_get_screen_mousey();
@@ -297,11 +333,16 @@ void nodemapeditor_mousedown(int x,int y){
 						if(nodes[i] == 0) {
 							break;
 						}				
-						if(point_in_rect( cmx,cmy, &node_titlebars[i]) == 1) {
+						if(point_in_rect( cmx,cmy, &node_titlebars[i]) == MOUSE_IN_TARGET ) {
 							interaction_mode = INTERACTION_MODE_MOVING_NODE;
 							dragging_node = i;
 							drag_origin_x = cmx;
 							drag_origin_y = cmy;
+							break;
+						}
+						if( point_in_rect(cmx,cmy, &node_guiareas[i]) == MOUSE_IN_TARGET ) {
+							focused_node = i;
+							node_mousedown(nodes[i],cmx,cmy);
 							break;
 						}
 				}
@@ -324,6 +365,12 @@ void nodemapeditor_mouseup(int x,int y){
 		unsigned int cmx = client_get_screen_mousex();
 		unsigned int cmy = client_get_screen_mousey();
 
+		if(focused_node != -1) {
+			mapper_node** nodes = nodemapper_get_node_array();
+			node_mouseup(nodes[focused_node]);
+			focused_node = -1;
+		}
+		
 		if(interaction_mode == INTERACTION_MODE_WIRING) {
 				int i;
 				for(i=0; i<visible_connections; ++i) {
@@ -350,6 +397,11 @@ void nodemapeditor_mousemotion(int x,int y){
 		unsigned int cmx = client_get_screen_mousex();
 		unsigned int cmy = client_get_screen_mousey();
 		mapper_node** nodes = nodemapper_get_node_array();
+
+		if( focused_node != -1) {
+			node_mousemotion(nodes[focused_node],cmx,cmy);
+			return;
+		}
 
 		if( interaction_mode == INTERACTION_MODE_MOVING_NODE ) {
 
