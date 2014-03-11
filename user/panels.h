@@ -1,7 +1,7 @@
 #ifndef __PANELS__
 #define __PANELS__
 
-#include <SDL.H>
+#include <SDL.h>
 
 #include "../user/stylus.h"
 

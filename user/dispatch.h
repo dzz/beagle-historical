@@ -1,7 +1,7 @@
 #ifndef __DISPATCH__
 #define __DISPATCH__
 
-#include <SDL.H>
+#include <SDL.h>
 
 #include "../system/ctt2.h"
 

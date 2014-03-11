@@ -1,7 +1,7 @@
 #ifndef __ANIMATION__
 #define __ANIMATION__
 
-#include <SDL.H>
+#include <SDL.h>
 #include "../compositor/compositor.h"
 #include "../document/layers.h"
 

@@ -2,7 +2,7 @@
 #define __BRUSH__
 
 #include "../user/stylus.h"
-#include <SDL.H>
+#include <SDL.h>
 
 void initBrush(SDL_Surface* context);
 void destroyBrush();

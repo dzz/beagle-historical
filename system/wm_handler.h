@@ -1,7 +1,7 @@
 #ifndef __WM_HANDLER__
 #define __WM_HANDLER__
 
-#include <SDL.H>
+#include <SDL.h>
 
 // this is for handling os specific WM events.
 //
