@@ -25,7 +25,7 @@
             - libs dir to find:
                     SDL2.lib
                     SDL2main.lib
-                    SDL2_image.dll
+                    SDL2_image.lib
 
             - linker subsystem: console (/SUBSYSTEM:CONSOLE)
 
