@@ -121,6 +121,15 @@ void render_node_gui( SDL_Surface* target, mapper_node* node, node_rect* r) {
 								200,200,200 );
 				SDL_FillRect( target, r, mapper_bg);
 				render_mapping_function(target, node->data, r);		
+				{
+					unsigned int y = r->y+(unsigned int)(node->outputs[0]*r->h);
+					SDL_Rect marker;
+					marker.x=r->x;
+					marker.y=y;
+					marker.w=r->w;
+					marker.h=2;
+					SDL_FillRect( target, &marker, 0);
+				}
 		}
 }
 

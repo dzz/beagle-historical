@@ -25,6 +25,8 @@ void stylusFilter_apply_pressure_impulse(double p) {
 			const double a_emu = 0.93;
 			const double b_emu = 0.07;
 
+			filteredPressure = p;
+			return;
 			if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_CONNECTED ) {
 					filteredPressure = filteredPressure *a +p*b;
 			} else {
@@ -61,9 +63,11 @@ void run_stroke_logic( void ) {
 		} 
 
 		if (current_stylus_frame.pressure ==0) {	 
-				if(previous_stylus_frame.pressure>0)
+				if(previous_stylus_frame.pressure>0){
+					filteredPressure = 0;
+					brush_render_stylus_stroke(previous_stylus_frame, current_stylus_frame);
 					brush_end_stroke();
-
+				}
 		}
 }
 
