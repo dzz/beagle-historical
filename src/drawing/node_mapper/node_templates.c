@@ -39,5 +39,7 @@ void nodemapper_create_template(unsigned int node_template) {
 
 			}
 			nodemapper_get_node_array()[nodemapper_get_top_id()] = node;
+
+
 }
 
