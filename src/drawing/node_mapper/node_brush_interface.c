@@ -5,7 +5,7 @@
 void create_node_brush_interface(mapper_node** nodes) {
 		int i;
 		mapper_node* output_node = nodes[NODE_ID_BRUSH_CONTROLLER];
-		mapper_node* stylus_input = nodes[NODE_ID_BRUSH_CONTROLLER];
+		mapper_node* stylus_input = nodes[NODE_ID_STYLUS_INPUT];
 
 		new_node(nodes[NODE_ID_BRUSH_CONTROLLER]);
 		output_node->inputs[0] = stylus_input;
