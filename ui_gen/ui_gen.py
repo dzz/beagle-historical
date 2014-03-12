@@ -50,7 +50,7 @@ for button_name in buttons:
 	os.system(down_command);
 	idx += 1;
 
-titles = [ "stylus","brush_controller","mapper" ]
+titles = [ "stylus","brush_controller","mapper","add" ]
 make_title_command = "convert -background rgb(72,72,72) -fill white -font Consolas -size 100x16 label:\" {$title_name} \" generated/title_{$title_name}.bmp"
 
 for title_name in titles:

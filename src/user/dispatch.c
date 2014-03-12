@@ -9,6 +9,7 @@
 #include "../user/yank_put.h"
 #include "../hardware/hw_run_vars.h"
 #include "../drawing/node_mapper.h"
+#include "../drawing/node_resource_ids.h"
 
 #include "dispatch.h"
 #include "panels.h"
@@ -27,7 +28,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								panels_disable_dragmode();
 								break;
 						case SDLK_n:
-								nodemapper_add_node();
+								nodemapper_create_template(LABEL_MAPPER);
 								break;
 				}
 		}

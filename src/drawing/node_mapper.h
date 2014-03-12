@@ -50,6 +50,7 @@ void dropNodeMapper(void);
 
 mapper_node* nodemapper_get_brush_controller();
 mapper_node** nodemapper_get_node_array();
-void nodemapper_add_node();
+
+void nodemapper_create_template(unsigned int node_template);
 
 #endif
