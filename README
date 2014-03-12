@@ -8,115 +8,117 @@
 
 (0) what is this
 
-	an animation and painting application.
+    an animation and painting application.
 
 (1) how to build/run:
 
-	WINDOWS
-	-------
+    WINDOWS
+    -------
 
-	- visual studio settings:
+    - visual studio settings:
 
-			- include dir set to find the following headers:
-					WINTAB.H
-					SDL.H
-					SDL_image.h
+            - include dir set to find the following headers:
+                    WINTAB.H
+                    SDL.H
+                    SDL_image.h
 
-			- libs dir to find:
-					SDL2.lib
-					SDL2main.lib
-					SDL2_image.dll
+            - libs dir to find:
+                    SDL2.lib
+                    SDL2main.lib
+                    SDL2_image.dll
 
-			- linker subsystem: console (/SUBSYSTEM:CONSOLE)
+            - linker subsystem: console (/SUBSYSTEM:CONSOLE)
 
-			- executable in same directory as this file
+            - executable in same directory as this file
 
-			- following DLLs in executable directory:
-					SDL2.dll
-					SDL2_image.dll
-					libjpeg-9.dll
-					libpng16-16.dll
-					libtiff-5.dll
-					libwebp-4.dll
-					zlib1.dll
+            - following DLLs in executable directory:
+                    SDL2.dll
+                    SDL2_image.dll
+                    libjpeg-9.dll
+                    libpng16-16.dll
+                    libtiff-5.dll
+                    libwebp-4.dll
+                    zlib1.dll
 
 
-	To generate the resources required to render the UI, you'll require 
-	an installation of imageMagick and python 2.7. cd into the ui-gen directory 
-	and run: 
+    To generate the resources required to render the UI, you'll require 
+    an installation of imageMagick and python 2.7. cd into the ui-gen directory 
+    and run: 
 
-			 python ui_gen.py
-	
-	to generate the images.
+             python ui_gen.py
+    
+    to generate the images.
 
-	LINUX
-	-----
+    LINUX
+    -----
 
-	- I have compiled with gcc succesfully under linux but the source may not 
-	remain compatible with gcc as I'm primarily doing my development with the
-	microsoft compilers. There is no tablet support under linux presently.
-	  
+    - I have compiled with gcc succesfully under linux but the source may not 
+    remain compatible with gcc as I'm primarily doing my development with the
+    microsoft compilers. There is no tablet support under linux presently.
+      
 
 (2) project-data:
 
-	Frame pngs and the keyframe index file are stored in the project-data/ folder.
-	You can delete the keyframe_idx file to create a new project.
+    Frame pngs and the keyframe index file are stored in the project-data/ 
+    folder.
 
-	If you export your data, it will be placed in project-data/export/ folder
+    You can delete the keyframe_idx file to create a new project.
+
+    If you export your data, it will be placed in project-data/export/ folder
 
 (3) usage:
 
-	The program will use the first available plugged in tablet it can find.
-	
-	If it cannot find a tablet, it will run in an emulation mode and you can
-	draw with the mouse.
+    The program will use the first available plugged in tablet it can find.
+    
+    If it cannot find a tablet, it will run in an emulation mode and you can
+    draw with the mouse.
 
-	KEYBOARD COMMANDS
-	-----------------
+    KEYBOARD COMMANDS
+    -----------------
 
-		Q     - Move frame cursor left
-		E     - Move frame cursor right
-		
-		1     - Edit background layer
-		2     - Edit foreground layer
-		
-		K    - Insert keyframe on active layer
-		D    - Delete keyframe on active layer
-		
-		R    - Toggle keyframe recording (automatically inserts keyframes on 
-		      active layer when navigating)
-		
-		C     - Switch primary/secondary colors in brush editor
-		TAB   - Toggle UI on/off
-		
-		S    - Save project data
-		X    - Export project data as png sequence
-		
-		Y    - Yank Current active layer/keyframe to buffer
-		P    - Put buffer to current keyframe
-		
-		0    - Animation preview
-		
-		N    - Add new brush node (parameter mapping)
-		
-		SPACE - Drag UI panels 
-		
-		ESC - Exit
-	
+        Q     - Move frame cursor left
+        E     - Move frame cursor right
+        
+        1     - Edit background layer
+        2     - Edit foreground layer
+        
+        K    - Insert keyframe on active layer
+        D    - Delete keyframe on active layer
+        
+        R    - Toggle keyframe recording (automatically inserts keyframes on 
+              active layer when navigating)
+        
+        C     - Switch primary/secondary colors in brush editor
+        TAB   - Toggle UI on/off
+        
+        S    - Save project data
+        X    - Export project data as png sequence
+        
+        Y    - Yank Current active layer/keyframe to buffer
+        P    - Put buffer to current keyframe
+        
+        0    - Animation preview
+        
+        N    - Add new brush node (parameter mapping)
+        
+        SPACE - Drag UI panels 
+        
+        ESC - Exit
+    
 (4) links
 
-	SDL 2.0
-	http://www.libsdl.org/
-	
-	SDL_image 2.0
-	https://www.libsdl.org/projects/SDL_image/
-	
-	WINTAB SDK
-	http://www.wacomeng.com/windows/index.html
+    SDL 2.0
+    http://www.libsdl.org/
+    
+    SDL_image 2.0
+    https://www.libsdl.org/projects/SDL_image/
+    
+    WINTAB SDK
+    http://www.wacomeng.com/windows/index.html
 
 (5) contact:
 
-	devon.zachary@gmail.com
+    devon.zachary@gmail.com
 
 
 -------------------------------------------------------------------------------
