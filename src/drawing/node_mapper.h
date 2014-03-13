@@ -29,6 +29,7 @@ struct mapper_node{
 		int input_channels;
 		int output_channels;
 		unsigned int node_label;
+		unsigned int interface_type;
 		unsigned int input_labels[MAX_NODE_CHANNELS];
 		unsigned int output_labels[MAX_NODE_CHANNELS];
 		unsigned int calculation_status;

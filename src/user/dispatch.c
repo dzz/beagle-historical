@@ -28,7 +28,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								panels_disable_dragmode();
 								break;
 						case SDLK_n:
-								nodemapper_create_template(LABEL_MAPPER);
+								nodemapper_create_template(TEMPLATE_MAPPER);
 								break;
 				}
 		}

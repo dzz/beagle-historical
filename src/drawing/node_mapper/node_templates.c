@@ -13,6 +13,7 @@ void template_MAPPER(mapper_node* node) {
 		node->input_labels[0] = LABEL_X;
 		node->output_labels[0] = LABEL_Y;
 		node->node_label = LABEL_MAPPER;
+		node->interface_type = NODE_INTERFACE_MAPPER;
 		node->data = malloc(sizeof(mapping_function));
 
 		{
@@ -25,7 +26,7 @@ void template_MAPPER(mapper_node* node) {
 }
 
 #define BEGIN_TEMPLATES {
-#define ADD_TEMPLATE(id) if( node_template == LABEL_##id ) template_##id(node); else
+#define ADD_TEMPLATE(id) if( node_template == TEMPLATE_##id ) template_##id(node); else
 #define END_TEMPLATES { /* invalid template specified */} }
 
 void nodemapper_create_template(unsigned int node_template) {
@@ -39,7 +40,5 @@ void nodemapper_create_template(unsigned int node_template) {
 
 			}
 			nodemapper_get_node_array()[nodemapper_get_top_id()] = node;
-
-
 }
 

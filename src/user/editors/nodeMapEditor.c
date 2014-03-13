@@ -22,7 +22,6 @@
 unsigned int interaction_mode = INTERACTION_MODE_NONE;
 
 static SDL_Surface* labels[NUM_LABELS] = {0};
-typedef SDL_Rect node_rect;
 
 node_rect node_titlebars[MAX_NODES];
 node_rect node_guiareas[MAX_NODES];
@@ -57,6 +56,8 @@ void add_input_mouse_target(SDL_Rect* r, mapper_node *t, unsigned int con_type, 
 void initNodeMapEditor(){
 		//node_resource_ids.h
 		LOAD_NODE_IMAGE_RESOURCES
+
+		initNodeDispatcher();
 }
 
 void destroyNodeMapEditor(){
@@ -115,21 +116,17 @@ void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 				}
 }
 
+#define BEGIN_INTERFACES {
+#define RENDERABLE_INTERFACE(x) if(node->interface_type==NODE_INTERFACE_##x) render_interface_##x( target, node, r ); else
+#define END_INTERFACES { /* invalid interface specified */} }
+
 void render_node_gui( SDL_Surface* target, mapper_node* node, node_rect* r) {
 		if(node->node_label == LABEL_MAPPER ) {
-				unsigned int mapper_bg = SDL_MapRGB(target->format,
-								200,200,200 );
-				SDL_FillRect( target, r, mapper_bg);
-				render_mapping_function(target, node->data, r);		
-				{
-					unsigned int y = r->y+(unsigned int)(node->outputs[0]*r->h);
-					SDL_Rect marker;
-					marker.x=r->x;
-					marker.y=y;
-					marker.w=r->w;
-					marker.h=2;
-					SDL_FillRect( target, &marker, 0);
-				}
+
+			BEGIN_INTERFACES
+			RENDERABLE_INTERFACE(MAPPER)
+			END_INTERFACES
+
 		}
 }
 

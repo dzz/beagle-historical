@@ -14,8 +14,18 @@
 #define LABEL_X 10
 #define LABEL_Y 11
 
-#define NUM_LABELS 12
+#define TEMPLATE_MAPPER 0
+#define TEMPLATE_ADD 1
+#define TEMPLATE_MUL 2
+#define TEMPLATE_SLIDER 3
+#define TEMPLATE_GRADIENT 4
+#define TEMPLATE_OSCILLATOR 5
 
+#define NODE_INTERFACE_NONE 0
+#define NODE_INTERFACE_MAPPER 1
+#define TOTAL_INTERFACES 2
+
+#define NUM_LABELS 12
 
 #define LOAD_NODE_IMAGE_RESOURCES \
 	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/generated/title_brush_controller.bmp");\

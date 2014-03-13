@@ -1,6 +1,10 @@
 #ifndef __NODE_MAP_EDITOR__
 #define __NODE_MAP_EDITOR__
 
+#include "../panels.h"
+
+typedef SDL_Rect node_rect;
+
 void initNodeMapEditor();
 void destroyNodeMapEditor();
 
