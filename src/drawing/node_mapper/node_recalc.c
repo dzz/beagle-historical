@@ -26,6 +26,10 @@ void node_recalc_mapper(mapper_node* node) {
 }
 
 void node_recalc_add(mapper_node* node) { 
-
+	int i;
+	node->outputs[0] = 0;	
+	for(i=0; i< node->input_channels; ++i) {
+		node->outputs[0]+=node->inputs[0]->outputs[ node->foreign_channels[0]];
+	}
 }
 

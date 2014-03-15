@@ -4,9 +4,19 @@
 #include "node_internals.h"
 #include "node_recalc.h"
 
+void template_ADD(mapper_node* node) {
+		node->recalc=&node_recalc_add;
+		node->input_channels = 2;
+		node->output_channels = 1;
+		node->input_labels[0] = LABEL_X;
+		node->input_labels[1] = LABEL_X;
+		node->output_labels[0] = LABEL_Y;
+		node->node_label = LABEL_ADD;
+		node->interface_type = NODE_INTERFACE_NONE;
+}
+
 void template_MAPPER(mapper_node* node) {
 
-		new_node(node);
 		node->recalc=&node_recalc_mapper;
 		node->input_channels = 1;
 		node->output_channels = 1;
@@ -36,6 +46,7 @@ void nodemapper_create_template(unsigned int node_template) {
 			
 				BEGIN_TEMPLATES
 				ADD_TEMPLATE(MAPPER)
+				ADD_TEMPLATE(ADD)
 				END_TEMPLATES
 
 			}

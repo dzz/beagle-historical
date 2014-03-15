@@ -58,6 +58,7 @@ mapper_node* nodemapper_allocate_top(){
 		{
 			mapper_node* node = (mapper_node*)malloc(sizeof(mapper_node));
 			node->id=top_node_id;
+			new_node(node);
 			return node;
 		} 
 		} else {

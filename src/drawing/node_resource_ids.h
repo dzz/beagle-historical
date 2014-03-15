@@ -13,6 +13,7 @@
 #define LABEL_MAPPER 9
 #define LABEL_X 10
 #define LABEL_Y 11
+#define LABEL_ADD 12
 
 #define TEMPLATE_MAPPER 0
 #define TEMPLATE_ADD 1
@@ -25,7 +26,7 @@
 #define NODE_INTERFACE_MAPPER 1
 #define TOTAL_INTERFACES 2
 
-#define NUM_LABELS 12
+#define NUM_LABELS 13
 
 #define LOAD_NODE_IMAGE_RESOURCES \
 	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/generated/title_brush_controller.bmp");\
@@ -39,6 +40,6 @@
 	labels[LABEL_TIME]=SDL_LoadBMP("ui_gen/generated/title_time.bmp");\
 	labels[LABEL_MAPPER]=SDL_LoadBMP("ui_gen/generated/title_mapper.bmp");\
 	labels[LABEL_X]=SDL_LoadBMP("ui_gen/generated/title_input.bmp");\
-	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/generated/title_output.bmp");
-	
+	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/generated/title_output.bmp");\
+	labels[LABEL_ADD]=SDL_LoadBMP("ui_gen/generated/title_add.bmp");
 #endif

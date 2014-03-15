@@ -17,5 +17,6 @@ void new_node(mapper_node* node) {
 	node->interface_type = NODE_INTERFACE_NONE;
 	node->x = 25;
 	node->y = 25;
+	node->data = 0;
 }
 

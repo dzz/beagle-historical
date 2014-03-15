@@ -30,6 +30,9 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_n:
 								nodemapper_create_template(TEMPLATE_MAPPER);
 								break;
+						case SDLK_3:
+								nodemapper_create_template(TEMPLATE_ADD);
+								break;
 				}
 		}
 
