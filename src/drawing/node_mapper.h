@@ -23,7 +23,6 @@ struct mapper_node{
 		unsigned int id;
 		mapper_node* inputs[MAX_NODE_CHANNELS];
 		int foreign_channels[MAX_NODE_CHANNELS];
-		void (*update_cascade)(mapper_node* node);
 		void (*recalc)(mapper_node *node);
 		double outputs[MAX_NODE_CHANNELS];
 		int input_channels;
