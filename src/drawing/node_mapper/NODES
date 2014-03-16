@@ -1,3 +1,10 @@
+NODE STRUCTURE
+
+     +----+<---TEMPLATE
+     |node|<---MOUSE HANDLERS
+     |    |<---INTERFACE RENDERER
+     +----+<---RECALCULATION FUNCTION
+
 NODE PROGRAMS
 
    - add new template id to the ../node_resource_ids.h header
@@ -21,4 +28,7 @@ NODE INTERFACES
 
    - bind interface in node_interaction.c: initNodeDispatcher() with 
      IMPORT_INTERFACE macro
+
+   - if the node interface renders anything to the screen, add in 
+     nodeMapEditor.c:render_node_gui  with the RENDERABLE_INTERFACE macro
 

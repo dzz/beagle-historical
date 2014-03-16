@@ -91,7 +91,9 @@ void bindColorPickerTarget(cp_color* target_color) {
 	map.rgba.b = editing_color->b;
 
 	hsv_from_rgb(map,&h,&s,&v);
+
 	commitColor();
+
 	drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 }
 
@@ -108,7 +110,7 @@ static void commitColor(void) {
 	}
 
 
-	secondary_rgb = rgb_from_hsv(secondary.h,secondary.s,secondary.v);
+	//secondary_rgb = rgb_from_hsv(secondary.h,secondary.s,secondary.v);
 
 	{
 		double r = 0.6;
@@ -242,7 +244,6 @@ cp_color getSecondaryColor(void) {
 void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 
 		int x_end;
-
 		int y_end;
 
 		if(area->x > target->w) return;
@@ -261,14 +262,11 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 			SDL_Rect r;
 			int rad = 12;
 			r.x = (COLORPICKER_WIDTH / 2) - rad;
-			r.w = rad;
+			r.w = rad*2;
 			r.h = rad*2;
 			r.y = (COLORPICKER_HEIGHT / 4) - rad;
 
 			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
-			r.x+=rad;	
-			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
-			 
 
 		}
 
@@ -293,39 +291,8 @@ void renderColorPicker(SDL_Surface *target, UI_AREA *area) {
 			r.w = rad*2;
 			r.h = rad*2;
 
-			if(secondary_toggle==0)	
-				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
-			else
-				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
+			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
 
-		}
-
-
-		if(buffered_wheel_x !=-1 ) {
-			int rad = 4;
-			SDL_Rect r;
-			r.x = (buffered_wheel_x-rad);
-			r.y = (buffered_wheel_y-rad);
-			r.w = rad*2;
-			r.h = rad*2;
-			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 0,0,0));
-
-			r.x = (buffered_sv_x-rad);
-			r.y = (buffered_sv_y-rad);
-			r.w = rad*2;
-			r.h = rad*2;
-			SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, 0,0,0));
-
-			rad -=1;
-			r.x+=1;
-			r.y+=1;
-			r.w = rad*2;
-			r.h = rad*2;
-
-			if(secondary_toggle==1)	
-				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, primary_rgb.r,primary_rgb.g,primary_rgb.b));
-			else
-				SDL_FillRect(if_buffer,&r,SDL_MapRGB(if_buffer->format, secondary_rgb.r,secondary_rgb.g,secondary_rgb.b));
 		}
 
 		SDL_BlitSurface(if_buffer,NULL,target,(SDL_Rect *)area);
