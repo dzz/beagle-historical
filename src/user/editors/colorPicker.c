@@ -55,28 +55,6 @@ void drawColorWheel(int w,int hgt);
 
 void cp_toggle_primary_secondary(void) {
 	printf("WARNING: CALL TO DEPRECATED cp_toggle_primary_secondary\n");
-	return;
-	/*
-	cp_color tmpc;
-	int tmp;
-	tmp = wheel_x; wheel_x = buffered_wheel_x; buffered_wheel_x = tmp;
-	tmp = wheel_y; wheel_y = buffered_wheel_y; buffered_wheel_y = tmp;
-	tmp = sv_x; sv_x = buffered_sv_x; buffered_sv_x = tmp;
-	tmp = sv_y; sv_y = buffered_sv_y; buffered_sv_y = tmp;
-
-	secondary_toggle = !secondary_toggle;
-	if(secondary_toggle == 1) {
-			h = secondary.h;
-			s = secondary.s;
-			v = secondary.v;
-	} else {
-			h = primary.h;
-			s = primary.s;
-			v = primary.v;
-	}
-	commitColor();
-	drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
-	*/
 }
 
 
@@ -91,6 +69,8 @@ void bindColorPickerTarget(cp_color* target_color) {
 	map.rgba.b = editing_color->b;
 
 	hsv_from_rgb(map,&h,&s,&v);
+
+	if(h!=h) h=0; //sanitize NaN
 
 	commitColor();
 
