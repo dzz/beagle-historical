@@ -8,6 +8,4 @@ typedef struct {
 		double y;
 } curve_point;
 
-typedef curve_point[MAX_CURVE_POINTS] mapping_curve;
-
 #endif

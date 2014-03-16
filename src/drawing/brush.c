@@ -247,7 +247,7 @@ __inline float map_intensity(float x,float y,float p) {
 		return (unsigned char)mid;
 }
 
-void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
+static void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
 		pix->rgba.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
 		pix->rgba.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
 		pix->rgba.b = (unsigned char)((float)prim.b * p + (float)secon.b * (1-p));
