@@ -32,7 +32,8 @@ void node_recalc_add(mapper_node* node) {
 	node->outputs[0] = 0;	
 	for(i=0; i< node->input_channels; ++i) {
 		if(node->inputs[i]!=0) {
-			node->outputs[0]+=node->inputs[i]->outputs[ node->foreign_channels[i]];
+			node->outputs[0]+=
+					node->inputs[i]->outputs[ node->foreign_channels[i]];
 		}
 	}
 }
@@ -44,7 +45,8 @@ void node_recalc_add3(mapper_node* node) {
 					return;
 	}
 	for(i=0; i<3; ++i) {
-			node->outputs[i] = node->inputs[i]->outputs[ node->foreign_channels[i] ] +
+			node->outputs[i] = 
+					node->inputs[i]->outputs[ node->foreign_channels[i] ] +
 					node->inputs[i+3]->outputs[ node->foreign_channels[i+3] ];
 	}
 }

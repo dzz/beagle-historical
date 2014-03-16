@@ -17,8 +17,14 @@ typedef struct {
 	_gp data[MAX_GRADIENT_POINTS];
 } gradient;
 
+
+
+//note: gradients require data[0] and data[1] to be
+//      located at 0 and 1
+
+void init_gradient(gradient* g);
+void gradient_add_stop(gradient* g, double p);
+void gradient_del_stop(_gp* stop); 
 cp_color gradient_compute_color_at(gradient* g, double p);
-
-
 
 #endif

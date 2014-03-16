@@ -96,7 +96,7 @@ void plot(SDL_Surface* target, int x, int y) {
 		unsigned int coord = y*(target->w)+x;
 		if(coord < (target->w*target->h)) {
 			unsigned int* target_pixels = (unsigned int*)target->pixels;
-			target_pixels[coord]=SDL_MapRGB(target->format,128,255,128);
+			target_pixels[coord]=SDL_MapRGB(target->format,128,128,235);
 		}
 }
 
@@ -123,6 +123,7 @@ void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 #define END_INTERFACES { /* invalid interface specified */} }
 
 void render_node_gui( SDL_Surface* target, mapper_node* node, node_rect* r) {
+
 			BEGIN_INTERFACES
 			RENDERABLE_INTERFACE(MAPPER)
 			RENDERABLE_INTERFACE(COLOR)
@@ -171,11 +172,12 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 				SDL_Rect r;
 				int input_channels = usable_input_channels(nodes[i]);
 				int output_channels = usable_output_channels(nodes[i]);
+				int max_channels = input_channels > output_channels ? input_channels : output_channels;
 
 				r.x = nodes[i]->x+area->x;
 				r.y = nodes[i]->y+area->y;
 				r.w = gui_width;
-				r.h =(  input_channels + output_channels ) * channel_height;
+				r.h =(  max_channels ) * channel_height;
 				r.h = r.h < gui_height ? gui_height : r.h;
 
 				if( i == last_touched_node)

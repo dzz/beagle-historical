@@ -19,7 +19,7 @@ void init_gradient(gradient* g) {
 	g->data[2].c.b=0;
 	g->data[2].next = 0;
 
-	g->_stack_top=3;
+	g->_stack_top=2;
 }
 
 static void mix_cp_color(cp_color *pix, double p, cp_color a, cp_color b) {
@@ -28,6 +28,53 @@ static void mix_cp_color(cp_color *pix, double p, cp_color a, cp_color b) {
 		pix->b = (unsigned char)((double)b.b * p + (double)a.b * (1-p));
 }
 
+
+void gradient_add_stop(gradient* g, double p) {
+//	printf("grad:%d  x:%f\n",g,p);
+
+	g->data[g->_stack_top].x = p;
+	g->data[g->_stack_top].c = gradient_compute_color_at(g,p);
+	g->_stack_top++;
+
+//	printf("created gradstop:%d  x:%f\n",g,p);
+//	printf("stack_top:%d  x:%f\n",g->_stack_top);
+}
+
+#define NO_STOP_FOUND -1
+
+void gradient_del_stop(gradient*g, _gp* stop) {
+		int i;
+		int found = NO_STOP_FOUND;
+
+		printf("grad:%d  _gp deleting:%d\n",g,stop);
+		printf("stack_top:%d  x:%f\n",g->_stack_top);
+
+		for(i=0; i<g->_stack_top; ++i) {
+						_gp* check =  &g->data[i];
+						if(check == stop) {
+								found = i;
+								break;
+						}
+		}
+
+		printf("idx %d to delete\n",found);
+
+		if(found != NO_STOP_FOUND ) {
+			int j;
+			g->_stack_top--;
+			for(j = 0; j< g->_stack_top;++j) {
+				int src_idx =j;
+
+				if(src_idx>=found)
+						src_idx++;
+
+				printf("setting data[%d] to source[%d]\n",j,src_idx);
+				g->data[j] = g->data[src_idx];
+			}
+		}
+		printf("finished delete\n");
+		printf("stack_top:%d  x:%f\n",g->_stack_top);
+}
 
 cp_color gradient_compute_color_at(gradient* g, double p) {
 

@@ -65,10 +65,28 @@ cp_color rgb_from_hsv(double h, double s, double v)
     return rgb_from_dbl(0,0,0);
 }
 
-// r,g,b values are from 0 to 1
-// h = [0,360], s = [0,1], v = [0,1]
-// if s == 0, then h = -1 (undefined)
-void hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v )
+void _hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v );
+void hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v ) {
+
+		if(col.packed == 0) {
+				*h = 0;
+				*s = 0;
+				*v = 0;
+				return;
+		} else {
+				int sum = col.rgba.r+col.rgba.g+col.rgba.b;
+				if (sum == (255+255+255)){
+						*h = 0;
+						*s = 0;
+						*v = 1;
+						return;
+				}
+		} 
+
+		_hsv_from_rgb(col,h,s,v);
+}
+
+void _hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v )
 {
 		double min, max, delta;
 

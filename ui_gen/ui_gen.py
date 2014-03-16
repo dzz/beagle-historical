@@ -50,15 +50,15 @@ for button_name in buttons:
 	os.system(down_command);
 	idx += 1;
 
-titles = [ "stylus","brush_controller","mapper","add" ]
-make_title_command = "convert -background rgb(72,72,72) -fill white -font Consolas -size 100x16 label:\" {$title_name} \" generated/title_{$title_name}.bmp"
+titles = [ "stylus","brush","mapper","add","mul","color","grad","add3","mul3" ]
+make_title_command = "convert -background rgb(72,72,72) -fill white -font Terminal -size 75x14 label:\" {$title_name} \" generated/title_{$title_name}.bmp"
 
 for title_name in titles:
 		command = make_title_command.replace("{$title_name}",title_name);
 		os.system(command);
 
-titles = [ "pressure","time","size","color","alpha","jitter","noise","input","output" ]
-make_title_command = "convert -background rgb(64,64,64) -fill rgba(165,164,162) -font Consolas -size 60x16  label:\" {$title_name} \" generated/title_{$title_name}.bmp"
+titles = [ "pres","time","size","alpha","jitter","noise","in","out","r","g","b","a" ]
+make_title_command = "convert -background rgb(64,64,64) -fill rgba(165,164,162) -font Consolas -size 40x14  label:\" {$title_name} \" generated/title_{$title_name}.bmp"
 
 for title_name in titles:
 		command = make_title_command.replace("{$title_name}",title_name);

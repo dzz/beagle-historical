@@ -42,19 +42,25 @@ void template_COLOR(mapper_node* node) {
 		node->gui_height =25;
 
 		node->data = malloc(sizeof(cp_color));
+		{
+			cp_color* col = (cp_color*)node->data;
+			col->r = 128;
+			col->g = 128;
+			col->b = 192;
+		}
 }
 
 void template_ADD(mapper_node* node) {
 
 		node->recalc=&node_recalc_add;
 
-		node->input_channels = 6;
+		node->input_channels = 2;
 		node->output_channels = 1;
 		node->input_labels[0] = LABEL_X;
 		node->input_labels[1] = LABEL_X;
 		node->output_labels[0] = LABEL_Y;
 
-		node->node_label = LABEL_ADD3;
+		node->node_label = LABEL_ADD;
 		node->interface_type = NODE_INTERFACE_NONE;
 }
 

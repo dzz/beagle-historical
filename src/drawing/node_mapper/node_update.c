@@ -8,7 +8,7 @@ void _node_stale_cascade(mapper_node* node, unsigned int* touched) {
 		touched[node->id] = NODE_TOUCHED;
 		for( i=0; i < node->input_channels; ++i) {
 				if(node->inputs[i] != 0) {
-						if( touched[i] != NODE_TOUCHED ){
+						if( touched[node->inputs[i]->id] != NODE_TOUCHED ){
 								_node_stale_cascade( node->inputs[i], touched );
 						}
 				}
@@ -24,7 +24,7 @@ void _node_update_cascade(mapper_node* node, unsigned int* touched) {
 		if( node-> calculation_status == NODE_STALE) {
 				for( i=0; i < node->input_channels; ++i) {
 						if(node->inputs[i] != 0) {
-								if( touched[i] != NODE_TOUCHED ){
+								if( touched[node->inputs[i]->id] != NODE_TOUCHED ){
 										_node_update_cascade(node->inputs[i], touched);
 								}
 						}

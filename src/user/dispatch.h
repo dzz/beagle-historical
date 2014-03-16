@@ -17,6 +17,8 @@ typedef struct {
 		unsigned int LEFT_ALT;
 } MODIFIERS;
 
-MODIFIERS dispatch_get_modifiers();
+#define MODIFIER_ENABLED 1
+MODIFIERS* dispatch_get_modifiers();
+
 
 #endif

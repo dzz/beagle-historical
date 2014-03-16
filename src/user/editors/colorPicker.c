@@ -20,6 +20,9 @@
 
 static void commitColor(void);
 
+static cp_color* editing_color = 0; // this is a binding for external colors
+									// e.g. a 'caret' for color editing
+
 static int wheel_x =-1;
 static int wheel_y =-1;
 static int buffered_wheel_x = -1;
@@ -77,22 +80,25 @@ void cp_toggle_primary_secondary(void) {
 }
 
 
-static cp_color* editing_color = 0;
 
 void bindColorPickerTarget(cp_color* target_color) {
+	uint_rgba_map map;
+
 	editing_color = target_color;	
+
+	map.rgba.r = editing_color->r;
+	map.rgba.g = editing_color->g;
+	map.rgba.b = editing_color->b;
+
+	hsv_from_rgb(map,&h,&s,&v);
+	commitColor();
+	drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 }
 
 static void commitColor(void) {
-	if(secondary_toggle == 1) {
-		secondary.h = h;
-		secondary.s = s;
-		secondary.v = v;
-	} else {
-		primary.h = h;
-		primary.s = s;
-		primary.v = v;
-	}
+	primary.h = h;
+	primary.s = s;
+	primary.v = v;
 	primary_rgb = rgb_from_hsv(primary.h,primary.s,primary.v);
 	if(editing_color!=0)
 	{
@@ -199,25 +205,19 @@ void initColorPicker(void) {
 		cur_color.g=128;
 		cur_color.b=64;
 		cur_color.a=255;
-
+	
+		editing_color = &primary_rgb;
 
 		interfaceSurface = createDrawingSurface(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 		if_buffer = createDrawingSurface(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
 
-
+		h = 0;
 		s = 1;
 		v = 1;
 		drawColorWheel(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
-
-
-		randomizeColor(seed);
 		commitColor();
-		cp_toggle_primary_secondary();
-
-		randomizeColor(seed+1024);
-		commitColor();
-
-		cp_toggle_primary_secondary();
+		drawSVTriangle(COLORPICKER_WIDTH,COLORPICKER_HEIGHT);
+		
 }
 
 

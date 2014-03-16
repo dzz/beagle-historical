@@ -24,8 +24,8 @@
 static MODIFIERS modifiers = {0};
 
 
-MODIFIERS dispatch_get_modifiers() {
-	return modifiers;
+MODIFIERS* dispatch_get_modifiers() {
+	return &modifiers;
 }
 
 SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
