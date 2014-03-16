@@ -127,6 +127,7 @@ void render_node_gui( SDL_Surface* target, mapper_node* node, node_rect* r) {
 			BEGIN_INTERFACES
 			RENDERABLE_INTERFACE(MAPPER)
 			RENDERABLE_INTERFACE(COLOR)
+			RENDERABLE_INTERFACE(GRADIENT)
 			END_INTERFACES
 
 }

@@ -16,10 +16,10 @@ void template_GRADIENT(mapper_node* node) {
 		node->output_labels[1] = LABEL_G;
 		node->output_labels[2] = LABEL_B;
 		node->node_label = LABEL_GRADIENT;
-		node->interface_type = NODE_INTERFACE_NONE;
+		node->interface_type = NODE_INTERFACE_GRADIENT;
 		node->data = malloc(sizeof(cp_color));
 		node->gui_width= 300;
-		node->gui_height =25;
+		node->gui_height =40;
 
 }
 void template_COLOR(mapper_node* node) {

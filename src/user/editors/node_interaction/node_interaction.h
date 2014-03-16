@@ -19,5 +19,6 @@ void render_interface_##name (SDL_Surface* target, mapper_node* node, node_rect*
 
 EXPORT_INTERFACE(MAPPER)
 EXPORT_INTERFACE(COLOR)
+EXPORT_INTERFACE(GRADIENT)
 
 #endif

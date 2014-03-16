@@ -18,6 +18,7 @@ node_dispatchers[NODE_INTERFACE_##x].mousemotion=&node_mousemotion_##x;
 void initNodeDispatcher() {
 	IMPORT_INTERFACE(MAPPER)
 	IMPORT_INTERFACE(COLOR)
+	IMPORT_INTERFACE(GRADIENT)
 }
 
 void node_mousedown(mapper_node* node, int cmx, int cmy) {
