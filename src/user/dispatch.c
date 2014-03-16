@@ -21,9 +21,22 @@
 #define KEYMODE_DOWN 1
 #define KEYMODE_UP 0
 
+static MODIFIERS modifiers = {0};
+
+
+MODIFIERS dispatch_get_modifiers() {
+	return modifiers;
+}
+
 SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 		if(mode==KEYMODE_UP) {
 				switch(sym) {
+						case SDLK_LCTRL:
+								modifiers.LEFT_CONTROL = 0;
+								break;
+						case SDLK_LALT:
+								modifiers.LEFT_ALT = 0;
+								break;	
 						case SDLK_SPACE:
 								panels_disable_dragmode();
 								break;
@@ -42,6 +55,12 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 		if(mode==KEYMODE_DOWN) {
 				//keydown handlers
 				switch(sym) {
+						case SDLK_LCTRL:
+								modifiers.LEFT_CONTROL = 1;
+								break;
+						case SDLK_LALT:
+								modifiers.LEFT_ALT = 1;
+								break;	
 						case SDLK_0:
 								animation_preview();
 								break;

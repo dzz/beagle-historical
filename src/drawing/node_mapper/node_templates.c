@@ -7,6 +7,22 @@
 #include "node_recalc.h"
 
 
+void template_GRADIENT(mapper_node* node) {
+		node->recalc=&node_recalc_gradient;
+		node->input_channels = 1;
+		node->output_channels = 3;
+		node->input_labels[0] = LABEL_X;
+		node->output_labels[0] = LABEL_R;
+		node->output_labels[1] = LABEL_G;
+		node->output_labels[2] = LABEL_B;
+		node->node_label = LABEL_GRADIENT;
+		node->interface_type = NODE_INTERFACE_NONE;
+		node->data = malloc(sizeof(cp_color));
+
+		node->gui_width= 50;
+		node->gui_height =50;
+
+}
 void template_COLOR(mapper_node* node) {
 		node->recalc=&node_recalc_color;
 		node->input_channels = 0;
@@ -92,6 +108,7 @@ void nodemapper_create_template(unsigned int node_template) {
 				ADD_TEMPLATE(ADD)
 				ADD_TEMPLATE(MUL)
 				ADD_TEMPLATE(COLOR)
+				ADD_TEMPLATE(GRADIENT)
 				END_TEMPLATES
 
 				node->x = template_x;

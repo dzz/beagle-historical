@@ -12,5 +12,11 @@ void dispatch_mousedown( int button,int x,int y);
 void dispatch_mouseup(int button,int x, int y);
 void dispatch_mousemotion(int x,int y);
 
+typedef struct {
+		unsigned int LEFT_CONTROL;
+		unsigned int LEFT_ALT;
+} MODIFIERS;
+
+MODIFIERS dispatch_get_modifiers();
 
 #endif

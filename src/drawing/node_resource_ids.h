@@ -20,7 +20,8 @@
 #define LABEL_A 16
 #define LABEL_MUL 17
 #define LABEL_COLOR 18
-#define NUM_LABELS 19
+#define LABEL_GRADIENT 19
+#define NUM_LABELS 20
 
 
 #define TEMPLATE_MAPPER 0
@@ -57,5 +58,6 @@
 	labels[LABEL_A]=SDL_LoadBMP("ui_gen/generated/title_a.bmp");\
 	labels[LABEL_ADD]=SDL_LoadBMP("ui_gen/generated/title_add.bmp");\
 	labels[LABEL_MUL]=SDL_LoadBMP("ui_gen/generated/title_mul.bmp");\
-	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");
+	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");\
+	labels[LABEL_GRADIENT]=SDL_LoadBMP("ui_gen/generated/title_grad.bmp");
 #endif

@@ -45,13 +45,12 @@ void node_recalc_mul(mapper_node* node) {
 void node_recalc_color(mapper_node* node) {
 	cp_color* c = (cp_color*)node->data;
 
-	printf("%d,%d,%d\n",
-							(unsigned int)c->r, 
-							(unsigned int)c->g, 
-							(unsigned int)c->b);
-
 	node->outputs[0] = (double)c->r / 255.0;
 	node->outputs[1] = (double)c->g / 255.0;
 	node->outputs[2] = (double)c->b / 255.0;
+
+}
+
+void node_recalc_gradient(mapper_node* node) {
 
 }

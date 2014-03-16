@@ -337,7 +337,7 @@ void wire_inputs( connection_mouse_target* a, connection_mouse_target* b) {
 
 #define MOUSE_IN_TARGET 1
 
-#define MENU_ITEMS 4
+#define MENU_ITEMS 5
 #define MENU_ITEM_HEIGHT 16
 
 unsigned int button_width = 0;
@@ -351,6 +351,7 @@ void renderAddMenu(SDL_Surface* target, UI_AREA* area) {
 	buttons[1] = labels[LABEL_ADD];
 	buttons[2] = labels[LABEL_MUL];
 	buttons[3] = labels[LABEL_COLOR];
+	buttons[4] = labels[LABEL_GRADIENT];
 
 	r.x = area->x; 
 	r.y = area->y;
@@ -379,12 +380,14 @@ void process_menu_item(unsigned int item) {
 				case 3: 
 						nodemapper_create_template(TEMPLATE_COLOR);
 						break;
+				case 4: 
+						nodemapper_create_template(TEMPLATE_GRADIENT);
+						break;
 		}
 }
 
 void nodemapeditor_mousedown(int x,int y){
 
-		
 		unsigned int cmx = client_get_screen_mousex();
 		unsigned int cmy = client_get_screen_mousey();
 		mapper_node** nodes = nodemapper_get_node_array();
