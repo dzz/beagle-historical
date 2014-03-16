@@ -338,7 +338,7 @@ void wire_inputs( connection_mouse_target* a, connection_mouse_target* b) {
 #define MOUSE_IN_TARGET 1
 
 #define MENU_ITEMS 5
-#define MENU_ITEM_HEIGHT 16
+#define MENU_ITEM_HEIGHT 24
 
 unsigned int button_width = 0;
 
@@ -362,7 +362,7 @@ void renderAddMenu(SDL_Surface* target, UI_AREA* area) {
 
 	for(i=0; i<MENU_ITEMS;++i) {
 		SDL_BlitSurface(buttons[i],NULL,target,&r);
-		r.y+=r.h;
+		r.y+=MENU_ITEM_HEIGHT;
 	}
 }
 

@@ -18,9 +18,8 @@ void template_GRADIENT(mapper_node* node) {
 		node->node_label = LABEL_GRADIENT;
 		node->interface_type = NODE_INTERFACE_NONE;
 		node->data = malloc(sizeof(cp_color));
-
-		node->gui_width= 50;
-		node->gui_height =50;
+		node->gui_width= 300;
+		node->gui_height =25;
 
 }
 void template_COLOR(mapper_node* node) {
@@ -35,7 +34,7 @@ void template_COLOR(mapper_node* node) {
 		node->data = malloc(sizeof(cp_color));
 
 		node->gui_width= 50;
-		node->gui_height =50;
+		node->gui_height =25;
 
 }
 
