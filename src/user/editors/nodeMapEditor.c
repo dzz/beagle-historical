@@ -123,13 +123,11 @@ void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 #define END_INTERFACES { /* invalid interface specified */} }
 
 void render_node_gui( SDL_Surface* target, mapper_node* node, node_rect* r) {
-
 			BEGIN_INTERFACES
 			RENDERABLE_INTERFACE(MAPPER)
 			RENDERABLE_INTERFACE(COLOR)
 			RENDERABLE_INTERFACE(GRADIENT)
 			END_INTERFACES
-
 }
 
 
@@ -338,7 +336,7 @@ void wire_inputs( connection_mouse_target* a, connection_mouse_target* b) {
 
 #define MOUSE_IN_TARGET 1
 
-#define MENU_ITEMS 5
+#define MENU_ITEMS 6
 #define MENU_ITEM_HEIGHT 24
 
 unsigned int button_width = 0;
@@ -353,6 +351,7 @@ void renderAddMenu(SDL_Surface* target, UI_AREA* area) {
 	buttons[2] = labels[LABEL_MUL];
 	buttons[3] = labels[LABEL_COLOR];
 	buttons[4] = labels[LABEL_GRADIENT];
+	buttons[5] = labels[LABEL_ADD3];
 
 	r.x = area->x; 
 	r.y = area->y;
@@ -383,6 +382,9 @@ void process_menu_item(unsigned int item) {
 						break;
 				case 4: 
 						nodemapper_create_template(TEMPLATE_GRADIENT);
+						break;
+				case 5: 
+						nodemapper_create_template(TEMPLATE_ADD3);
 						break;
 		}
 }

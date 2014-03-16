@@ -48,13 +48,33 @@ void template_ADD(mapper_node* node) {
 
 		node->recalc=&node_recalc_add;
 
-		node->input_channels = 2;
+		node->input_channels = 6;
 		node->output_channels = 1;
 		node->input_labels[0] = LABEL_X;
 		node->input_labels[1] = LABEL_X;
 		node->output_labels[0] = LABEL_Y;
 
-		node->node_label = LABEL_ADD;
+		node->node_label = LABEL_ADD3;
+		node->interface_type = NODE_INTERFACE_NONE;
+}
+
+void template_ADD3(mapper_node* node) {
+
+		node->recalc=&node_recalc_add3;
+
+		node->input_channels = 6;
+		node->output_channels = 3;
+		node->input_labels[0] = LABEL_A;
+		node->input_labels[1] = LABEL_A;
+		node->input_labels[2] = LABEL_A;
+		node->input_labels[3] = LABEL_B;
+		node->input_labels[4] = LABEL_B;
+		node->input_labels[5] = LABEL_B;
+		node->output_labels[0] = LABEL_Y;
+		node->output_labels[1] = LABEL_Y;
+		node->output_labels[2] = LABEL_Y;
+
+		node->node_label = LABEL_ADD3;
 		node->interface_type = NODE_INTERFACE_NONE;
 }
 
@@ -122,6 +142,7 @@ void nodemapper_create_template(unsigned int node_template) {
 				BEGIN_TEMPLATES
 				ADD_TEMPLATE(MAPPER)
 				ADD_TEMPLATE(ADD)
+				ADD_TEMPLATE(ADD3)
 				ADD_TEMPLATE(MUL)
 				ADD_TEMPLATE(COLOR)
 				ADD_TEMPLATE(GRADIENT)

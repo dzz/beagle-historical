@@ -13,7 +13,13 @@ void init_gradient(gradient* g) {
 	g->data[1].c.b=255;
 	g->data[1].next = 0;
 
-	g->_stack_top=2;
+	g->data[2].x = 0.5;
+	g->data[2].c.r=0;
+	g->data[2].c.g=255;
+	g->data[2].c.b=0;
+	g->data[2].next = 0;
+
+	g->_stack_top=3;
 }
 
 static void mix_cp_color(cp_color *pix, double p, cp_color a, cp_color b) {
@@ -22,17 +28,21 @@ static void mix_cp_color(cp_color *pix, double p, cp_color a, cp_color b) {
 		pix->b = (unsigned char)((double)b.b * p + (double)a.b * (1-p));
 }
 
+
 cp_color gradient_compute_color_at(gradient* g, double p) {
 
 	int i;
 
 	_gp* min = 0;
 	_gp* max = 0;
-	cp_color ret;
+	cp_color ret = {0};
+
+	if(p>1) p = 1;
+	if(p<0) p = 0;
 
 	for(i=0; i<g->_stack_top; ++i) {
 			_gp* cur = &g->data[i];
-			if(p==cur->x) {
+			if( cur->x == p) {
 					return cur->c;
 			}
 			if( cur->x < p )

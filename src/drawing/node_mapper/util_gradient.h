@@ -19,4 +19,6 @@ typedef struct {
 
 cp_color gradient_compute_color_at(gradient* g, double p);
 
+
+
 #endif
