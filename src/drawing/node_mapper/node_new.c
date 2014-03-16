@@ -14,8 +14,11 @@ void new_node(mapper_node* node) {
 	node->calculation_status = NODE_STALE;
 	node->binding_mode = BINDING_MODE_USER;
 	node->interface_type = NODE_INTERFACE_NONE;
+
 	node->x = 25;
 	node->y = 25;
 	node->data = 0;
+	node->gui_width= 80;
+	node->gui_height = 1;
 }
 

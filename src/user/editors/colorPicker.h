@@ -24,5 +24,6 @@ cp_color getSecondaryColor(void);
 
 void cp_toggle_primary_secondary(void);
 unsigned int get_cp_secondary(void);
+void bindColorPickerTarget(cp_color* target_color);
 
 #endif

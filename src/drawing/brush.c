@@ -53,6 +53,10 @@ static int brush_erase = 0;
 static int brush_loaded_dabs = 0;
 static int brush_smudge = 0;
 
+static double brush_r;
+static double brush_g;
+static double brush_b;
+
 static stylusState stroke_origin;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
@@ -72,10 +76,6 @@ void brush_modulate_values(double pressure, unsigned int time_ms) {
 		brush_size_mod = 
 				brush_size_base * 
 				brush_controller->outputs[BRUSH_CHANNEL_SIZE];
-
-		brush_color_mix_mod = 
-				brush_controller->outputs[BRUSH_CHANNEL_COLOR];
-
 		brush_alpha_mod = 
 				brush_controller->outputs[BRUSH_CHANNEL_ALPHA];
 
@@ -84,7 +84,16 @@ void brush_modulate_values(double pressure, unsigned int time_ms) {
 
 		brush_noise_mod = 
 				brush_controller->outputs[BRUSH_CHANNEL_NOISE];
+		brush_r = 
+				brush_controller->outputs[BRUSH_CHANNEL_R];
+		brush_g = 
+				brush_controller->outputs[BRUSH_CHANNEL_G];
+		brush_b = 
+				brush_controller->outputs[BRUSH_CHANNEL_B];
 
+		if(brush_r>1) brush_r = 1;
+		if(brush_g>1) brush_g = 1;
+		if(brush_b>1) brush_b = 1;
 }
 
 void brush_setValuesFromUI() {
@@ -280,7 +289,11 @@ __inline void plot_dab(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		}
 
 		if( brush_smudge != 1) {
-			mix_rgb_by_float(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
+				
+				current.rgba.r = (unsigned char)(brush_r *255.0);
+				current.rgba.g = (unsigned char)(brush_g *255.0);
+				current.rgba.b = (unsigned char)(brush_b *255.0);
+			//mix_rgb_by_float(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
 		} else {
 			current = sample_surface( ctxt, x,y );
 		}

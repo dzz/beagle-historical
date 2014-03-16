@@ -14,32 +14,48 @@
 #define LABEL_X 10
 #define LABEL_Y 11
 #define LABEL_ADD 12
+#define LABEL_R 13
+#define LABEL_G 14
+#define LABEL_B 15
+#define LABEL_A 16
+#define LABEL_MUL 17
+#define LABEL_COLOR 18
+#define NUM_LABELS 19
+
 
 #define TEMPLATE_MAPPER 0
 #define TEMPLATE_ADD 1
 #define TEMPLATE_MUL 2
-#define TEMPLATE_SLIDER 3
+#define TEMPLATE_COLOR 3
 #define TEMPLATE_GRADIENT 4
+#define TEMPLATE_NOISE 5
 #define TEMPLATE_OSCILLATOR 5
+#define TEMPLATE_SLIDER 6
 
 #define NODE_INTERFACE_NONE 0
 #define NODE_INTERFACE_MAPPER 1
-#define TOTAL_INTERFACES 2
+#define NODE_INTERFACE_COLOR 2
+#define TOTAL_INTERFACES 3
 
-#define NUM_LABELS 13
 
 #define LOAD_NODE_IMAGE_RESOURCES \
-	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/generated/title_brush_controller.bmp");\
+	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/generated/title_brush.bmp");\
 	labels[LABEL_SIZE]=SDL_LoadBMP("ui_gen/generated/title_size.bmp");\
 	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");\
 	labels[LABEL_ALPHA]=SDL_LoadBMP("ui_gen/generated/title_alpha.bmp");\
 	labels[LABEL_JITTER]=SDL_LoadBMP("ui_gen/generated/title_jitter.bmp");\
 	labels[LABEL_NOISE]=SDL_LoadBMP("ui_gen/generated/title_noise.bmp");\
 	labels[LABEL_STYLUS]=SDL_LoadBMP("ui_gen/generated/title_stylus.bmp");\
-	labels[LABEL_PRESSURE]=SDL_LoadBMP("ui_gen/generated/title_pressure.bmp");\
+	labels[LABEL_PRESSURE]=SDL_LoadBMP("ui_gen/generated/title_pres.bmp");\
 	labels[LABEL_TIME]=SDL_LoadBMP("ui_gen/generated/title_time.bmp");\
 	labels[LABEL_MAPPER]=SDL_LoadBMP("ui_gen/generated/title_mapper.bmp");\
-	labels[LABEL_X]=SDL_LoadBMP("ui_gen/generated/title_input.bmp");\
-	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/generated/title_output.bmp");\
-	labels[LABEL_ADD]=SDL_LoadBMP("ui_gen/generated/title_add.bmp");
+	labels[LABEL_X]=SDL_LoadBMP("ui_gen/generated/title_in.bmp");\
+	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/generated/title_out.bmp");\
+	labels[LABEL_R]=SDL_LoadBMP("ui_gen/generated/title_r.bmp");\
+	labels[LABEL_G]=SDL_LoadBMP("ui_gen/generated/title_g.bmp");\
+	labels[LABEL_B]=SDL_LoadBMP("ui_gen/generated/title_b.bmp");\
+	labels[LABEL_A]=SDL_LoadBMP("ui_gen/generated/title_a.bmp");\
+	labels[LABEL_ADD]=SDL_LoadBMP("ui_gen/generated/title_add.bmp");\
+	labels[LABEL_MUL]=SDL_LoadBMP("ui_gen/generated/title_mul.bmp");\
+	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");
 #endif

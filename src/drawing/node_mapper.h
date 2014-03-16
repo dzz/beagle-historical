@@ -3,7 +3,7 @@
 
 #include "node_resource_ids.h"
 
-#define MAX_NODES 32
+#define MAX_NODES 64
 #define MAX_NODE_CHANNELS 8
 
 #define NODE_STALE 1
@@ -36,6 +36,8 @@ struct mapper_node{
 		//display
 		unsigned int x;
 		unsigned int y;
+		unsigned int gui_width;
+		unsigned int gui_height;
 		void* data;
 };
 
@@ -43,14 +45,17 @@ void initNodeMapper(void);
 void dropNodeMapper(void);
 
 #define BRUSH_CHANNEL_SIZE 0
-#define BRUSH_CHANNEL_COLOR 1
-#define BRUSH_CHANNEL_ALPHA 2
-#define BRUSH_CHANNEL_JITTER 3
-#define BRUSH_CHANNEL_NOISE 4
+#define BRUSH_CHANNEL_ALPHA 1
+#define BRUSH_CHANNEL_JITTER 2
+#define BRUSH_CHANNEL_NOISE 3
+#define BRUSH_CHANNEL_R 4
+#define BRUSH_CHANNEL_G 5
+#define BRUSH_CHANNEL_B 6
 
 mapper_node* nodemapper_get_brush_controller();
 mapper_node** nodemapper_get_node_array();
 
 void nodemapper_create_template(unsigned int node_template);
+void nodemapper_set_template_coords(int x, int y);
 
 #endif

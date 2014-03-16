@@ -18,6 +18,6 @@ void node_mousemotion_##name (mapper_node* node, int cmx,int cmy);\
 void render_interface_##name (SDL_Surface* target, mapper_node* node, node_rect* r );
 
 EXPORT_INTERFACE(MAPPER)
+EXPORT_INTERFACE(COLOR)
 
 #endif
-

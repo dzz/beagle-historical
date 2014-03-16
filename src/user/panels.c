@@ -124,8 +124,8 @@ void layoutPanels() {
 	
 	nodemapeditor_area->x=0;
 	nodemapeditor_area->y=0;
-	nodemapeditor_area->h=890;
-	nodemapeditor_area->w=880;
+	nodemapeditor_area->h=540;
+	nodemapeditor_area->w=1920;
 
 	//normalize our convenience variables
 	{
@@ -321,12 +321,12 @@ void renderColorSwatch(SDL_Surface *target) {
 void renderPanels(SDL_Surface *target) {
 		if(panelsEnabled == 1) {
 				if( dragmode == 0 ) {
+						renderNodeMapEditor(target,nodemapeditor_area);
 						renderColorSwatch(target);
 						renderBrushEditor(target,brusheditor_area);
 						renderColorPicker(target,colorpicker_area);
 						renderTimeline(target);
 						renderToolbar(target,toolbar_area);
-						renderNodeMapEditor(target,nodemapeditor_area);
 				} else {
 						int i;
 						for(i=0; i<TOTAL_PANELS; ++i) {
