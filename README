@@ -2,7 +2,7 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.2.3.0
+      ctt2 0.2.5.0
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -53,8 +53,10 @@
     -----
 
     - I have compiled with gcc succesfully under linux but the source may not 
-    remain compatible with gcc as I'm primarily doing my development with the
-    microsoft compilers. There is no tablet support under linux presently.
+    remain compatible as I'm primarily doing my development with the microsoft 
+    vstudio express compilers. 
+
+    There is no tablet support under linux presently.
       
 
 (2) project-data:
@@ -99,13 +101,23 @@
         
         0    - Animation preview
         
-        N    - Add new brush node (parameter mapping)
-        
         SPACE - Drag UI panels 
         
         ESC - Exit
     
-(4) links
+(4) node brushes / special keys
+
+    ** WORK IN PROGRESS **
+
+    Brushes are a series of nodes with data flowing out from the stylus,
+    through nodes, and then into the brush controller which performs rendering
+    to the active drawing context.
+
+    CTRL+Click will add data points inside node editors (e.g. gradient, mapper)
+
+    ALT+Click removes data points.
+ 
+(5) links
 
     SDL 2.0
     http://www.libsdl.org/
@@ -116,7 +128,7 @@
     WINTAB SDK
     http://www.wacomeng.com/windows/index.html
 
-(5) contact:
+(6) contact:
 
     devon.zachary@gmail.com
 

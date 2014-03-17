@@ -1,94 +1,99 @@
 #include <SDL.h>
 #include "../../../drawing/node_mapper.h"
+#include "../../../drawing/node_mapper/util_curve.h"
+#include "../../dispatch.h"
 #include "../mapperEditorBank.h"
 #include "../brushEditor.h"
 #include "node_interaction.h"
 
-static mapping_function* editing_function = 0;
-static int editing_function_node;
-
 void render_interface_MAPPER(SDL_Surface* target, mapper_node* node, node_rect* r ) {
 		unsigned int mapper_bg = SDL_MapRGB(target->format,
 						200,200,200 );
+		unsigned int mapper_fg = SDL_MapRGB(target->format,
+						20,20,20 );
+		curve* c = (curve*)node->data;
+
 		SDL_FillRect( target, r, mapper_bg);
-		render_mapping_function(target, node->data, r);		
+
 		{
-				unsigned int y = r->y+(unsigned int)(node->outputs[0]*r->h);
-				SDL_Rect marker;
-				marker.x=r->x;
-				marker.y=y;
-				marker.w=r->w;
-				marker.h=2;
-				SDL_FillRect( target, &marker, 0);
+				int i;
+				for( i=0; i<r->w;i+=3) {
+					double _sP = (double)i/(double)r->w;
+					double _sY = curve_compute_y_at(c,_sP);
+					SDL_Rect plot;
+					plot.x = i+r->x;
+					plot.y = r->y+(int)( (1.0-_sY) * (double)r->h);
+					plot.w=2;
+					plot.h=2;
+					SDL_FillRect( target, &plot, mapper_fg);
+				}
 		}
+
+		node->gui_width = r->w;
+		node->gui_height = r->h;
 }
 
-void node_mousemotion_MAPPER(mapper_node* node, int cmx,int cmy) {
-		int x = cmx;
-		int y = cmy;
+_cp* editing_point = 0;
 
-		if( editing_function != 0 ) {
-				double t_x = 
-						(double)(x - editing_function->_rendered_at.x)/ 
-						(double)editing_function->_rendered_at.w;
+#define MOUSEMODE_NONE -1
+#define MOUSEMODE_DRAGGING 1
 
-				double t_y = 
-						(double)(y - editing_function->_rendered_at.y)/ 
-						(double)editing_function->_rendered_at.h;
+unsigned int MAPPER_MOUSEMODE = MOUSEMODE_NONE;
 
-				t_y = 1 - t_y;
-
-				if( editing_function_node == MAPPER_NODE_MIN ) {
-						editing_function->min_y = t_y;
-
-						if(t_x < editing_function->max_x ){
-								editing_function->min_x = t_x;
-						}
-				} else
-
-				if( editing_function_node == MAPPER_NODE_MAX ) {
-						editing_function->max_y = t_y;
-
-						if(t_x > editing_function->min_x )
-								editing_function->max_x = t_x;
-				} 
-			
-		} else {
-				//other handlers
+void node_mousemotion_MAPPER(mapper_node* node, int cmx,int cmy){
+	if(MAPPER_MOUSEMODE == MOUSEMODE_DRAGGING) {
+		double _sX = (double)(cmx-node->x) / (double)node->gui_width;
+		double _sY = (double)(cmy-node->y) / (double)node->gui_height;
+		curve* c = (curve*)node->data;
+		
+		if( (editing_point != &c->data[CURVE_SPECIAL_POINT_START]) &&
+			(editing_point != &c->data[CURVE_SPECIAL_POINT_END]) ){
+					editing_point->x = _sX;
 		}
+		
+		editing_point->y = 1 - _sY;
+	}
 }
 
 void node_mouseup_MAPPER(mapper_node* node){
-	editing_function = 0;
-	brusheditor_redraw_stroke();
+	MAPPER_MOUSEMODE = MOUSEMODE_NONE;
 }
 
 void node_mousedown_MAPPER(mapper_node* node, int cmx, int cmy) {
-		const int md_threshold = 400;
-		int i;
+	int i;
+	double _sX = (double)(cmx-node->x) / (double)node->gui_width;
+	double _sY = (double)(cmy-node->y) / (double)node->gui_height;
+	curve *c = (curve*) node->data;
 
-		int x = cmx;
-		int y = cmy;
+	if(  dispatch_get_modifiers()->LEFT_CONTROL == MODIFIER_ENABLED ) {
+		curve_add_point(c,_sX, 1 - _sY);			
+		return;
+	}
 
-		mapping_function* func = (mapping_function*)node->data;
-		int nodes [4];
+	{
+			const double epsilon = 1.0 / 2.0;
 
+			double nD = fabs(_sX - c->data[0].x);
+			_cp* nearest = &c->data[0];
 
-		int node_idx;
+			for(i=1; i< c->_stack_top; ++i) {
+					double d;
+					d = fabs(_sX - c->data[i].x);
+					if(d < nD ){
+							nearest = &c->data[i];
+							nD = d;
+					}
+			}
 
-		nodes[0] = func->_min_render_x;
-		nodes[1] = func->_min_render_y;
-		nodes[2] = func->_max_render_x;
-		nodes[3] = func->_max_render_y;
-
-		for(node_idx=0; node_idx <2; ++node_idx) {
-				int dx = x - nodes[node_idx*2];
-				int dy = y - nodes[(node_idx*2)+1];
-				int md = dx*dx+dy*dy;
-				if( md < md_threshold ) {
-						editing_function = func;
-						editing_function_node = node_idx; // this will correspond to MAPPER_NODE_MIN or MAPPER_NODE_MAX
-						printf("%u\n",editing_function_node);
-				}
-		}
+			if( nD < epsilon ) {
+							if( dispatch_get_modifiers()->LEFT_ALT == MODIFIER_ENABLED) {
+								if( (nearest != &c->data[CURVE_SPECIAL_POINT_START]) &&
+									(nearest != &c->data[CURVE_SPECIAL_POINT_END]) ) 
+								curve_del_point(c, nearest);
+							} else{
+								MAPPER_MOUSEMODE = MOUSEMODE_DRAGGING;
+								editing_point = nearest;
+							}
+			}
+	}
 }

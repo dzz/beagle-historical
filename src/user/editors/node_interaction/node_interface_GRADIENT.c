@@ -10,7 +10,8 @@
 #include "node_interaction.h"
 
 void render_interface_GRADIENT( SDL_Surface* target, mapper_node* node, node_rect* r ) {
-		/* should not do this EVERY redraw. */
+		/* should not do this EVERY redraw... will probably just do a cached surface
+		 * for the whole node editor interface and only update when needed */
 		double p = 0;
 		double p_delta = 1.0/255.0;
 		double scr_delta = (double)r->w/255.0;
@@ -94,8 +95,8 @@ void node_mousedown_GRADIENT(mapper_node* node, int cmx, int cmy) {
 
 			bindColorPickerTarget(&nearest->c);
 			if( nD < epsilon ) {
-					if( (nearest != &g->data[0]) &&
-						(nearest != &g->data[1]) ) {
+					if( (nearest != &g->data[GRADIENT_SPECIAL_STOP_START]) &&
+						(nearest != &g->data[GRADIENT_SPECIAL_STOP_END]) ) {
 							if( dispatch_get_modifiers()->LEFT_ALT == MODIFIER_ENABLED) {
 
 								gradient_del_stop(g, nearest);

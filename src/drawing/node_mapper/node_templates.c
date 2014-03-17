@@ -4,6 +4,7 @@
 #include "../node_mapper.h"
 #include "node_internals.h"
 #include "util_gradient.h"
+#include "util_curve.h"
 #include "node_recalc.h"
 
 void template_GRADIENT(mapper_node* node) {
@@ -113,15 +114,8 @@ void template_MAPPER(mapper_node* node) {
 		node->gui_width = 150;
 		node->gui_height = 150;
 
-		node->data = malloc(sizeof(mapping_function));
-
-		{
-			mapping_function* mf = node->data;
-			mf->min_x = 0;
-			mf->max_x = 1;
-			mf->min_y = 0;
-			mf->max_y = 1;
-		}
+		node->data = malloc(sizeof(curve));
+		init_curve( node->data);
 }
 
 /******************************/
