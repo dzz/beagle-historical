@@ -4,6 +4,7 @@ typedef struct {
 		int x;
 		int y;
 		double pressure;
+        double azimuth;
 		unsigned int timestamp;
 } stylusState;
 

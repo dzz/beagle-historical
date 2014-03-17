@@ -63,7 +63,7 @@ void invalidateDrawingContext() {
 }
 
 void updateDrawingContext() {
-	SDL_Rect r = getDirtyRect();\
+	SDL_Rect r = getDirtyRect();
 
 	{
 		SDL_Surface *comp = compositeFrameWithContext( getDrawingContext() , getActiveFrame() , r);

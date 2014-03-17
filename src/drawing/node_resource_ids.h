@@ -23,7 +23,8 @@
 #define LABEL_GRADIENT 19
 #define LABEL_ADD3 20
 #define LABEL_MUL3 21
-#define NUM_LABELS 22
+#define LABEL_AZIMUTH 22
+#define NUM_LABELS 23
 
 
 #define TEMPLATE_MAPPER 0
@@ -65,5 +66,6 @@
 	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");\
 	labels[LABEL_GRADIENT]=SDL_LoadBMP("ui_gen/generated/title_grad.bmp");\
 	labels[LABEL_ADD3]=SDL_LoadBMP("ui_gen/generated/title_add3.bmp");\
-	labels[LABEL_MUL3]=SDL_LoadBMP("ui_gen/generated/title_mul3.bmp");
+	labels[LABEL_MUL3]=SDL_LoadBMP("ui_gen/generated/title_mul3.bmp");\
+	labels[LABEL_AZIMUTH]=SDL_LoadBMP("ui_gen/generated/title_azimuth.bmp");
 #endif

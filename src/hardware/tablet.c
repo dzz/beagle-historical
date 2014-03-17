@@ -7,7 +7,7 @@
 #include <WindowsX.h>
 #include <msgpack.h>
 #include <wintab.h>
-#define PACKETDATA (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_TIME )
+#define PACKETDATA (PK_X | PK_Y | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_TIME | PK_ORIENTATION )
 #define PACKETMODE PK_BUTTONS
 #include <pktdef.h>
 #include "vendor/wintab_utils.h"
@@ -28,6 +28,8 @@
 
 HCTX hctx = 0;
 AXIS pressure_axis = {0};
+AXIS orient_axis[3] = {0};
+
 HWND window_handle;
 
 void initTablet(SDL_Window* window) {
@@ -36,10 +38,10 @@ void initTablet(SDL_Window* window) {
 		SDL_SysWMinfo data;
 
 		LOGCONTEXTA lcMine = {{0}};
-		unsigned int wWTInfoRetVal = 0;
 		AXIS TabletX = {0};
 		AXIS TabletY = {0};
 		AXIS Pressure = {0};
+		AXIS Orient[3] = {0};
 		int numDevices = 0;
 		int contextOpen;
 		int ctxIndex = 0;
@@ -64,7 +66,7 @@ void initTablet(SDL_Window* window) {
 
 				if ( contextOpen > 0 )
 				{
-
+		                unsigned int status = 0;
 						lcMine.lcPktData = PACKETDATA;
 						lcMine.lcOptions |= CXO_MESSAGES;
 						lcMine.lcOptions |= CXO_SYSTEM;
@@ -73,30 +75,22 @@ void initTablet(SDL_Window* window) {
 						lcMine.lcBtnUpMask = lcMine.lcBtnDnMask;
 
 						// Set the entire tablet as active
-						wWTInfoRetVal = _wt_InfoA( WTI_DEVICES + ctxIndex, DVC_X, &TabletX );
-						if (  wWTInfoRetVal != sizeof( AXIS ) )
-						{
-								printf("This context should not be opened.\n");
-								return;
-						}
-
-						wWTInfoRetVal = _wt_InfoA( WTI_DEVICES + ctxIndex, DVC_Y, &TabletY );
+						_wt_InfoA( WTI_DEVICES + ctxIndex, DVC_X, &TabletX );
+						_wt_InfoA( WTI_DEVICES + ctxIndex, DVC_Y, &TabletY );
 
 						_wt_InfoA( WTI_DEVICES + ctxIndex, DVC_NPRESSURE, &Pressure );
+						_wt_InfoA( WTI_DEVICES + ctxIndex, DVC_ORIENTATION, &orient_axis );
 
 						lcMine.lcInOrgX = 0;
 						lcMine.lcInOrgY = 0;
 						lcMine.lcInExtX = TabletX.axMax;
 						lcMine.lcInExtY = TabletY.axMax;
 
-						// Guarantee the output coordinate space to be in screen coordinates.
+                        //set x,y to screen coords
 						lcMine.lcOutOrgX = GetSystemMetrics( SM_XVIRTUALSCREEN );
 						lcMine.lcOutOrgY = GetSystemMetrics( SM_YVIRTUALSCREEN );
 						lcMine.lcOutExtX = GetSystemMetrics( SM_CXVIRTUALSCREEN );
-
-						// In Wintab, the tablet origin is lower left.  Move origin to upper left
-						// so that it coincides with screen origin.
-						lcMine.lcOutExtY = -GetSystemMetrics( SM_CYVIRTUALSCREEN );
+						lcMine.lcOutExtY = -GetSystemMetrics( SM_CYVIRTUALSCREEN ); // invert
 
 						// Leave the system origin and extents as received:
 						// lcSysOrgX, lcSysOrgY, lcSysExtX, lcSysExtY
@@ -140,13 +134,18 @@ void dropTablet() {
 void handle_wt_packet(PACKET pkt) {
 		int shouldUpdateStylus = 1;
 		double pressureNorm = (double)pkt.pkNormalPressure / (double)pressure_axis.axMax;
+        double orientNorm = (double)pkt.pkOrientation.orAzimuth / (double)orient_axis[0].axMax;
+
 		stylusPacket sPkt = {0};
+
+        printf("orient: %f\n",orientNorm);
 
 		sPkt.x = pkt.pkX;
 		sPkt.y = pkt.pkY;
 		ScreenToClient(window_handle,(LPPOINT)&sPkt);
 		sPkt.pressure = pressureNorm;
 		sPkt.timestamp = pkt.pkTime;
+        sPkt.azimuth = orientNorm;
 
 		if (getPanelsEnabled() == 1) {
 				if(panels_point_in_clients(sPkt.x,sPkt.y)==1){

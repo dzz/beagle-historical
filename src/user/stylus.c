@@ -48,7 +48,12 @@ void updateStylus(stylusPacket packet) {
 	current_stylus_frame.timestamp = packet.timestamp;
 	stylusFilter_apply_pressure_impulse( packet.pressure );
 
-	node_mapper_apply_input( stylusFilter_getFilteredPressure() );
+	node_mapper_apply_input( 
+            stylusFilter_getFilteredPressure(), 
+            packet.timestamp, 
+            packet.azimuth 
+            );
+
 	run_stroke_logic();
 }
 

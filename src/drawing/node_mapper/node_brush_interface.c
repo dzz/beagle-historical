@@ -33,11 +33,12 @@ void create_node_brush_interface(mapper_node** nodes) {
 		output_node->binding_mode = BINDING_MODE_OUTPUT_DRIVER;
 
 		new_node(nodes[NODE_ID_STYLUS_INPUT]);
-		stylus_input->output_channels = 2;
+		stylus_input->output_channels = 3;
 
 		stylus_input->node_label = LABEL_STYLUS;
 		stylus_input->output_labels[0] = LABEL_PRESSURE;
 		stylus_input->output_labels[1] = LABEL_TIME;
+		stylus_input->output_labels[2] = LABEL_AZIMUTH;
 		
 		stylus_input->x = 120;
 		stylus_input->y = 40;

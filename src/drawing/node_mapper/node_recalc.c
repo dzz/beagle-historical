@@ -60,7 +60,13 @@ void node_recalc_mul(mapper_node* node) {
 	}
 }
 
+void node_recalc_mix3(mapper_node* node) {
+
+
+}
+
 void node_recalc_color(mapper_node* node) {
+
 	cp_color* c = (cp_color*)node->data;
 
 	node->outputs[0] = (double)c->r / 255.0;
