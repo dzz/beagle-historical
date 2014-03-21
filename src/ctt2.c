@@ -5,22 +5,21 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#endif
-
 #include <GL/gl.h>
-
-#ifdef _WIN32
 #include <GL/wglext.h>
 #endif
 
 #ifdef __linux__
-#include <GL/glxext.h>
+//put whatever we need in here for
+//getting at the platform specific way
+//to disable vsync 
 #endif
 
 #include <SDL.h>
 #include <SDL_syswm.h>
 
 #include "system/ctt2.h"
+#include "system/extended_video.h"
 #include "system/wm_handler.h"
 #include "system/log.h"
 #include "system/dirty.h"
@@ -167,16 +166,14 @@ int main(int argc, char **argv){
 		initAnimation();
 		initDrawingContext();
 		initBrush( getDrawingContext() );
-		initHwBrush();
 		animation_cursor_move(getDrawingContext(),0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 		initYankPut();
 		initTablet(opengl_window);
 
 		gl_context = SDL_GL_CreateContext(opengl_window);	
-		glClearColor(0.0,0.0,0,0,1,0);
-		glClear( GL_COLOR_BUFFER_BIT );
 		disable_vsync();
-		SDL_GL_SwapWindow(opengl_window);
+		initExtendedVideo();
+		initHwBrush();
 
 		screenSurface = SDL_GetWindowSurface( window );
 		//screenSurface = createDrawingSurface(1920,1080);
@@ -234,7 +231,6 @@ int main(int argc, char **argv){
 								renderPanels(screenSurface);
 								invalidateDrawingContext();
 								updateViewingSurface(); 
-								glClear(GL_COLOR_BUFFER_BIT);
 								SDL_GL_SwapWindow(opengl_window);
 						}
 				}
@@ -248,6 +244,7 @@ int main(int argc, char **argv){
 		dropPanels();
 		dropDrawingSurfaces();
 		dropYankPut();
+		dropExtendedVideo();
 		dropLog();
 		SDL_GL_DeleteContext(gl_context);
 		SDL_DestroyWindow( opengl_window);
@@ -256,3 +253,23 @@ int main(int argc, char **argv){
 		return 0;
 }
 
+/* A simple function that will read a file into an allocated char pointer buffer */
+char* read_file(char *file)
+{
+    FILE *fptr;
+    long length;
+    char *buf;
+ 
+    fptr = fopen(file, "rb"); /* Open file for reading */
+    if (!fptr) /* Return NULL on failure */
+        return NULL;
+    fseek(fptr, 0, SEEK_END); /* Seek to the end of the file */
+    length = ftell(fptr); /* Find out how many bytes into the file we are */
+    buf = (char*)malloc(length+1); /* Allocate a buffer for the entire length of the file and a null terminator */
+    fseek(fptr, 0, SEEK_SET); /* Go back to the beginning of the file */
+    fread(buf, length, 1, fptr); /* Read the contents of the file in to the buffer */
+    fclose(fptr); /* Close the file */
+    buf[length] = 0; /* Null terminator */
+
+    return buf; /* Return the buffer */
+}

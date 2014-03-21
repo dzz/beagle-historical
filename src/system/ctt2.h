@@ -19,6 +19,8 @@ int client_get_screen_mousey();
 
 typedef unsigned int SYSTEM_SIGNAL;
 
+char* read_file(char *file);
+
 #define SYSSIG_QUIT_CTT2 1
 
 #endif
