@@ -2,6 +2,21 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include <GL/gl.h>
+
+#ifdef _WIN32
+#include <GL/wglext.h>
+#endif
+
+#ifdef __linux__
+#include <GL/glxext.h>
+#endif
+
 #include <SDL.h>
 #include <SDL_syswm.h>
 
@@ -13,6 +28,7 @@
 
 #include "document/animation.h"
 
+#include "drawing/hw_brush.h"
 #include "drawing/brush.h"
 #include "drawing/drawingContext.h"
 #include "drawing/drawingSurfaces.h"
@@ -75,26 +91,61 @@ void updateDrawingContext() {
 }
 
 
+
+SDL_Window* opengl_window;
+
+void disable_vsync()
+{	
+#ifdef _WIN32
+	typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
+	PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
+	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALPROC)SDL_GL_GetProcAddress( "wglSwapIntervalEXT" );
+	wglSwapIntervalEXT(0);
+#endif
+#ifdef __linux__
+	printf("linux unimplemented disable_vsync()");
+#endif
+}
+
 void initSDLSystems(SDL_Window** window,int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+
 		//Initialize SDL
 		if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
 				printf( "%s\n", SDL_GetError() );
 				exit(1);
 		} 
+
+		
 		//Create window
-		*window = SDL_CreateWindow( "ctt2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		*window = SDL_CreateWindow( "ctt2", 0, 0, 1920, 540, SDL_WINDOW_SHOWN );
 		if( window == NULL ) {
 				printf( "%s\n", SDL_GetError() );
 				exit(1);
 		}
 		
 		SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+
+
+		//make an opengl window
+
+		
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+		opengl_window = SDL_CreateWindow( "ctt2", 0, 540, 
+						1920, 540, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+		if( opengl_window == NULL ) {
+				printf( "%s\n", SDL_GetError() );
+				exit(1);
+		}
 }
 
 int main(int argc, char **argv){ 
 #ifndef CTT2_SCREENMODE_DEBUG
-		const int SCREEN_WIDTH = 1920;
-		const int SCREEN_HEIGHT = 1080;
+		const int SCREEN_WIDTH = 800;
+		const int SCREEN_HEIGHT = 800;
 #else
 		const int SCREEN_WIDTH = 1920;
 		const int SCREEN_HEIGHT = 400;
@@ -107,6 +158,8 @@ int main(int argc, char **argv){
 
 		int finished = 0;
 
+		SDL_GLContext gl_context;
+
 		initLog();
 		initSDLSystems(&window, SCREEN_WIDTH,SCREEN_HEIGHT);
 		initCompositor();
@@ -114,18 +167,26 @@ int main(int argc, char **argv){
 		initAnimation();
 		initDrawingContext();
 		initBrush( getDrawingContext() );
+		initHwBrush();
 		animation_cursor_move(getDrawingContext(),0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 		initYankPut();
-		initTablet(window);
+		initTablet(opengl_window);
+
+		gl_context = SDL_GL_CreateContext(opengl_window);	
+		glClearColor(0.0,0.0,0,0,1,0);
+		glClear( GL_COLOR_BUFFER_BIT );
+		disable_vsync();
+		SDL_GL_SwapWindow(opengl_window);
 
 		screenSurface = SDL_GetWindowSurface( window );
+		//screenSurface = createDrawingSurface(1920,1080);
 		SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0x00, 0x00, 0x00 ) );
-		SDL_UpdateWindowSurface( window );
 
 		initPanels(screenSurface);
 		invalidateDirty(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
 		{
+				unsigned int render_gui = 0;
 				SDL_Event event;
 				while(finished == 0) {
 						if(SDL_PollEvent(&event)) {
@@ -138,8 +199,10 @@ int main(int argc, char **argv){
 												break;
 										case SDL_KEYDOWN:
 												finished = dispatch_key(event.key.keysym.sym,1);
+												render_gui = 1;
 												break;
 										case SDL_KEYUP:
+												render_gui = 0;
 												dispatch_key(event.key.keysym.sym,0);
 												break;
 										case SDL_MOUSEBUTTONDOWN:
@@ -170,12 +233,15 @@ int main(int argc, char **argv){
 								screenbuffer_cycles = 0;
 								renderPanels(screenSurface);
 								invalidateDrawingContext();
-								updateViewingSurface();
+								updateViewingSurface(); 
+								glClear(GL_COLOR_BUFFER_BIT);
+								SDL_GL_SwapWindow(opengl_window);
 						}
 				}
 		}
-		SDL_DestroyWindow( window );
+
 		destroyBrush();
+		dropHwBrush();
 		dropTablet();
 		dropDrawingContext();
 		dropFrames();
@@ -183,6 +249,9 @@ int main(int argc, char **argv){
 		dropDrawingSurfaces();
 		dropYankPut();
 		dropLog();
+		SDL_GL_DeleteContext(gl_context);
+		SDL_DestroyWindow( opengl_window);
+		SDL_DestroyWindow( window );
 		SDL_Quit();
 		return 0;
 }

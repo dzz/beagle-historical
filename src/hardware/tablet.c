@@ -123,6 +123,7 @@ void initTablet(SDL_Window* window) {
 		return;
 }
 
+
 void dropTablet() { 
 		if(hctx>0) {
 				_wt_Close(hctx);
@@ -137,8 +138,6 @@ void handle_wt_packet(PACKET pkt) {
         double orientNorm = (double)pkt.pkOrientation.orAzimuth / (double)orient_axis[0].axMax;
 
 		stylusPacket sPkt = {0};
-
-        printf("orient: %f\n",orientNorm);
 
 		sPkt.x = pkt.pkX;
 		sPkt.y = pkt.pkY;
