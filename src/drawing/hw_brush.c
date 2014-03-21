@@ -3,12 +3,28 @@
 #include "../system/ctt2.h"
 #include "hw_brush.h"
 
+typedef struct {
+    GLuint texture;
+
+} brush_context;
+
+brush_context _context;
+
+void createBrushContext(brush_context ctxt) {
+    glGenTextures(1,&ctxt.texture);
+}
+
+void destroyBrushContext(brush_context ctxt) {
+    glDeleteTextures(1,&ctxt.texture);
+}
+
 void initHwBrush(){
     GLchar *vertexsource, *fragmentsource;
     GLuint vertexshader, fragmentshader;
     GLuint shaderprogram;
-
     glewInit();
+
+    createBrushContext(_context);
 
     vertexsource = read_file("shaders/simple.vert.glsl");
     fragmentsource = read_file("shaders/simple.frag.glsl");
@@ -43,4 +59,5 @@ void initHwBrush(){
 }
 
 void dropHwBrush(){ 
+    destroyBrushContext(_context);
 }
