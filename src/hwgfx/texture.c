@@ -37,12 +37,9 @@ void texture_generate(gfx_texture* texture,int w,int h) {
 
 void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
     SDL_LockSurface(surf);
-    glGenTextures(1,&texture->texture_id);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,surf->w,surf->h ,_NOBORDER,
                 GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,(unsigned char*)surf->pixels);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     SDL_UnlockSurface(surf);
 
 }

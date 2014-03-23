@@ -27,7 +27,7 @@
 
 #include "document/animation.h"
 
-#include "drawing/hw_brush.h"
+#include "drawing/hw_brush_context.h"
 #include "drawing/brush.h"
 #include "drawing/drawingContext.h"
 #include "drawing/drawingSurfaces.h"
@@ -163,8 +163,8 @@ void dropOpengl() {
 /** MAIN **/
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_RECOMPOSITE = 36;
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 35;
+    const int CYCLES_BETWEEN_RECOMPOSITE = 20;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 15;
 
     int recomposite_cycles = 0;
     int screenbuffer_cycles = 0;
