@@ -4,21 +4,16 @@
 
 #include "../system/ctt2.h"
 #include "hw_brush.h"
+#include "../hardware/shader.h"
 
 #define CONTEXT_SIZE 2048
 
 typedef struct {
     GLuint texture_id;
-
-    GLchar *vertex_src;
-    GLchar *frag_src;
-
-    GLuint shader_id;
-    GLuint vert_shader_id;
-    GLuint frag_shader_id;
-
     GLuint vert_array;
     GLuint vert_buffer;
+
+    gfx_shader shader;
 
 } brush_context;
 
@@ -50,6 +45,10 @@ unsigned char* generate_debug_texture() {
 void createBrushContext(brush_context *ctxt) {
     unsigned char* texture_data = generate_debug_texture();
 
+    shader_load( &ctxt->shader, "shaders/hw_context.vert.glsl",
+                                "shaders/hw_context.frag.glsl" );
+
+
     /* bigass texture where we will draw to. when the brush is lifted
      * it will composite down to the drawingContext and get cleared */
     glGenTextures(1,&ctxt->texture_id);
@@ -63,60 +62,6 @@ void createBrushContext(brush_context *ctxt) {
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
     free(texture_data);
-
-    /* shaders */
-
-
-
-    {
-        int iv;
-
-        ctxt->vertex_src = read_file("shaders/hw_context.vert.glsl");
-        ctxt->frag_src = read_file("shaders/hw_context.frag.glsl");
-
-        ctxt->vert_shader_id = glCreateShader(GL_VERTEX_SHADER);
-        ctxt->frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(ctxt->vert_shader_id, 1, (const GLchar**)&ctxt->vertex_src, 0);
-        glCompileShader(ctxt->vert_shader_id);
-        glGetShaderiv(ctxt->vert_shader_id, GL_COMPILE_STATUS, &iv);
-        if(iv == 0 ){
-            int maxLength;
-            char* fragmentInfoLog;
-            printf("error compiling vert shader\n");
-            glGetShaderiv(ctxt->vert_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
-            fragmentInfoLog = (char *)malloc(maxLength);
-            glGetShaderInfoLog(ctxt->vert_shader_id, maxLength, &maxLength, fragmentInfoLog);
-            printf(fragmentInfoLog);
-            free(fragmentInfoLog);
-        }
-
-        glShaderSource(ctxt->frag_shader_id, 1, (const GLchar**)&ctxt->frag_src, 0);
-        glCompileShader(ctxt->frag_shader_id);
-        glGetShaderiv(ctxt->frag_shader_id, GL_COMPILE_STATUS, &iv);
-        if(iv == 0 ){
-            int maxLength;
-            char* fragmentInfoLog;
-            printf("error compiling frag shader\n");
-            glGetShaderiv(ctxt->frag_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
-            fragmentInfoLog = (char *)malloc(maxLength);
-            glGetShaderInfoLog(ctxt->frag_shader_id, maxLength, &maxLength, fragmentInfoLog);
-            printf(fragmentInfoLog);
-            free(fragmentInfoLog);
-        }
-
-        ctxt->shader_id = glCreateProgram();
-        glAttachShader(ctxt->shader_id, ctxt->vert_shader_id);
-        glAttachShader(ctxt->shader_id, ctxt->frag_shader_id);
-
-        glBindAttribLocation(ctxt->shader_id, 0, "in_Position");
-        glLinkProgram(ctxt->shader_id);
-
-        glGetProgramiv(ctxt->shader_id, GL_LINK_STATUS, (int *)&iv);
-        if(iv == 0) {
-            printf("error linking shader\n");
-            
-        }
-    }
 
     /* gemoetry */
     glGenVertexArrays(1, &ctxt->vert_array);
@@ -146,14 +91,9 @@ void createBrushContext(brush_context *ctxt) {
 }
 
 void destroyBrushContext(brush_context *ctxt) {
+
+    shader_drop(&ctxt->shader);
     glDeleteTextures(1,&ctxt->texture_id);
-    free(ctxt->vertex_src); 
-    free(ctxt->frag_src);
-    glDetachShader(ctxt->shader_id, ctxt->vert_shader_id);
-    glDetachShader(ctxt->shader_id, ctxt->frag_shader_id);
-    glDeleteProgram(ctxt->shader_id);
-    glDeleteShader(ctxt->vert_shader_id);
-    glDeleteShader(ctxt->frag_shader_id);
     glDeleteVertexArrays(1,&ctxt->vert_array);
     glDeleteBuffers(1,&ctxt->vert_buffer);
 }
@@ -163,7 +103,6 @@ void initHwBrush(){
 }
 
 void dropHwBrush(){ 
-    glUseProgram(0);
     destroyBrushContext(&_context);
 }
 
@@ -175,7 +114,7 @@ void _renderBrushContext(brush_context* ctxt) {
 
     oscillator ++;
 
-    glUseProgram(ctxt->shader_id);
+    shader_bind( &ctxt->shader);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -185,7 +124,7 @@ void _renderBrushContext(brush_context* ctxt) {
     glBindTexture(GL_TEXTURE_2D, ctxt->texture_id );
 
     glUniform1i(
-            glGetUniformLocation( ctxt->shader_id, "ctxt->sampler"),
+            glGetUniformLocation( ctxt->shader.shader_id, "ctxt->sampler"),
             0); 
 
    // glClearColor(1-fr,fr,fr,1.0);
@@ -195,7 +134,6 @@ void _renderBrushContext(brush_context* ctxt) {
     glDisable(GL_BLEND);
 
 }
-void debug_drawscene(void);
 
 void renderHwBrushContext() {
        _renderBrushContext(&_context);

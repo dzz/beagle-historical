@@ -8,5 +8,4 @@ void initExtendedVideo() {
 }
 
 void dropExtendedVideo() {
-
 }
