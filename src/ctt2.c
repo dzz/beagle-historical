@@ -244,7 +244,7 @@ int main(int argc, char **argv){
 	  if(screenbuffer_cycles > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
 		screenbuffer_cycles = 0;
 		renderPanels(screenSurface);
-		renderHwBrush();
+		renderHwBrushContext();
 		invalidateDrawingContext();
 		updateViewingSurface(); 
 	  }

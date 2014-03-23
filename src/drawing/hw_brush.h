@@ -3,6 +3,6 @@
 
 void initHwBrush();
 void dropHwBrush();
-void renderHwBrush();
+void renderHwBrushContext();
 
 #endif

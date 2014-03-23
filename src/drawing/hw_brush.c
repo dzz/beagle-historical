@@ -25,27 +25,44 @@ typedef struct {
 brush_context _context;
 
 const GLfloat verts[4][2] = {
-    {  0.0,  1.0  }, /* Top point */
-    {  1.0,  0.0  }, /* Right point */
-    {  0.0, -1.0  }, /* Bottom point */
-    { -1.0,  0.0  } }; /* Left point */
+    { -1.0,  -1.0 }, /* Top point */
+    {  1.0,  -1.0 }, /* Right point */
+    {  1.0, 1.0   }, /* Bottom point */
+    { -1.0,  1.0  } }; /* Left point */
+
+
+unsigned char* generate_debug_texture() {
+        unsigned char* texture_data;
+        int i;
+        int addr=0;
+
+        texture_data = malloc( CONTEXT_SIZE*CONTEXT_SIZE*4,
+               sizeof(unsigned char));
+        for(i=0; i<(CONTEXT_SIZE*CONTEXT_SIZE);++i) {
+            texture_data[addr++]=(unsigned char)i;
+            texture_data[addr++]=(i/2048)%255;
+            texture_data[addr++]=255;
+            texture_data[addr++]=255;
+        }
+        return texture_data;
+}
 
 void createBrushContext(brush_context *ctxt) {
+    unsigned char* texture_data = generate_debug_texture();
+
     /* bigass texture where we will draw to. when the brush is lifted
      * it will composite down to the drawingContext and get cleared */
-
     glGenTextures(1,&ctxt->texture_id);
-    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,ctxt->texture_id);
+#define HWBRUSH_LOD 0 
+#define NOBORDER 0 
+    glTexImage2D(GL_TEXTURE_2D,HWBRUSH_LOD,GL_RGBA,CONTEXT_SIZE,CONTEXT_SIZE
+                ,NOBORDER,
+                GL_RGBA, GL_UNSIGNED_BYTE,_ctxt_texture_data);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    {
-        unsigned char* image = malloc( CONTEXT_SIZE*CONTEXT_SIZE*4,
-                sizeof(unsigned char));
-
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,CONTEXT_SIZE,CONTEXT_SIZE,0,
-                GL_RGBA, GL_UNSIGNED_BYTE,image);
-        free(image);
-    }
+    free(texture_data);
 
     /* shaders */
 
@@ -54,8 +71,8 @@ void createBrushContext(brush_context *ctxt) {
     {
         int iv;
 
-        ctxt->vertex_src = read_file("shaders/simple.vert.glsl");
-        ctxt->frag_src = read_file("shaders/simple.frag.glsl");
+        ctxt->vertex_src = read_file("shaders/hw_context.vert.glsl");
+        ctxt->frag_src = read_file("shaders/hw_context.frag.glsl");
 
         ctxt->vert_shader_id = glCreateShader(GL_VERTEX_SHADER);
         ctxt->frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
@@ -77,7 +94,14 @@ void createBrushContext(brush_context *ctxt) {
         glCompileShader(ctxt->frag_shader_id);
         glGetShaderiv(ctxt->frag_shader_id, GL_COMPILE_STATUS, &iv);
         if(iv == 0 ){
+            int maxLength;
+            char* fragmentInfoLog;
             printf("error compiling frag shader\n");
+            glGetShaderiv(ctxt->frag_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
+            fragmentInfoLog = (char *)malloc(maxLength);
+            glGetShaderInfoLog(ctxt->frag_shader_id, maxLength, &maxLength, fragmentInfoLog);
+            printf(fragmentInfoLog);
+            free(fragmentInfoLog);
         }
 
         ctxt->shader_id = glCreateProgram();
@@ -145,24 +169,35 @@ void dropHwBrush(){
 
 int oscillator = 0;
 
-void renderBrushContext(brush_context ctxt) {
+void _renderBrushContext(brush_context* ctxt) {
     int i;
     float fr = (float)(oscillator%2)/10.0f;
 
     oscillator ++;
 
-    glUseProgram(ctxt.shader_id);
+    glUseProgram(ctxt->shader_id);
 
-    glClearColor(1-fr,fr,fr,1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBindVertexArray(ctxt.vert_array);
-    for(i=2;i<4;++i) {
-        glDrawArrays(GL_LINE_LOOP, 0, i);
-    } 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, ctxt->texture_id );
+
+    glUniform1i(
+            glGetUniformLocation( ctxt->shader_id, "ctxt->sampler"),
+            0); 
+
+   // glClearColor(1-fr,fr,fr,1.0);
+   // glClear(GL_COLOR_BUFFER_BIT);
+    glBindVertexArray(ctxt->vert_array);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glDisable(GL_BLEND);
+
 }
 void debug_drawscene(void);
 
-void renderHwBrush() {
-       renderBrushContext(_context);
+void renderHwBrushContext() {
+       _renderBrushContext(&_context);
 } 
 

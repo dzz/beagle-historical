@@ -42,7 +42,7 @@ void allocateUninitializedLayers(frame *fr) {
 		if(fr->layerKeyFrames[i]==1) {
 				unsigned int coord = fr->idx + (i*current_frame_storage);
 				if(surface_cache[coord] != 0) {
-					printf("found existing layer in cache. Skipping");
+					//printf("found existing layer in cache. Skipping");
 				} else {
 					surface_cache[coord]=allocateCompositeLayer(COMPOSITOR_DEFAULT_W,
 																COMPOSITOR_DEFAULT_H);
