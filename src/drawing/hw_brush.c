@@ -19,12 +19,6 @@ typedef struct {
 
 brush_context _context;
 
-const gfx_float context_verts[4][2] = {
-    {  0.0, 0.0 }, 
-    {  1.0, 0.0 }, 
-    {  1.0, 1.0 }, 
-    {  0.0, 1.0 } }; 
-
 void createBrushContext(brush_context *ctxt) {
 
     shader_load( &ctxt->shader, "shaders/hw_context.vert.glsl",
@@ -36,8 +30,8 @@ void createBrushContext(brush_context *ctxt) {
     texture_generate( &ctxt->texture, CONTEXT_SIZE,
                                       CONTEXT_SIZE);
 
-    primitive_create_coordinate_primitive(&ctxt->primitive,
-            context_verts, 4);
+
+    primitive_create_screen_primitive(&ctxt->primitive);
 
 
 }
@@ -66,4 +60,13 @@ void _renderBrushContext(brush_context* ctxt) {
 void renderHwBrushContext() {
        _renderBrushContext(&_context);
 } 
+
+void renderLocalBuffer( SDL_Surface* img) {
+    gfx_texture tex;
+    shader_bind( &_context.shader);
+    texture_from_SDL_surface(&tex,img);
+    texture_bind(&tex,TEX_UNIT_0);
+    primitive_render( &_context.primitive );
+    texture_drop(&tex);
+}
 

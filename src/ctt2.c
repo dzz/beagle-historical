@@ -49,8 +49,15 @@ static SDL_GLContext gl_context;
 static SDL_Surface *screenSurface = NULL;
 static int drawingContextInvalid = 1;
 
-static unsigned int ctt2_keyframe_mode = 0;
+#ifndef CTT2_SCREENMODE_DEBUG
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
+#else
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 800;
+#endif
 
+static unsigned int ctt2_keyframe_mode = 0;
 
 /** KEYFRAMING FUNCTIONS **/
 
@@ -74,7 +81,6 @@ void ctt2_insertkeyframe() {
 /** DISPLAY MGMT **/
 
 void updateViewingSurface() {
-    SDL_UpdateWindowSurface( window );
     SDL_GL_SwapWindow( opengl_window );
 }
 
@@ -126,18 +132,14 @@ void initDisplay() {
         exit(1);
     } 
 
-    window = SDL_CreateWindow( "dopey", 1920/2, 0, 1920/2, 540, SDL_WINDOW_SHOWN );
-    if( window == NULL ) {
-        printf( "%s\n", SDL_GetError() );
-        exit(1);
-    }
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    opengl_window = SDL_CreateWindow( "simple", 0, 540, 
-            1920/2, 540, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+    opengl_window = SDL_CreateWindow( "ctt2_hw", 0, 0, 
+            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+
     if( opengl_window == NULL ) {
         printf( "%s\n", SDL_GetError() );
         exit(1);
@@ -146,8 +148,6 @@ void initDisplay() {
 
 void dropDisplay() {
     SDL_DestroyWindow( opengl_window);
-    SDL_DestroyWindow( window );
-
 }
 
 void initOpenGL() {
@@ -163,21 +163,13 @@ void dropOpengl() {
 /** MAIN **/
 
 int main(int argc, char **argv){ 
-#ifndef CTT2_SCREENMODE_DEBUG
-    const int SCREEN_WIDTH = 800;
-    const int SCREEN_HEIGHT = 800;
-#else
-    const int SCREEN_WIDTH = 1920;
-    const int SCREEN_HEIGHT = 400;
-#endif
-    const int CYCLES_BETWEEN_RECOMPOSITE = 20;
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 3;
+    const int CYCLES_BETWEEN_RECOMPOSITE = 36;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 35;
 
     int recomposite_cycles = 0;
     int screenbuffer_cycles = 0;
 
     int finished = 0;
-
 
     initLog();
     initDisplay();
@@ -193,7 +185,7 @@ int main(int argc, char **argv){
     initTablet(opengl_window);
     initHwBrush();
 
-    screenSurface = SDL_GetWindowSurface( window );
+    screenSurface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
 
     initPanels(screenSurface);
     invalidateDirty(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -244,7 +236,8 @@ int main(int argc, char **argv){
             if(screenbuffer_cycles > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 screenbuffer_cycles = 0;
                 renderPanels(screenSurface);
-                renderHwBrushContext();
+                //renderHwBrushContext();
+                renderLocalBuffer(screenSurface);
                 invalidateDrawingContext();
                 updateViewingSurface(); 
             }

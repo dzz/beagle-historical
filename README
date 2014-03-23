@@ -2,7 +2,7 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.2.5.0
+      ctt2 0.2.7.0
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -17,29 +17,12 @@
 
     - visual studio settings:
 
-            - include dir set to find the following headers:
-                    WINTAB.H
-                    SDL.H
-                    SDL_image.h
+            - make sure the following libraries are available:
 
-            - libs dir to find:
-                    SDL2.lib
-                    SDL2main.lib
-                    SDL2_image.lib
-
-            - linker subsystem: console (/SUBSYSTEM:CONSOLE)
-
-            - executable in same directory as this file
-
-            - following DLLs in executable directory:
-                    SDL2.dll
-                    SDL2_image.dll
-                    libjpeg-9.dll
-                    libpng16-16.dll
-                    libtiff-5.dll
-                    libwebp-4.dll
-                    zlib1.dll
-
+                  WINTAB.h - header only
+                  SDL2
+                  SDL_image 2.0
+                  GLEW
 
     To generate the resources required to render the UI, you'll require 
     an installation of imageMagick and python 2.7. cd into the ui-gen directory 
@@ -127,6 +110,9 @@
     
     WINTAB SDK
     http://www.wacomeng.com/windows/index.html
+
+    GLEW
+    http://glew.sourceforge.net/
 
 (6) contact:
 

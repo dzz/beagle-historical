@@ -1,3 +1,4 @@
+#include <math.h>
 #include <SDL.h>
 #include "../../../drawing/node_mapper.h"
 #include "../../../drawing/node_mapper/util_curve.h"
@@ -63,6 +64,7 @@ void node_mousedown_MAPPER(mapper_node* node, int cmx, int cmy) {
 	int i;
 	double _sX = (double)(cmx-node->x) / (double)node->gui_width;
 	double _sY = (double)(cmy-node->y) / (double)node->gui_height;
+  
 	curve *c = (curve*) node->data;
 
 	if(  dispatch_get_modifiers()->LEFT_CONTROL == MODIFIER_ENABLED ) {

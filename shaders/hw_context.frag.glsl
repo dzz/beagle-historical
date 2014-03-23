@@ -8,7 +8,7 @@ void main(void) {
     ivec2 scrp;
 
     scrp.x = int(gl_FragCoord.x);
-    scrp.y = int(gl_FragCoord.y);
+    scrp.y = int(1080-gl_FragCoord.y);
 
     color = texelFetch(ctxt_sampler,scrp,0);
 

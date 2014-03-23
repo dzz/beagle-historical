@@ -85,6 +85,8 @@ void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
     glDeleteBuffers(1,&uv_primitive->uv_buffer);
 }
 
+/** PRIMITIVE TEMPLATES **/
+
 void primitive_create_dab_primitive(gfx_coordinate_primitive* uv_primitive) {
 
     const gfx_float dab_verts[4][2] = {
@@ -102,4 +104,15 @@ void primitive_create_dab_primitive(gfx_coordinate_primitive* uv_primitive) {
   primitive_create_coordinate_uv_primitive(uv_primitive, dab_verts,
           dab_uvs,4);
 
+}
+
+void primitive_create_screen_primitive(gfx_coordinate_primitive* primitive) {
+
+  const gfx_float context_verts[4][2] = {
+      {  0.0, 0.0 }, 
+      {  1.0, 0.0 }, 
+      {  1.0, 1.0 }, 
+      {  0.0, 1.0 } }; 
+
+  primitive_create_coordinate_primitive(primitive, context_verts, 4); 
 }
