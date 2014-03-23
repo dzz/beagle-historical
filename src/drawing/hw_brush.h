@@ -3,5 +3,6 @@
 
 void initHwBrush();
 void dropHwBrush();
+void renderHwBrush();
 
 #endif
