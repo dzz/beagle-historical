@@ -39,8 +39,8 @@ unsigned char* generate_debug_texture() {
         texture_data = malloc( CONTEXT_SIZE*CONTEXT_SIZE*4,
                sizeof(unsigned char));
         for(i=0; i<(CONTEXT_SIZE*CONTEXT_SIZE);++i) {
-            texture_data[addr++]=(unsigned char)i;
-            texture_data[addr++]=(i/2048)%255;
+            texture_data[addr++]=255;
+            texture_data[addr++]=255;
             texture_data[addr++]=255;
             texture_data[addr++]=255;
         }
@@ -58,7 +58,7 @@ void createBrushContext(brush_context *ctxt) {
 #define NOBORDER 0 
     glTexImage2D(GL_TEXTURE_2D,HWBRUSH_LOD,GL_RGBA,CONTEXT_SIZE,CONTEXT_SIZE
                 ,NOBORDER,
-                GL_RGBA, GL_UNSIGNED_BYTE,_ctxt_texture_data);
+                GL_RGBA, GL_UNSIGNED_BYTE,texture_data);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
