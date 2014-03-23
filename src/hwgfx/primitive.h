@@ -2,35 +2,39 @@
 #define __GFX_PRIMITIVE__
 
 #include <GL/glew.h>
+typedef GLfloat gfx_float;
+
+#define PRIMITIVE_BASE \
+    int _num_verts; \
+    GLuint vert_array; \
+    GLuint vert_buffer; 
 
 typedef struct {
-    GLuint vert_array;
-    GLuint vert_buffer;
-    int _num_verts;
+  PRIMITIVE_BASE
 } gfx_coordinate_primitive;
 
 typedef struct{
-  GLuint vert_array;
-  GLuint vert_buffer;
+  PRIMITIVE_BASE
   GLuint uv_buffer;
-  int _num_verts;
 } gfx_coordinate_uv_primitive;
 
-typedef GLfloat gfx_float;
 
 void primitive_create_coordinate_primitive(gfx_coordinate_primitive* 
-        primitive, int verts);
+        primitive, gfx_float* coordinates, int verts);
 void primitive_destroy_coordinate_primitive(gfx_coordinate_primitive*
         primitive);
-void primitive_render_coordiate_primitive(gfx_coordinate_primitive*
-        primitive);
+void primitive_render(gfx_coordinate_primitive* primitive);
 
 
-void primitive_create_dab_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive);
+void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
+        uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts);
 void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
         uv_primitive);
 void primitive_render_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
         uv_primitive);
+
+void primitive_create_dab_primitive(gfx_coordinate_uv_primitive*
+        uv_primitive);
+
 
 #endif
