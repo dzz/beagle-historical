@@ -7,6 +7,7 @@
 #include "../system/ctt2.h"
 #include "../system/surfaceCache.h"
 #include "../drawing/drawingSurfaces.h"
+#include "../drawing/hw_brush_context.h"
 #include "../compositor/compositor.h"
 
 unsigned int baseSize = 1024;	//our initial stack
@@ -274,6 +275,7 @@ void animation_preview() {
 
 		SDL_Surface *composited = compositeFrame(fr, render_area);
 		SDL_BlitSurface(composited,NULL,getViewingSurface(),NULL);
+    renderLocalBuffer(getViewingSurface());
 		updateViewingSurface();
 		SDL_PumpEvents();
 		SDL_FreeSurface(composited);
