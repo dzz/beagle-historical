@@ -2,8 +2,10 @@
 #include <math.h>
 #include <GL/glew.h>
 
-#include "../hardware/shader.h"
-#include "../hardware/texture.h"
+#include "../hwgfx/shader.h"
+#include "../hwgfx/texture.h"
+#include "../hwgfx/primitive.h"
+
 #include "hw_brush.h"
 
 #define CONTEXT_SIZE 2048
@@ -14,18 +16,17 @@ typedef struct {
 
     gfx_shader shader;
     gfx_texture texture;
+    gfx_coordinate_primitive primitive;
 
 } brush_context;
 
 brush_context _context;
 
-const GLfloat verts[4][2] = {
-    {  0.0, 0.0 }, /* Top point */
-    {  1.0, 0.0 }, /* Right point */
-    {  1.0, 1.0 }, /* Bottom point */
-    {  0.0, 1.0 } }; /* Left point */
-
-
+const gfx_float verts[4][2] = {
+    {  0.0, 0.0 }, 
+    {  1.0, 0.0 }, 
+    {  1.0, 1.0 }, 
+    {  0.0, 1.0 } }; 
 
 void createBrushContext(brush_context *ctxt) {
 
@@ -38,40 +39,16 @@ void createBrushContext(brush_context *ctxt) {
     texture_generate( &ctxt->texture, CONTEXT_SIZE,
                                       CONTEXT_SIZE);
 
-    /* gemoetry */
-    glGenVertexArrays(1, &ctxt->vert_array);
-    glBindVertexArray(ctxt->vert_array);
-    glGenBuffers(1, &ctxt->vert_buffer);
+    primitive_create_coordinate_primitive(&ctxt->primitive,
+            verts, 4);
 
-    glBindBuffer(GL_ARRAY_BUFFER, ctxt->vert_buffer);
-#define COORDINATE_ATTRIBUTE_INDEX  0
-#define COLOR_ATTRIBUTE_INDEX 1
-
-#define FLOATS_PER_VERT 2
-
-#define NOT_NORMALIZED 0
-#define NO_STRIDE 0
-#define NO_POINTER_OFFSET 0
-
-    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(GLfloat), verts, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(COORDINATE_ATTRIBUTE_INDEX, 
-            FLOATS_PER_VERT, GL_FLOAT, NOT_NORMALIZED, 
-            NO_STRIDE, 
-            NO_POINTER_OFFSET); 
-
-    //would bind uv etc. here
-    glEnableVertexAttribArray(COORDINATE_ATTRIBUTE_INDEX);
 
 }
 
 void destroyBrushContext(brush_context *ctxt) {
-
     shader_drop(&ctxt->shader);
     texture_drop(&ctxt->texture);
-
-    glDeleteVertexArrays(1,&ctxt->vert_array);
-    glDeleteBuffers(1,&ctxt->vert_buffer);
+    primitive_destroy_coordinate_primitive(&ctxt->primitive);
 }
 
 void initHwBrush(){
@@ -82,23 +59,13 @@ void dropHwBrush(){
     destroyBrushContext(&_context);
 }
 
-int oscillator = 0;
 
 void _renderBrushContext(brush_context* ctxt) {
-    int i;
-    float fr = (float)(oscillator%2)/10.0f;
-
-    oscillator ++;
-
     shader_bind( &ctxt->shader);
     texture_bind( &ctxt->texture, TEX_UNIT_0 );
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-
-    glClearColor(1-fr,fr,fr,1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBindVertexArray(ctxt->vert_array);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    primitive_render_coordiate_primitive( &ctxt->primitive );
     glDisable(GL_BLEND);
 
 }
