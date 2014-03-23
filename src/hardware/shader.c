@@ -1,4 +1,6 @@
 #include <GL/glew.h>
+
+#include "../system/ctt2.h"
 #include "shader.h"
 
 void shader_load(gfx_shader* shader, const char* v_src_path, 
@@ -59,6 +61,15 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
 
 void shader_bind(gfx_shader* shader){
     glUseProgram(shader->shader_id);
+    /*
+
+    glUniform1i(
+            glGetUniformLocation( ctxt->shader.shader_id, "ctxt_sampler"),
+            0); 
+
+    glUniform1i(
+            glGetUniformLocation( ctxt->shader.shader_id, "other_sampler"),
+            1); */
 }
 
 void shader_drop(gfx_shader* shader) {

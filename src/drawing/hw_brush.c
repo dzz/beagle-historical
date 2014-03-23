@@ -2,66 +2,41 @@
 #include <math.h>
 #include <GL/glew.h>
 
-#include "../system/ctt2.h"
-#include "hw_brush.h"
 #include "../hardware/shader.h"
+#include "../hardware/texture.h"
+#include "hw_brush.h"
 
 #define CONTEXT_SIZE 2048
 
 typedef struct {
-    GLuint texture_id;
     GLuint vert_array;
     GLuint vert_buffer;
 
     gfx_shader shader;
+    gfx_texture texture;
 
 } brush_context;
 
 brush_context _context;
 
 const GLfloat verts[4][2] = {
-    { -1.0,  -1.0 }, /* Top point */
-    {  1.0,  -1.0 }, /* Right point */
-    {  1.0, 1.0   }, /* Bottom point */
-    { -1.0,  1.0  } }; /* Left point */
+    {  0.0, 0.0 }, /* Top point */
+    {  1.0, 0.0 }, /* Right point */
+    {  1.0, 1.0 }, /* Bottom point */
+    {  0.0, 1.0 } }; /* Left point */
 
 
-unsigned char* generate_debug_texture() {
-        unsigned char* texture_data;
-        int i;
-        int addr=0;
-
-        texture_data = malloc( CONTEXT_SIZE*CONTEXT_SIZE*4,
-               sizeof(unsigned char));
-        for(i=0; i<(CONTEXT_SIZE*CONTEXT_SIZE);++i) {
-            texture_data[addr++]=255;
-            texture_data[addr++]=255;
-            texture_data[addr++]=255;
-            texture_data[addr++]=255;
-        }
-        return texture_data;
-}
 
 void createBrushContext(brush_context *ctxt) {
-    unsigned char* texture_data = generate_debug_texture();
 
     shader_load( &ctxt->shader, "shaders/hw_context.vert.glsl",
                                 "shaders/hw_context.frag.glsl" );
 
-
     /* bigass texture where we will draw to. when the brush is lifted
      * it will composite down to the drawingContext and get cleared */
-    glGenTextures(1,&ctxt->texture_id);
-    glBindTexture(GL_TEXTURE_2D,ctxt->texture_id);
-#define HWBRUSH_LOD 0 
-#define NOBORDER 0 
-    glTexImage2D(GL_TEXTURE_2D,HWBRUSH_LOD,GL_RGBA,CONTEXT_SIZE,CONTEXT_SIZE
-                ,NOBORDER,
-                GL_RGBA, GL_UNSIGNED_BYTE,texture_data);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-    free(texture_data);
+    texture_generate( &ctxt->texture, CONTEXT_SIZE,
+                                      CONTEXT_SIZE);
 
     /* gemoetry */
     glGenVertexArrays(1, &ctxt->vert_array);
@@ -93,7 +68,8 @@ void createBrushContext(brush_context *ctxt) {
 void destroyBrushContext(brush_context *ctxt) {
 
     shader_drop(&ctxt->shader);
-    glDeleteTextures(1,&ctxt->texture_id);
+    texture_drop(&ctxt->texture);
+
     glDeleteVertexArrays(1,&ctxt->vert_array);
     glDeleteBuffers(1,&ctxt->vert_buffer);
 }
@@ -115,20 +91,12 @@ void _renderBrushContext(brush_context* ctxt) {
     oscillator ++;
 
     shader_bind( &ctxt->shader);
-
+    texture_bind( &ctxt->texture, TEX_UNIT_0 );
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, ctxt->texture_id );
-
-    glUniform1i(
-            glGetUniformLocation( ctxt->shader.shader_id, "ctxt->sampler"),
-            0); 
-
-   // glClearColor(1-fr,fr,fr,1.0);
-   // glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(1-fr,fr,fr,1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
     glBindVertexArray(ctxt->vert_array);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     glDisable(GL_BLEND);

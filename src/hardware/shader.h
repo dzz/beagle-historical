@@ -1,5 +1,5 @@
-#ifndef __SHADER__
-#define __SHADER__
+#ifndef __GFX_SHADER__
+#define __GFX_SHADER__
 
 #include <GL/glew.h>
 
