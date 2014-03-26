@@ -332,35 +332,3 @@ int pointInArea(int x, int y, UI_AREA area) {
 		}
 	return 0;
 }
-
-
-/*
-void renderColorSwatch(SDL_Surface *target) {
-		const int swatchWidth = 18;
-		const int swatchHeight = 30;
-		cp_color col = getPrimaryColor();
-		SDL_Rect sr;
-
-		sr.x = client_get_screen_mousex();
-		sr.y = client_get_screen_mousey();
-
-		sr.w = swatchWidth;
-		sr.h = swatchHeight;
-
-		SDL_FillRect( target, &sr, SDL_MapRGB(
-								target->format,
-								col.r,
-								col.g,
-								col.b ) );
-
-		sr.x+=swatchWidth;
-		col = getSecondaryColor();
-
-		SDL_FillRect( target, &sr, SDL_MapRGB(
-								target->format,
-								col.r,
-								col.g,
-								col.b ) );
-
-		invalidateDirty(sr.x-swatchWidth,sr.y,sr.x+swatchWidth,sr.y+swatchHeight);
-}*/

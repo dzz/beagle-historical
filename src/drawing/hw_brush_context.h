@@ -8,4 +8,5 @@ void initHwBrush();
 void dropHwBrush();
 void renderHwBrushContext();
 void renderLocalBuffer( SDL_Surface* img );
+void importBrushContext( SDL_Surface* img );
 #endif

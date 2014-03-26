@@ -6,6 +6,9 @@
 #include "../user/stylus.h"
 
 
+#define PANELS_INVISIBLE 0
+#define PANELS_ENABLED 1
+
 void togglePanels(void);
 int getPanelsEnabled(void);
 void panelsDispatchPacket(stylusPacket sPkt);

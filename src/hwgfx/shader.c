@@ -53,7 +53,7 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     glGetProgramiv(shader->shader_id, GL_LINK_STATUS, (int *)&iv);
     if(iv == 0) {
         printf("error linking shader\n");
-
+        exit(1);
     }
     free(vertex_src);
     free(frag_src);

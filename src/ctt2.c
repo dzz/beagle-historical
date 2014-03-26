@@ -43,11 +43,12 @@
 
 #include "user/editors/colorPicker.h"
 
-static SDL_Window *window = NULL;
 static SDL_Window* opengl_window;
-static SDL_GLContext gl_context;
-static SDL_Surface *screenSurface = NULL;
+static SDL_Surface* ui_surface = NULL;
+static SDL_Surface* canvas_surface = NULL;
 static int drawingContextInvalid = 1;
+
+static SDL_GLContext gl_context;
 
 #ifndef CTT2_SCREENMODE_DEBUG
 const int SCREEN_WIDTH = 1920;
@@ -85,21 +86,26 @@ void updateViewingSurface() {
 }
 
 SDL_Surface* getViewingSurface(){
-    return screenSurface;
+    return ui_surface;
 }
 
 void invalidateDrawingContext() {
     drawingContextInvalid = 1;
 }
 
+
 void updateDrawingContext() {
     SDL_Rect r = getDirtyRect();
 
     {
+        
         SDL_Surface *comp = 
             compositeFrameWithContext( getDrawingContext() , getActiveFrame() , r);
-        SDL_BlitSurface( comp,NULL, screenSurface,&r);
+
+        SDL_BlitSurface( comp,NULL, canvas_surface,&r);
+        importBrushContext(canvas_surface);
         SDL_FreeSurface(comp);
+        
     }
     resetDirty();
     drawingContextInvalid = 0;
@@ -185,9 +191,10 @@ int main(int argc, char **argv){
     initTablet(opengl_window);
     initHwBrush();
 
-    screenSurface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
+    ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
+    canvas_surface = createDrawingSurface(1920,1080);
 
-    initPanels(screenSurface);
+    initPanels(ui_surface);
     invalidateDirty(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
     /** MAIN DISPATCH LOOP **/
@@ -225,19 +232,23 @@ int main(int argc, char **argv){
 
                 }
             }
-            recomposite_cycles++;
-            if(recomposite_cycles > CYCLES_BETWEEN_RECOMPOSITE ) {
+            if(recomposite_cycles++ > CYCLES_BETWEEN_RECOMPOSITE ) {
                 recomposite_cycles = 0;
                 if(drawingContextInvalid == 1) {
                     updateDrawingContext();
                 }
             }
-            screenbuffer_cycles++;
-            if(screenbuffer_cycles > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
+            if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 screenbuffer_cycles = 0;
-                renderPanels(screenSurface);
-                //renderHwBrushContext();
-                renderLocalBuffer(screenSurface);
+
+
+                renderHwBrushContext();
+
+                if( getPanelsEnabled() == PANELS_ENABLED ){
+                    renderPanels(ui_surface);
+                    renderLocalBuffer(ui_surface);
+                }
+
                 invalidateDrawingContext();
                 updateViewingSurface(); 
             }
