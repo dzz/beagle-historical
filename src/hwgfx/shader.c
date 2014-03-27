@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 
 #include "../system/ctt2.h"
+#include "../system/log.h"
 #include "shader.h"
 
 void shader_load(gfx_shader* shader, const char* v_src_path, 
@@ -25,8 +26,9 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
         glGetShaderiv(shader->vert_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
         fragmentInfoLog = (char *)malloc(maxLength);
         glGetShaderInfoLog(shader->vert_shader_id, maxLength, &maxLength, fragmentInfoLog);
-        printf(fragmentInfoLog);
+        log_msg(fragmentInfoLog);
         free(fragmentInfoLog);
+        exit(27);
     }
 
     glShaderSource(shader->frag_shader_id, 1, (const GLchar**)&frag_src, 0);
@@ -39,8 +41,9 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
         glGetShaderiv(shader->frag_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
         fragmentInfoLog = (char *)malloc(maxLength);
         glGetShaderInfoLog(shader->frag_shader_id, maxLength, &maxLength, fragmentInfoLog);
-        printf(fragmentInfoLog);
+        log_msg(fragmentInfoLog);
         free(fragmentInfoLog);
+        exit(9);
     }
 
     shader->shader_id = glCreateProgram();
@@ -53,7 +56,7 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     glGetProgramiv(shader->shader_id, GL_LINK_STATUS, (int *)&iv);
     if(iv == 0) {
         printf("error linking shader\n");
-        exit(1);
+        exit(2);
     }
     free(vertex_src);
     free(frag_src);
@@ -61,15 +64,20 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
 
 void shader_bind(gfx_shader* shader){
     glUseProgram(shader->shader_id);
-    /*
+}
 
-    glUniform1i(
-            glGetUniformLocation( ctxt->shader.shader_id, "ctxt_sampler"),
-            0); 
+void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {
+   int loc = glGetUniformLocation( shader->shader_id, param );
+   glUniform4f( loc, x,y,z,w );
+   
+}
 
-    glUniform1i(
-            glGetUniformLocation( ctxt->shader.shader_id, "other_sampler"),
-            1); */
+void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {
+   glUniform3f( glGetUniformLocation( shader->shader_id, param ), x,y,z );
+}
+
+void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
+   glUniform2f( glGetUniformLocation( shader->shader_id, param ), x,y);
 }
 
 void shader_drop(gfx_shader* shader) {

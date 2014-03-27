@@ -249,7 +249,13 @@ int main(int argc, char **argv){
                     renderLocalBuffer(ui_surface);
                 }
 
+
                 invalidateDrawingContext();
+                {
+                stylusState ss = getStylusState();
+                hw_brush_dab(client_get_screen_mousex(),
+                            client_get_screen_mousey(),ss.pressure*140);
+                }
                 updateViewingSurface(); 
             }
         }
