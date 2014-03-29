@@ -31,7 +31,7 @@ void createBrushContext(brush_context *ctxt) {
     shader_load( &ctxt->dab_shader, "shaders/dab.vert.glsl",
                                "shaders/dab.frag.glsl" );
 
-    texture_generate( &ctxt->context_texture, CONTEXT_SIZE,
+    texture_generate_fp( &ctxt->context_texture, CONTEXT_SIZE,
                                       CONTEXT_SIZE);
 
     texture_generate( &ctxt->ui, 1920,1080 );

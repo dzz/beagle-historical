@@ -4,7 +4,7 @@
 //
 
 
-#define BRUSH_FANCY
+//#define BRUSH_FANCY
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -71,7 +71,7 @@ double test_modulate(unsigned int time_ms) {
 	//return 1;
 }
 
-void brush_modulate_values(double pressure, unsigned int time_ms) {
+void brush_modulate_values() {
 		mapper_node* brush_controller = nodemapper_get_brush_controller();
 
 		brush_size_mod = 
@@ -364,6 +364,31 @@ void brush_render_stylus_stroke(stylusState a, stylusState b) {
 					(float)a.pressure,(float)b.pressure, 
 					a.timestamp,b.timestamp,
 					brush_drawing_context);
+/*
+    const double space_sqr = 4;
+    double dx = b.x - a.x;
+    double dy = b.y-  a.y;
+    double md = (dx*dx)+(dy*dy); //dist squared
+    double interval = md/space_sqr;
+    double dxt = dx/interval;
+    double dyt = dy/interval;
+    int ii = (int)interval;
+    int i;
+    double x = a.x;
+    double y = b.y;
+    for( i=0; i<ii; ++i) {
+         brush_modulate_values();
+		 hw_brush_dab(
+                 (float)((x)),
+                 (float)((y)),
+                 (float)brush_size_mod, 
+                 (float)brush_r,
+                 (float)brush_g,
+                 (float)brush_b,
+                 (float)brush_alpha_mod);
+    }
+    x+=dxt;
+    y+=dyt;*/
 }
 
 void brush_end_stroke() {
@@ -392,9 +417,9 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
 		double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
 		int	radius = (int)(brush_size_mod);
-		int spacing = 1;
+		int spacing = 2;
 
-		brush_modulate_values(p, t0);
+		brush_modulate_values();
 		SDL_LockSurface(ctxt);
 		
 		//set_smudge_sample(ctxt,x0,y0,x1,y1);

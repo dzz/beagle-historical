@@ -486,12 +486,22 @@ void nodemapeditor_mousemotion(int x,int y){
 
 		if( interaction_mode == INTERACTION_MODE_MOVING_NODE ) {
 
-			nodes[dragging_node]->x -= (drag_origin_x - cmx);
-			nodes[dragging_node]->y -= (drag_origin_y - cmy);
+			unsigned int newx = nodes[dragging_node]->x - (drag_origin_x - cmx);
+			unsigned int newy = nodes[dragging_node]->y - (drag_origin_y - cmy);
 
-			drag_origin_x = cmx;
-			drag_origin_y = cmy;
+            //newx/=16;newx*=16;
+            //newy/=16;newy*=16;
+
+            if( newx != nodes[dragging_node]->x){
+                nodes[dragging_node]->x = newx;
+                drag_origin_x = cmx;
+            }
+            if ( newy != nodes[dragging_node]->y) {
+                nodes[dragging_node]->y = newy;
+                drag_origin_y = cmy;
+            }
 		}
+
 }
 
 void nodemapeditor_mouseleave(){
