@@ -10,10 +10,10 @@
 #define NO_STRIDE 0
 #define NO_POINTER_OFFSET 0
 
-
 /** BASIC TYPE **/
 void primitive_create_coordinate_primitive(gfx_coordinate_primitive* 
         primitive, gfx_float* coordinates, int verts ){
+
     primitive->_num_verts = verts;
 
     glGenVertexArrays(1, &primitive->vert_array);

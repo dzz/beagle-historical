@@ -10,9 +10,10 @@
 #endif
 
 #ifdef __linux__
-//put whatever we need in here for
-//getting at the platform specific way
-//to disable vsync 
+/*
+ *
+ *
+ */
 #endif
 
 #include <SDL.h>
@@ -103,7 +104,7 @@ void updateDrawingContext() {
             compositeFrameWithContext( getDrawingContext() , getActiveFrame() , r);
 
         SDL_BlitSurface( comp,NULL, canvas_surface,&r);
-        importBrushContext(canvas_surface);
+        //importBrushContext(canvas_surface);
         SDL_FreeSurface(comp);
         
     }
@@ -232,31 +233,21 @@ int main(int argc, char **argv){
 
                 }
             }
-            if(recomposite_cycles++ > CYCLES_BETWEEN_RECOMPOSITE ) {
+            /*if(recomposite_cycles++ > CYCLES_BETWEEN_RECOMPOSITE ) {
                 recomposite_cycles = 0;
                 if(drawingContextInvalid == 1) {
                     updateDrawingContext();
                 }
-            }
+            }*/
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 screenbuffer_cycles = 0;
-
-
                 renderHwBrushContext();
-
                 if( getPanelsEnabled() == PANELS_ENABLED ){
                     renderPanels(ui_surface);
                     renderLocalBuffer(ui_surface);
                 }
-
-
                 invalidateDrawingContext();
-                {
-                stylusState ss = getStylusState();
-                hw_brush_dab(client_get_screen_mousex(),
-                            client_get_screen_mousey(),ss.pressure*140);
-                }
-                updateViewingSurface(); 
+                updateViewingSurface();
             }
         }
     }
@@ -279,21 +270,3 @@ int main(int argc, char **argv){
     return 0;
 }
 
-char* read_file(char *file)
-{
-    FILE *fptr;
-    long length;
-    char *buf;
-
-    fptr = fopen(file, "rb"); 
-    if (!fptr) 
-        return NULL;
-    fseek(fptr, 0, SEEK_END); 
-    length = ftell(fptr); 
-    buf = (char*)malloc(length+1); 
-    fseek(fptr, 0, SEEK_SET); 
-    fread(buf, length, 1, fptr); 
-    fclose(fptr); 
-    buf[length] = 0; 
-    return buf; 
-}

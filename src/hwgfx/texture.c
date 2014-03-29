@@ -11,10 +11,10 @@ unsigned char* generate_debug_texture(int w,int h) {
                sizeof(unsigned char));
         for(i=0; i<(w*h);++i) {
             int j=i/w;
-            texture_data[addr++]=addr+j;
-            texture_data[addr++]=addr+i;
-            texture_data[addr++]=addr+(i*j);
-            texture_data[addr++]=(i*i+j*j);
+            texture_data[addr++]=addr%1;
+            texture_data[addr++]=addr%1;
+            texture_data[addr++]=addr%1;
+            texture_data[addr++]=addr%1;
         }
         return texture_data;
 }

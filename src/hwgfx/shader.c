@@ -1,9 +1,21 @@
+#include <stdio.h>
 #include <GL/glew.h>
 
-#include "../system/ctt2.h"
+#include "../system/files.h"
 #include "../system/log.h"
 #include "shader.h"
 
+void _shader_err(GLuint shader_id) {
+    int maxLength;
+    char* infoLog;
+    printf("error compiling shader\n");
+    glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &maxLength);
+    infoLog = (char *)malloc(maxLength);
+    glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
+    log_msg(infoLog);
+    free(infoLog);
+    exit(1);
+}
 void shader_load(gfx_shader* shader, const char* v_src_path, 
         const char* f_src_path ){
 
@@ -20,30 +32,14 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     glCompileShader(shader->vert_shader_id);
     glGetShaderiv(shader->vert_shader_id, GL_COMPILE_STATUS, &iv);
     if(iv == 0 ){
-        int maxLength;
-        char* fragmentInfoLog;
-        printf("error compiling vert shader\n");
-        glGetShaderiv(shader->vert_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
-        fragmentInfoLog = (char *)malloc(maxLength);
-        glGetShaderInfoLog(shader->vert_shader_id, maxLength, &maxLength, fragmentInfoLog);
-        log_msg(fragmentInfoLog);
-        free(fragmentInfoLog);
-        exit(27);
+        _shader_err(shader->vert_shader_id);
     }
 
     glShaderSource(shader->frag_shader_id, 1, (const GLchar**)&frag_src, 0);
     glCompileShader(shader->frag_shader_id);
     glGetShaderiv(shader->frag_shader_id, GL_COMPILE_STATUS, &iv);
     if(iv == 0 ){
-        int maxLength;
-        char* fragmentInfoLog;
-        printf("error compiling frag shader\n");
-        glGetShaderiv(shader->frag_shader_id, GL_INFO_LOG_LENGTH, &maxLength);
-        fragmentInfoLog = (char *)malloc(maxLength);
-        glGetShaderInfoLog(shader->frag_shader_id, maxLength, &maxLength, fragmentInfoLog);
-        log_msg(fragmentInfoLog);
-        free(fragmentInfoLog);
-        exit(9);
+        _shader_err(shader->frag_shader_id);
     }
 
     shader->shader_id = glCreateProgram();
@@ -69,7 +65,6 @@ void shader_bind(gfx_shader* shader){
 void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {
    int loc = glGetUniformLocation( shader->shader_id, param );
    glUniform4f( loc, x,y,z,w );
-   
 }
 
 void shader_bind_vec3(gfx_shader* shader, const char* param, float x, float y, float z) {

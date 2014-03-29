@@ -19,7 +19,7 @@ void main(void) {
     p_t.x = p_t.x + dab_location.x;
     p_t.y = p_t.y + dab_location.y;
     p_t.x = ((p_t.x / scr_size.x)*2) -1;
-    p_t.y = (( ( scr_size.y - p_t.y) / scr_size.y)*2) -1;
+    p_t.y = (( ( p_t.y) / scr_size.y)*2) -1;
         gl_Position = vec4( p_t.x, p_t.y,
                 0.0, 
                 1.0);

@@ -32,6 +32,7 @@
 
 #include "node_mapper.h"
 
+#include "hw_brush_context.h"
 #include "brush.h"
 
 static SDL_Surface* brush_drawing_context;
@@ -281,6 +282,7 @@ __inline void plot_dab(int x, int y, int r, float p, SDL_Surface* ctxt) {
 
 		clipped_x = clipped_x < 0 ? r2 + clipped_x : r2;
 
+
 		if(brush_erase == 1) {
 				mixer = &erase;
 		} 
@@ -297,7 +299,6 @@ __inline void plot_dab(int x, int y, int r, float p, SDL_Surface* ctxt) {
 		} else {
 			current = sample_surface( ctxt, x,y );
 		}
-
 		for( i=0; i<r2; ++i) {
 				for( j=0; j<r2; ++j) {
 
@@ -391,7 +392,7 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
 		double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
 
 		int	radius = (int)(brush_size_mod);
-		int spacing = (radius > 24 ) ?	2 + ( (radius*radius) / 700 ) : 1;
+		int spacing = 1;
 
 		brush_modulate_values(p, t0);
 		SDL_LockSurface(ctxt);
@@ -415,7 +416,14 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
 				if(space_ctr==0){
 						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
 						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
-						plot_dab((x0+jtr_x),(y0+jtr_y),radius,p, ctxt);
+
+						hw_brush_dab((float)((x0+jtr_x)),
+                                (float)((y0+jtr_y)),
+                                (float)radius, 
+                                (float)brush_r,
+                                (float)brush_g,
+                                (float)brush_b,
+                                (float)brush_alpha_mod);
 				}
 				space_ctr = (space_ctr+1) % spacing;
 		}
