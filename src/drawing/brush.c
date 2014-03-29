@@ -4,7 +4,7 @@
 //
 
 
-//#define BRUSH_FANCY
+#define BRUSH_FANCY
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -62,10 +62,6 @@ static stylusState stroke_origin;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
-unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx);
-unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx);
-unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx);
-
 double test_modulate(unsigned int time_ms) {
 	return cos( ((double)time_ms/1000)*25*3.14 );
 	//return 1;
@@ -113,8 +109,6 @@ void brush_setValuesFromUI() {
 
 	brush_erase =  (get_selected_tool() == TOOL_ERASE ) ? 1 : 0;
 	brush_smudge = (get_selected_tool() == TOOL_SMUDGE) ? 1 : 0;
-
-	active_mixing_function=&mix_char;
 }
 
 #define MAX_DABS 32
@@ -146,7 +140,6 @@ void initBrush( SDL_Surface* context ) {
 			}
 			dab_bmps[idx] = dabBmp;
 
-			active_mixing_function = &mix_char;
 			brush_drawing_context = context;
 
 			SDL_LockSurface(dabBmp);
@@ -428,7 +421,7 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
 
 				radius = (int)(brush_size_mod)
 #ifdef BRUSH_FANCY	
-						+(int)(1.27*((float)fastrand() / RAND_MAX)) // noise 
+						+(float)(0.67*((float)fastrand() / RAND_MAX)) // noise 
 #endif
 						;
 
@@ -479,29 +472,6 @@ __inline float map_intensity_square(float x,float y,float p) {
 }
 */
 
-unsigned char mix_char(unsigned char l, unsigned char r, unsigned char idx) {
-	return (((l*idx+r*((255-idx)))/255));
-}
-
-unsigned char bright_char(unsigned char l, unsigned char r, unsigned char idx) {
-		unsigned int yolo = ((l*idx)+(r*255))/255;
-		if(yolo>255) yolo=255;
-		return yolo;
-}
-
-unsigned char dark_char(unsigned char l, unsigned char r, unsigned char idx) {
-		float a = (float)l/255;
-		float b = (float)r/255;
-		float c = (float)idx/255;
-
-		float mix_amt = 1-c;
-		float mul_v = a*b;
-
-		float result = (mul_v*c) + (mix_amt*b);
-
-		unsigned int yolo = (unsigned int)( (result) * 255);
-		return yolo;
-}
 
 static int g_seed = 0;
 

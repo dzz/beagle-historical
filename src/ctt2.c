@@ -25,6 +25,7 @@
 #include "system/log.h"
 #include "system/dirty.h"
 #include "system/surfaceCache.h"
+#include "hardware/tablet.h"
 
 #include "document/animation.h"
 

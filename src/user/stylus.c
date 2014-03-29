@@ -19,8 +19,8 @@ void run_stroke_logic( void );
 static double filteredPressure = 0;
 
 void stylusFilter_apply_pressure_impulse(double p) {
-			const double a = 0.4;
-			const double b = 0.6;
+			const double a = 0.9;
+			const double b = 0.1;
 			//alternate coefficients if we are in emulated stylus mode
 			const double a_emu = 0.93;
 			const double b_emu = 0.07;
@@ -30,8 +30,6 @@ void stylusFilter_apply_pressure_impulse(double p) {
 			if( HW_RUN_VAR_TABLET_CONNECTED == TABLET_CONNECTED ) {
 					filteredPressure = filteredPressure *a +p*b;
 			} else {
-					//we're using a mouse and want to filter the
-					//heavy 0/1 toggle in pressure
 					filteredPressure = filteredPressure *a_emu +p*b_emu;
 			}
 }
