@@ -2,7 +2,6 @@
 
 #include <SDL.h>
 
-#include "../system/dirty.h"
 #include "../system/ctt2.h"
 #include "../document/animation.h"
 #include "../user/panels.h"
@@ -80,15 +79,11 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								break;
 						case SDLK_k:
 								animation_insert_keyframe_at_cursor();
-								animation_cursor_move( getDrawingContext(), 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
-								invalidateDirty(0,0,1920,1080);
-								updateDrawingContext();
+								animation_cursor_move(  0, DO_NOT_COMMIT_DRAWING_CONTEXT );
 								break;
 						case SDLK_d:
 								animation_delete_keyframe_at_cursor();
-								animation_cursor_move( getDrawingContext(), 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
-								invalidateDirty(0,0,1920,1080);
-								updateDrawingContext();
+								animation_cursor_move(  0, DO_NOT_COMMIT_DRAWING_CONTEXT );
 								break;
 						case SDLK_x:
 								animation_export();
@@ -101,32 +96,24 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								toggleKeyframingMode();
 								break;
 						case SDLK_q:
-								animation_cursor_move(getDrawingContext(),-1, 
-												COMMIT_DRAWING_CONTEXT);
+								animation_cursor_move(-1, COMMIT_DRAWING_CONTEXT);
 								if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
 										ctt2_insertkeyframe();
-								invalidateDirty(0,0,1920,1080);
 								break;
 						case SDLK_e:
-								animation_cursor_move(getDrawingContext(),1, 
-												COMMIT_DRAWING_CONTEXT);
+								animation_cursor_move(1, COMMIT_DRAWING_CONTEXT);
 								if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
 										ctt2_insertkeyframe();
-								invalidateDirty(0,0,1920,1080);
 								break;
 						case SDLK_1:
-								animation_cursor_move(getDrawingContext(),0, 
-												COMMIT_DRAWING_CONTEXT);
+								animation_cursor_move(0, COMMIT_DRAWING_CONTEXT);
 								setActiveLayer(0);
-								animation_cursor_move(getDrawingContext(),0, 0);
-								invalidateDirty(0,0,1920,1080);
+								animation_cursor_move(0, 0);
 								break;
 						case SDLK_2:
-								animation_cursor_move(getDrawingContext(),0, 
-												COMMIT_DRAWING_CONTEXT);
+								animation_cursor_move(0,COMMIT_DRAWING_CONTEXT);
 								setActiveLayer(1);
-								animation_cursor_move(getDrawingContext(),0, 0);
-								invalidateDirty(0,0,1920,1080);
+								animation_cursor_move(0, 0);
 								break;
 						case SDLK_y:
 								yankDrawingContext();

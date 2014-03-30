@@ -75,3 +75,10 @@ void texture_bind(gfx_texture* texture, int texture_unit) {
     glActiveTexture(GL_TEXTURE0 + texture_unit);
     glBindTexture(GL_TEXTURE_2D, texture->texture_id );
 }
+
+void texture_download(gfx_texture* texture, SDL_Surface* target) {
+    texture_bind(texture, TEX_UNIT_0);
+    SDL_LockSurface(target);
+    glGetTexImage(GL_TEXTURE_2D, _LOD, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, target->pixels );
+    SDL_UnlockSurface(target);
+}

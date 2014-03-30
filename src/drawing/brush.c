@@ -1,11 +1,3 @@
-//   dopey - paint synthesizer
-//
-//  	#define BRUSH_FANCY			- secret noise and dithering
-//
-
-
-#define BRUSH_FANCY
-
 #include <SDL.h>
 #include <stdio.h>
 #include <math.h>
@@ -25,15 +17,11 @@
 #include "../user/editors/mapperEditorBank.h"
 
 #include "drawingSurfaces.h"
-#include "drawingContext.h"
 
 #include "node_mapper.h"
 
 #include "hw_brush_context.h"
 #include "brush.h"
-
-static SDL_Surface* brush_drawing_context;
-static SDL_Surface* smudge_buffer;
 
 static float brush_alpha_mod;
 static float brush_size_mod;
@@ -116,7 +104,7 @@ SDL_Surface* brush_get_active_dab_bmp() {
 			return dab_bmps[0];
 }
 
-void initBrush( SDL_Surface* context ) {
+void initBrush() {
 	int i;
 	int idx;
 
@@ -133,8 +121,6 @@ void initBrush( SDL_Surface* context ) {
 			}
 			dab_bmps[idx] = dabBmp;
 
-			brush_drawing_context = context;
-
 			SDL_LockSurface(dabBmp);
 			for(i=0; i<64*64;++i) {
 					unsigned char* dabData = (unsigned char*)dabBmp->pixels;
@@ -144,19 +130,15 @@ void initBrush( SDL_Surface* context ) {
 			SDL_UnlockSurface(dabBmp);
 			brush_loaded_dabs++;
 	}
-
-	smudge_buffer = createDrawingSurface( context->w, context->h );
 }
 
-void destroyBrush() {
+void dropBrush() {
 		int i;
 		for( i=0; i< MAX_DABS; ++i) {
 			if(dab_bmps[i]!=0) {
 				SDL_FreeSurface(dab_bmps[i]);
 			}
 		}
-
-		SDL_FreeSurface(smudge_buffer);
 		dropNodeMapper();
 }
 
@@ -241,36 +223,21 @@ static void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_colo
 }
 
 
-double _radius_filtered = 0;
-
-void _radius_filter_apply_input(double a) {
-    const double a_coef = 0.9;
-    const double b_coef = 0.1;
-    _radius_filtered = _radius_filtered * a_coef + a * b_coef;
-}
 void brush_begin_stroke( stylusState a ) {
 		stroke_origin = a;
         brush_modulate_values();
-        _radius_filtered = brush_size_mod;
-
-		if( brush_smudge == 1 ) {
-			SDL_BlitSurface( getDrawingContext() , NULL, smudge_buffer, NULL);
-			SDL_LockSurface( smudge_buffer );
-		} 
 }
 
 void brush_render_stylus_stroke(stylusState a, stylusState b) {
 	brush_tesselate_stroke(a.x,a.y,b.x,b.y,
 					(float)a.pressure,(float)b.pressure, 
-					a.timestamp,b.timestamp,
-					brush_drawing_context);
+					a.timestamp,b.timestamp);
 }
 
 void brush_end_stroke() {
-		SDL_UnlockSurface( smudge_buffer );
 }
 
-void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, unsigned int t0, unsigned int t1, SDL_Surface* ctxt) {
+void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, unsigned int t0, unsigned int t1) {
        
 		int origin_x = x0;
 		int origin_y = y0;

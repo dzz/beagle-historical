@@ -2,11 +2,17 @@
 #include <math.h>
 #include <GL/glew.h>
 
+#include "../system/surfaceCache.h"
+
+#include "../document/animation.h"
+#include "../document/layers.h"
+
 #include "../hwgfx/blend_control.h"
 #include "../hwgfx/shader.h"
 #include "../hwgfx/texture.h"
 #include "../hwgfx/framebuffer.h"
 #include "../hwgfx/primitive.h"
+#include "../hwgfx/misc.h"
 
 #include "hw_brush_context.h"
 
@@ -29,7 +35,7 @@ void createBrushContext(brush_context *ctxt) {
     shader_load( &ctxt->dab_shader, "shaders/dab.vert.glsl",
                                "shaders/dab.frag.glsl" );
 
-    texture_generate_fp( &ctxt->context_texture, 1920, 1080); 
+    texture_generate( &ctxt->context_texture, 1920, 1080); 
     texture_generate( &ctxt->ui, 1920, 1080);
 
     primitive_create_screen_primitive(&ctxt->screen_primitive);
@@ -97,4 +103,16 @@ void renderLocalBuffer( SDL_Surface* img) {
 
 void importBrushContext( SDL_Surface* img) {
         texture_from_SDL_surface(&_context.context_texture,img);
+}
+
+void hw_brush_commit_context() {
+    SDL_Surface* frdata = 
+        getCompositeLayerFromFrame(getActiveFrame(),
+                                   getActiveLayer(), 
+                                   COMP_RESOLVE_VIRTUAL) ->data;
+
+    texture_download( &_context.context_texture, frdata);
+    framebuffer_render_start(&_context.framebuffer);
+    gfx_clear();
+    framebuffer_render_end(&_context.framebuffer);
 }

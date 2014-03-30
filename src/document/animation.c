@@ -153,7 +153,7 @@ frame* find_left() {
 	return found;
 }
 
-void animation_cursor_move(SDL_Surface* drawingContext, int delta, int commit) {
+void animation_cursor_move(int delta, int commit) {
 
 	COMPOSITE_LAYER* activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer(), COMP_RESOLVE_VIRTUAL	);
 
@@ -162,14 +162,13 @@ void animation_cursor_move(SDL_Surface* drawingContext, int delta, int commit) {
 	}
 
 	if(commit == 1) {
-		/*commit frame*/
-		SDL_BlitSurface(drawingContext,NULL, activeCompositeLayer->data,NULL);
+		hw_brush_commit_context();
 	}
 
 	activeFrame = find_implicit_create(activeFrame->idx+delta);
 	/*copy current frame to context*/
 	activeCompositeLayer = getCompositeLayerFromFrame( activeFrame, getActiveLayer(), COMP_RESOLVE_VIRTUAL );
-	SDL_BlitSurface(activeCompositeLayer->data,NULL, drawingContext,NULL);
+    importBrushContext( activeCompositeLayer->data );
 }
 
 void dropAnimation(void) {

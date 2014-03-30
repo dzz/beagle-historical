@@ -154,7 +154,6 @@ void handle_wt_packet(PACKET pkt) {
 		}
 		if(shouldUpdateStylus == 1) {
 				updateStylus(sPkt);
-				invalidateDrawingContext();
 		} else {
 			resetStylusState();
 		}

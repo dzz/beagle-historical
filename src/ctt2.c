@@ -23,7 +23,6 @@
 #include "system/extended_video.h"
 #include "system/wm_handler.h"
 #include "system/log.h"
-#include "system/dirty.h"
 #include "system/surfaceCache.h"
 #include "hardware/tablet.h"
 
@@ -31,7 +30,6 @@
 
 #include "drawing/hw_brush_context.h"
 #include "drawing/brush.h"
-#include "drawing/drawingContext.h"
 #include "drawing/drawingSurfaces.h"
 
 #include "compositor/compositor.h"
@@ -74,11 +72,8 @@ unsigned int getKeyframingMode() {
 
 void ctt2_insertkeyframe() {
     animation_insert_keyframe_at_cursor();
-    animation_cursor_move( getDrawingContext(), 0, 
-            DO_NOT_COMMIT_DRAWING_CONTEXT );
+    animation_cursor_move( 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
 
-    invalidateDirty(0,0,1920,1080);
-    updateDrawingContext();
 }
 
 /** DISPLAY MGMT **/
@@ -92,27 +87,6 @@ SDL_Surface* getViewingSurface(){
     return ui_surface;
 }
 
-void invalidateDrawingContext() {
-    drawingContextInvalid = 1;
-}
-
-
-void updateDrawingContext() {
-    SDL_Rect r = getDirtyRect();
-
-    {
-        
-        SDL_Surface *comp = 
-            compositeFrameWithContext( getDrawingContext() , getActiveFrame() , r);
-
-        SDL_BlitSurface( comp,NULL, canvas_surface,&r);
-        //importBrushContext(canvas_surface);
-        SDL_FreeSurface(comp);
-        
-    }
-    resetDirty();
-    drawingContextInvalid = 0;
-}
 
 /** OPENGL HELPER **/
 
@@ -187,9 +161,8 @@ int main(int argc, char **argv){
     initCompositor();
     initLayers();
     initAnimation();
-    initDrawingContext();
-    initBrush( getDrawingContext() );
-    animation_cursor_move(getDrawingContext(),0,DO_NOT_COMMIT_DRAWING_CONTEXT);
+    initBrush();
+    animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
     initYankPut();
     initTablet(opengl_window);
     initHwBrush();
@@ -198,7 +171,6 @@ int main(int argc, char **argv){
     canvas_surface = createDrawingSurface(1920,1080);
 
     initPanels(ui_surface);
-    invalidateDirty(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 
     /** MAIN DISPATCH LOOP **/
     {
@@ -236,24 +208,33 @@ int main(int argc, char **argv){
                 }
             }
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
+                int i;
+                frame* fr = getActiveFrame();
                 screenbuffer_cycles = 0;
-                renderHwBrushContext();
+                SDL_FillRect(ui_surface, NULL, SDL_MapRGBA( ui_surface->format, 0,0,0,0));
+                renderPanels(ui_surface);
+                for(i = 0; i<numLayers;++i) {
+                    if( i == getActiveLayer() ) {
+                        renderHwBrushContext();
+                    } else {
+                        renderLocalBuffer(getCompositeLayerFromFrame( getActiveFrame(),
+                                    getActiveLayer(),
+                                    COMP_RESOLVE_VIRTUAL)->data);
+                    }
+                }
                 if( getPanelsEnabled() == PANELS_ENABLED ){
-                    SDL_FillRect(ui_surface, NULL, SDL_MapRGBA( ui_surface->format, 0,0,0,0));
-                    renderPanels(ui_surface);
                     renderLocalBuffer(ui_surface);
                 }
-                invalidateDrawingContext();
+
                 updateViewingSurface();
             }
         }
     }
     /** FINISHED **/
 
-    destroyBrush();
+    dropBrush();
     dropHwBrush();
     dropTablet();
-    dropDrawingContext();
     dropAnimation();
     dropPanels();
     dropDrawingSurfaces();

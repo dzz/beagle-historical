@@ -27,3 +27,4 @@ void blend_exit() {
     glDisable(GL_BLEND);
     _blending = 0;
 }
+

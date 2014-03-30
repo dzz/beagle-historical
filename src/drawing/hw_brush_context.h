@@ -9,5 +9,6 @@ void renderHwBrushContext();
 void renderLocalBuffer( SDL_Surface* img );
 void importBrushContext( SDL_Surface* img );
 void hw_brush_dab(float x, float y, float z,float r,float g,float b,float a, float jit);
+void hw_brush_commit_context();
 
 #endif
