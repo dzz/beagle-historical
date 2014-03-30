@@ -23,10 +23,10 @@ unsigned char* _fp_data(int w,int h) {
 
         texture_data = malloc( w*h*4 * sizeof(float));
         for(i=0; i<(w*h);++i) {
-            /*texture_data[addr++]=0.0f;
             texture_data[addr++]=0.0f;
             texture_data[addr++]=0.0f;
-            texture_data[addr++]=0.0f;*/
+            texture_data[addr++]=0.0f;
+            texture_data[addr++]=0.0f;
         }
         return texture_data;
 }

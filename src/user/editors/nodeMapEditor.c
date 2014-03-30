@@ -92,30 +92,43 @@ int usable_output_channels(mapper_node* node) {
 					return 0;
 }
 
+unsigned int line_color = 0;
+
 void plot(SDL_Surface* target, int x, int y) {
 		unsigned int coord = y*(target->w)+x;
 		if(coord < (target->w*target->h)) {
 			unsigned int* target_pixels = (unsigned int*)target->pixels;
-			target_pixels[coord]=SDL_MapRGB(target->format,128,128,235);
+			target_pixels[coord]=line_color;
 		}
 }
 
 
 
-void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
+void _draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 		int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
 		int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1;
 		int err = (dx>dy ? dx : -dy)/2, e2;
-		int space = y1;
+		int space = y1+x0;
 
 				for(;;) {
 						space++;
-						if(space%3==2) plot(target, x0,y0);
+						if(space%6<=3) plot(target, x0,y0);
 								if (x0==x1 && y0==y1) break;
 						e2 = err;
 						if (e2 >-dx) { err -= dy; x0 += sx; }
 						if (e2 < dy) { err += dx; y0 += sy; }
 				}
+}
+
+unsigned int line_chan_offs = 0;
+void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
+
+    int xm = ((x1-x0)/2)+x0 + (line_chan_offs * 3);
+    
+    _draw_line( target,x0,y0,xm,y0);
+    _draw_line( target,xm,y0,xm,y1);
+    _draw_line( target,xm,y1,x1,y1);
+
 }
 
 #define BEGIN_INTERFACES {
@@ -155,7 +168,6 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 		visible_connections = 0;
 
 
-	
 		SDL_FillRect(target, (SDL_Rect*) area, bg_color);
 		renderAddMenu(target,area);
 
@@ -289,12 +301,20 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 																  MAX_NODE_CHANNELS ];
 
 
-									draw_line(target,chan_in->x,chan_in->y,chan_out->x+chan_out->w,chan_out->y+chan_out->h);
+                                    
+                                   
+                                    line_color = SDL_MapRGB(target->format, 172,172,172);
+                                    if( i == last_touched_node || nodes[last_touched_node] == nodes[i]->inputs[j] ) {
+                                        line_color = SDL_MapRGB(target->format, 255,255,255);
+                                    }
+                                    line_chan_offs = j;
+									draw_line(target,chan_in->x+4,chan_in->y+4,chan_out->x+4,chan_out->y+(j*2));
 							}
 						}
 			}
 			
 			if(interaction_mode == INTERACTION_MODE_WIRING) {
+                                    line_color = SDL_MapRGB(target->format, 172,172,255);
 					draw_line(target, 
 									wiring_from_connection->location.x,
 									wiring_from_connection->location.y,

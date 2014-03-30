@@ -172,7 +172,7 @@ void animation_cursor_move(SDL_Surface* drawingContext, int delta, int commit) {
 	SDL_BlitSurface(activeCompositeLayer->data,NULL, drawingContext,NULL);
 }
 
-void dropFrames(void) {
+void dropAnimation(void) {
 		free(frameArr);
 		free(frameMap);
 		destroyCompositeLayer(background);

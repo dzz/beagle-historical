@@ -85,6 +85,7 @@ void ctt2_insertkeyframe() {
 
 void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 SDL_Surface* getViewingSurface(){
@@ -234,16 +235,11 @@ int main(int argc, char **argv){
 
                 }
             }
-            /*if(recomposite_cycles++ > CYCLES_BETWEEN_RECOMPOSITE ) {
-                recomposite_cycles = 0;
-                if(drawingContextInvalid == 1) {
-                    updateDrawingContext();
-                }
-            }*/
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 screenbuffer_cycles = 0;
                 renderHwBrushContext();
                 if( getPanelsEnabled() == PANELS_ENABLED ){
+                    SDL_FillRect(ui_surface, NULL, SDL_MapRGBA( ui_surface->format, 0,0,0,0));
                     renderPanels(ui_surface);
                     renderLocalBuffer(ui_surface);
                 }
@@ -258,7 +254,7 @@ int main(int argc, char **argv){
     dropHwBrush();
     dropTablet();
     dropDrawingContext();
-    dropFrames();
+    dropAnimation();
     dropPanels();
     dropDrawingSurfaces();
     dropYankPut();

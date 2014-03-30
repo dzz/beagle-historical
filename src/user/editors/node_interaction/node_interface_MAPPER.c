@@ -47,6 +47,11 @@ void node_mousemotion_MAPPER(mapper_node* node, int cmx,int cmy){
 		double _sY = (double)(cmy-node->y) / (double)node->gui_height;
 		curve* c = (curve*)node->data;
 		
+        if(_sX<0) _sX = 0;
+        if(_sY<0) _sY = 0;
+        if(_sX>1) _sX = 1;
+        if(_sY>1) _sY = 1;
+
 		if( (editing_point != &c->data[CURVE_SPECIAL_POINT_START]) &&
 			(editing_point != &c->data[CURVE_SPECIAL_POINT_END]) ){
 					editing_point->x = _sX;

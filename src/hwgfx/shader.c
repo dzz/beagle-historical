@@ -75,6 +75,10 @@ void shader_bind_vec2(gfx_shader* shader, const char* param, float x, float y) {
    glUniform2f( glGetUniformLocation( shader->shader_id, param ), x,y);
 }
 
+void shader_bind_float(gfx_shader* shader, const char* param, float x) {
+   glUniform1f( glGetUniformLocation( shader->shader_id, param ), x);
+}
+
 void shader_drop(gfx_shader* shader) {
     glUseProgram(0); 
     glDetachShader(shader->shader_id, shader->vert_shader_id);

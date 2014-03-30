@@ -6,9 +6,6 @@
 
 #define BRUSH_FANCY
 
-#define MIN(a,b) (((a)<(b))?(a):(b))
-#define MAX(a,b) (((a)>(b))?(a):(b))
-
 #include <SDL.h>
 #include <stdio.h>
 #include <math.h>
@@ -62,10 +59,6 @@ static stylusState stroke_origin;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
-double test_modulate(unsigned int time_ms) {
-	return cos( ((double)time_ms/1000)*25*3.14 );
-	//return 1;
-}
 
 void brush_modulate_values() {
 		mapper_node* brush_controller = nodemapper_get_brush_controller();
@@ -248,103 +241,17 @@ static void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_colo
 }
 
 
-__inline void plot_dab(int x, int y, int r, float p, SDL_Surface* ctxt) {
-		signed int i;
-		signed int j;
-		const signed int r2 = r+r;
-		const float pi = 2;
-		const float piov_2 = 1;
-		const float delta = pi / (float)(r2);
-		float plotX = -piov_2;
-		float plotY = -piov_2;
-		float intensity;
-		unsigned char v = 0;
-		int coord = (x-r)+((y-r) * ctxt->w);
-		const unsigned int jmp = (ctxt->w - ((r*2)));
-		unsigned int ucoord;
-		uint_rgba_map dest;
-		uint_rgba_map current;
-		unsigned int* pixels = (unsigned int*)ctxt->pixels;
-		unsigned int* smudge_pixels = (unsigned int*)smudge_buffer->pixels;
-		int clipped_x = ctxt->w -(x+r);
-		const int ctxt_end = ctxt->w*ctxt->h;
-		float noise = 1;
-		unsigned int* (*mixer)(uint_rgba_map,uint_rgba_map);
-		float buf;
+double _radius_filtered = 0;
 
-
-		clipped_x = clipped_x < 0 ? r2 + clipped_x : r2;
-
-
-		if(brush_erase == 1) {
-				mixer = &erase;
-		} 
-		else {
-				mixer = &mix;
-		}
-
-		if( brush_smudge != 1) {
-				
-				current.rgba.r = (unsigned char)(brush_r *255.0);
-				current.rgba.g = (unsigned char)(brush_g *255.0);
-				current.rgba.b = (unsigned char)(brush_b *255.0);
-			//mix_rgb_by_float(&current,brush_color_mix_mod, getPrimaryColor(), getSecondaryColor());
-		} else {
-			current = sample_surface( ctxt, x,y );
-		}
-		for( i=0; i<r2; ++i) {
-				for( j=0; j<r2; ++j) {
-
-						plotX += delta;
-						//hax until i properly fix clipping
-						if(( x + (j-r) ) < (signed int)ctxt->w)
-						if(( y + (i-r) ) < (signed int)ctxt->h)
-						if(( x + (j-r) ) > 0)
-						if(( y + (i-r) ) > 0)
-						{
-								if( brush_smudge == 1 ) {
-										if( ctxt == brush_drawing_context ) {
-
-											int smudge_coord = 
-													  (i-r) + 
-													  ( (j-r) * smudge_buffer->w) +
-													  (stroke_origin.x) +
-													  (stroke_origin.y * smudge_buffer->w);
-
-											if(smudge_coord>0 && smudge_coord < ctxt_end ) {
-												current.packed = smudge_pixels[(unsigned int)smudge_coord];
-											}
-										}
-								}
-
-								noise = 1-(((float)fastrand()/RAND_MAX)*brush_noise_mod);
-								intensity = map_intensity(plotX,plotY,p);
-
-								if(coord>0 && coord<ctxt_end && intensity>0) {
-										buf = intensity*brush_alpha_mod*noise;
-										v = (unsigned char)(buf);
-										dest.packed =pixels[coord];
-										current.rgba.a = v;
-										pixels[coord] = *(*mixer)(current,dest);
-								}
-						}
-						coord++;
-				}
-				plotX = -piov_2;
-				plotY += delta;
-				coord += jmp;
-		}
-		//if we're rendering directly to the active drawing context,
-		//invalidate the dirty rect. Othewise, we're in use somewhere
-		//else not tied to the global dirty rect manager
-		if(ctxt == getDrawingContext() ) {
-				invalidateDirty(x-r,y-r,x+r,y+r);
-		}
+void _radius_filter_apply_input(double a) {
+    const double a_coef = 0.9;
+    const double b_coef = 0.1;
+    _radius_filtered = _radius_filtered * a_coef + a * b_coef;
 }
-
-
 void brush_begin_stroke( stylusState a ) {
 		stroke_origin = a;
+        brush_modulate_values();
+        _radius_filtered = brush_size_mod;
 
 		if( brush_smudge == 1 ) {
 			SDL_BlitSurface( getDrawingContext() , NULL, smudge_buffer, NULL);
@@ -357,31 +264,6 @@ void brush_render_stylus_stroke(stylusState a, stylusState b) {
 					(float)a.pressure,(float)b.pressure, 
 					a.timestamp,b.timestamp,
 					brush_drawing_context);
-/*
-    const double space_sqr = 4;
-    double dx = b.x - a.x;
-    double dy = b.y-  a.y;
-    double md = (dx*dx)+(dy*dy); //dist squared
-    double interval = md/space_sqr;
-    double dxt = dx/interval;
-    double dyt = dy/interval;
-    int ii = (int)interval;
-    int i;
-    double x = a.x;
-    double y = b.y;
-    for( i=0; i<ii; ++i) {
-         brush_modulate_values();
-		 hw_brush_dab(
-                 (float)((x)),
-                 (float)((y)),
-                 (float)brush_size_mod, 
-                 (float)brush_r,
-                 (float)brush_g,
-                 (float)brush_b,
-                 (float)brush_alpha_mod);
-    }
-    x+=dxt;
-    y+=dyt;*/
 }
 
 void brush_end_stroke() {
@@ -389,6 +271,7 @@ void brush_end_stroke() {
 }
 
 void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, unsigned int t0, unsigned int t1, SDL_Surface* ctxt) {
+       
 		int origin_x = x0;
 		int origin_y = y0;
 	
@@ -397,55 +280,31 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
 
 		int err = (dx>dy ? dx : -dy)/2, e2;
 
-		int space_ctr = 0;
+		float	radius = (float)(brush_size_mod);
 
-		float pD = 1;
+        for(;;){
+            int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
+            int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
 
-		// if we're drawing to the user's drawing context, we're going to use the fancy
-		// filtered pressure, otherwise, we're rendering for some other reason, and
-		// should use the supplied value.
-		//
-		//this is not ideal coupling
+		    brush_modulate_values();
 
-		double p = ctxt == getDrawingContext() ? stylusFilter_getFilteredPressure() : p0;
+            radius = (float)brush_size_mod;
 
-		int	radius = (int)(brush_size_mod);
-		int spacing = 2;
-
-		brush_modulate_values();
-		SDL_LockSurface(ctxt);
-		
-		//set_smudge_sample(ctxt,x0,y0,x1,y1);
-
-		for(;;){
-
-				radius = (int)(brush_size_mod)
-#ifdef BRUSH_FANCY	
-						+(float)(0.67*((float)fastrand() / RAND_MAX)) // noise 
-#endif
-						;
+            if (x0==x1 && y0==y1) break;
+            e2 = err;
+            if (e2 >-dx) { err -= dy; x0 += sx; }
+            if (e2 < dy) { err += dx; y0 += sy; }
 
 
-				if (x0==x1 && y0==y1) break;
-				e2 = err;
-				if (e2 >-dx) { err -= dy; x0 += sx; }
-				if (e2 < dy) { err += dx; y0 += sy; }
-
-				if(space_ctr==0){
-						int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
-						int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
-
-						hw_brush_dab((float)((x0+jtr_x)),
-                                (float)((y0+jtr_y)),
-                                (float)radius, 
-                                (float)brush_r,
-                                (float)brush_g,
-                                (float)brush_b,
-                                (float)brush_alpha_mod);
-				}
-				space_ctr = (space_ctr+1) % spacing;
-		}
-		SDL_UnlockSurface(ctxt);
+            hw_brush_dab((float)((x0+jtr_x)),
+                    (float)((y0+jtr_y)),
+                    (float)radius, 
+                    (float)brush_r,
+                    (float)brush_g,
+                    (float)brush_b,
+                    (float)brush_alpha_mod,
+                    (float)brush_noise_mod);
+        }
 }
 
 __inline float cheap_sqrt(float x)

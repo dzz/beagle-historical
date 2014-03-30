@@ -1,5 +1,6 @@
 #version 330 core
 
+precision highp float;
 // x,y  = canvas space
 //   z  = dab size
 uniform vec3 dab_location;

@@ -10,8 +10,6 @@
 
 #include "hw_brush_context.h"
 
-#define CONTEXT_SIZE 2048
-
 typedef struct {
     gfx_shader shader;
     gfx_shader dab_shader;
@@ -31,10 +29,8 @@ void createBrushContext(brush_context *ctxt) {
     shader_load( &ctxt->dab_shader, "shaders/dab.vert.glsl",
                                "shaders/dab.frag.glsl" );
 
-    texture_generate_fp( &ctxt->context_texture, CONTEXT_SIZE,
-                                      CONTEXT_SIZE);
-
-    texture_generate( &ctxt->ui, 1920,1080 );
+    texture_generate_fp( &ctxt->context_texture, 1920, 1080); 
+    texture_generate( &ctxt->ui, 1920, 1080);
 
     primitive_create_screen_primitive(&ctxt->screen_primitive);
     primitive_create_dab_primitive(&ctxt->dab_primitive);
@@ -55,8 +51,7 @@ void destroyBrushContext(brush_context *ctxt) {
     primitive_destroy_coordinate_primitive(&ctxt->dab_primitive);
 }
 
-void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a) {
-    //printf("%s %s %s - %s %s %s %s\n",x,y,z,r,g,b,a);
+void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float jit) {
     framebuffer_render_start(&_context.framebuffer);
     {
         blend_enter( BLENDMODE_OVER ); {
@@ -64,6 +59,7 @@ void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a) {
             shader_bind_vec3( &_context.dab_shader, "dab_location",x,y,z );
             shader_bind_vec4( &_context.dab_shader, "base_color",r,g,b,a );
             shader_bind_vec2( &_context.dab_shader, "scr_size",1920.0, 1080.0);
+            shader_bind_float(&_context.dab_shader, "jitter",jit); 
             primitive_render( &_context.dab_primitive);
         }
         blend_exit();

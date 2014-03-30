@@ -10,8 +10,8 @@ typedef struct {
 	int idx;
 } frame;
 
-void initFrames(void);
-void dropFrames(void);
+void initAnimation(void);
+void dropAnimation(void);
 
 #define COMMIT_DRAWING_CONTEXT 1
 #define DO_NOT_COMMIT_DRAWING_CONTEXT 0
