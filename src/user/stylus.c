@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 
 #include "../system/ctt2.h"
@@ -39,6 +40,8 @@ double stylusFilter_getFilteredPressure() {
 }
 
 void updateStylus(stylusPacket packet) {
+    double orientation;
+
 	previous_stylus_frame = current_stylus_frame;
 	current_stylus_frame.x = packet.x;
 	current_stylus_frame.y = packet.y;
@@ -46,10 +49,18 @@ void updateStylus(stylusPacket packet) {
 	current_stylus_frame.timestamp = packet.timestamp;
 	stylusFilter_apply_pressure_impulse( packet.pressure );
 
+
+    {
+        double d_x = current_stylus_frame.x - previous_stylus_frame.x;
+        double d_y = current_stylus_frame.y - previous_stylus_frame.y;
+        orientation = atan2(d_x,d_y); 
+    }
+
 	node_mapper_apply_input( 
             stylusFilter_getFilteredPressure(), 
             packet.timestamp, 
-            packet.azimuth 
+            packet.azimuth,
+            orientation
             );
 
 	run_stroke_logic();

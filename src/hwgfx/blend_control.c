@@ -19,7 +19,7 @@ void _blend_set_mode(unsigned int mode) {
                glBlendEquation(GL_FUNC_ADD);
             break;
         case BLENDMODE_DAB_RENDERING:
-               glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+               glBlendFuncSeparate(GL_SRC_ALPHA, GL_ZERO,
                        GL_ONE,GL_ONE);
                glBlendEquationSeparate(GL_FUNC_ADD,GL_MAX);
             break;

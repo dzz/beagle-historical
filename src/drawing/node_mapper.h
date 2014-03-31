@@ -51,12 +51,19 @@ void dropNodeMapper(void);
 #define BRUSH_CHANNEL_R 4
 #define BRUSH_CHANNEL_G 5
 #define BRUSH_CHANNEL_B 6
+#define BRUSH_CHANNEL_ROT 7
+
+#define STYLUS_CHANNEL_PRESSURE 0
+#define STYLUS_CHANNEL_TIME 1
+#define STYLUS_CHANNEL_AZIMUTH 2
+#define STYLUS_CHANNEL_ORIENT 3
 
 mapper_node* nodemapper_get_brush_controller();
 mapper_node** nodemapper_get_node_array();
 
 mapper_node* nodemapper_create_template(unsigned int node_template);
 void nodemapper_set_template_coords(int x, int y);
-void node_mapper_apply_input( double pressure, double time, double azimuth );
+void node_mapper_apply_input( double pressure, double time, double azimuth,
+       double orientation );
 
 #endif

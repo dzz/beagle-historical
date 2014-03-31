@@ -43,12 +43,17 @@ static double brush_r;
 static double brush_g;
 static double brush_b;
 
+static double brush_rot;
+
 static stylusState stroke_origin;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
 
 void brush_modulate_values() {
+        //eventually, what should happen here is to keep track of 2 or more
+        //states so we can smoothly interpolate when we tesselate
+
 		mapper_node* brush_controller = nodemapper_get_brush_controller();
 
 		brush_size_mod = 
@@ -68,6 +73,8 @@ void brush_modulate_values() {
 				brush_controller->outputs[BRUSH_CHANNEL_G];
 		brush_b = 
 				brush_controller->outputs[BRUSH_CHANNEL_B];
+        brush_rot = 
+                brush_controller->outputs[BRUSH_CHANNEL_ROT];
 
 		if(brush_r>1) brush_r = 1;
 		if(brush_g>1) brush_g = 1;
@@ -75,7 +82,6 @@ void brush_modulate_values() {
 }
 
 #define MAX_DABS 32
-double dabs[MAX_DABS][(64*64)+64];
 SDL_Surface* dab_bmps[MAX_DABS];
 
 SDL_Surface* brush_get_active_dab_bmp() {
@@ -124,14 +130,6 @@ void initBrush() {
 				break;
 			}
 			dab_bmps[idx] = dabBmp;
-
-			SDL_LockSurface(dabBmp);
-			for(i=0; i<64*64;++i) {
-					unsigned char* dabData = (unsigned char*)dabBmp->pixels;
-					dabs[idx][i] = (double)255-dabData[i];
-			}
-
-			SDL_UnlockSurface(dabBmp);
 			brush_loaded_dabs++;
 	}
 }
@@ -183,43 +181,6 @@ unsigned int* mix(uint_rgba_map src, uint_rgba_map dst) {
 
 }
 
-__inline float map_intensity(float x,float y,float p) {
-		float  xc_d = (x*32)+32;
-		float  yc_d = (y*32)+32;
-
-		int xc=(int)xc_d;
-		int yc=(int)yc_d;
-
-		unsigned int dab_v[4];
-
-		unsigned int x_f = (double)(xc_d - xc)*255;
-		unsigned int y_f = (double)(yc_d - yc)*255;
-
-		double top,bottom,mid;
-
-		dab_v[0] = dabs[brush_dab_index][(yc*64)+xc];
-		dab_v[1] = dabs[brush_dab_index][(yc*64)+xc+1];
-		dab_v[2] = dabs[brush_dab_index][((yc+1)*64)+xc];
-		dab_v[3] = dabs[brush_dab_index][((yc+1)*64)+xc+1];
-
-		top = dab_v[0]*(255-x_f)+dab_v[1]*(x_f);
-		bottom = dab_v[2]*(255-x_f)+dab_v[3]*(x_f);
-		mid = (top*(255-y_f) + bottom*y_f)/(255*255);
-
-#ifdef BRUSH_FANCY
-		// dopey dither
-		if(mid>128)
-				if(mid<192)
-				if( fastrand() < (RAND_MAX/2) )
-						mid+=32;
-		if(mid>1)
-				if(mid<8)
-				if( fastrand() < (RAND_MAX/2) )
-						mid-=1;
-#endif
-		return (unsigned char)mid;
-}
-
 static void mix_rgb_by_float(uint_rgba_map *pix, float p, cp_color prim, cp_color secon) {
 		pix->rgba.r = (unsigned char)((float)prim.r * p + (float)secon.r * (1-p));
 		pix->rgba.g = (unsigned char)((float)prim.g * p + (float)secon.g * (1-p));
@@ -239,7 +200,8 @@ void brush_render_stylus_stroke(stylusState a, stylusState b) {
 }
 
 void brush_end_stroke() {
-    hw_brush_commit_brush_stroke();
+    //hw_brush_commit_brush_stroke(); 
+    return;
 }
 
 void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, unsigned int t0, unsigned int t1) {
@@ -275,7 +237,8 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
                     (float)brush_g,
                     (float)brush_b,
                     (float)brush_alpha_mod,
-                    (float)brush_noise_mod);
+                    (float)brush_noise_mod,
+                    (float)brush_rot);
         }
 }
 

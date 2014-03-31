@@ -75,11 +75,12 @@ void bind_mouse_handlers() {
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mouseleave_handler = &brusheditor_mouseleave;
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mousemotion_handler = &brusheditor_mousemotion;
 
+    /*
 	mouse_handlers[PANEL_TOOLBAR].bound_mousedown_handler = &toolbar_mousedown;
 	mouse_handlers[PANEL_TOOLBAR].bound_mouseup_handler = &dummy_xy_mousehandler;
 	mouse_handlers[PANEL_TOOLBAR].bound_mouseleave_handler = &dummy_void_mousehandler;
 	mouse_handlers[PANEL_TOOLBAR].bound_mousemotion_handler = &dummy_xy_mousehandler;
-
+*/
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mousedown_handler = &nodemapeditor_mousedown;
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseup_handler = &nodemapeditor_mouseup;
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseleave_handler = &nodemapeditor_mouseleave;
@@ -297,7 +298,7 @@ void renderPanels(SDL_Surface *target) {
 						renderBrushEditor(target,brusheditor_area);
 						renderColorPicker(target,colorpicker_area);
 						renderTimeline(target);
-						renderToolbar(target,toolbar_area);
+						//renderToolbar(target,toolbar_area);
 				} else {
 						int i;
 						for(i=0; i<TOTAL_PANELS; ++i) {

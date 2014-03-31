@@ -2,9 +2,6 @@
 #include "node_internals.h"
 #include "node_recalc.h"
 
-#define STYLUS_CHANNEL_PRESSURE 0
-#define STYLUS_CHANNEL_TIME 1
-#define STYLUS_CHANNEL_AZIMUTH 2
 
 void create_node_brush_interface(mapper_node** nodes) {
         /* these are preallocated*/
@@ -21,8 +18,8 @@ void create_node_brush_interface(mapper_node** nodes) {
 		new_node(nodes[NODE_ID_BRUSH_CONTROLLER]);
 		output_node->inputs[0] = stylus_input;
 		output_node->recalc = &node_passthrough;
-		output_node->input_channels = 7;
-		output_node->output_channels = 7;
+		output_node->input_channels = 8;
+		output_node->output_channels = 8;
 		output_node->node_label = LABEL_BRUSH_CONTROLLER;
 		output_node->input_labels[BRUSH_CHANNEL_SIZE] = LABEL_SIZE;
 		output_node->input_labels[BRUSH_CHANNEL_ALPHA] = LABEL_ALPHA;
@@ -31,7 +28,7 @@ void create_node_brush_interface(mapper_node** nodes) {
 		output_node->input_labels[BRUSH_CHANNEL_R] = LABEL_R;
 		output_node->input_labels[BRUSH_CHANNEL_G] = LABEL_G;
 		output_node->input_labels[BRUSH_CHANNEL_B] = LABEL_B;
-
+        output_node->input_labels[BRUSH_CHANNEL_ROT] = LABEL_ROT;
         /* bind to pressure */
 		output_node->inputs[BRUSH_CHANNEL_SIZE] 
             = nodes[NODE_ID_STYLUS_INPUT];
@@ -62,7 +59,7 @@ void create_node_brush_interface(mapper_node** nodes) {
 
         /* create the stylus driver */
 		new_node(nodes[NODE_ID_STYLUS_INPUT]);
-		stylus_input->output_channels = 3;
+		stylus_input->output_channels = 4;
 
 		stylus_input->node_label = LABEL_STYLUS;
 		stylus_input->output_labels[STYLUS_CHANNEL_PRESSURE] 
@@ -71,6 +68,8 @@ void create_node_brush_interface(mapper_node** nodes) {
             = LABEL_TIME;
 		stylus_input->output_labels[STYLUS_CHANNEL_AZIMUTH] 
             = LABEL_AZIMUTH;
+		stylus_input->output_labels[STYLUS_CHANNEL_ORIENT] 
+            = LABEL_ORIENT;
 		
 		stylus_input->x = 120;
 		stylus_input->y = 40;

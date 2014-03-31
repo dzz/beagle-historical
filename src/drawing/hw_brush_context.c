@@ -84,7 +84,7 @@ void destroyBrushContext(brush_context *ctxt) {
     primitive_destroy_coordinate_primitive(&ctxt->dab_primitive);
 }
 
-void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float jit) {
+void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float jit, float rot) {
     framebuffer_render_start(&_context.brushing_framebuffer);
     {
         texture_bind(&_context.dab_texture, TEX_UNIT_0);
@@ -94,6 +94,7 @@ void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, flo
         shader_bind_vec4( &_context.dab_shader, "base_color",r,g,b,a );
         shader_bind_vec2( &_context.dab_shader, "scr_size",1920.0, 1080.0);
         shader_bind_float(&_context.dab_shader, "jitter",jit); 
+        shader_bind_float(&_context.dab_shader, "rot",rot); 
         primitive_render( &_context.dab_primitive);
         blend_exit();
     }
@@ -118,9 +119,6 @@ void _render_drawing_context(brush_context* ctxt) {
     texture_bind( &ctxt->drawing_context_texture, TEX_UNIT_0 );
     primitive_render( &ctxt->screen_primitive );
 
-    /*brushing context-> the context we are dabbing to */
-    texture_bind( &ctxt->brushing_context_texture, TEX_UNIT_0 );
-    primitive_render( &ctxt->screen_primitive );
     blend_exit();
 }
 
