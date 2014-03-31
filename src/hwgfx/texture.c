@@ -67,6 +67,15 @@ void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
 
 }
 
+void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf) {
+    SDL_LockSurface(surf);
+    glBindTexture(GL_TEXTURE_2D,texture->texture_id);
+    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,surf->w,surf->h ,_NOBORDER,
+                GL_RED, GL_UNSIGNED_BYTE,(unsigned char*)surf->pixels);
+    SDL_UnlockSurface(surf);
+
+}
+
 void texture_drop(gfx_texture* texture) {
     glDeleteTextures(1,&texture->texture_id);
 }
@@ -82,3 +91,4 @@ void texture_download(gfx_texture* texture, SDL_Surface* target) {
     glGetTexImage(GL_TEXTURE_2D, _LOD, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, target->pixels );
     SDL_UnlockSurface(target);
 }
+

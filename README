@@ -2,17 +2,9 @@
  / __)(_  _)(_  _)(__ \ 
 ( (__   )(    )(   / _/ 
  \___) (__)  (__) (____)
-      ctt2 0.3.0.0
+      ctt2 0.3.1.0
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-
---* notice *--
-
-
-many features are broken presently as stuff is getting ported to the new opengl 
-rendering system
-
 
 
 (0) what is this

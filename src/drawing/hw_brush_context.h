@@ -12,5 +12,6 @@ void hw_brush_dab(float x, float y, float z,float r,float g,float b,float a, flo
 void hw_brush_commit_context(SDL_Surface* frdata);
 void hw_brush_commit_brush_stroke();
 void hw_render_layerstack(frame* fr);
+void hw_import_dab_texture( SDL_Surface* img);
 
 #endif

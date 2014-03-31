@@ -74,6 +74,18 @@ void brush_modulate_values() {
 		if(brush_b>1) brush_b = 1;
 }
 
+#define MAX_DABS 32
+double dabs[MAX_DABS][(64*64)+64];
+SDL_Surface* dab_bmps[MAX_DABS];
+
+SDL_Surface* brush_get_active_dab_bmp() {
+	if(dab_bmps[brush_dab_index]!=0)
+			return dab_bmps[brush_dab_index];
+	else
+			//hax
+			return dab_bmps[0];
+}
+
 void brush_setValuesFromUI() {
 	const double brush_min = 0.2;
 	const double brush_max = 255.0;
@@ -90,19 +102,11 @@ void brush_setValuesFromUI() {
 
 	brush_erase =  (get_selected_tool() == TOOL_ERASE ) ? 1 : 0;
 	brush_smudge = (get_selected_tool() == TOOL_SMUDGE) ? 1 : 0;
+
+    hw_import_dab_texture(dab_bmps[brush_dab_index]);
+
 }
 
-#define MAX_DABS 32
-double dabs[MAX_DABS][(64*64)+64];
-SDL_Surface* dab_bmps[MAX_DABS];
-
-SDL_Surface* brush_get_active_dab_bmp() {
-	if(dab_bmps[brush_dab_index]!=0)
-			return dab_bmps[brush_dab_index];
-	else
-			//hax
-			return dab_bmps[0];
-}
 
 void initBrush() {
 	int i;

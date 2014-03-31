@@ -33,6 +33,9 @@ typedef struct {
     /*brush buffer*/
     gfx_framebuffer brushing_framebuffer;
     gfx_texture brushing_context_texture;
+
+    gfx_texture dab_texture;
+
 } brush_context;
 
 brush_context _context;
@@ -48,6 +51,7 @@ void _destroy_ctxt_gfx_data( gfx_texture* tex, gfx_framebuffer* fb) {
     framebuffer_drop(fb);
 }
 
+
 void createBrushContext(brush_context *ctxt) {
     shader_load( &ctxt->screen_shader, "shaders/hw_context.vert.glsl",
             "shaders/hw_context.frag.glsl" );
@@ -61,6 +65,7 @@ void createBrushContext(brush_context *ctxt) {
 
     texture_generate( &ctxt->brushing_context_texture, 1920, 1080); 
     texture_generate( &ctxt->ui, 1920, 1080);
+    texture_generate( &ctxt->dab_texture, 64, 64);
 
     _build_ctxt_gfx_data( &ctxt->brushing_context_texture, &ctxt->brushing_framebuffer );
     _build_ctxt_gfx_data( &ctxt->drawing_context_texture, &ctxt->drawing_context_framebuffer );
@@ -82,6 +87,7 @@ void destroyBrushContext(brush_context *ctxt) {
 void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float jit) {
     framebuffer_render_start(&_context.brushing_framebuffer);
     {
+        texture_bind(&_context.dab_texture, TEX_UNIT_0);
         blend_enter( BLENDMODE_DAB_RENDERING ); 
         shader_bind( &_context.dab_shader );
         shader_bind_vec3( &_context.dab_shader, "dab_location",x,y,z );
@@ -170,4 +176,8 @@ void renderLocalBuffer( SDL_Surface* img) {
 
 void hw_import_drawing_context( SDL_Surface* img) {
     texture_from_SDL_surface(&_context.drawing_context_texture,img);
+}
+
+void hw_import_dab_texture( SDL_Surface* img) {
+    texture_from_SDL_surface_grayscale(&_context.dab_texture,img);
 }

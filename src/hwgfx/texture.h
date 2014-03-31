@@ -11,6 +11,7 @@ typedef struct {
 void texture_generate(gfx_texture* texture, int w,int h);
 void texture_generate_fp(gfx_texture* texture, int w,int h);
 void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf);
+void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf);
 
 void texture_drop(gfx_texture* texture);
 void texture_bind(gfx_texture* texture, int texture_unit);

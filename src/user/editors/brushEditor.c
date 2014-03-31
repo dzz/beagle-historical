@@ -45,7 +45,7 @@ void _redraw_stroke_sample() {
 				int x2 = (int)((cosf(((p+(1.0/25))*3.14*4)))*10) + 57;
 
 				node_mapper_apply_input(p);
-				brush_tesselate_stroke( x1,(v*8)+15,x2,(v*8)+8+15,p,p,t0,t0,brushSample);
+//				brush_tesselate_stroke( x1,(v*8)+15,x2,(v*8)+8+15,p,p,t0,t0,brushSample);
 
 		}
 	}
@@ -61,7 +61,7 @@ void _redraw_stroke_sample() {
 }
 
 void redraw_stroke_sample() { 
-    //_redraw_stroke_sample();
+    _redraw_stroke_sample();
 }
 void brusheditor_redraw_stroke() {
 	redraw_stroke_sample();
