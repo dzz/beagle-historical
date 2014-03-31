@@ -45,9 +45,9 @@ void template_COLOR(mapper_node* node) {
 		node->data = malloc(sizeof(cp_color));
 		{
 			cp_color* col = (cp_color*)node->data;
-			col->r = 128;
-			col->g = 128;
-			col->b = 192;
+			col->r = 32;
+			col->g = 16;
+			col->b = 172;
 		}
 }
 
@@ -134,7 +134,7 @@ void nodemapper_set_template_coords(int x, int y) {
 		template_y = y;	
 }
 
-void nodemapper_create_template(unsigned int node_template) {
+mapper_node* nodemapper_create_template(unsigned int node_template) {
 
 			mapper_node* node = nodemapper_allocate_top();
 			if( node!= NO_FREE_NODES_AVAILABLE ) {
@@ -152,5 +152,6 @@ void nodemapper_create_template(unsigned int node_template) {
 				node->y = template_y;
 			}
 			nodemapper_get_node_array()[nodemapper_get_top_id()] = node;
+            return node;
 }
 

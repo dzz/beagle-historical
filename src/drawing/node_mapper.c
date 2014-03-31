@@ -26,8 +26,8 @@ mapper_node* nodemapper_get_brush_controller() {
 void initNodeMapper() {
 		node_array[NODE_ID_STYLUS_INPUT] = &stylus_input;
 		node_array[NODE_ID_BRUSH_CONTROLLER] = &output_node;
-		create_node_brush_interface(node_array);
 		top_node_id = 1;
+		create_node_brush_interface(node_array);
 }
 
 void dropNodeMapper() {

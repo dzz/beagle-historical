@@ -124,9 +124,13 @@ unsigned int line_chan_offs = 0;
 void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 
     int xm = ((x1-x0)/2)+x0 + (line_chan_offs * 3);
+    int y0t = y0;
+    xm/=8;
+    xm*=8; 
+
     
-    _draw_line( target,x0,y0,xm,y0);
-    _draw_line( target,xm,y0,xm,y1);
+    _draw_line( target,x0,y0,xm,y0t);
+    _draw_line( target,xm,y0t,xm,y1);
     _draw_line( target,xm,y1,x1,y1);
 
 }

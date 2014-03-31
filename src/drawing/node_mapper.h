@@ -55,7 +55,7 @@ void dropNodeMapper(void);
 mapper_node* nodemapper_get_brush_controller();
 mapper_node** nodemapper_get_node_array();
 
-void nodemapper_create_template(unsigned int node_template);
+mapper_node* nodemapper_create_template(unsigned int node_template);
 void nodemapper_set_template_coords(int x, int y);
 void node_mapper_apply_input( double pressure, double time, double azimuth );
 

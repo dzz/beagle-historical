@@ -235,6 +235,7 @@ void brush_render_stylus_stroke(stylusState a, stylusState b) {
 }
 
 void brush_end_stroke() {
+    hw_brush_commit_brush_stroke();
 }
 
 void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, unsigned int t0, unsigned int t1) {

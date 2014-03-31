@@ -45,17 +45,18 @@
 
 static SDL_Window* opengl_window;
 static SDL_Surface* ui_surface = NULL;
-static SDL_Surface* canvas_surface = NULL;
 static int drawingContextInvalid = 1;
 
 static SDL_GLContext gl_context;
+
+//#define CTT2_SCREENMODE_DEBUG
 
 #ifndef CTT2_SCREENMODE_DEBUG
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 #else
 const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_HEIGHT = 800=
 #endif
 
 static unsigned int ctt2_keyframe_mode = 0;
@@ -161,15 +162,15 @@ int main(int argc, char **argv){
     initCompositor();
     initLayers();
     initAnimation();
+    initHwBrush();
     initBrush();
+
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
+
     initYankPut();
     initTablet(opengl_window);
-    initHwBrush();
 
     ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
-    canvas_surface = createDrawingSurface(1920,1080);
-
     initPanels(ui_surface);
 
     /** MAIN DISPATCH LOOP **/
@@ -208,24 +209,15 @@ int main(int argc, char **argv){
                 }
             }
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
-                int i;
                 frame* fr = getActiveFrame();
                 screenbuffer_cycles = 0;
-                SDL_FillRect(ui_surface, NULL, SDL_MapRGBA( ui_surface->format, 0,0,0,0));
-                renderPanels(ui_surface);
-                for(i = 0; i<numLayers;++i) {
-                    if( i == getActiveLayer() ) {
-                        renderHwBrushContext();
-                    } else {
-                        renderLocalBuffer(getCompositeLayerFromFrame( getActiveFrame(),
-                                    getActiveLayer(),
-                                    COMP_RESOLVE_VIRTUAL)->data);
-                    }
-                }
+                hw_render_layerstack(fr);
+
                 if( getPanelsEnabled() == PANELS_ENABLED ){
+                    SDL_FillRect(ui_surface, NULL, SDL_MapRGBA( ui_surface->format, 0,0,0,0));
+                    renderPanels(ui_surface);
                     renderLocalBuffer(ui_surface);
                 }
-
                 updateViewingSurface();
             }
         }

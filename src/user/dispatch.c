@@ -105,16 +105,18 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								if( getKeyframingMode() == KEYFRAME_MODE_RECORD)
 										ctt2_insertkeyframe();
 								break;
+
 						case SDLK_1:
 								animation_cursor_move(0, COMMIT_DRAWING_CONTEXT);
 								setActiveLayer(0);
-								animation_cursor_move(0, 0);
+								animation_cursor_move(0, DO_NOT_COMMIT_DRAWING_CONTEXT);
 								break;
 						case SDLK_2:
 								animation_cursor_move(0,COMMIT_DRAWING_CONTEXT);
 								setActiveLayer(1);
-								animation_cursor_move(0, 0);
+								animation_cursor_move(0, DO_NOT_COMMIT_DRAWING_CONTEXT);
 								break;
+
 						case SDLK_y:
 								yankDrawingContext();
 								break;
