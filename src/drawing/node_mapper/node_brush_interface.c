@@ -39,6 +39,10 @@ void create_node_brush_interface(mapper_node** nodes) {
             = nodes[NODE_ID_STYLUS_INPUT];
         output_node->foreign_channels[BRUSH_CHANNEL_ALPHA] = 
             STYLUS_CHANNEL_PRESSURE;
+        output_node->inputs[BRUSH_CHANNEL_ROT] = 
+            nodes[NODE_ID_STYLUS_INPUT];
+        output_node->foreign_channels[BRUSH_CHANNEL_ROT] = 
+            STYLUS_CHANNEL_ORIENT;
 
         /* bind to color */
         output_node->inputs[BRUSH_CHANNEL_R] = color_node;

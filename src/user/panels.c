@@ -75,12 +75,12 @@ void bind_mouse_handlers() {
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mouseleave_handler = &brusheditor_mouseleave;
 	mouse_handlers[PANEL_BRUSHEDITOR].bound_mousemotion_handler = &brusheditor_mousemotion;
 
-    /*
+    
 	mouse_handlers[PANEL_TOOLBAR].bound_mousedown_handler = &toolbar_mousedown;
 	mouse_handlers[PANEL_TOOLBAR].bound_mouseup_handler = &dummy_xy_mousehandler;
 	mouse_handlers[PANEL_TOOLBAR].bound_mouseleave_handler = &dummy_void_mousehandler;
 	mouse_handlers[PANEL_TOOLBAR].bound_mousemotion_handler = &dummy_xy_mousehandler;
-*/
+
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mousedown_handler = &nodemapeditor_mousedown;
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseup_handler = &nodemapeditor_mouseup;
 	mouse_handlers[PANEL_NODEMAPEDITOR].bound_mouseleave_handler = &nodemapeditor_mouseleave;
@@ -120,8 +120,11 @@ void layoutPanels() {
 
 	toolbar_area->x = 1920 -TOOLBAR_WIDTH;
 	toolbar_area->y = brusheditor_area->y+brusheditor_area->h;
-	toolbar_area->w = TOOLBAR_WIDTH;
-	toolbar_area->h = 48;
+	/*toolbar_area->w = TOOLBAR_WIDTH;
+	toolbar_area->h = 48;*/
+    toolbar_area->w=0;
+    toolbar_area->h=0;
+
 	
 	nodemapeditor_area->x=0;
 	nodemapeditor_area->y=0;

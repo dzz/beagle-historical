@@ -46,6 +46,20 @@ void texture_generate(gfx_texture* texture,int w,int h) {
 
     free(texture_data);
 }
+
+void texture_generate_filtered(gfx_texture* texture,int w,int h) {
+    unsigned char* texture_data = _uc_data(w,h);
+
+    glGenTextures(1,&texture->texture_id);
+    glBindTexture(GL_TEXTURE_2D,texture->texture_id);
+    glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,w,h ,_NOBORDER,
+                GL_RGBA, GL_UNSIGNED_BYTE,texture_data);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+    free(texture_data);
+}
+
 void texture_generate_fp(gfx_texture* texture,int w,int h) {
     unsigned float* texture_data = _fp_data(w,h);
     glGenTextures(1,&texture->texture_id);
