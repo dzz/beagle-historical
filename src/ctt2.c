@@ -158,6 +158,16 @@ void dropOpengl() {
     SDL_GL_DeleteContext(gl_context);
 }
 
+
+void initPython() {
+    Py_SetProgramName("ctt2_py");
+    Py_Initialize();
+    PyRun_SimpleString("foo=1");
+}
+
+void dropPython(){
+    Py_Finalize();
+}
 /** MAIN **/
 
 int main(int argc, char **argv){ 
@@ -168,6 +178,7 @@ int main(int argc, char **argv){
     int finished = 0;
 
     initLog();
+    initPython();
     initDisplay();
     initWindowingSystemMessages();
     initOpenGL();
@@ -246,6 +257,7 @@ int main(int argc, char **argv){
     dropExtendedVideo();
     dropOpengl();
     dropDisplay();
+    dropPython();
     dropLog();
 
     SDL_Quit();
