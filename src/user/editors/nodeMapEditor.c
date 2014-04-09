@@ -125,8 +125,6 @@ void draw_line(SDL_Surface *target, int x0,int y0,int x1,int y1) {
 
     int xm = ((x1-x0)/2)+x0 + (line_chan_offs * 3);
     int y0t = y0;
-    xm/=8;
-    xm*=8; 
 
     
     _draw_line( target,x0,y0,xm,y0t);
@@ -172,7 +170,8 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
 		visible_connections = 0;
 
 
-		SDL_FillRect(target, (SDL_Rect*) area, bg_color);
+		//SDL_FillRect(target, (SDL_Rect*) area, bg_color);
+
 		renderAddMenu(target,area);
 
 		/** render node bodies **/
@@ -312,7 +311,7 @@ void renderNodeMapEditor(SDL_Surface* target, UI_AREA* area){
                                         line_color = SDL_MapRGB(target->format, 255,255,255);
                                     }
                                     line_chan_offs = j;
-									draw_line(target,chan_in->x+4,chan_in->y+4,chan_out->x+4,chan_out->y+(j*2));
+									draw_line(target,chan_in->x+4,chan_in->y+4,chan_out->x+(4 * (j%2)),chan_out->y+(j*2));
 							}
 						}
 			}

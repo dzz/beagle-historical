@@ -1,5 +1,6 @@
 //#define CTT2_SCREENMODE_DEBUG 
 
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,6 +16,19 @@
  *
  */
 #endif
+
+/*debug sux*/
+#ifdef _DEBUG
+#define __DEBUG
+#undef _DEBUG
+#endif
+
+#include <Python.h>
+
+#ifdef __DEBUG
+#define _DEBUG
+#endif
+
 
 #include <SDL.h>
 #include <SDL_syswm.h>
@@ -147,10 +161,8 @@ void dropOpengl() {
 /** MAIN **/
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_RECOMPOSITE = 20;
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 15;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 30;
 
-    int recomposite_cycles = 0;
     int screenbuffer_cycles = 0;
 
     int finished = 0;

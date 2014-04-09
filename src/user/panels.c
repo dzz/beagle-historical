@@ -128,7 +128,7 @@ void layoutPanels() {
 	
 	nodemapeditor_area->x=0;
 	nodemapeditor_area->y=0;
-	nodemapeditor_area->h=540;
+	nodemapeditor_area->h=1080;
 	nodemapeditor_area->w=1920;
 
 	//normalize our convenience variables
