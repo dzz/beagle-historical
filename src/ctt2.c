@@ -34,6 +34,8 @@
 #include <SDL_syswm.h>
 
 #include "system/ctt2.h"
+#include "ctt2_api.h"
+
 #include "system/extended_video.h"
 #include "system/wm_handler.h"
 #include "system/log.h"
@@ -162,11 +164,12 @@ void dropOpengl() {
 void initPython() {
     Py_SetProgramName("ctt2_py");
     Py_Initialize();
-    PyRun_SimpleString("foo=1");
+    api_init();
 }
 
 void dropPython(){
     Py_Finalize();
+    api_drop();
 }
 /** MAIN **/
 
@@ -231,6 +234,9 @@ int main(int argc, char **argv){
 
                 }
             }
+
+            api_tick();
+
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 frame* fr = getActiveFrame();
                 screenbuffer_cycles = 0;
