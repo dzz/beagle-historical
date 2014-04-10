@@ -161,12 +161,12 @@ class window_renderer(renderer):
 
     def render(self, ui_area):
         gfx.solid_rect( ui_area.r, self.bgcol)
-        gfx_solid_rect( [ui_area.r[0],
+        gfx.solid_rect( [ui_area.r[0],
                          ui_area.r[1],
                          ui_area.r[2], 
                          ui_area.prop.get("titlebar_height")],
                          self.bg_col) 
-        self.label.draw()
+        self.label.draw(ui_area.r)
 
 #controller 
 def register_ui_area(area):
