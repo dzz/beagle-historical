@@ -18,17 +18,9 @@
 #endif
 
 /*debug sux*/
-#ifdef _DEBUG
-#define __DEBUG
 #undef _DEBUG
-#endif
 
 #include <Python.h>
-
-#ifdef __DEBUG
-#define _DEBUG
-#endif
-
 
 #include <SDL.h>
 #include <SDL_syswm.h>
@@ -65,14 +57,14 @@ static int drawingContextInvalid = 1;
 
 static SDL_GLContext gl_context;
 
-//#define CTT2_SCREENMODE_DEBUG
+#define CTT2_SCREENMODE_DEBUG
 
 #ifndef CTT2_SCREENMODE_DEBUG
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 #else
 const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800=
+const int SCREEN_HEIGHT = 800;
 #endif
 
 static unsigned int ctt2_keyframe_mode = 0;
