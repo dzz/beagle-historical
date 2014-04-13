@@ -32,8 +32,8 @@ void api_fail_hard() {
 
 int api_checkfailure() {
     if(PyErr_Occurred())
-        return API_NOFAILURE;
-    return 0;
+        return API_FAILURE;
+    return API_NOFAILURE;
 }
 
 #define PY_NOARGS 0
