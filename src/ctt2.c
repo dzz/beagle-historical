@@ -1,6 +1,7 @@
 //#define CTT2_SCREENMODE_DEBUG 
 
 
+#include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -153,16 +154,26 @@ void dropOpengl() {
 }
 
 
+void dropPython(){
+    if(PyErr_Occurred()) {
+        PyErr_Print();
+        printf("press a key...\n");
+        getch();
+        api_drop();
+        Py_Finalize();
+    }
+}
+
 void initPython() {
     Py_SetProgramName("ctt2_py");
     Py_Initialize();
-    api_init();
+
+    if( api_init() == API_FAILURE ) {
+        dropPython();
+        exit(1);
+    }
 }
 
-void dropPython(){
-    Py_Finalize();
-    api_drop();
-}
 /** MAIN **/
 
 int main(int argc, char **argv){ 
@@ -227,7 +238,6 @@ int main(int argc, char **argv){
                 }
             }
 
-            api_tick();
 
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 frame* fr = getActiveFrame();
@@ -240,6 +250,10 @@ int main(int argc, char **argv){
                     renderLocalBuffer(ui_surface);
                 }
                 updateViewingSurface();
+            }
+
+            if(api_tick() == API_FAILURE) {
+                finished = 1; 
             }
         }
     }
