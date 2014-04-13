@@ -141,7 +141,7 @@ class ui_area(object):
         self.active = False # set in main.py dispatch
         self.modifier_stack = []
         self.prop = {}
-        self.renderer = None
+        self.renderers = []
         self.children = []
 
     def compute_client_area(self):
@@ -177,7 +177,7 @@ class ui_window(ui_area):
                                mod_titlebar ( self, titlebar_text = title, height = 8 ),
                                mod_parent   ( )]
 
-        self.renderers = window_renderer(self)
+        self.renderers = [ window_renderer(self) ]
 
 class renderer(object):
     def render(ui_area):
@@ -198,7 +198,7 @@ class window_renderer(renderer):
                          ui_area.r[1],
                          ui_area.r[2], 
                          ui_area.prop.get("titlebar_height")],
-                         self.bg_col) 
+                         self.bgcol) 
         self.label.draw(ui_area.r)
 
 #controller 

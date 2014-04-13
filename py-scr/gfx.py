@@ -1,3 +1,5 @@
+import hwgfx
+
 # mock gfx api methods
 def hwgfx_genlabel(text,color,fontsize):
     return [0,0,0]
@@ -9,6 +11,9 @@ def hwgfx_draw_solidquad(x, y, w, h, r, g, b):
     pass
 
 def hwgfx_draw_solidtri(x1,y1,x2,y2,x3,y3,r,g,b):
+    pass
+
+def hwgfx_bind_texture(tex_id):
     pass
 #
 
@@ -22,9 +27,10 @@ class label(object):
         hwgfx_drop_texture(self.tex_id)
 
     def draw(self,r):
+        hwgfx_bind_texture( self.tex_id )
         hwgfx_draw_texquad( r[0], r[1], self.w, self.h )
 
         
 def solid_rect(r,color):
-    hwgfx_draw_solidquad( r[0],r[1],r[2],r[3],
+    hwgfx.draw_solidquad( r[0],r[1],r[2],r[3],
                color[0],color[1],color[2] )

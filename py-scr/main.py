@@ -14,8 +14,8 @@ def tick():
 
 def render():
     for area in ui_area.order_areas():
-        if area.renderer is not None:
-            area.renderer.render(area)
+        for renderer in area.renderers:
+            renderer.render(area)
     
 def calculate_mouse_position(area,x,y):
     xt = min(max( 0, x - area.r[0] ),area.r[2])

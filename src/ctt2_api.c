@@ -21,6 +21,7 @@ typedef struct {
 
 static API_FUNCS api;
 
+void api_init_embedded_modules();
 
 void api_fail_hard() {
     if(PyErr_Occurred())
@@ -75,6 +76,9 @@ int _pycall_int_args(PyObject* func,int* args,int nargs) {
 
 int api_init() {
     PyObject *pName, *pModule, *pDict;
+
+    api_init_embedded_modules();
+
     pName = PyString_FromString("py-scr.main");
     pModule = PyImport_Import(pName);
     Py_DECREF(pName);
@@ -129,4 +133,23 @@ void api_drop() {
     Py_CLEAR(api.dispatch_key);
     Py_CLEAR(api.finalize);
     Py_CLEAR(api.__module);
+}
+
+/* BINDINGS FOR HWGFX MODUOLE */
+static PyObject* hwgfx_draw_solidsquad(PyObject *self, PyObject *args) {
+    int x,y,w,h;
+    double r,g,b;
+    if(!PyArg_ParseTuple(args,"iiiiddd",&x,&y,&w,&h,&r,&g,&b)) {
+        return NULL;
+    } 
+    Py_RETURN_NONE;
+}
+static PyMethodDef hwgfx_methods[] = {
+    {"draw_solidquad", hwgfx_draw_solidsquad, METH_VARARGS,NULL},
+    {NULL,NULL,0,NULL } /*terminator record*/
+};
+
+void api_init_embedded_modules() {
+    Py_InitModule("hwgfx", hwgfx_methods); 
+    api_checkfailure();
 }
