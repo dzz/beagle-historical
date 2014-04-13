@@ -34,7 +34,6 @@ class mod_empty(object):
 
 class mod_titlebar(mod_empty):
     def __init__(self,ui_area,titlebar_text,height):
-        super(self)
         self.move_origin = [0,0]
         self.height = height
         self.toggled = False
@@ -171,9 +170,10 @@ class ui_area(object):
         order_areas()
 
 class ui_window(ui_area):
-    def __init__(self,title):
-        super(self)
-        self.modifier_stack = [mod_resize   ( self, resize_border = 2 ),
+    def __init__(self,title="ctt2_window",x=0,y=0,width=100,height=100):
+        ui_area.__init__(self)
+        self.r = [x,y,width,height]
+        self.modifier_stack = [mod_resize   ( resize_border = 2 ),
                                mod_titlebar ( self, titlebar_text = title, height = 8 ),
                                mod_parent   ( )]
 
@@ -185,7 +185,7 @@ class renderer(object):
 
 class window_renderer(renderer):
     def __init__(self,ui_area):
-        self.label = gfx.label( text        = self.prop["titlebar_text"], 
+        self.label = gfx.label( text        = ui_area.prop["titlebar_text"], 
                                 color       = style.get("window_titlebar_text_color"),
                                 fontsize    = style.get("window_titlebar_fontsize"))
 

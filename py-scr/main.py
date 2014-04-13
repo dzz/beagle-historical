@@ -4,7 +4,7 @@ mouse_focused_area = None
 caret_handler = None
 
 def init():
-    init_ui_areas()
+    ui_area.init_ui_areas()
 
 def finalize():
     pass
@@ -23,6 +23,7 @@ def calculate_mouse_position(area,x,y):
     return [xt,yt] 
 
 def dispatch_mouseup(button,x,y):
+    global mouse_focused_area
     if mouse_focused_area is not None:
         mouse_focused_area.rcv_mouse_button(button,x,y, down = False)
         mouse_focused_area.active = False
@@ -46,13 +47,13 @@ def dispatch_mousemotion(x,y):
 def dispatch_key(key,down):
     global caret_handler
     if(caret_handler == None):
-        dispatch_root_keybindings(button,x,y,down)
+        dispatch_root_keybindings(key,down)
         if(mouse_focused_area is not None):
             area.rcv_key(key,down)
         return
     caret_handler.rcv_key(key,down)
 
-def dispatch_root_keybindings(button,x,y,down):
+def dispatch_root_keybindings(key,down):
     pass
 
 def caret_release():

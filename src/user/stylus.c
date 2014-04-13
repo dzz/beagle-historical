@@ -39,6 +39,17 @@ double stylusFilter_getFilteredPressure() {
 	return filteredPressure;
 }
 
+static double d_x_f = 0;
+static double d_y_f = 0;
+
+void stylusFilter_apply_delta_filter(double x, double y) {
+    const double a = 0.8;
+    const double b = 0.2;
+
+    d_x_f = (d_x_f*a) + (x*b);
+    d_y_f = (d_y_f*a) + (y*b);
+}
+
 void updateStylus(stylusPacket packet) {
     double orientation;
 
@@ -53,7 +64,8 @@ void updateStylus(stylusPacket packet) {
     {
         double d_x = current_stylus_frame.x - previous_stylus_frame.x;
         double d_y = current_stylus_frame.y - previous_stylus_frame.y;
-        orientation = atan2(d_x,d_y); 
+        stylusFilter_apply_delta_filter(d_x,d_y);
+        orientation = atan2(d_x_f,d_y_f); 
     }
 
 	node_mapper_apply_input( 

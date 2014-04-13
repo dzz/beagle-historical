@@ -176,6 +176,7 @@ void initPython() {
 
 /** MAIN **/
 
+
 int main(int argc, char **argv){ 
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 30;
 
@@ -217,27 +218,35 @@ int main(int argc, char **argv){
                         break;
                     case SDL_KEYDOWN:
                         finished = dispatch_key(event.key.keysym.sym,1);
+                        if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = 1;
                         break;
                     case SDL_KEYUP:
                         dispatch_key(event.key.keysym.sym,0);
+                        if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = 1;
                         break;
                     case SDL_MOUSEBUTTONDOWN:
                         dispatch_mousedown(event.button.button,
                                 event.button.x,
                                 event.button.y );
+                        if(api_dispatch_mousedown(event.button, event.button.x, event.button.y) == API_FAILURE ) 
+                            finished = 1;
                         break;
                     case SDL_MOUSEBUTTONUP:
                         dispatch_mouseup(event.button.button,
                                 event.button.x,
                                 event.button.y );
+                        if(api_dispatch_mouseup(event.button, event.button.x, event.button.y) == API_FAILURE ) 
+                            finished = 1;
+                        break;
                     case SDL_MOUSEMOTION:
                         dispatch_mousemotion(event.motion.x, 
                                 event.motion.y );
-                        break;
 
+                        if(api_dispatch_mousemotion(event.motion.x, event.motion.y) == API_FAILURE ) 
+                            finished = 1;
+                        break;
                 }
             }
-
 
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 frame* fr = getActiveFrame();
