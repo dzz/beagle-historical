@@ -58,7 +58,7 @@ static int drawingContextInvalid = 1;
 
 static SDL_GLContext gl_context;
 
-#define CTT2_SCREENMODE_DEBUG
+//#define CTT2_SCREENMODE_DEBUG
 
 #ifndef CTT2_SCREENMODE_DEBUG
 const int SCREEN_WIDTH = 1920;
@@ -130,7 +130,7 @@ void initDisplay() {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    opengl_window = SDL_CreateWindow( "ctt2_hw", 50, 50, 
+    opengl_window = SDL_CreateWindow( "ctt2_hw", 0, 0, 
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
 
     if( opengl_window == NULL ) {
