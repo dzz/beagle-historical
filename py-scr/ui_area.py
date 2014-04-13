@@ -5,6 +5,7 @@ areas = []
 
 def _zsort(has_z):
     has_z.sort( key=lambda x: x.z, reverse = True )
+    return has_z
 
 def xy_in_r(x,y,r):
     return (x>=r[0] 

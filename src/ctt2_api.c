@@ -68,7 +68,6 @@ pyfailure:
     api_fail_hard();
 }
 
-
 int api_tick() {
     return _pycall_noargs(api.tick);
 }
