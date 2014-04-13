@@ -14,7 +14,7 @@ mapper_node stylus_input;
 void node_mapper_apply_input( double pressure, double time, double azimuth, 
         double orientation ) {
 	stylus_input.outputs[0] = pressure;
-	stylus_input.outputs[1] = time / 1000;
+	stylus_input.outputs[1] = time / 1000.0;
 	stylus_input.outputs[2] = azimuth;
     stylus_input.outputs[3] = orientation;
 	node_stale_cascade( &output_node );

@@ -224,5 +224,6 @@ def find_ui_area(x,y):
 
 #from api
 def init_ui_areas():
-    pass 
+    window = ui_window()
+    register_ui_area(window)
 

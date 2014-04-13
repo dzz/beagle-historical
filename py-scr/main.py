@@ -6,6 +6,9 @@ caret_handler = None
 def init():
     init_ui_areas()
 
+def finalize():
+    pass
+
 def tick():
     render()
 

@@ -2,17 +2,6 @@
 #include "node_internals.h"
 #include "node_recalc.h"
 
-/*
-a machine where stimuli is received then classified into 
-indicators of future positive or negative re-inforcment based upon 
-correlation of preceding patterns of stimuli to remembered previous 
-patterns and reacted upon a moment before the stimuli occurs 
-would be threatened by patterns of stimuli with low correlation. machines 
-which slowly run down due to components running fast than 
-they should; machines which crudely copy firmware 
-to newly manufactured dopplegangers.
- */
-
 void create_node_brush_interface(mapper_node** nodes) {
         /* these are preallocated*/
 		mapper_node* output_node = nodes[NODE_ID_BRUSH_CONTROLLER];
