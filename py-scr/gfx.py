@@ -5,10 +5,10 @@ def hwgfx_genlabel(text,color,fontsize):
 def hwgfx_draw_texquad( x, y, w, h ):
     pass
 
-def hwgfx_draw_solidquad(x, y, w, h, r, g, b)
+def hwgfx_draw_solidquad(x, y, w, h, r, g, b):
     pass
 
-def hwgfx_draw_solidtri(x1,y1,x2,y2,x3,y3,r,g,b)
+def hwgfx_draw_solidtri(x1,y1,x2,y2,x3,y3,r,g,b):
     pass
 #
 

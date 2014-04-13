@@ -3,6 +3,9 @@ import ui_area
 mouse_focused_area = None
 caret_handler = None
 
+def init():
+    init_ui_areas()
+
 def tick():
     render()
 
@@ -15,7 +18,6 @@ def calculate_mouse_position(area,x,y):
     xt = min(max( 0, x - area.r[0] ),area.r[2])
     yt = min(max( 0, y - area.r[1] ),area.r[3])
     return [xt,yt] 
-
 
 def dispatch_mouseup(button,x,y):
     if mouse_focused_area is not None:

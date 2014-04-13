@@ -3,22 +3,33 @@ import gfx
 
 areas = []
 
+def _zsort(has_z):
+    has_z.sort( key=lambda x: x.z, reverse = True )
+
+def xy_in_r(x,y,r):
+    return (x>=r[0] 
+            and y>=r[1] 
+            and (x < r[0]+r[2]) 
+            and (y < r[1]+r[3]))
+
+SIGNAL_EXIT_HANDLER = True
+SIGNAL_CONTINUE_HANDLING = False
+
 class mod_empty(object):
     def __init__(self):
         pass
 
     def rcv_mousemotion(self,ui_area,x,y):
-        return False
+        return SIGNAL_CONTINUE_HANDLING
 
     def rcv_mouse_button(self,ui_area,button,x,y,down):
-        return False
+        return SIGNAL_CONTINUE_HANDLING
 
-    def rcv_key(self,ui_area,button,x,y,down):
-        return False
+    def rcv_key(self,ui_area,key,down):
+        return SIGNAL_CONTINUE_HANDLING
 
     def transform_client_area(self,r):
         return r
-
 
 class mod_titlebar(mod_empty):
     def __init__(self,ui_area,titlebar_text,height):
@@ -37,12 +48,12 @@ class mod_titlebar(mod_empty):
     def rcv_mouse_button(self,ui_area,button,x,y,down):
         if down == False:
             self.toggled = False
-            return False 
+            return SIGNAL_CONTINUE_HANDLING 
         else:
             if( y < self.height ):
                 self.toggled = True
                 self.move_origin = [x,y]
-                return True
+                return SIGNAL_EXIT_HANDLER
 
     def rcv_mousemotion(self,ui_area,x,y):
         if self.toggled == False:
@@ -51,6 +62,26 @@ class mod_titlebar(mod_empty):
             ui_area.r[0] += x - self.move_origin[0]
             ui_area.r[1] += y - self.move_origin[1]
             self.move_origin = [x,y]
+
+def _cascade_signal(ui_area,func,x,y,addtl_params):
+        for child in ui_area.children:
+            if(xy_in_r(x,y,child.r)):
+                    x_t = x - ui_area.x
+                    y_t =y - ui_area.y
+                    child.func(x_t,y_t,*addtl_params)
+                    return SIGNAL_EXIT_HANDLER
+        return SIGNAL_CONTINUE_HANDLING
+
+class mod_parent(mod_empty):
+    def rcv_mousemotion(self,ui_area,x,y):
+        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, [x,y])
+
+    def rcv_mouse_button(self,ui_area,button,x,y,down):
+        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, [x,y, down])
+
+    def rcv_key(self,ui_area,key,down):
+        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, [key,down])
+
 
 class mod_resize(mod_empty):
     def __init__(self, resize_border):
@@ -111,6 +142,7 @@ class ui_area(object):
         self.modifier_stack = []
         self.prop = {}
         self.renderer = None
+        self.children = []
 
     def compute_client_area(self):
         self.client_area = self.r
@@ -132,8 +164,7 @@ class ui_area(object):
         self.m_pos = position
 
     def bring_top(self):
-        global areas
-        for area in areas:
+        for area in get_ui_areas():
             area.z +=1
         self.z = 0
         order_areas()
@@ -142,7 +173,8 @@ class ui_window(ui_area):
     def __init__(self,title):
         super(self)
         self.modifier_stack = [mod_resize   ( self, resize_border = 2 ),
-                               mod_titlebar ( self, titlebar_text = title, height = 8 ) ]
+                               mod_titlebar ( self, titlebar_text = title, height = 8 ),
+                               mod_parent   ( )]
 
         self.renderers = window_renderer(self)
 
@@ -170,20 +202,16 @@ class window_renderer(renderer):
 
 #controller 
 def register_ui_area(area):
-    global areas
-    areas.append(area)
+    get_ui_areas().append(area)
 
 def remove_ui_area(area):
-    global areas
-    areas.remove(area)
+    get_ui_areas().remove(area)
 
-#access
 def order_areas():
-    global areas
-    areas.sort( key=lambda x: x.z, reverse = True )
-    return areas
+    return _zsort(get_ui_areas())
 
 def get_ui_areas():
+    global areas
     return areas
 
 def find_ui_area(x,y):
@@ -191,4 +219,10 @@ def find_ui_area(x,y):
         if( x >= area.r[0] and x < area.r[0] + area.r[2] and
                 y >= area.r[1] and y < area.r[1] + area.r[3] ):
                     return area
-    return ui_area()
+    return None
+
+
+#from api
+def init_ui_areas():
+    pass 
+
