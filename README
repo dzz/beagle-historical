@@ -1,138 +1,16 @@
-  ___  ____  ____  ___  
- / __)(_  _)(_  _)(__ \ 
-( (__   )(    )(   / _/ 
- \___) (__)  (__) (____)
-      ctt2 0.3.1.0
 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-
-(0) what is this
-
-    an animation and painting application.
-
-(1) how to build/run:
-
-    WINDOWS
-    -------
-
-    - visual studio settings:
-
-            - make sure the following libraries are available:
-
-                  WINTAB.h - header only
-                  SDL2
-                  SDL_image 2.0
-                  GLEW
-
-    To generate the resources required to render the UI, you'll require 
-    an installation of imageMagick and python 2.7. cd into the ui-gen directory 
-    and run: 
-
-             python ui_gen.py
-    
-    to generate the images.
-
-    LINUX
-    -----
-
-    - I have compiled with gcc succesfully under linux but the source may not 
-    remain compatible as I'm primarily doing my development with the microsoft 
-    vstudio express compilers. 
-
-    There is no tablet support under linux presently.
-      
-
-(2) project-data:
-
-    Frame pngs and the keyframe index file are stored in the project-data/ 
-    folder.
-
-    You can delete the keyframe_idx file to create a new project.
-
-    If you export your data, it will be placed in project-data/export/ folder
-
-(3) usage:
-
-    The program will use the first available plugged in tablet it can find.
-    
-    If it cannot find a tablet, it will run in an emulation mode and you can
-    draw with the mouse.
-
-    KEYBOARD COMMANDS
-    -----------------
-
-        Q     - Move frame cursor left
-        E     - Move frame cursor right
-        
-        1     - Edit background layer
-        2     - Edit foreground layer
-        
-        K    - Insert keyframe on active layer
-        D    - Delete keyframe on active layer
-        
-        R    - Toggle keyframe recording (automatically inserts keyframes on 
-              active layer when navigating)
-        
-        C     - Switch primary/secondary colors in brush editor
-        TAB   - Toggle UI on/off
-        
-        S    - Save project data
-        X    - Export project data as png sequence
-        
-        Y    - Yank Current active layer/keyframe to buffer
-        P    - Put buffer to current keyframe
-        
-        0    - Animation preview
-        
-        SPACE - Drag UI panels 
-        
-        ESC - Exit
-    
-(4) node brushes / special keys
-
-    ** WORK IN PROGRESS **
-
-    Brushes are a series of nodes with data flowing out from the stylus,
-    through nodes, and then into the brush controller which performs rendering
-    to the active drawing context.
-
-    CTRL+Click will add data points inside node editors (e.g. gradient, mapper)
-
-    ALT+Click removes data points.
- 
-(5) links
-
-    SDL 2.0
-    http://www.libsdl.org/
-    
-    SDL_image 2.0
-    https://www.libsdl.org/projects/SDL_image/
-    
-    WINTAB SDK
-    http://www.wacomeng.com/windows/index.html
-
-    GLEW
-    http://glew.sourceforge.net/
-
-(6) contact:
-
-    devon.zachary@gmail.com
-
-
--------------------------------------------------------------------------------
-Copright (c) 2014 Devon Zachary
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  ) ^_^,                                            *
+  (_\ /     ,``,       ,                           _|                        /-
+ / _ Y      -----    , `` `                      /|                         /
+/    )\              -------`-`             {=[[[=||   [[[= }             _/
+    _    _ _   _                                 -||  -                __/
+   | | _(_) |_| |_ ___ _ __  ___                  |    _____          /
+   | |/ / | __| __/ _ \ '_ \/ __|                 ||  |[[[  |      /-/
+   |   <| | |_| ||  __/ | | \__ \                 |   |[[[  |---  /
+   |_|\_\_|\__|\__\___|_| |_|___/              ____   |[[[  |   |
+                                              |[[[ |  |[[[  |   |-_-_-
+\      under constuction         ^_^, )       |[[[ |  |[[[  |       [[*--_
+ \-\                             \ / (      /\|[[[ |  |[[[  |    [   -_-_
+    \                             Y_ \     /  |[[[ |  |[[[  |   [
+     \                           /(   \   /   |[[[ |  |[[[  |
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*=-=-*=-=-=-==-=-=-=-=-=-=-=-=-=-
