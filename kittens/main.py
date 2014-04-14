@@ -1,11 +1,12 @@
 import gfx
 import ui_area
+import kittens.application.main
 
 mouse_focused_area = None
 caret_handler = None
 
 def init():
-    ui_area.init_ui_areas()
+    kittens.application.main.init()
 
 def finalize():
     pass

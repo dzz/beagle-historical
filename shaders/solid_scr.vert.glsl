@@ -3,6 +3,7 @@
 in vec2 in_Position;
 uniform vec2 scr_size;
 uniform vec4 rect_coords;
+out vec2 uv;
 
 void main(void) {
     vec2 p_t;
@@ -20,8 +21,8 @@ void main(void) {
     p_t *= 2;
     p_t -= 1;
 
+    uv.x = p_t.x;
+    uv.y = p_t.y;
     gl_Position = vec4(p_t.x,p_t.y,0.0,1.0);
 
-    //gl_Position.x = in_Position.x;
-    //gl_Position.y = in_Position.y;
 }

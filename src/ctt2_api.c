@@ -80,7 +80,7 @@ int api_init() {
 
     api_init_embedded_modules();
 
-    pName = PyString_FromString("py-scr.main");
+    pName = PyString_FromString("kittens.main");
     pModule = PyImport_Import(pName);
     Py_DECREF(pName);
 
