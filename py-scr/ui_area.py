@@ -170,7 +170,7 @@ class ui_area(object):
         order_areas()
 
 class ui_window(ui_area):
-    def __init__(self,title="ctt2_window",x=0,y=0,width=100,height=100):
+    def __init__(self,title="ctt2_window",x=200,y=200,width=500,height=500):
         ui_area.__init__(self)
         self.r = [x,y,width,height]
         self.modifier_stack = [mod_resize   ( resize_border = 2 ),
@@ -198,7 +198,7 @@ class window_renderer(renderer):
                          ui_area.r[1],
                          ui_area.r[2], 
                          ui_area.prop.get("titlebar_height")],
-                         self.bgcol) 
+                         self.title_bgcol) 
         self.label.draw(ui_area.r)
 
 #controller 

@@ -23,4 +23,6 @@ char* read_file(char *file);
 
 #define SYSSIG_QUIT_CTT2 1
 
+void DIRTY_DISPLAY_ABORT();
+
 #endif

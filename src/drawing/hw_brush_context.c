@@ -88,9 +88,9 @@ void destroyBrushContext(brush_context *ctxt) {
 void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float noise, float rot) {
 
     framebuffer_render_start(&_context.brushing_framebuffer);
+    texture_bind(&_context.dab_texture, TEX_UNIT_0);
+    blend_enter( BLENDMODE_DAB_RENDERING ); 
     {
-        texture_bind(&_context.dab_texture, TEX_UNIT_0);
-        blend_enter( BLENDMODE_DAB_RENDERING ); 
         shader_bind( &_context.dab_shader );
         shader_bind_vec3( &_context.dab_shader, "dab_location",x,y,z );
         shader_bind_vec4( &_context.dab_shader, "base_color",r,g,b,a );
@@ -98,8 +98,8 @@ void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, flo
         shader_bind_float(&_context.dab_shader, "noise",noise); 
         shader_bind_float(&_context.dab_shader, "rot",rot); 
         primitive_render( &_context.dab_primitive);
-        blend_exit();
     }
+    blend_exit();
     framebuffer_render_end(&_context.brushing_framebuffer);
     hw_brush_commit_brush_stroke();
 }

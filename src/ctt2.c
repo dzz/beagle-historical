@@ -37,6 +37,7 @@
 
 #include "document/animation.h"
 
+#include "hwgfx/quads.h"
 #include "drawing/hw_brush_context.h"
 #include "drawing/brush.h"
 #include "drawing/drawingSurfaces.h"
@@ -143,13 +144,19 @@ void dropDisplay() {
     SDL_DestroyWindow( opengl_window);
 }
 
+void DIRTY_DISPLAY_ABORT() {
+    dropDisplay();
+}
+
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
     disable_vsync();
     initExtendedVideo();
+    initQuads();
 }
 
 void dropOpengl() {
+    dropQuads();
     SDL_GL_DeleteContext(gl_context);
 }
 
@@ -179,9 +186,7 @@ void initPython() {
 
 int main(int argc, char **argv){ 
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 30;
-
     int screenbuffer_cycles = 0;
-
     int finished = 0;
 
     initLog();
@@ -248,6 +253,7 @@ int main(int argc, char **argv){
                 }
             }
 
+
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                 frame* fr = getActiveFrame();
                 screenbuffer_cycles = 0;
@@ -258,16 +264,14 @@ int main(int argc, char **argv){
                     renderPanels(ui_surface);
                     renderLocalBuffer(ui_surface);
                 }
+                if(api_tick() == API_FAILURE) { finished = 1; }
                 updateViewingSurface();
             }
 
-            if(api_tick() == API_FAILURE) {
-                finished = 1; 
-            }
+
         }
     }
     /** FINISHED **/
-
     dropBrush();
     dropHwBrush();
     dropTablet();
@@ -284,4 +288,3 @@ int main(int argc, char **argv){
     SDL_Quit();
     return 0;
 }
-

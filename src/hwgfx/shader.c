@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <GL/glew.h>
 
+#include "../system/ctt2.h"
 #include "../system/files.h"
 #include "../system/log.h"
 #include "shader.h"
@@ -8,13 +9,14 @@
 void _shader_err(GLuint shader_id) {
     int maxLength;
     char* infoLog;
+    DIRTY_DISPLAY_ABORT();
     printf("error compiling shader\n");
     glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &maxLength);
     infoLog = (char *)malloc(maxLength);
     glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
     log_msg(infoLog);
     free(infoLog);
-    exit(1);
+    getch();
 }
 void shader_load(gfx_shader* shader, const char* v_src_path, 
         const char* f_src_path ){

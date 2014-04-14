@@ -4,6 +4,7 @@
 #include <Python.h>
 
 #include "system/ctt2.h"
+#include "hwgfx/quads.h"
 #include "ctt2_api.h"
 
 char* main_py;
@@ -142,6 +143,7 @@ static PyObject* hwgfx_draw_solidsquad(PyObject *self, PyObject *args) {
     if(!PyArg_ParseTuple(args,"iiiiddd",&x,&y,&w,&h,&r,&g,&b)) {
         return NULL;
     } 
+    draw_solidquad(x,y,w,h,r,g,b);
     Py_RETURN_NONE;
 }
 static PyMethodDef hwgfx_methods[] = {
