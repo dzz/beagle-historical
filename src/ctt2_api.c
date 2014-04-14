@@ -64,7 +64,7 @@ int _pycall_int_args(PyObject* func,int* args,int nargs) {
         PyObject* py_vals [MAX_ARGS] = {0};
 
         for(i=0;i<nargs;++i) {
-            py_vals[i] = PyInt_FromLong(args[i]);
+            py_vals[i] = PyInt_FromLong((long)args[i]);
             PyTuple_SetItem(py_args,i,py_vals[i]);
         }
         PyObject_CallObject(func,py_args);
@@ -146,8 +146,13 @@ static PyObject* hwgfx_draw_solidsquad(PyObject *self, PyObject *args) {
     draw_solidquad(x,y,w,h,r,g,b);
     Py_RETURN_NONE;
 }
+static PyObject* debug_displaykill(PyObject *self, PyObject *args) {
+    DIRTY_DISPLAY_ABORT();
+    Py_RETURN_NONE;
+}
 static PyMethodDef hwgfx_methods[] = {
     {"draw_solidquad", hwgfx_draw_solidsquad, METH_VARARGS,NULL},
+    {"debug_displaykill", debug_displaykill, METH_VARARGS,NULL},
     {NULL,NULL,0,NULL } /*terminator record*/
 };
 

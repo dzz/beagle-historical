@@ -1,7 +1,17 @@
 import style
 import gfx
+import hwgfx
 
 areas = []
+__mpos = [0,0]
+
+def set_absolute_mpos(mpos):
+    global __mpos
+    __mpos = mpos
+
+def _glbl_mpos():
+    global __mpos
+    return __mpos
 
 def _zsort(has_z):
     has_z.sort( key=lambda x: x.z, reverse = True )
@@ -34,7 +44,8 @@ class mod_empty(object):
 
 class mod_titlebar(mod_empty):
     def __init__(self,ui_area,titlebar_text,height):
-        self.move_origin = [0,0]
+        self.cursor_origin = [0,0]
+        self.origin = [0,0]
         self.height = height
         self.toggled = False
         ui_area.prop["titlebar_text"] = titlebar_text
@@ -52,16 +63,20 @@ class mod_titlebar(mod_empty):
         else:
             if( y < self.height ):
                 self.toggled = True
-                self.move_origin = [x,y]
+                self.origin = [ ui_area.r[0], ui_area.r[1] ]
+                mpos = _glbl_mpos()
+                self.cursor_origin = [ mpos[0], mpos[1] ]
                 return SIGNAL_EXIT_HANDLER
 
     def rcv_mousemotion(self,ui_area,x,y):
         if self.toggled == False:
-            return False
+            return SIGNAL_CONTINUE_HANDLING
         else:
-            ui_area.r[0] += x - self.move_origin[0]
-            ui_area.r[1] += y - self.move_origin[1]
+            mpos = _glbl_mpos()
+            ui_area.r[0] = self.origin[0] + mpos[0] - self.cursor_origin[0]
+            ui_area.r[1] = self.origin[1] + mpos[1] - self.cursor_origin[1]
             self.move_origin = [x,y]
+            return SIGNAL_EXIT_HANDLER
 
 def _cascade_signal(ui_area,func,x,y,addtl_params):
         for child in ui_area.children:
@@ -74,63 +89,49 @@ def _cascade_signal(ui_area,func,x,y,addtl_params):
 
 class mod_parent(mod_empty):
     def rcv_mousemotion(self,ui_area,x,y):
-        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, [x,y])
+        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, x,y,[])
 
     def rcv_mouse_button(self,ui_area,button,x,y,down):
-        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, [x,y, down])
+        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, x,y, [down])
 
-    def rcv_key(self,ui_area,key,down):
-        return _cascade_signal(ui_area,ui_area.rcv_mouse_button, [key,down])
+    #def rcv_key(self,ui_area,key,down):
+    #    return _cascade_signal(ui_area,ui_area.rcv_mouse_button, x,y, [key,down])
 
 
 class mod_resize(mod_empty):
-    def __init__(self, resize_border):
+    def __init__(self, handle_size):
         self.toggled = False
-        self.resize_border = resize_border
-        self.adjusting_border = None;
         self.resize_origin = [0,0]
+        self.handle_size = handle_size
 
     def transform_client_area(self,r):
-        r[0] += self.resize_border
-        r[1] += self.resize_border
-        r[2] -= (self.resize_border*2)
-        r[3] -= (self.resize_border*2)
         return r
 
-
     def rcv_mouse_button(self,ui_area,button,x,y,down):
+        [ gx, gy ] = _glbl_mpos()
         if down == False:
             self.toggled = False
             return False
         else:
-            self.resize_origin = [x, y]
-            if ( x - ui_area.r[0] < self.resize_border ):
-                self.adjusting_border = 0
+            self.resize_origin = [gx, gy]
+            if( (x > ( ui_area.r[2] - self.handle_size )) and
+                (y > ( ui_area.r[3] - self.handle_size )) ):
                 self.toggled = True
-                return
-            if ( ui_area.r[2] - x < self.resize_border ):
-                self.adjusting_border = 1
-                self.toggled = True
-                return
-            if ( y - ui_area.r[1] < self.resize_border ):
-                self.adjusting_border = 2
-                self.toggled = True
-                return
-            if ( ui_area.r[3] - y < self.resize_border ):
-                self.adjusting_border = 3
-                self.toggled = True
-                return
-            return True
+                return SIGNAL_EXIT_HANDLER
+
+            return SIGNAL_CONTINUE_HANDLING
 
     def rcv_mousemotion(self,ui_area,x,y):
+        [ x, y ] = _glbl_mpos()
         if self.toggled:
-            if(self.adjusting_border < 2 ):
-                ui_area.r[self.adjusting_border] += x - self.resize_origin[0]
-            else:
-                ui_area.r[self.adjusting_border] += y - self.resize_origin[1]
-            self.resize_origin[x,y]
-            return True
-        return False
+            ui_area.r[2] += x - self.resize_origin[0]
+            ui_area.r[3] += y - self.resize_origin[1]
+            ui_area.r[2] = max(ui_area.r[2],self.handle_size)
+            ui_area.r[3] = max(ui_area.r[3],self.handle_size)
+            self.resize_origin = [x,y]
+            return SIGNAL_EXIT_HANDLER
+
+        return SIGNAL_CONTINUE_HANDLING
 
 class ui_area(object):
     def __init__(self):
@@ -144,24 +145,34 @@ class ui_area(object):
         self.renderers = []
         self.children = []
 
+    def add_child(self,ui_area):
+        self.children.append(ui_area)
+
     def compute_client_area(self):
-        self.client_area = self.r
-        for modifier in modifier_stack:
+        self.client_area = list(self.r)
+        for modifier in self.modifier_stack:
             self.client_area = modifier.transform_client_area(self.client_area)
-        return self.compute_client_area
+        return self.client_area
 
     def rcv_mouse_button(self,button,x,y,down):
-        for modifier in modifier_stack:
-            if modifier.rcv_mouse_button(self,button,x,y,down):
+        self.bring_top()
+        for modifier in self.modifier_stack:
+            if modifier.rcv_mouse_button(self,button,x,y,down) == SIGNAL_EXIT_HANDLER:
+                return
+
+    def rcv_mousemotion(self,x,y):
+        for modifier in self.modifier_stack:
+            if modifier.rcv_mousemotion(self,x,y) == SIGNAL_EXIT_HANDLER:
                 return
             
     def rcv_key(self,key,down):
-        for modifier in modifier_stack:
-            if modifier.rcv_key(self,key,down):
+        for modifier in self.modifier_stack:
+            if modifier.rcv_key(self,key,down) == SIGNAL_EXIT_HANDLER:
                 return
 
     def set_m(self,position):
         self.m_pos = position
+        self.rcv_mousemotion(self.m_pos[0],self.m_pos[1])
 
     def bring_top(self):
         for area in get_ui_areas():
@@ -170,11 +181,12 @@ class ui_area(object):
         order_areas()
 
 class ui_window(ui_area):
-    def __init__(self,title="ctt2_window",x=200,y=200,width=500,height=500):
+    def __init__(self,title="ctt2_window",x=200,y=200,width=200,height=200):
         ui_area.__init__(self)
         self.r = [x,y,width,height]
-        self.modifier_stack = [mod_resize   ( resize_border = 2 ),
-                               mod_titlebar ( self, titlebar_text = title, height = 8 ),
+        self.modifier_stack = [
+                               mod_resize   ( handle_size = 9 ),
+                               mod_titlebar ( self, titlebar_text = title, height = 12 ),
                                mod_parent   ( )]
 
         self.renderers = [ window_renderer(self) ]
@@ -191,6 +203,7 @@ class window_renderer(renderer):
 
         self.title_bgcol    = style.get("window_titlebar_bg_color")
         self.bgcol          = style.get("window_bg_color")
+        self.clientcol      = style.get("window_client_color")
 
     def render(self, ui_area):
         gfx.solid_rect( ui_area.r, self.bgcol)
@@ -200,6 +213,7 @@ class window_renderer(renderer):
                          ui_area.prop.get("titlebar_height")],
                          self.title_bgcol) 
         self.label.draw(ui_area.r)
+        gfx.solid_rect( ui_area.compute_client_area(), self.clientcol)
 
 #controller 
 def register_ui_area(area):
@@ -222,9 +236,12 @@ def find_ui_area(x,y):
                     return area
     return None
 
-
 #from api
 def init_ui_areas():
     window = ui_window()
+    window2 = ui_window()
+    #sub_window = ui_window()
+    #window.add_child(sub_window)
     register_ui_area(window)
+    register_ui_area(window2)
 

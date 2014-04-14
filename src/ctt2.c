@@ -1,6 +1,5 @@
 //#define CTT2_SCREENMODE_DEBUG 
 
-
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -118,6 +117,7 @@ void disable_vsync()
 
 void initWindowingSystemMessages() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+//SDL_ShowCursor(0);
 }
 
 void initDisplay() {
@@ -233,22 +233,30 @@ int main(int argc, char **argv){
                         dispatch_mousedown(event.button.button,
                                 event.button.x,
                                 event.button.y );
-                        if(api_dispatch_mousedown(event.button, event.button.x, event.button.y) == API_FAILURE ) 
-                            finished = 1;
+                        if(api_dispatch_mousedown(
+                                    event.button.button, 
+                                    event.button.x, 
+                                    event.button.y) == API_FAILURE ) 
+                                        finished = 1;
                         break;
                     case SDL_MOUSEBUTTONUP:
                         dispatch_mouseup(event.button.button,
                                 event.button.x,
                                 event.button.y );
-                        if(api_dispatch_mouseup(event.button, event.button.x, event.button.y) == API_FAILURE ) 
-                            finished = 1;
+                        if(api_dispatch_mouseup(
+                                    event.button.button, 
+                                    event.button.x, 
+                                    event.button.y) == API_FAILURE ) 
+                                        finished = 1;
                         break;
                     case SDL_MOUSEMOTION:
                         dispatch_mousemotion(event.motion.x, 
                                 event.motion.y );
 
-                        if(api_dispatch_mousemotion(event.motion.x, event.motion.y) == API_FAILURE ) 
-                            finished = 1;
+                        if(api_dispatch_mousemotion(
+                                    event.motion.x, 
+                                    event.motion.y) == API_FAILURE ) 
+                                        finished = 1;
                         break;
                 }
             }
