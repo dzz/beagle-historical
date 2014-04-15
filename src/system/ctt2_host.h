@@ -1,5 +1,5 @@
-#ifndef __CTT2_API__
-#define __CTT2_API__
+#ifndef __CTT2_HOST__
+#define __CTT2_HOST__
 
 #define API_FAILURE 1
 #define API_NOFAILURE 0

@@ -26,7 +26,7 @@
 #include <SDL_syswm.h>
 
 #include "system/ctt2.h"
-#include "ctt2_api.h"
+#include "system/ctt2_host.h"
 
 #include "system/extended_video.h"
 #include "system/wm_handler.h"
