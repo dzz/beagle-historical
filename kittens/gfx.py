@@ -19,18 +19,18 @@ def hwgfx_bind_texture(tex_id):
 
 class label(object):
     def __init__(self, text, color, fontsize ):
-       [ self.w,
-         self.h,
-         self.tex_id] = hwgfx_genlabel(text, color, fontsize)
+        self._label = hwgfx.label_generate()
+        hwgfx.label_set_text(self._label,text)
 
     def __del__(self):
-        hwgfx_drop_texture(self.tex_id)
+        hwgfx_drop_label(self._label)
 
-    def draw(self,r):
-        hwgfx_bind_texture( self.tex_id )
-        hwgfx_draw_texquad( r[0], r[1], self.w, self.h )
+    def set_text(text):
+        hwgfx.label_set_text(text)
 
-        
+    def draw(self,x,y):
+        pass
+
 def solid_rect(r,color):
     hwgfx.draw_solidquad( r[0],r[1],r[2],r[3],
                color[0],color[1],color[2] )

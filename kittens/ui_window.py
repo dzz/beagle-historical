@@ -22,7 +22,7 @@ class window_renderer(area_renderer):
                          ui_area.r[2], 
                          ui_area.prop.get("titlebar_height")],
                          self.title_bgcol) 
-        self.label.draw(ui_area.r)
+        self.label.draw(ui_area.r[0], ui_area.r[1])
         gfx.solid_rect( ui_area.compute_client_area(), self.clientcol)
 
 class ui_window(ui_area):
