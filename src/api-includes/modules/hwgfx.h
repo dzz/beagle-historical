@@ -23,7 +23,11 @@ MODULE_FUNC hwgfx_label_generate
 DEF_ARGS {
     gfx_label* label = malloc(sizeof(gfx_label));
     label_generate(label);
-    return Py_BuildValue("I",label);
+    { 
+        unsigned int ptr = (unsigned int)label;
+        printf("ptr out: %d",ptr);
+    }
+    return Py_BuildValue("I",(unsigned int)label);
 }
 
 MODULE_FUNC hwgfx_label_drop 
@@ -43,8 +47,9 @@ DEF_ARGS {
     unsigned int ptr; 
     gfx_label* label;
     PyStringObject* py_str_txt;
-    if(!INPUT_ARGS(args,"Is",&ptr)) 
+    if(!INPUT_ARGS(args,"Is",&ptr, py_str_txt)) 
         return NULL;
+    printf("ptr in: %d",ptr);
     label_set_text(label,PyString_AsString(py_str_txt));
     Py_RETURN_NONE;
 }

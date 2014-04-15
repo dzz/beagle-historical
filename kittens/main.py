@@ -1,9 +1,13 @@
+import host
+import hwgfx
 import gfx
 import ui_area
 import kittens.application.main
 
 mouse_focused_area = None
 caret_handler = None
+
+ticks = 0
 
 def init():
     kittens.application.main.init()
@@ -12,6 +16,13 @@ def finalize():
     pass
 
 def tick():
+    global ticks
+    ticks += 1;
+    if(ticks==100):
+        hwgfx.debug_displaykill()
+        raw_input()
+        host.abort()
+
     render()
 
 def _get_mf_area():

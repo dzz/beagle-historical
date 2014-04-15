@@ -73,10 +73,12 @@ void texture_generate_fp(gfx_texture* texture,int w,int h) {
 }
 
 void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
+    printf("\n{%d}\n",surf->w);
     SDL_LockSurface(surf);
+    if(surf->w!=24) {
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,surf->w,surf->h ,_NOBORDER,
-                GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,(unsigned char*)surf->pixels);
+                GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,(unsigned char*)surf->pixels);}
     SDL_UnlockSurface(surf);
 
 }

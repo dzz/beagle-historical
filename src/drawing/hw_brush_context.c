@@ -53,22 +53,29 @@ void _destroy_ctxt_gfx_data( gfx_texture* tex, gfx_framebuffer* fb) {
 
 
 void createBrushContext(brush_context *ctxt) {
-    shader_load( &ctxt->screen_shader, "shaders/hw_context.vert.glsl",
-            "shaders/hw_context.frag.glsl" );
-    shader_load( &ctxt->dab_shader, "shaders/dab.vert.glsl",
-            "shaders/dab.frag.glsl" );
-    shader_load( &ctxt->brush_composite_shader, "shaders/brush_composite.vert.glsl",
-            "shaders/brush_composite.frag.glsl" );
 
-    primitive_create_screen_primitive(&ctxt->screen_primitive);
-    primitive_create_dab_primitive(&ctxt->dab_primitive);
+    shader_load(    &ctxt->screen_shader, 
+                    "shaders/hw_context.vert.glsl",
+                    "shaders/hw_context.frag.glsl" );
+    shader_load(    &ctxt->dab_shader, 
+                    "shaders/dab.vert.glsl",
+                    "shaders/dab.frag.glsl" );
+    shader_load(    &ctxt->brush_composite_shader, 
+                    "shaders/brush_composite.vert.glsl",
+                    "shaders/brush_composite.frag.glsl" );
 
-    texture_generate( &ctxt->brushing_context_texture, 1920, 1080); 
-    texture_generate( &ctxt->ui, 1920, 1080);
-    texture_generate_filtered( &ctxt->dab_texture, 64, 64);
+    primitive_create_screen_primitive   (&ctxt->screen_primitive);
+    primitive_create_dab_primitive      (&ctxt->dab_primitive);
 
-    _build_ctxt_gfx_data( &ctxt->brushing_context_texture, &ctxt->brushing_framebuffer );
-    _build_ctxt_gfx_data( &ctxt->drawing_context_texture, &ctxt->drawing_context_framebuffer );
+    texture_generate            ( &ctxt->brushing_context_texture, 1920, 1080); 
+    texture_generate            ( &ctxt->ui,                       1920, 1080);
+    texture_generate_filtered   ( &ctxt->dab_texture,              64, 64);
+
+    _build_ctxt_gfx_data( &ctxt->brushing_context_texture, 
+                          &ctxt->brushing_framebuffer );
+
+    _build_ctxt_gfx_data(   &ctxt->drawing_context_texture, 
+                            &ctxt->drawing_context_framebuffer );
 }
 
 void destroyBrushContext(brush_context *ctxt) {

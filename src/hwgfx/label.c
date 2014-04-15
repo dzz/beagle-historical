@@ -4,23 +4,23 @@
 #include "texture.h"
 #include "label.h"
 
-
-
-
 static SDL_Surface* atlas;
 static SDL_Surface* font;
+gfx_texture atlas_texture;
 
 static int _atl_cursor;
 
 void initLabels() {
     font = IMG_Load("font\\cga8.png");
     atlas = createDrawingSurface(1024,1024);
+    texture_generate(&atlas_texture,1024,1024);
     _atl_cursor = 0;
 }
 
 void dropLabels() {
     SDL_FreeSurface(font);
     SDL_FreeSurface(atlas);
+    texture_drop(&atlas_texture);
 }
 
 
@@ -33,20 +33,19 @@ void get_cursor_position(int p, int* x,int* y) {
 }
 
 void label_generate(gfx_label* label) {
-        gfx_label zero_label = {0};
-        *label = zero_label; 
+    label->texture = malloc(sizeof(gfx_texture));
+    label->_set = 0;
 }
 
-void label_set_text(gfx_label* label, char* text) {}
-void _label_set_text(gfx_label* label, char* text) {
+void label_set_text(gfx_label* label, char* text) {
     int i;
     int l = strlen(text);
     SDL_Surface* tex = createDrawingSurface(8*l,8);
     label->w = l*8;
+    printf("  %d  ",label->w);
     label->h = 8;
-
     for( i=0; i<l; ++i) {
-        //   int val = (int)text[i];
+        //int val = (int)text[i];
         int val = 1;
         int basex = val % 32;
         int basey = val / 16; 
@@ -63,7 +62,6 @@ void _label_set_text(gfx_label* label, char* text) {
         dst.h=8;
         SDL_BlitSurface(font,&src,tex,&dst);
     }
-
     {
         /* reuse the atlas position if already set */
         SDL_Rect r;
@@ -77,12 +75,11 @@ void _label_set_text(gfx_label* label, char* text) {
 
         SDL_BlitSurface(tex,NULL,atlas,&r);
     }
-
-
     label->_set = 1; 
-    texture_from_SDL_surface(&label->texture, atlas);
+    texture_from_SDL_surface(&atlas_texture, tex);
     SDL_FreeSurface(tex);
 }
 
 void label_drop(gfx_label* label) {
+    free(label->texture);
 }

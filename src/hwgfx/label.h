@@ -4,7 +4,7 @@
 #include "texture.h"
 
 typedef struct {
-    gfx_texture texture;
+    gfx_texture *texture;
     int w;
     int h; 
     int _cursor; 
