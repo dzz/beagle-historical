@@ -50,7 +50,6 @@ void api_drop() {
 
 /*****************************************************************************/
 #include "api-includes/client-handlers.h"  //C function bindings for client_if
-/*****************************************************************************/
 
 /*
  * implementations of modules

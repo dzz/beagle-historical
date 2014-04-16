@@ -13,6 +13,7 @@ static int _atl_cursor;
 void initLabels() {
     font = IMG_Load("font\\cga8.png");
     atlas = createDrawingSurface(1024,1024);
+    printf("ATLAS:%d\n",atlas);
     texture_generate(&atlas_texture,1024,1024);
     _atl_cursor = 0;
 }
@@ -39,14 +40,14 @@ void label_generate(gfx_label* label) {
 
 void label_set_text(gfx_label* label, char* text) {
     int i;
-    int l = strlen(text);
+    int l = 128;
     SDL_Surface* tex = createDrawingSurface(8*l,8);
+    printf(" atlas: %d \n",atlas);
     label->w = l*8;
-    printf("  %d  ",label->w);
+    //printf("  %d  ",label->w);
     label->h = 8;
     for( i=0; i<l; ++i) {
-        //int val = (int)text[i];
-        int val = 1;
+        int val = i;
         int basex = val % 32;
         int basey = val / 16; 
         SDL_Rect src;
@@ -56,10 +57,12 @@ void label_set_text(gfx_label* label, char* text) {
         src.y=basey*8;
         src.w=8;
         src.h=8;
+
         dst.x=i*8;
         dst.y=0;
         dst.w=8;
         dst.h=8;
+
         SDL_BlitSurface(font,&src,tex,&dst);
     }
     {
@@ -76,7 +79,8 @@ void label_set_text(gfx_label* label, char* text) {
         SDL_BlitSurface(tex,NULL,atlas,&r);
     }
     label->_set = 1; 
-    texture_from_SDL_surface(&atlas_texture, tex);
+    texture_from_SDL_surface(&atlas_texture, atlas);
+    IMG_SavePNG( atlas, "c:\\res\\out.png");
     SDL_FreeSurface(tex);
 }
 

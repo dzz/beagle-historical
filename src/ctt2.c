@@ -68,9 +68,9 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
 #endif
 
-static unsigned int ctt2_keyframe_mode = 0;
+/**************************************/
 
-/** KEYFRAMING FUNCTIONS **/
+static unsigned int ctt2_keyframe_mode = 0;
 
 void toggleKeyframingMode() {
     ctt2_keyframe_mode = !ctt2_keyframe_mode;
@@ -86,7 +86,7 @@ void ctt2_insertkeyframe() {
 
 }
 
-/** DISPLAY MGMT **/
+/**************************************/
 
 void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
@@ -97,8 +97,7 @@ SDL_Surface* getViewingSurface(){
     return ui_surface;
 }
 
-
-/** OPENGL HELPER **/
+/**************************************/
 
 void disable_vsync()
 {	
@@ -119,6 +118,8 @@ void initWindowingSystemMessages() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
 //SDL_ShowCursor(0);
 }
+
+/**************************************/
 
 void initDisplay() {
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
@@ -148,6 +149,8 @@ void DIRTY_DISPLAY_ABORT() {
     dropDisplay();
 }
 
+/**************************************/
+
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
     disable_vsync();
@@ -160,6 +163,7 @@ void dropOpengl() {
     SDL_GL_DeleteContext(gl_context);
 }
 
+/**************************************/
 
 void dropPython(){
     if(PyErr_Occurred()) {
@@ -181,8 +185,9 @@ void initPython() {
     }
 }
 
-/** MAIN **/
 
+
+/*****************************************************************************/
 
 int main(int argc, char **argv){ 
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 30;
@@ -190,7 +195,6 @@ int main(int argc, char **argv){
     int finished = 0;
 
     initLog();
-    initPython();
     initDisplay();
     initWindowingSystemMessages();
     initOpenGL();
@@ -199,6 +203,7 @@ int main(int argc, char **argv){
     initAnimation();
     initHwBrush();
     initBrush();
+    initPython();
 
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 
@@ -223,11 +228,13 @@ int main(int argc, char **argv){
                         break;
                     case SDL_KEYDOWN:
                         finished = dispatch_key(event.key.keysym.sym,1);
-                        if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = 1;
+                        if( api_dispatch_key(event.key.keysym.sym,1) 
+                                == API_FAILURE ) finished = 1;
                         break;
                     case SDL_KEYUP:
                         dispatch_key(event.key.keysym.sym,0);
-                        if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = 1;
+                        if( api_dispatch_key(event.key.keysym.sym,1) 
+                                == API_FAILURE ) finished = 1;
                         break;
                     case SDL_MOUSEBUTTONDOWN:
                         dispatch_mousedown(event.button.button,
@@ -268,7 +275,8 @@ int main(int argc, char **argv){
                 hw_render_layerstack(fr);
 
                 if( getPanelsEnabled() == PANELS_ENABLED ){
-                    SDL_FillRect(ui_surface, NULL, SDL_MapRGBA( ui_surface->format, 0,0,0,0));
+                    SDL_FillRect(ui_surface, NULL, 
+                            SDL_MapRGBA( ui_surface->format, 0,0,0,0));
                     renderPanels(ui_surface);
                     renderLocalBuffer(ui_surface);
                 }
