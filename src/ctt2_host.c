@@ -7,7 +7,7 @@
 #include "system/ctt2.h"
 #include "hwgfx/label.h"
 #include "hwgfx/quads.h"
-
+#include "hwgfx/blend_control.h"
 
 //build a structure to hold required host callables inside of client
 #define CLIENT_FUNCTION(x,y) PyObject* x;

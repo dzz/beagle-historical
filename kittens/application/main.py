@@ -6,5 +6,8 @@ import kittens.ui_window as ui_window
 def init():
     window = ui_window.ui_window()
     ui_area.register_ui_area(window)
+
+    window = ui_window.ui_window(title="different")
+    ui_area.register_ui_area(window)
     return
 

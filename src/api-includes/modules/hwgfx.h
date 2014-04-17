@@ -58,6 +58,29 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_label_render
 DEF_ARGS {
+    unsigned int ptr; 
+    float x,y,r,g,b;
+    gfx_label* label;
+    if(!INPUT_ARGS(args,"Ifffff",&ptr,&x,&y,&r,&g,&b)) 
+        return NULL;
+    label = (gfx_label*)ptr;
+
+    label_render (label, x, y,r,g,b);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_blend_enter
+DEF_ARGS{
+    int mode;
+    if(!INPUT_ARGS(args,"i",&mode))
+        return NULL;
+    blend_enter(mode);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_blend_exit
+DEF_ARGS{
+    blend_exit();
     Py_RETURN_NONE;
 }
 
@@ -70,6 +93,8 @@ static PyMethodDef hwgfx_methods[] = {
     {"label_generate",      hwgfx_label_generate,       METH_VARARGS, NULL},
     {"label_drop",          hwgfx_label_drop,           METH_VARARGS, NULL},
     {"label_set_text",      hwgfx_label_set_text,       METH_VARARGS, NULL},
-
+    {"label_render",        hwgfx_label_render,         METH_VARARGS, NULL},
+    {"blend_enter" ,        hwgfx_blend_enter,          METH_VARARGS, NULL},
+    {"blend_exit" ,         hwgfx_blend_exit,          METH_VARARGS, NULL},
     {NULL,NULL,0,NULL } /*terminator record*/
 };

@@ -2,6 +2,7 @@ import host
 import hwgfx
 import gfx
 import ui_area
+import ui_window
 import kittens.application.main
 
 mouse_focused_area = None
@@ -19,7 +20,9 @@ def finalize():
     pass
 
 def tick():
+    gfx.blend_enter( gfx.BLENDMODE_OVER )
     render()
+    gfx.blend_exit()
 
 def _get_mf_area():
     return mouse_focused_area
@@ -44,7 +47,6 @@ def dispatch_mouseup(button,x,y):
         mouse_focused_area.rcv_mouse_button(button,m_pos[0],m_pos[1], down = False)
         mouse_focused_area.active = False
         mouse_focused_area = None
-
 
 def dispatch_mousedown(button,x,y):
     global mouse_focused_area
