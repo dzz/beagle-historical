@@ -1,3 +1,4 @@
+#include "../system/ctt2.h"
 #include "../drawing/drawingSurfaces.h"
 #include <string.h>
 #include <SDL.h>
@@ -15,7 +16,7 @@ void initLabels() {
     atlas = createDrawingSurface(1024,1024);
     printf("ATLAS:%d\n",atlas);
     texture_generate(&atlas_texture,1024,1024);
-    _atl_cursor = 0;
+    _atl_cursor = 1;
 }
 
 void dropLabels() {
@@ -25,31 +26,44 @@ void dropLabels() {
 }
 
 
-void get_cursor_position(int p, int* x,int* y) {
-    const int columns = 4;
-    int a = p % columns;
-    int b = p / columns;
-    *x = a * (1024/columns);
-    *y = b * (1024/columns);
+typedef struct{
+    int x;
+    int y;
+} _pt;
+
+_pt get_cursor_position(int p) {
+    _pt r;
+    int a = p % 4;
+    int b = p / 4;
+    r.x = a * (1024/4);
+    r.y = b*8;
+    return r;
 }
 
+static gfx_label* only_label;
+
 void label_generate(gfx_label* label) {
+    only_label = label;
     label->texture = malloc(sizeof(gfx_texture));
     label->_set = 0;
 }
 
-void label_set_text(gfx_label* label, char* text) {
+void label_set_text(gfx_label* label, const char* text) {
     int i;
-    int l = 128;
-    SDL_Surface* tex = createDrawingSurface(8*l,8);
+    int l;
+    SDL_Surface* tex; 
+
+    l = strlen(text);
+    tex = createDrawingSurface(8*l,8);
+    printf("\n__lbl:%x\n",label);
     printf(" atlas: %d \n",atlas);
     label->w = l*8;
     //printf("  %d  ",label->w);
     label->h = 8;
     for( i=0; i<l; ++i) {
-        int val = i;
+        int val = (int)text[i];
         int basex = val % 32;
-        int basey = val / 16; 
+        int basey = val / 32; 
         SDL_Rect src;
         SDL_Rect dst;
 
@@ -67,20 +81,29 @@ void label_set_text(gfx_label* label, char* text) {
     }
     {
         /* reuse the atlas position if already set */
+        SDL_Rect sr;
         SDL_Rect r;
+        _pt pt;
+
         if( label->_set==0) {
             label->_cursor = _atl_cursor;
+            _atl_cursor++;
         }
 
-        get_cursor_position( label->_cursor, &r.x, &r.y );
+        pt = get_cursor_position(label->_cursor );
+        r.x = pt.x;
+        r.y = pt.y;
         r.w = label->w;
         r.h = label->h;
+        sr.x=0;
+        sr.y=0;
+        sr.w=label->w;
+        sr.h=label->h;
 
-        SDL_BlitSurface(tex,NULL,atlas,&r);
+        SDL_BlitSurface(tex,&sr,atlas,&r);
     }
     label->_set = 1; 
     texture_from_SDL_surface(&atlas_texture, atlas);
-    IMG_SavePNG( atlas, "c:\\res\\out.png");
     SDL_FreeSurface(tex);
 }
 

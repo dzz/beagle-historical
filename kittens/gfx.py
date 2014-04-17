@@ -20,8 +20,7 @@ def hwgfx_bind_texture(tex_id):
 class label(object):
     def __init__(self, text, color, fontsize ):
         self._label = hwgfx.label_generate()
-        hwgfx.debug_displaykill()
-        print "%s" % self._label;
+        print "_pylabel_%x" % self._label;
         hwgfx.label_set_text(self._label,text)
 
     def __del__(self):

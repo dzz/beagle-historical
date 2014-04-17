@@ -9,6 +9,9 @@ caret_handler = None
 
 ticks = 0
 
+__clickpos = [0,0]
+__mpos = [0,0]
+
 def init():
     kittens.application.main.init()
 
@@ -16,13 +19,6 @@ def finalize():
     pass
 
 def tick():
-    global ticks
-    ticks += 1;
-    if(ticks==100):
-        hwgfx.debug_displaykill()
-        raw_input()
-        host.abort()
-
     render()
 
 def _get_mf_area():
@@ -35,13 +31,6 @@ def render():
     for area in ui_area.order_areas():
         for renderer in area.renderers:
             renderer.render(area)
-    ##gfx.solid_rect( [ __mpos[0],__mpos[1],10,10],[0.5,0.5,1] )
-    ##gfx.solid_rect( [ __clickpos[0],__clickpos[1],40,40],[0.9,0.5,1] )
-
-    ##if _get_mf_area() is not None:
-    ##    gfx.solid_rect( _get_mf_area().r, [1,1,1])
-
-    ##gfx.solid_rect( [ __clickpos[0],__clickpos[1],40,40],[0.9,0.5,1] )
     
 def calculate_mouse_position(area,x,y):
     xt = min(max( 0, x - area.r[0] ),area.r[2])
@@ -56,7 +45,6 @@ def dispatch_mouseup(button,x,y):
         mouse_focused_area.active = False
         mouse_focused_area = None
 
-__clickpos = [0,0]
 
 def dispatch_mousedown(button,x,y):
     global mouse_focused_area
@@ -70,7 +58,6 @@ def dispatch_mousedown(button,x,y):
         area.active = True
         mouse_focused_area = area
 
-__mpos = [0,0]
 
 def dispatch_mousemotion(x,y):
     global __mpos

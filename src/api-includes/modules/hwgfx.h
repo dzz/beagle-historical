@@ -45,12 +45,14 @@ DEF_ARGS {
 MODULE_FUNC hwgfx_label_set_text 
 DEF_ARGS {
     unsigned int ptr; 
+    char *text; 
     gfx_label* label;
-    PyStringObject* py_str_txt;
-    if(!INPUT_ARGS(args,"Is",&ptr, py_str_txt)) 
+    char* py_str_txt;
+    if(!INPUT_ARGS(args,"Is",&ptr, &py_str_txt)) 
         return NULL;
-    printf("ptr in: %d",ptr);
-    label_set_text(label,PyString_AsString(py_str_txt));
+    label = (gfx_label*)ptr;
+    text= py_str_txt;
+    label_set_text(label,text);
     Py_RETURN_NONE;
 }
 
