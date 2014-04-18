@@ -3,11 +3,12 @@ import hwgfx
 _shaders = {}
 
 def get(vert,frag):
-    if name in _shaders.keys():
-        return _shaders[ [vert, frag] ]
+    global _shaders
+    if (vert,frag) in _shaders.keys():
+        return _shaders[ (vert, frag) ]
     else:
         loaded                  = shader(vert,frag) 
-        _shaders[[ vert, frag]] = loaded
+        _shaders[( vert, frag)] = loaded
         return loaded
 
 
@@ -20,11 +21,13 @@ class shader(object):
 
     def bind(self,uniforms):
         hwgfx.shader_bind(self._shader)
-        for u in uniforms
+        for u in uniforms:
             name    = u[0]
             vector  = u[1]
             vlen    = len(vector)
 
+            print name
+            print vector
             if vlen == 1:
                 hwgfx.shader_bind_float (self._shader, name, 
                         vector[0])

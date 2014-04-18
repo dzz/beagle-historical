@@ -28,5 +28,7 @@ void shader_bind_vec2
 void shader_bind_float
 (gfx_shader* shader, const char* param, float x);
 
+gfx_shader* shader_get_bound();
+
 #endif
 

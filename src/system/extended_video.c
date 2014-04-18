@@ -13,9 +13,6 @@ gfx_coordinate_uv_primitive     _screen_primitive;
 gfx_shader                      _screen_shader;
 
 void gfx_surface_render( SDL_Surface* img) {
-
-    return;
-
     blend_enter                 ( BLENDMODE_OVER        ); 
     shader_bind                 (&_screen_shader        );
     texture_from_SDL_surface    (&_ui,      img         );

@@ -12,7 +12,7 @@ DEF_ARGS  {
     int x,y,w,h;
     double r,g,b,a;
 
-    if(!INPUT_ARGS(args,"iiiiI",&x,&y,&w,&h)) 
+    if(!INPUT_ARGS(args,"iiii",&x,&y,&w,&h)) 
         return NULL;
     rect_draw(x,y,w,h);
     Py_RETURN_NONE;
@@ -104,7 +104,7 @@ DEF_ARGS {
     if(!INPUT_ARGS(args, "ss", &vert, &frag))
         return NULL;
     shader_load(shader, vert, frag);
-    Py_RETURN_NONE;
+    return Py_BuildValue("I",(unsigned int)shader);
 }
 
 MODULE_FUNC hwgfx_shader_drop
@@ -117,6 +117,16 @@ DEF_ARGS    {
     free        ((gfx_shader*)ptr);
     Py_RETURN_NONE;
 }
+
+MODULE_FUNC hwgfx_shader_bind
+DEF_ARGS    {
+   unsigned int ptr;
+   if(!INPUT_ARGS(args,"I",&ptr))
+       return NULL;
+   shader_bind  ((gfx_shader*)ptr);
+   Py_RETURN_NONE;
+}
+
 
 MODULE_FUNC hwgfx_shader_bind_float
 DEF_ARGS {
@@ -193,6 +203,11 @@ static PyMethodDef hwgfx_methods[] = {
     {"blend_exit" ,         hwgfx_blend_exit,           METH_VARARGS, NULL},
     {"shader_load" ,        hwgfx_shader_load,          METH_VARARGS, NULL},
     {"shader_drop" ,        hwgfx_shader_drop,          METH_VARARGS, NULL},
+    {"shader_bind" ,        hwgfx_shader_bind,          METH_VARARGS, NULL},
+    {"shader_bind_float" ,  hwgfx_shader_bind_float,    METH_VARARGS, NULL},
+    {"shader_bind_vec2" ,   hwgfx_shader_bind_vec2,     METH_VARARGS, NULL},
+    {"shader_bind_vec3" ,   hwgfx_shader_bind_vec3,     METH_VARARGS, NULL},
+    {"shader_bind_vec4" ,   hwgfx_shader_bind_vec4,     METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };

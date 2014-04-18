@@ -10,7 +10,6 @@ typedef struct{
 static quad_context _quad_context;
 
 void initRects(){
-
     primitive_create_scrquad_primitive
         (&_quad_context.quad_primitive);
 }
@@ -31,8 +30,8 @@ void rect_draw(int x,int y, int w, int h) {
                      (float)h);
 
     shader_bind_vec2( bound_shader, "scr_size", 
-                     (float)scr_dims.x,
-                     (float)scr_dims.y);
+                     (float)scr_dims.w,
+                     (float)scr_dims.h);
 
     primitive_render( &_quad_context.quad_primitive);
 }

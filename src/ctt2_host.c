@@ -5,6 +5,7 @@
 
 #include "system/ctt2_host.h"
 #include "system/ctt2.h"
+#include "hwgfx/shader.h"
 #include "hwgfx/label.h"
 #include "hwgfx/rect.h"
 #include "hwgfx/blend_control.h"
