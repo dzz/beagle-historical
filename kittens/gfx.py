@@ -1,3 +1,4 @@
+import shaders
 import hwgfx
 
 BLENDMODE_OVER              = 0
@@ -12,7 +13,7 @@ class label(object):
         hwgfx.label_set_text(self._label,text)
 
     def __del__(self):
-        hwgfx_drop_label(self._label)
+        hwgfx.label_drop(self._label)
 
     def set_text(text):
         hwgfx.label_set_text(self._label,text)
@@ -21,8 +22,12 @@ class label(object):
         hwgfx.label_render(self._label,x,y,1,1,1);
 
 def solid_rect(r,color):
-    hwgfx.draw_solidquad( r[0],r[1],r[2],r[3],
-               color[0],color[1],color[2] )
+    shader = shaders.get( [ "hwgfx/rect", 
+                            "hwgfx/rect_solid" ] )
+
+    shader.bind         ( [ "color", color ] )
+    hwgfx.rect_draw( [0],r[1],r[2],r[3] )
+
 
 def blend_enter(mode):
     hwgfx.blend_enter(mode)

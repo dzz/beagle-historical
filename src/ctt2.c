@@ -36,7 +36,6 @@
 
 #include "document/animation.h"
 
-#include "hwgfx/quads.h"
 #include "drawing/hw_brush_context.h"
 #include "drawing/brush.h"
 #include "drawing/drawingSurfaces.h"
@@ -155,11 +154,9 @@ void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
     disable_vsync();
     initExtendedVideo();
-    initQuads();
 }
 
 void dropOpengl() {
-    dropQuads();
     SDL_GL_DeleteContext(gl_context);
 }
 
@@ -190,9 +187,9 @@ void initPython() {
 /*****************************************************************************/
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES = 30;
-    int screenbuffer_cycles = 0;
-    int finished = 0;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 30;
+    int screenbuffer_cycles                         = 0;
+    int finished                                    = 0;
 
     initLog();
     initDisplay();
@@ -270,15 +267,15 @@ int main(int argc, char **argv){
 
 
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
-                frame* fr = getActiveFrame();
+                frame* fr           = getActiveFrame();
                 screenbuffer_cycles = 0;
-                hw_render_layerstack(fr);
 
+                hw_render_layerstack(fr);
                 if( getPanelsEnabled() == PANELS_ENABLED ){
                     SDL_FillRect(ui_surface, NULL, 
                             SDL_MapRGBA( ui_surface->format, 0,0,0,0));
-                    renderPanels(ui_surface);
-                    renderLocalBuffer(ui_surface);
+                    renderPanels        (ui_surface);
+                    gfx_surface_render  (ui_surface);
                 }
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 updateViewingSurface();
@@ -300,7 +297,6 @@ int main(int argc, char **argv){
     dropDisplay();
     dropPython();
     dropLog();
-
     SDL_Quit();
     return 0;
 }

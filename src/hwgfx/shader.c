@@ -60,8 +60,19 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     free(frag_src);
 }
 
+gfx_shader* _bound = 0;
+
 void shader_bind(gfx_shader* shader){
     glUseProgram(shader->shader_id);
+    _bound = shader;
+}
+
+void shader_get_bound() {
+    if(bound==0) {
+        printf("\n**catastrophe: bound==0 when getting bound shader.");
+        exit(1);
+    }
+    return _bound;
 }
 
 void shader_bind_vec4(gfx_shader* shader, const char* param, float x, float y, float z, float w) {

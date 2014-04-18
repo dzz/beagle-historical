@@ -3,25 +3,29 @@
  * =============
  */
 
-MODULE_FUNC hwgfx_draw_solidsquad 
+
+/**
+ *  rect
+ */
+MODULE_FUNC hwgfx_rect_draw
 DEF_ARGS  {
     int x,y,w,h;
-    double r,g,b;
-    if(!INPUT_ARGS(args,"iiiiddd",&x,&y,&w,&h,&r,&g,&b)) 
+    double r,g,b,a;
+
+    if(!INPUT_ARGS(args,"iiiiI",&x,&y,&w,&h)) 
         return NULL;
-    draw_solidquad(x,y,w,h,r,g,b);
+    rect_draw(x,y,w,h);
     Py_RETURN_NONE;
 }
 
-MODULE_FUNC hwgfx_debug_displaykill
-DEF_ARGS {
-    DIRTY_DISPLAY_ABORT();
-    Py_RETURN_NONE;
-}
 
+/**
+ * label
+ */
 MODULE_FUNC hwgfx_label_generate 
 DEF_ARGS {
     gfx_label* label = malloc(sizeof(gfx_label));
+
     label_generate(label);
     { 
         unsigned int ptr = (unsigned int)label;
@@ -34,6 +38,7 @@ MODULE_FUNC hwgfx_label_drop
 DEF_ARGS {
     unsigned int ptr; 
     gfx_label* label;
+
     if(!INPUT_ARGS(args,"I",&ptr)) 
         return NULL;
     label = (gfx_label*)ptr;
@@ -48,10 +53,11 @@ DEF_ARGS {
     char *text; 
     gfx_label* label;
     char* py_str_txt;
+
     if(!INPUT_ARGS(args,"Is",&ptr, &py_str_txt)) 
         return NULL;
-    label = (gfx_label*)ptr;
-    text= py_str_txt;
+    label   = (gfx_label*)ptr;
+    text    = py_str_txt;
     label_set_text(label,text);
     Py_RETURN_NONE;
 }
@@ -68,7 +74,9 @@ DEF_ARGS {
     label_render (label, x, y,r,g,b);
     Py_RETURN_NONE;
 }
-
+/**
+ * blend
+ */
 MODULE_FUNC hwgfx_blend_enter
 DEF_ARGS{
     int mode;
@@ -84,17 +92,103 @@ DEF_ARGS{
     Py_RETURN_NONE;
 }
 
+/**
+ * shader
+ */
+MODULE_FUNC hwgfx_shader_load
+DEF_ARGS {
+    gfx_shader* shader = malloc(sizeof(gfx_shader));
+    char*       vert;
+    char*       frag;
+
+    if(!INPUT_ARGS(args, "ss", &vert, &frag))
+        return NULL;
+    shader_load(shader, vert, frag);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_shader_drop
+DEF ARGS    {
+    unsigned int ptr;
+
+    if(!INPUT_ARGS(args,"I",&ptr))
+        return NULL;
+    shader_drop ((gfx_shader*)ptr);    
+    free        ((gfx_shader*)ptr);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_shader_bind_float
+DEF ARGS {
+    float x;
+    unsigned int ptr;
+    gfx_shader* shader;
+    if(!INPUT_ARGS(args,"If",&x,&ptr))
+        return NULL;
+    shader = (gfx_shader*)ptr;
+    shader_bind_float(shader,x);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_shader_bind_vec2
+DEF ARGS {
+    float x,y;
+    unsigned int ptr;
+    gfx_shader* shader;
+    if(!INPUT_ARGS(args,"Iff",&x,&y,&ptr))
+        return NULL;
+    shader = (gfx_shader*)ptr;
+    shader_bind_vec2(shader,x,y);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_shader_bind_vec3
+DEF ARGS {
+    float x,y,z;
+    unsigned int ptr;
+    gfx_shader* shader;
+    if(!INPUT_ARGS(args,"Ifff",&x,&y,&z,&ptr))
+        return NULL;
+    shader = (gfx_shader*)ptr;
+    shader_bind_vec3(shader,x,y,z);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_shader_bind_vec4
+DEF ARGS {
+    float x,y,z,w;
+    unsigned int ptr;
+    gfx_shader* shader;
+    if(!INPUT_ARGS(args,"Iffff",&x,&y,&z,&w,&ptr))
+        return NULL;
+    shader = (gfx_shader*)ptr;
+    shader_bind_vec4(shader,x,y,z,w);
+    Py_RETURN_NONE;
+}
+
+/**
+ * debug
+ */
+MODULE_FUNC hwgfx_debug_displaykill
+DEF_ARGS {
+    DIRTY_DISPLAY_ABORT();
+    Py_RETURN_NONE;
+}
+
 
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 
 static PyMethodDef hwgfx_methods[] = {
-    {"draw_solidquad",      hwgfx_draw_solidsquad,      METH_VARARGS, NULL},
     {"debug_displaykill",   hwgfx_debug_displaykill,    METH_VARARGS, NULL},
+    {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
     {"label_generate",      hwgfx_label_generate,       METH_VARARGS, NULL},
     {"label_drop",          hwgfx_label_drop,           METH_VARARGS, NULL},
     {"label_set_text",      hwgfx_label_set_text,       METH_VARARGS, NULL},
     {"label_render",        hwgfx_label_render,         METH_VARARGS, NULL},
     {"blend_enter" ,        hwgfx_blend_enter,          METH_VARARGS, NULL},
-    {"blend_exit" ,         hwgfx_blend_exit,          METH_VARARGS, NULL},
+    {"blend_exit" ,         hwgfx_blend_exit,           METH_VARARGS, NULL},
+    {"shader_load" ,        hwgfx_shader_load,          METH_VARARGS, NULL},
+    {"shader_drop" ,        hwgfx_shader_drop,          METH_VARARGS, NULL},
+
     {NULL,NULL,0,NULL } /*terminator record*/
 };
