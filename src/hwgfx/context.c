@@ -11,7 +11,6 @@ void _validate_vp(){
         glGetIntegerv(GL_VIEWPORT,_vp);
         _unknown = 0;
     }
-    return _vp;
 }
 
 void gfx_viewport_set_dims(viewport_dims dims) {
@@ -33,7 +32,8 @@ viewport_dims   gfx_viewport_get_dims() {
     dims.h = _vp[3];
 }
 
-root_gfx_size gfx_get_root_gfx_size(){
+root_gfx_size
+	gfx_get_root_gfx_size(){
 
     root_gfx_size gfx_size;
     gfx_size.w = 1920;

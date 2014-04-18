@@ -20,8 +20,8 @@ void initLabels() {
     _atl_cursor = 0;
 
     texture_generate(&atlas_texture,1024,1024);
-    shader_load(&label_shader, "shaders/label.vert.glsl",
-                               "shaders/label.frag.glsl");
+    shader_load(&label_shader, "shaders/hwgfx/label.vert.glsl",
+                               "shaders/hwgfx/label.frag.glsl");
 }
 
 void dropLabels() {
@@ -131,7 +131,6 @@ void label_set_text(gfx_label* label, const char* text) {
 
         SDL_BlitSurface(tex,&sr,atlas,&r);
     }
-    IMG_SavePNG(atlas,"c:\\res\\out2.png");
     texture_from_SDL_surface(&atlas_texture, atlas);
     SDL_FreeSurface(tex);
 }

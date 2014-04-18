@@ -201,7 +201,6 @@ int main(int argc, char **argv){
     initHwBrush();
     initBrush();
     initPython();
-
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 
     initYankPut();
@@ -216,6 +215,7 @@ int main(int argc, char **argv){
 
         while(finished == 0) {
             if(SDL_PollEvent(&event)) {
+                
                 switch (event.type) {
                     case SDL_QUIT:
                         finished = 1;

@@ -55,14 +55,14 @@ void _destroy_ctxt_gfx_data( gfx_texture* tex, gfx_framebuffer* fb) {
 void createBrushContext(brush_context *ctxt) {
 
     shader_load(    &ctxt->screen_shader, 
-                    "shaders/hw_context.vert.glsl",
-                    "shaders/hw_context.frag.glsl" );
+                    "shaders/hwgfx/screen.vert.glsl",
+                    "shaders/hwgfx/texture.frag.glsl" );
     shader_load(    &ctxt->dab_shader, 
-                    "shaders/dab.vert.glsl",
-                    "shaders/dab.frag.glsl" );
+                    "shaders/paint-engine/dab.vert.glsl",
+                    "shaders/paint-engine/dab.frag.glsl" );
     shader_load(    &ctxt->brush_composite_shader, 
-                    "shaders/brush_composite.vert.glsl",
-                    "shaders/brush_composite.frag.glsl" );
+                    "shaders/paint-engine/brush_composite.vert.glsl",
+                    "shaders/paint-engine/brush_composite.frag.glsl" );
 
     primitive_create_screen_primitive   (&ctxt->screen_primitive);
     primitive_create_dab_primitive      (&ctxt->dab_primitive);

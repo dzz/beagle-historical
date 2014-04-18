@@ -1,3 +1,4 @@
+#include <SDL.h>
 #include <GL/glew.h>
 
 #include "extended_video.h"
@@ -7,11 +8,13 @@
 #include "../hwgfx/shader.h"
 #include "../hwgfx/context.h"
 
-gfx_texture                 _ui;
-gfx_coordinate_primitive    _screen_primitive;
-gfx_shader                  _screen_shader;
+gfx_texture                     _ui;
+gfx_coordinate_uv_primitive     _screen_primitive;
+gfx_shader                      _screen_shader;
 
 void gfx_surface_render( SDL_Surface* img) {
+
+    return;
 
     blend_enter                 ( BLENDMODE_OVER        ); 
     shader_bind                 (&_screen_shader        );
@@ -39,6 +42,8 @@ void initExtendedVideo() {
 
     texture_generate                    (&_ui, rgs.w, rgs.h);
     primitive_create_screen_primitive   (&_screen_primitive);
+    shader_load                         (&_screen_shader, "shaders/hwgfx/screen.vert.glsl",
+                                                          "shaders/hwgfx/texture.frag.glsl");
 }
 
 void dropExtendedVideo() {
