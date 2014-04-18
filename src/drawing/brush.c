@@ -20,7 +20,7 @@
 
 #include "node_mapper.h"
 
-#include "hw_brush_context.h"
+#include "shader_brush.h"
 #include "brush.h"
 
 static float brush_alpha_mod;

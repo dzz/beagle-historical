@@ -26,19 +26,19 @@ class shader(object):
             vlen    = len(vector)
 
             if vlen == 1:
-                hwgfx.shader_bind_float(name, 
+                hwgfx.shader_bind_float (self._shader, name, 
                         vector[0])
             elif vlen ==2:
-                hwgfx.shader_bind_vec2(name, 
+                hwgfx.shader_bind_vec2  (self._shader, name, 
                         vector[0],
                         vector[1])
             elif vlen ==3:
-                hwgfx.shader_bind_vec3(name, 
+                hwgfx.shader_bind_vec3  (self._shader, name, 
                         vector[0],
                         vector[1],
                         vector[2])
             elif vlen ==4:
-                hwgfx.shader_vind_vec4(name, 
+                hwgfx.shader_bind_vec4  (self._shader, name, 
                         vector[0],
                         vector[1],
                         vector[2],

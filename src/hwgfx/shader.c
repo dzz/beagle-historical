@@ -68,7 +68,7 @@ void shader_bind(gfx_shader* shader){
 }
 
 void shader_get_bound() {
-    if(bound==0) {
+    if(_bound==0) {
         printf("\n**catastrophe: bound==0 when getting bound shader.");
         exit(1);
     }

@@ -7,7 +7,7 @@
 #include "../system/ctt2.h"
 #include "../system/surfaceCache.h"
 #include "../drawing/drawingSurfaces.h"
-#include "../drawing/hw_brush_context.h"
+#include "../drawing/shader_brush.h"
 #include "../compositor/compositor.h"
 
 unsigned int baseSize = 1024;	//our initial stack

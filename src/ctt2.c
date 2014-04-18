@@ -36,7 +36,7 @@
 
 #include "document/animation.h"
 
-#include "drawing/hw_brush_context.h"
+#include "drawing/shader_brush.h"
 #include "drawing/brush.h"
 #include "drawing/drawingSurfaces.h"
 

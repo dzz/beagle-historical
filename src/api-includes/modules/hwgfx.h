@@ -108,7 +108,7 @@ DEF_ARGS {
 }
 
 MODULE_FUNC hwgfx_shader_drop
-DEF ARGS    {
+DEF_ARGS    {
     unsigned int ptr;
 
     if(!INPUT_ARGS(args,"I",&ptr))
@@ -119,50 +119,54 @@ DEF ARGS    {
 }
 
 MODULE_FUNC hwgfx_shader_bind_float
-DEF ARGS {
+DEF_ARGS {
     float x;
     unsigned int ptr;
+    char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"If",&x,&ptr))
+    if(!INPUT_ARGS(args,"Isf",&ptr,&param,&x))
         return NULL;
     shader = (gfx_shader*)ptr;
-    shader_bind_float(shader,x);
+    shader_bind_float(shader,param,x);
     Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_shader_bind_vec2
-DEF ARGS {
+DEF_ARGS {
     float x,y;
     unsigned int ptr;
+    char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Iff",&x,&y,&ptr))
+    if(!INPUT_ARGS(args,"Isff",&ptr,&param,&x,&y))
         return NULL;
     shader = (gfx_shader*)ptr;
-    shader_bind_vec2(shader,x,y);
+    shader_bind_vec2(shader,param,x,y);
     Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_shader_bind_vec3
-DEF ARGS {
+DEF_ARGS {
     float x,y,z;
     unsigned int ptr;
+    char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Ifff",&x,&y,&z,&ptr))
+    if(!INPUT_ARGS(args,"Isfff",&ptr,&param,&x,&y,&z))
         return NULL;
     shader = (gfx_shader*)ptr;
-    shader_bind_vec3(shader,x,y,z);
+    shader_bind_vec3(shader,param,x,y,z);
     Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_shader_bind_vec4
-DEF ARGS {
+DEF_ARGS {
     float x,y,z,w;
     unsigned int ptr;
+    char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Iffff",&x,&y,&z,&w,&ptr))
+    if(!INPUT_ARGS(args,"Isffff",&ptr,&param,&x,&y,&z,&w))
         return NULL;
     shader = (gfx_shader*)ptr;
-    shader_bind_vec4(shader,x,y,z,w);
+    shader_bind_vec4(shader,param,x,y,z,w);
     Py_RETURN_NONE;
 }
 

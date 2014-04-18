@@ -2,7 +2,7 @@
 
 #include "context.h"
 
-int _vp[4] = {0}
+int _vp[4] = {0};
 
 int _unknown = 1;
 
@@ -33,8 +33,10 @@ viewport_dims   gfx_viewport_get_dims() {
     dims.h = _vp[3];
 }
 
-root_size gfx_get_root_size(){
+root_gfx_size gfx_get_root_gfx_size(){
+
     root_gfx_size gfx_size;
     gfx_size.w = 1920;
     gfx_size.h = 1080;
+    return gfx_size;
 }
