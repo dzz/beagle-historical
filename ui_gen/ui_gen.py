@@ -6,24 +6,26 @@ make_slider_command = "convert -background black -fill white -font Consolas -poi
 
 idx = 0;
 for slider_name in sliders:
-	command = make_slider_command.replace("{$slider_name}",slider_name);
-	command = command.replace("{$slider_idx}","%d" % idx);
-	os.system(command);
-	idx += 1;
+    print "making slider: %s" % slider_name
+    command = make_slider_command.replace("{$slider_name}",slider_name);
+    command = command.replace("{$slider_idx}","%d" % idx);
+    os.system(command);
+    idx += 1;
 
 buttons = [ "grad","erase", "std","bright","dark" ];
 make_button_command = "convert -background transparent -fill {$color} -font Consolas -pointsize 10 label:\"{$button_name}\" label_{$button_name}.bmp & composite -gravity Center label_{$button_name}.bmp templates/button_{$mode}.bmp generated/button_{$button_idx}_{$mode}.bmp"
 
 idx = 0;
 for button_name in buttons:
-	command = make_button_command.replace("{$button_name}",button_name);
-	command = command.replace("{$button_idx}","%d" % idx);
+    print "making button: %s" % button_name
+    command = make_button_command.replace("{$button_name}",button_name);
+    command = command.replace("{$button_idx}","%d" % idx);
 
-	up_command = command.replace("{$mode}","up").replace("{$color}","black");
-	down_command = command.replace("{$mode}","down").replace("{$color}","red");
-	os.system(up_command);
-	os.system(down_command);
-	idx += 1;
+    up_command = command.replace("{$mode}","up").replace("{$color}","black");
+    down_command = command.replace("{$mode}","down").replace("{$color}","red");
+    os.system(up_command);
+    os.system(down_command);
+    idx += 1;
 
 
 mappers = [ "colormix", "alpha", "size", "jitter", "noise" ]
@@ -31,38 +33,41 @@ make_mapper_command = "convert -background transparent -fill green -font Consola
 
 idx = 0;
 for mapper_name in mappers:
-	command = make_mapper_command.replace("{$mapper_name}",mapper_name);
-	command = command.replace("{$slider_idx}","%d" % idx);
-	os.system(command);
-	idx += 1;
+    print "making mapper %s" % mapper_name
+    command = make_mapper_command.replace("{$mapper_name}",mapper_name);
+    command = command.replace("{$slider_idx}","%d" % idx);
+    os.system(command);
+    idx += 1;
 
 buttons = [ "brush","erase", "smudge","eyedrop" ];
 make_button_command = "convert -background transparent -fill {$color} -font Consolas {$boldmode} -pointsize 11 label:\"{$button_name}\" label_{$button_name}.bmp & composite -gravity Center label_{$button_name}.bmp templates/toolbar_{$mode}.bmp generated/toolbar_{$button_idx}_{$mode}.bmp"
 
 idx = 0;
 for button_name in buttons:
-	command = make_button_command.replace("{$button_name}",button_name);
-	command = command.replace("{$button_idx}","%d" % idx);
+    print "making button %s" % button_name
+    command = make_button_command.replace("{$button_name}",button_name);
+    command = command.replace("{$button_idx}","%d" % idx);
 
-	up_command = command.replace("{$mode}","up").replace("{$color}","black").replace("{$boldmode}","");
-	down_command = command.replace("{$mode}","down").replace("{$color}","white").replace("$boldmode}","-weight bold");
-	os.system(up_command);
-	os.system(down_command);
-	idx += 1;
+    up_command = command.replace("{$mode}","up").replace("{$color}","black").replace("{$boldmode}","");
+    down_command = command.replace("{$mode}","down").replace("{$color}","white").replace("$boldmode}","-weight bold");
+    os.system(up_command);
+    os.system(down_command);
+    idx += 1;
 
 titles = [ "stylus","brush","mapper","add","mul","color","grad","add3","mul3","slider01" ]
-make_title_command = "convert -background rgb(72,72,72) -fill white -font Terminal -size 75x14 label:\" {$title_name} \" generated/title_{$title_name}.bmp"
+make_title_command = "convert -background rgb(72,72,72) -fill white -font Consolas -size 75x14 label:\" {$title_name} \" generated/title_{$title_name}.bmp"
 
 for title_name in titles:
-		command = make_title_command.replace("{$title_name}",title_name);
-		os.system(command);
+        print "making titlelabel %s" % title_name
+        command = make_title_command.replace("{$title_name}",title_name);
+        os.system(command);
 
 titles = [ "pres","time","size","alpha","jitter","noise","in","out","r","g","b","a","azimuth","orient", "rot" ]
 make_title_command = "convert -background rgb(64,64,64) -fill rgba(165,164,162) -font Consolas -size 40x14  label:\" {$title_name} \" generated/title_{$title_name}.bmp"
 
 for title_name in titles:
-		command = make_title_command.replace("{$title_name}",title_name);
-		os.system(command);
+        command = make_title_command.replace("{$title_name}",title_name);
+        os.system(command);
 
 os.system("copy templates\\*.bmp generated\\");
 os.system("del *.bmp");
