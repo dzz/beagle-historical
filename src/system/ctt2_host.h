@@ -6,6 +6,9 @@
 
 int api_init();
 int api_tick();
-void api_drop();
+int api_drop();
+int api_dispatch_mouseup(int button, int x, int y);
+int api_dispatch_mousedown(int button, int x, int y);
+int api_dispatch_mousemotion(int x, int y);
 
 #endif

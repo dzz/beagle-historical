@@ -1,7 +1,7 @@
 #ifndef __GFX_SHADER__
 #define __GFX_SHADER__
 
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 
 typedef struct {
     GLuint shader_id;

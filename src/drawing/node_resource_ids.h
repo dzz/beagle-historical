@@ -47,29 +47,29 @@
 
 
 #define LOAD_NODE_IMAGE_RESOURCES \
-	labels[LABEL_BRUSH_CONTROLLER]=SDL_LoadBMP("ui_gen/generated/title_brush.bmp");\
-	labels[LABEL_SIZE]=SDL_LoadBMP("ui_gen/generated/title_size.bmp");\
-	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");\
-	labels[LABEL_ALPHA]=SDL_LoadBMP("ui_gen/generated/title_alpha.bmp");\
-	labels[LABEL_JITTER]=SDL_LoadBMP("ui_gen/generated/title_jitter.bmp");\
-	labels[LABEL_NOISE]=SDL_LoadBMP("ui_gen/generated/title_noise.bmp");\
-	labels[LABEL_STYLUS]=SDL_LoadBMP("ui_gen/generated/title_stylus.bmp");\
-	labels[LABEL_PRESSURE]=SDL_LoadBMP("ui_gen/generated/title_pres.bmp");\
-	labels[LABEL_TIME]=SDL_LoadBMP("ui_gen/generated/title_time.bmp");\
-	labels[LABEL_MAPPER]=SDL_LoadBMP("ui_gen/generated/title_mapper.bmp");\
-	labels[LABEL_X]=SDL_LoadBMP("ui_gen/generated/title_in.bmp");\
-	labels[LABEL_Y]=SDL_LoadBMP("ui_gen/generated/title_out.bmp");\
-	labels[LABEL_R]=SDL_LoadBMP("ui_gen/generated/title_r.bmp");\
-	labels[LABEL_G]=SDL_LoadBMP("ui_gen/generated/title_g.bmp");\
-	labels[LABEL_B]=SDL_LoadBMP("ui_gen/generated/title_b.bmp");\
-	labels[LABEL_A]=SDL_LoadBMP("ui_gen/generated/title_a.bmp");\
-	labels[LABEL_ADD]=SDL_LoadBMP("ui_gen/generated/title_add.bmp");\
-	labels[LABEL_MUL]=SDL_LoadBMP("ui_gen/generated/title_mul.bmp");\
-	labels[LABEL_COLOR]=SDL_LoadBMP("ui_gen/generated/title_color.bmp");\
-	labels[LABEL_GRADIENT]=SDL_LoadBMP("ui_gen/generated/title_grad.bmp");\
-	labels[LABEL_ADD3]=SDL_LoadBMP("ui_gen/generated/title_add3.bmp");\
-	labels[LABEL_MUL3]=SDL_LoadBMP("ui_gen/generated/title_mul3.bmp");\
-	labels[LABEL_AZIMUTH]=SDL_LoadBMP("ui_gen/generated/title_azimuth.bmp");\
-	labels[LABEL_ROT]=SDL_LoadBMP("ui_gen/generated/title_rot.bmp");\
-	labels[LABEL_ORIENT]=SDL_LoadBMP("ui_gen/generated/title_orient.bmp");
+	labels[LABEL_BRUSH_CONTROLLER]=IMG_Load("c:/c/ctt2/ui_gen/generated/title_brush.bmp");\
+	labels[LABEL_SIZE]=IMG_Load("ui_gen/generated/title_size.bmp");\
+	labels[LABEL_COLOR]=IMG_Load("ui_gen/generated/title_color.bmp");\
+	labels[LABEL_ALPHA]=IMG_Load("ui_gen/generated/title_alpha.bmp");\
+	labels[LABEL_JITTER]=IMG_Load("ui_gen/generated/title_jitter.bmp");\
+	labels[LABEL_NOISE]=IMG_Load("ui_gen/generated/title_noise.bmp");\
+	labels[LABEL_STYLUS]=IMG_Load("ui_gen/generated/title_stylus.bmp");\
+	labels[LABEL_PRESSURE]=IMG_Load("ui_gen/generated/title_pres.bmp");\
+	labels[LABEL_TIME]=IMG_Load("ui_gen/generated/title_time.bmp");\
+	labels[LABEL_MAPPER]=IMG_Load("ui_gen/generated/title_mapper.bmp");\
+	labels[LABEL_X]=IMG_Load("ui_gen/generated/title_in.bmp");\
+	labels[LABEL_Y]=IMG_Load("ui_gen/generated/title_out.bmp");\
+	labels[LABEL_R]=IMG_Load("ui_gen/generated/title_r.bmp");\
+	labels[LABEL_G]=IMG_Load("ui_gen/generated/title_g.bmp");\
+	labels[LABEL_B]=IMG_Load("ui_gen/generated/title_b.bmp");\
+	labels[LABEL_A]=IMG_Load("ui_gen/generated/title_a.bmp");\
+	labels[LABEL_ADD]=IMG_Load("ui_gen/generated/title_add.bmp");\
+	labels[LABEL_MUL]=IMG_Load("ui_gen/generated/title_mul.bmp");\
+	labels[LABEL_COLOR]=IMG_Load("ui_gen/generated/title_color.bmp");\
+	labels[LABEL_GRADIENT]=IMG_Load("ui_gen/generated/title_grad.bmp");\
+	labels[LABEL_ADD3]=IMG_Load("ui_gen/generated/title_add3.bmp");\
+	labels[LABEL_MUL3]=IMG_Load("ui_gen/generated/title_mul3.bmp");\
+	labels[LABEL_AZIMUTH]=IMG_Load("ui_gen/generated/title_azimuth.bmp");\
+	labels[LABEL_ROT]=IMG_Load("ui_gen/generated/title_rot.bmp");\
+	labels[LABEL_ORIENT]=IMG_Load("ui_gen/generated/title_orient.bmp");
 #endif

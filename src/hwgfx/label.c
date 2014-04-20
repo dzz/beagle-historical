@@ -2,6 +2,7 @@
 #include "../drawing/drawingSurfaces.h"
 #include <string.h>
 #include <SDL.h>
+#include "context.h"
 #include "texture.h"
 #include "shader.h"
 #include "primitive.h"
@@ -13,6 +14,7 @@ gfx_shader  label_shader;
 gfx_texture atlas_texture;
 
 static int _atl_cursor;
+
 
 void initLabels() {
     font        = IMG_Load("font\\cga8.png");
@@ -51,11 +53,13 @@ _pt get_cursor_position(int p) {
 
 void label_render(gfx_label* label, float x, float y,float r,float g, float b) {
 
-    shader_bind         (&label_shader                          );
-    shader_bind_vec2    (&label_shader, "label_pos",   x,y      );
-    shader_bind_vec2    (&label_shader, "scr_size",    1920,1080);
-    shader_bind_vec3    (&label_shader, "label_col",   r,g,b    );
-    texture_bind        (&atlas_texture, TEX_UNIT_0             );
+    viewport_dims dims = gfx_viewport_get_dims();
+
+    shader_bind         (&label_shader                              );
+    shader_bind_vec2    (&label_shader, "label_pos",   x,y          );
+    shader_bind_vec2    (&label_shader, "scr_size",    dims.w,dims.h);
+    shader_bind_vec3    (&label_shader, "label_col",   r,g,b        );
+    texture_bind        (&atlas_texture, TEX_UNIT_0                 );
 
     primitive_render    (label->primitive);
 }

@@ -1,7 +1,7 @@
 #ifndef __GFX_FRAME_BUFFER__
 #define __GFX_FRAME_BUFFER__
 
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 #include "texture.h"
 
 typedef struct {

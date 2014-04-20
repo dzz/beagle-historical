@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 
 #include "extended_video.h"
 #include "../hwgfx/blend_control.h"
@@ -22,10 +22,8 @@ void gfx_surface_render( SDL_Surface* img) {
 }
 
 void initGlew(){
-
-    glewExperimental    = GL_TRUE;
-    glewInit();
-
+	glxwInit();
+  
 }
 
 void initExtendedVideo() {

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 
 #include "../system/ctt2.h"
 #include "../system/files.h"

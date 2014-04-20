@@ -28,6 +28,7 @@
 #include "system/ctt2.h"
 #include "system/ctt2_host.h"
 
+#include "drawing/node_resource_ids.h"
 #include "system/extended_video.h"
 #include "system/wm_handler.h"
 #include "system/log.h"
@@ -63,8 +64,8 @@ static SDL_GLContext gl_context;
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 #else
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 500;
+const int SCREEN_HEIGHT = 500;
 #endif
 
 /**************************************/
@@ -126,9 +127,9 @@ void initDisplay() {
         exit(1);
     } 
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+/*    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+ */   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
     opengl_window = SDL_CreateWindow( "ctt2_hw", 0, 0, 
@@ -187,7 +188,7 @@ void initPython() {
 /*****************************************************************************/
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 30;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 240;
     int screenbuffer_cycles                         = 0;
     int finished                                    = 0;
 
@@ -207,6 +208,7 @@ int main(int argc, char **argv){
     initTablet(opengl_window);
 
     ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
+
     initPanels(ui_surface);
 
     /** MAIN DISPATCH LOOP **/

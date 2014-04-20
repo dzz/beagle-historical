@@ -1,4 +1,4 @@
-#include <GL/GLew.h>
+#include <GLXW/glxw.h>
 
 #include "context.h"
 

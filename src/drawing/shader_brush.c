@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <math.h>
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 
 #include "../system/surfaceCache.h"
 
 #include "../document/animation.h"
 #include "../document/layers.h"
 
+#include "../hwgfx/context.h"
 #include "../hwgfx/blend_control.h"
 #include "../hwgfx/shader.h"
 #include "../hwgfx/texture.h"
@@ -15,6 +16,9 @@
 #include "../hwgfx/misc.h"
 
 #include "shader_brush.h"
+
+extern const int SCREEN_WIDTH;
+extern const int SCREEN_HEIGHT;
 
 typedef struct {
     gfx_shader screen_shader;
@@ -41,7 +45,7 @@ typedef struct {
 brush_context _context;
 
 void _build_ctxt_gfx_data( gfx_texture* tex, gfx_framebuffer* fb ) {
-    texture_generate(tex, 1920,1080);
+    texture_generate(tex, SCREEN_WIDTH,SCREEN_HEIGHT);
     framebuffer_create_framebuffer(fb);
     framebuffer_bind_texture(fb,tex);
 }
@@ -67,8 +71,8 @@ void createBrushContext(brush_context *ctxt) {
     primitive_create_screen_primitive   (&ctxt->screen_primitive);
     primitive_create_dab_primitive      (&ctxt->dab_primitive);
 
-    texture_generate            ( &ctxt->brushing_context_texture, 1920, 1080); 
-    texture_generate            ( &ctxt->ui,                       1920, 1080);
+    texture_generate            ( &ctxt->brushing_context_texture, SCREEN_WIDTH, SCREEN_HEIGHT); 
+    texture_generate            ( &ctxt->ui,                       SCREEN_WIDTH, SCREEN_HEIGHT);
     texture_generate_filtered   ( &ctxt->dab_texture,              64, 64);
 
     _build_ctxt_gfx_data( &ctxt->brushing_context_texture, 
@@ -94,16 +98,18 @@ void destroyBrushContext(brush_context *ctxt) {
 
 void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float noise, float rot) {
 
+    viewport_dims vd = gfx_viewport_get_dims();
+
     framebuffer_render_start(&_context.brushing_framebuffer);
     texture_bind(&_context.dab_texture, TEX_UNIT_0);
     blend_enter( BLENDMODE_DAB_RENDERING ); 
     {
         shader_bind( &_context.dab_shader );
-        shader_bind_vec3( &_context.dab_shader, "dab_location",x,y,z );
-        shader_bind_vec4( &_context.dab_shader, "base_color",r,g,b,a );
-        shader_bind_vec2( &_context.dab_shader, "scr_size",1920.0, 1080.0);
-        shader_bind_float(&_context.dab_shader, "noise",noise); 
-        shader_bind_float(&_context.dab_shader, "rot",rot); 
+        shader_bind_vec3( &_context.dab_shader, "dab_location"  ,x,y,z );
+        shader_bind_vec4( &_context.dab_shader, "base_color"    ,r,g,b,a );
+        shader_bind_vec2( &_context.dab_shader, "scr_size"      ,vd.w, vd.h);
+        shader_bind_float(&_context.dab_shader, "noise"         ,noise); 
+        shader_bind_float(&_context.dab_shader, "rot"           ,rot); 
         primitive_render( &_context.dab_primitive);
     }
     blend_exit();

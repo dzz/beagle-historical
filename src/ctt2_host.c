@@ -43,13 +43,14 @@ int api_init() {
 
 //terminate
 #define CLIENT_FUNCTION(x,y) Py_CLEAR(client_if.##x);
-void api_drop() {
-    _pycall_noargs(client_if.finalize);
+int api_drop() {
+    int ret; 
+    ret = _pycall_noargs(client_if.finalize);
     #include "api-includes/client-handler-inventory.h"
     Py_CLEAR(client_if.__module);
+    return ret;
 }
 
-/*****************************************************************************/
 #include "api-includes/client-handlers.h"  //C function bindings for client_if
 
 /*

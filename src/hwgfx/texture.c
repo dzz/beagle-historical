@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 #include "texture.h"
 
 unsigned char* _uc_data(int w,int h) {

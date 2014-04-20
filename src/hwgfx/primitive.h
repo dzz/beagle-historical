@@ -1,7 +1,7 @@
 #ifndef __GFX_PRIMITIVE__
 #define __GFX_PRIMITIVE__
 
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 typedef GLfloat gfx_float;
 
 #define PRIMITIVE_BASE \

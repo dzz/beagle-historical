@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 
 #include "primitive.h"
 

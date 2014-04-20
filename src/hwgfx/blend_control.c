@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 #include "blend_control.h"
 
 unsigned static int _blending = 0;

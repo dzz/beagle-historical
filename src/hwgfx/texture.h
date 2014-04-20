@@ -1,7 +1,7 @@
 #ifndef __GFX_TEXTURE__
 #define __GFX_TEXTURE__
 #include <SDL.h>
-#include <GL/glew.h>
+#include <GLXW/glxw.h>
 
 typedef struct {
     GLuint texture_id;
