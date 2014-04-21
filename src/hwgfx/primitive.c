@@ -1,6 +1,7 @@
 #include <GLXW/glxw.h>
 
 #include "primitive.h"
+#include "OGL_OBJ.h"
 
 #define COORDINATE_ATTRIBUTE_INDEX  0
 #define UV_ATTRIBUTE_INDEX 1
@@ -19,6 +20,7 @@ void primitive_create_coordinate_primitive(gfx_coordinate_primitive*
     glGenVertexArrays(1, &primitive->vert_array);
     glBindVertexArray(primitive->vert_array);
 
+
     //install our coordinates
     glGenBuffers(1, &primitive->vert_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, primitive->vert_buffer);
@@ -34,6 +36,9 @@ void primitive_create_coordinate_primitive(gfx_coordinate_primitive*
             NO_POINTER_OFFSET ); 
 
     glEnableVertexAttribArray(COORDINATE_ATTRIBUTE_INDEX);
+    
+    OGL_OBJ("varray",   primitive->vert_array,  OGL_RECV);
+    OGL_OBJ("vbuffer",  primitive->vert_buffer, OGL_RECV);
 }
 
 
@@ -42,6 +47,9 @@ void primitive_destroy_coordinate_primitive(gfx_coordinate_primitive*
 
     glDeleteVertexArrays(1,&primitive->vert_array);
     glDeleteBuffers(1,&primitive->vert_buffer);
+
+    OGL_OBJ("varray",   primitive->vert_array,  OGL_DROP);
+    OGL_OBJ("vbuffer",  primitive->vert_buffer, OGL_DROP);
 
 }
 
@@ -56,6 +64,8 @@ void primitive_render(gfx_coordinate_primitive*
 void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive* 
         uv_primitive, gfx_float* coordinates, gfx_float* uvs,
         int verts ){
+
+    //initialize basic object
     primitive_create_coordinate_primitive( 
             (gfx_coordinate_primitive*)uv_primitive, 
             coordinates, verts);
@@ -74,6 +84,8 @@ void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
             NO_POINTER_OFFSET ); 
 
     glEnableVertexAttribArray(UV_ATTRIBUTE_INDEX);
+
+    OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_RECV);
 }
 
 void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
@@ -83,6 +95,8 @@ void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
             uv_primitive);
 
     glDeleteBuffers(1,&uv_primitive->uv_buffer);
+
+    OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_DROP);
 }
 
 /** PRIMITIVE TEMPLATES **/

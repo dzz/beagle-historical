@@ -13,6 +13,7 @@ class label(object):
         hwgfx.label_set_text(self._label,text)
 
     def __del__(self):
+        print "PY: delete label %x" % self._label
         hwgfx.label_drop(self._label)
 
     def set_text(text):

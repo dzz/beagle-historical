@@ -26,7 +26,7 @@ void embed_modules();                       // fwd declaration for use in init
 
 
 //load the python client code:
-#define FAIL_RETURN { api_fail_hard(); return; }
+#define FAIL_RETURN { api_fail_hard(); return 1; }
 #define CLIENT_FUNCTION(x,y) client_if.##x = PyObject_GetAttrString\
 (client_if.__module,y); if(client_if.##x==0) FAIL_RETURN
 int api_init() {

@@ -59,13 +59,8 @@ void add_input_mouse_target(SDL_Rect* r, mapper_node *t, unsigned int con_type, 
 
 void initNodeMapEditor(){
     int i;
-    //node_resource_ids.h
-    LOAD_NODE_IMAGE_RESOURCES
-    for(i=0; i< NUM_LABELS; ++i) {
-        printf("%x - label %d\n", labels[i],i);
-    }
-
-        initNodeDispatcher();
+    LOAD_NODE_IMAGE_RESOURCES;
+    initNodeDispatcher();
 }
 
 void destroyNodeMapEditor(){

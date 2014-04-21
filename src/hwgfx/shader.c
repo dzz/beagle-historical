@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <GLXW/glxw.h>
+#include "OGL_OBJ.h"
 
 #include "../system/ctt2.h"
 #include "../system/files.h"
 #include "../system/log.h"
 #include "shader.h"
+
 
 void _shader_err(GLuint shader_id) {
     int maxLength;
@@ -27,6 +29,11 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
 
     vertex_src = read_file(v_src_path);
     frag_src = read_file(f_src_path);
+
+    OGL_SHADOP(v_src_path,f_src_path);
+
+    shader->frag_name = f_src_path;
+    shader->vert_name = v_src_path;
 
     shader->vert_shader_id = glCreateShader(GL_VERTEX_SHADER);
     shader->frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
@@ -58,6 +65,11 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     }
     free(vertex_src);
     free(frag_src);
+
+   
+    OGL_OBJ("vertshad", shader->vert_shader_id, OGL_RECV);
+    OGL_OBJ("fragshad", shader->frag_shader_id, OGL_RECV);
+    OGL_OBJ("compshad", shader->shader_id,      OGL_RECV);
 }
 
 gfx_shader* _bound = 0;
@@ -99,6 +111,11 @@ void shader_drop(gfx_shader* shader) {
     glDeleteProgram(shader->shader_id);
     glDeleteShader(shader->vert_shader_id);
     glDeleteShader(shader->frag_shader_id);
+
+    OGL_SHADOP(shader->vert_name, shader->frag_name);
+    OGL_OBJ("vertshad", shader  ->vert_shader_id, OGL_DROP);
+    OGL_OBJ("fragshad", shader  ->frag_shader_id, OGL_DROP);
+    OGL_OBJ("compshad", shader  ->shader_id,      OGL_DROP);
 }
 
 

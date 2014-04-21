@@ -7,6 +7,8 @@ typedef struct {
     GLuint shader_id;
     GLuint vert_shader_id;
     GLuint frag_shader_id;
+    char * vert_name;
+    char * frag_name;
 } gfx_shader;
 
 

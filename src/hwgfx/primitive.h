@@ -35,11 +35,11 @@ void primitive_render_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
 
 
 /** PRIMITIVE TEMPLATES **/
-void primitive_create_scrquad_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive);
-void primitive_create_dab_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive);
-void primitive_create_screen_primitive(gfx_coordinate_uv_primitive*
+void primitive_create_scrquad_primitive(gfx_coordinate_primitive*
+        primitive);
+void primitive_create_dab_primitive(gfx_coordinate_primitive*
+        primitive);
+void primitive_create_screen_primitive(gfx_coordinate_primitive*
         primitive);
 
 

@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <GLXW/glxw.h>
 #include "texture.h"
+#include "OGL_OBJ.h"
 
 unsigned char* _uc_data(int w,int h) {
         unsigned char* texture_data;
@@ -16,7 +17,7 @@ unsigned char* _uc_data(int w,int h) {
         }
         return texture_data;
 }
-unsigned char* _fp_data(int w,int h) {
+float* _fp_data(int w,int h) {
         float* texture_data;
         int i;
         int addr=0;
@@ -34,10 +35,16 @@ unsigned char* _fp_data(int w,int h) {
 #define _LOD 0 
 #define _NOBORDER 0 
 
+void _texture_gen_id(gfx_texture* texture) {
+
+    glGenTextures(1,&texture->texture_id);
+    OGL_OBJ("texture", texture->texture_id,OGL_RECV);
+}
+
 void texture_generate(gfx_texture* texture,int w,int h) {
     unsigned char* texture_data = _uc_data(w,h);
 
-    glGenTextures(1,&texture->texture_id);
+    _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,w,h ,_NOBORDER,
                 GL_RGBA, GL_UNSIGNED_BYTE,texture_data);
@@ -50,7 +57,7 @@ void texture_generate(gfx_texture* texture,int w,int h) {
 void texture_generate_filtered(gfx_texture* texture,int w,int h) {
     unsigned char* texture_data = _uc_data(w,h);
 
-    glGenTextures(1,&texture->texture_id);
+    _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,w,h ,_NOBORDER,
                 GL_RGBA, GL_UNSIGNED_BYTE,texture_data);
@@ -61,8 +68,9 @@ void texture_generate_filtered(gfx_texture* texture,int w,int h) {
 }
 
 void texture_generate_fp(gfx_texture* texture,int w,int h) {
-    unsigned float* texture_data = _fp_data(w,h);
-    glGenTextures(1,&texture->texture_id);
+    float* texture_data = _fp_data(w,h);
+
+    _texture_gen_id(texture);
     glBindTexture(GL_TEXTURE_2D,texture->texture_id);
     glTexImage2D(GL_TEXTURE_2D,_LOD,GL_RGBA,w,h ,_NOBORDER,
                 GL_RGBA, GL_FLOAT,texture_data);
@@ -92,6 +100,7 @@ void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf)
 
 void texture_drop(gfx_texture* texture) {
     glDeleteTextures(1,&texture->texture_id);
+    OGL_OBJ("texture", texture->texture_id,OGL_DROP);
 }
 
 void texture_bind(gfx_texture* texture, int texture_unit) {

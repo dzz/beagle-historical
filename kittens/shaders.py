@@ -18,6 +18,7 @@ class shader(object):
         self._shader = hwgfx.shader_load(
                 "shaders/" + vert + ".vert.glsl",
                 "shaders/" + frag + ".frag.glsl");
+        print "PY: loaded shader %s,%s WITH ID: %x" % (vert,frag,self._shader)
 
     def bind(self,uniforms):
         hwgfx.shader_bind(self._shader)
@@ -26,8 +27,6 @@ class shader(object):
             vector  = u[1]
             vlen    = len(vector)
 
-            print name
-            print vector
             if vlen == 1:
                 hwgfx.shader_bind_float (self._shader, name, 
                         vector[0])
@@ -48,5 +47,6 @@ class shader(object):
                         vector[3])
 
     def __del__(self):
+        print "PY: dropping shader %x" % self._shader
         hwgfx.shader_drop(self._shader)
 

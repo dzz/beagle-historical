@@ -1,13 +1,16 @@
 #include <GLXW/glxw.h>
 
 #include "framebuffer.h"
+#include "OGL_OBJ.h"
 
 void framebuffer_create_framebuffer(gfx_framebuffer* framebuffer) {
     glGenFramebuffers(1, &framebuffer->framebuffer_id);
+    OGL_OBJ("framebuffer",framebuffer->framebuffer_id,OGL_RECV);
 }
 
 void framebuffer_drop(gfx_framebuffer* framebuffer) {
     glDeleteFramebuffers(1, &framebuffer->framebuffer_id);
+    OGL_OBJ("framebuffer",framebuffer->framebuffer_id,OGL_DROP);
 }
 
 #define NO_FRAMEBUFFER_BOUND 0

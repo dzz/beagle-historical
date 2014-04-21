@@ -4,8 +4,7 @@
 #include "rect.h"
 
 typedef struct{
-    gfx_shader solid_shader;
-    gfx_coordinate_uv_primitive quad_primitive;
+    gfx_coordinate_primitive quad_primitive;
 } quad_context;
 static quad_context _quad_context;
 
@@ -15,8 +14,8 @@ void initRects(){
 }
 
 void dropRects(){
-
-    shader_drop( &_quad_context.solid_shader);
+    primitive_destroy_coordinate_primitive
+        (&_quad_context.quad_primitive);
 }
 
 void rect_draw(int x,int y, int w, int h) {

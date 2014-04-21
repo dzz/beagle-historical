@@ -61,8 +61,8 @@ static SDL_GLContext gl_context;
 //#define CTT2_SCREENMODE_DEBUG
 
 #ifndef CTT2_SCREENMODE_DEBUG
-const int SCREEN_WIDTH = 1920;
-const int SCREEN_HEIGHT = 1080;
+const int SCREEN_WIDTH = 500;
+const int SCREEN_HEIGHT = 500;
 #else
 const int SCREEN_WIDTH = 500;
 const int SCREEN_HEIGHT = 500;
@@ -127,10 +127,10 @@ void initDisplay() {
         exit(1);
     } 
 
-/*    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
- */   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
     opengl_window = SDL_CreateWindow( "ctt2_hw", 0, 0, 
             SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
@@ -158,6 +158,8 @@ void initOpenGL() {
 }
 
 void dropOpengl() {
+    printf("dropping ogl\n");
+    getch();
     SDL_GL_DeleteContext(gl_context);
 }
 
@@ -281,6 +283,9 @@ int main(int argc, char **argv){
                 }
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 updateViewingSurface();
+
+                //DEBUG
+                finished=1;
             }
 
 
@@ -294,10 +299,10 @@ int main(int argc, char **argv){
     dropPanels();
     dropDrawingSurfaces();
     dropYankPut();
-    dropExtendedVideo();
-    dropOpengl();
-    dropDisplay();
     dropPython();
+    dropExtendedVideo();
+    dropDisplay();
+    dropOpengl();
     dropLog();
     SDL_Quit();
     return 0;

@@ -29,7 +29,6 @@ DEF_ARGS {
     label_generate(label);
     { 
         unsigned int ptr = (unsigned int)label;
-        printf("ptr out: %d",ptr);
     }
     return Py_BuildValue("I",(unsigned int)label);
 }

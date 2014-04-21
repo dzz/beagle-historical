@@ -61,7 +61,6 @@ void initTablet(SDL_Window* window) {
 
 		_wt_InfoA(WTI_INTERFACE, IFC_NDEVICES, &numDevices);
 		{
-				printf("Getting info on contextIndex: %i ...\n", ctxIndex);
 				contextOpen = _wt_InfoA(WTI_DDCTXS + ctxIndex, 0, &lcMine);
 
 				if ( contextOpen > 0 )
