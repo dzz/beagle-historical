@@ -171,6 +171,7 @@ void dropPython(){
         getch();
     }
     api_drop();
+    printf("CH:Py_Finalize()\n");
     Py_Finalize();
 }
 
@@ -297,5 +298,6 @@ int main(int argc, char **argv){
     dropDisplay();
     dropLog();
     SDL_Quit();
+    getch();
     return 0;
 }
