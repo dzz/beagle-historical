@@ -5,9 +5,11 @@ class label:
         self._label = hwgfx.label_generate()
         self.color = color;
         hwgfx.label_set_text(self._label,text)
+        print("PY: acquired label ", self._label)
 
     def __del__(self):
         hwgfx.label_drop(self._label)
+        print("PY: dropped label", self._label)
 
     def set_text(text):
         hwgfx.label_set_text(self._label,text)

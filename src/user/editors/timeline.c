@@ -1,3 +1,4 @@
+/* scheduled for burning*/
 #include <SDL.h>
 
 #include "../../system/ctt2.h"
@@ -96,7 +97,7 @@ void renderTimelineFrameTicks(SDL_Surface* target) {
 		aF_marker.y = full_timeline.y;
 		aF_marker.h = full_timeline.h;
 		aF_marker.w = 5;
-		aF_marker.x = jmp * aF.idx + 5;
+		aF_marker.x = (int)(jmp * aF.idx + 5);
 		SDL_FillRect(target,&aF_marker,SDL_MapRGB(target->format, 0x55,0x55,0x66 ));
 
 }

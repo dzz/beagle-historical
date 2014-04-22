@@ -1,5 +1,4 @@
 #include "../../colors/colors.h"
-#include "../../user/editors/mapperEditorBank.h"
 #include "../node_mapper.h"
 #include "util_gradient.h"
 #include "util_curve.h"
@@ -82,14 +81,12 @@ void node_recalc_gradient(mapper_node* node) {
 	if(node->inputs[0]!=0) {
 		cp_color c = {0};
 
-		printf("addr of c:%d\n",&c);
 		c = gradient_compute_color_at( g, 
 				node->inputs[0]->
 				outputs[ node->foreign_channels[0 
 				]]
 				);
 
-		printf("addr of c:%d\n",&c);
 
 		node->outputs[0] = (double)(c.r)/255.0;
 		node->outputs[1] = (double)(c.g)/255.0;

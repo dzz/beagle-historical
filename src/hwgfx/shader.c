@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <conio.h>
 #include <GLXW/glxw.h>
 #include "OGL_OBJ.h"
 
@@ -18,7 +19,7 @@ void _shader_err(GLuint shader_id) {
     glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
     log_msg(infoLog);
     free(infoLog);
-    getch();
+    _getch();
 }
 void shader_load(gfx_shader* shader, const char* v_src_path, 
         const char* f_src_path ){
@@ -27,13 +28,13 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     char* frag_src;
     int iv;
 
-    vertex_src = read_file(v_src_path);
-    frag_src = read_file(f_src_path);
+    vertex_src = read_file((char*)v_src_path);
+    frag_src = read_file((char*)f_src_path);
 
     OGL_SHADOP(v_src_path,f_src_path);
 
-    shader->frag_name = f_src_path;
-    shader->vert_name = v_src_path;
+    shader->frag_name = (char*)f_src_path;
+    shader->vert_name = (char*)v_src_path;
 
     shader->vert_shader_id = glCreateShader(GL_VERTEX_SHADER);
     shader->frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);

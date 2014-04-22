@@ -36,7 +36,7 @@ void gradient_add_stop(gradient* g, double p) {
 #define NO_STOP_FOUND -1
 
 void gradient_del_stop(gradient*g, _gp* stop) {
-		int i;
+		unsigned int i;
 		int found = NO_STOP_FOUND;
 
 		for(i=0; i<g->_stack_top; ++i) {
@@ -48,7 +48,7 @@ void gradient_del_stop(gradient*g, _gp* stop) {
 		}
 
 		if(found != NO_STOP_FOUND ) {
-			int j;
+			unsigned int j;
 			g->_stack_top--;
 			for(j = 0; j< g->_stack_top;++j) {
 				int src_idx =j;
@@ -56,15 +56,13 @@ void gradient_del_stop(gradient*g, _gp* stop) {
 				if(src_idx>=found)
 						src_idx++;
 
-				printf("setting data[%d] to source[%d]\n",j,src_idx);
 				g->data[j] = g->data[src_idx];
 			}
 		}
 }
 
 cp_color gradient_compute_color_at(gradient* g, double p) {
-
-	int i;
+	unsigned int i;
 
 	_gp* min = 0;
 	_gp* max = 0;

@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <SDL.h>
 
 #include "../system/ctt2.h"

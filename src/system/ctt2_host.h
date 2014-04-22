@@ -10,5 +10,6 @@ int api_drop();
 int api_dispatch_mouseup(int button, int x, int y);
 int api_dispatch_mousedown(int button, int x, int y);
 int api_dispatch_mousemotion(int x, int y);
+int api_dispatch_key(int key, int mode);
 
 #endif

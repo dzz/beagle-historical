@@ -2,7 +2,7 @@ void api_fail_hard() {
     if(PyErr_Occurred())
         PyErr_Print();
     printf("press a key...\n");
-    getch();
+    _getch();
     exit(1);
 }
 
@@ -22,7 +22,6 @@ int _pycall_noargs(PyObject* func) {
 }
 
 int api_checkfailure_cleanargs(PyObject* args,PyObject** vals) {
-    int i;
     if(PyErr_Occurred())
         return API_FAILURE;
     Py_CLEAR(args);

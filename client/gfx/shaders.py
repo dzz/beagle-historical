@@ -15,7 +15,8 @@ class shader(object):
     def __init__(self,vert,frag):
         self._shader = hwgfx.shader_load(
                 "shaders/" + vert + ".vert.glsl",
-                "shaders/" + frag + ".frag.glsl");
+                "shaders/" + frag + ".frag.glsl")
+        print("PY: loaded shader ",self._shader)
 
     def bind(self,uniforms):
         hwgfx.shader_bind(self._shader)
@@ -44,5 +45,6 @@ class shader(object):
                         vector[3])
 
     def __del__(self):
+        print("PY:deleting shader", self._shader)
         hwgfx.shader_drop(self._shader)
 

@@ -17,7 +17,8 @@ void gfx_surface_render( SDL_Surface* img) {
     shader_bind                 (&_screen_shader        );
     texture_from_SDL_surface    (&_ui,      img         );
     texture_bind                (&_ui,      TEX_UNIT_0  );
-    primitive_render            (&_screen_primitive     );
+	primitive_render            ((gfx_coordinate_primitive*)
+								 (&_screen_primitive)     );
     blend_exit                  (                       );
 }
 

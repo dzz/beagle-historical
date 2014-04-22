@@ -168,7 +168,7 @@ void dropPython(){
     if(PyErr_Occurred()) {
         PyErr_Print();
         printf("press a key...\n");
-        getch();
+        _getch();
     }
     api_drop();
     printf("CH:Py_Finalize()\n");
@@ -298,6 +298,5 @@ int main(int argc, char **argv){
     dropDisplay();
     dropLog();
     SDL_Quit();
-    getch();
     return 0;
 }

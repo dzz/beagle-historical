@@ -1,3 +1,4 @@
+/*scheduled for burning - animation model to be moved to python space*/
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
@@ -63,7 +64,6 @@ void initAnimation(void) {
         frameMap=(unsigned int*)malloc(baseSize*sizeof(unsigned int));
 
         for(i=0; i< baseSize; ++i) {
-            fprintf(getLogfile(), "i = %d\n",i);
             frameMap[i] = invalid_addr;
         }
     }

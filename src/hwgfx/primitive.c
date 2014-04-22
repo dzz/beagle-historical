@@ -111,7 +111,7 @@ void primitive_create_dab_primitive(gfx_coordinate_primitive* primitive) {
         {  1.0, -1.0 }, 
         {  1.0, 1.0 }, 
         {  -1.0, 1.0 } }; 
-    primitive_create_coordinate_primitive(primitive, dab_verts, 4);
+    primitive_create_coordinate_primitive(primitive, (gfx_float*)dab_verts, 4);
 }
 
 void primitive_create_screen_primitive(gfx_coordinate_primitive* primitive) {
@@ -120,5 +120,5 @@ void primitive_create_screen_primitive(gfx_coordinate_primitive* primitive) {
         {  1.0, 0.0 }, 
         {  1.0, 1.0 }, 
         {  0.0, 1.0 } }; 
-    primitive_create_coordinate_primitive(primitive, context_verts, 4); 
+    primitive_create_coordinate_primitive(primitive, (gfx_float*)context_verts, 4); 
 }

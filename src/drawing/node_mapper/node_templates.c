@@ -1,4 +1,3 @@
-#include "../../user/editors/mapperEditorBank.h"
 #include "../../colors/colors.h"
 #include "../node_resource_ids.h"
 #include "../node_mapper.h"

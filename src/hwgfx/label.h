@@ -14,7 +14,7 @@ typedef struct {
 } gfx_label;
 
 void label_generate(gfx_label* label);
-void label_set_text(gfx_label* label, char* text);
+void label_set_text(gfx_label* label, const char* text);
 void label_drop(gfx_label* label);
 void label_render(gfx_label* label, float x, float y,float r, float g, float b);
 void initLabels();

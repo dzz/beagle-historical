@@ -26,17 +26,17 @@ mapper_node* nodemapper_get_brush_controller() {
 }
 
 void initNodeMapper() {
-		node_array[NODE_ID_STYLUS_INPUT] = &stylus_input;
-		node_array[NODE_ID_BRUSH_CONTROLLER] = &output_node;
+		node_array[NODE_ID_STYLUS_INPUT] = (mapper_node*)(&stylus_input);
+		node_array[NODE_ID_BRUSH_CONTROLLER] = (mapper_node*)(&output_node);
 		top_node_id = 1;
-		create_node_brush_interface(node_array);
+		create_node_brush_interface((mapper_node**)node_array);
 }
 
 void dropNodeMapper() {
 	int i;
 	for(i=2; i< MAX_NODES; ++i) {
 		if( node_array[i] != 0 ) {
-			mapper_node* node = node_array[i];
+			mapper_node* node = (mapper_node*)node_array[i];
 			if(node->data != 0) {
 				free(node->data);
 			}

@@ -16,7 +16,7 @@ void render_interface_GRADIENT( SDL_Surface* target, mapper_node* node, node_rec
 		double p_delta = 1.0/255.0;
 		double scr_delta = (double)r->w/255.0;
 		double x = 0;
-		int i;
+		unsigned int i;
 		SDL_Rect sliver; 
 
 		gradient *g = (gradient*)node->data;

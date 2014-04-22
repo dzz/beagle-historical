@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL_image.h>
 #include <math.h>
 #include <malloc.h>
 
@@ -8,8 +9,6 @@
 #include "../../drawing/node_resource_ids.h"
 
 #include "../panels.h"
-
-#include "mapperEditorBank.h"
 
 #include "nodeMapEditor.h"
 
@@ -58,7 +57,6 @@ void add_input_mouse_target(SDL_Rect* r, mapper_node *t, unsigned int con_type, 
 }
 
 void initNodeMapEditor(){
-    int i;
     LOAD_NODE_IMAGE_RESOURCES;
     initNodeDispatcher();
 }
@@ -95,7 +93,7 @@ unsigned int line_color = 0;
 
 void plot(SDL_Surface* target, int x, int y) {
     unsigned int coord = y*(target->w)+x;
-    if(coord < (target->w*target->h)) {
+    if(coord < (unsigned int)(target->w*target->h)) {
         unsigned int* target_pixels = (unsigned int*)target->pixels;
         target_pixels[coord]=line_color;
     }
@@ -415,8 +413,8 @@ void process_menu_item(unsigned int item) {
 
 void nodemapeditor_mousedown(int x,int y){
 
-    unsigned int cmx = client_get_screen_mousex();
-    unsigned int cmy = client_get_screen_mousey();
+    int cmx = (int)client_get_screen_mousex();
+    int cmy = (int)client_get_screen_mousey();
     mapper_node** nodes = nodemapper_get_node_array();
 
     if( interaction_mode == INTERACTION_MODE_NONE) {

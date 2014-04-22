@@ -1,7 +1,8 @@
+#include <stdlib.h>
+#include <stdio.h>
 #include <SDL.h>
 #include <math.h>
 #include <time.h>
-#include <stdlib.h>
 
 #include "../../colors/colors.h"
 
@@ -156,8 +157,8 @@ void drawColorWheel(int w,int h) {
 				double d= sqrt(((unit_x)*(unit_x))+((unit_y)*(unit_y)));
 				double calc_h = atan2(unit_y,unit_x)*(350/(M_PI*2))+180;
 
-				if(h == 0) h = 0.0001;
-				if(h == 360) h = 359.999;
+				if(calc_h == 0) calc_h = 0.0001;
+				if(calc_h == 360) calc_h = 359.999;
 				coord = (y*w)+x;
 				if(d<0.78 && d>0.42) {
 
@@ -181,7 +182,7 @@ void randomizeColor(int seed) {
 }
 
 void initColorPicker(void) {
-		int seed = time(0) * 256;
+		int seed = (int)(time(0) * 256);
 
 		cur_color.r=100;
 		cur_color.g=128;

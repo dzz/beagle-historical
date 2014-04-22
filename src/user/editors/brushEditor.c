@@ -5,6 +5,7 @@
 
 #include "../../drawing/drawingSurfaces.h"
 #include "../../drawing/brush.h"
+#include "../../drawing/node_mapper.h"
 
 
 static SDL_Surface* bg;
@@ -44,7 +45,7 @@ void _redraw_stroke_sample() {
 				int x1 = (int)((cosf((p*3.14*4)))*10) + 57;
 				int x2 = (int)((cosf(((p+(1.0/25))*3.14*4)))*10) + 57;
 
-				node_mapper_apply_input(p);
+				node_mapper_apply_input(p,0,0,0);
 //				brush_tesselate_stroke( x1,(v*8)+15,x2,(v*8)+8+15,p,p,t0,t0,brushSample);
 
 		}

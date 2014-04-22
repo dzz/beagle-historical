@@ -14,7 +14,6 @@
 #include "../user/editors/toolbar.h"
 #include "../user/editors/colorPicker.h"
 #include "../user/editors/brushEditor.h"
-#include "../user/editors/mapperEditorBank.h"
 
 #include "drawingSurfaces.h"
 
@@ -49,6 +48,20 @@ static stylusState stroke_origin;
 
 unsigned char (*active_mixing_function)(unsigned char,unsigned char,unsigned char);
 
+static int g_seed = 0;
+
+/*
+ * local fast pnrg for jitter
+ */
+__inline int fastrand() { 
+  g_seed = (214013*g_seed+2531011); 
+  return (g_seed>>16)&0x7FFF; 
+} 
+
+void brush_reset_random() {
+	g_seed = 0;
+}
+/***/
 
 void brush_modulate_values() {
         //eventually, what should happen here is to keep track of 2 or more
@@ -56,11 +69,11 @@ void brush_modulate_values() {
 
 		mapper_node* brush_controller = nodemapper_get_brush_controller();
 
-		brush_size_mod = 
+		brush_size_mod = (float)(
 				brush_size_base * 
-				brush_controller->outputs[BRUSH_CHANNEL_SIZE];
-		brush_alpha_mod = 
-				brush_controller->outputs[BRUSH_CHANNEL_ALPHA];
+				brush_controller->outputs[BRUSH_CHANNEL_SIZE]);
+		brush_alpha_mod = (float)(
+				brush_controller->outputs[BRUSH_CHANNEL_ALPHA]);
 
 		brush_jitter_mod = 
 				brush_controller->outputs[BRUSH_CHANNEL_JITTER];
@@ -115,7 +128,6 @@ void brush_setValuesFromUI() {
 
 
 void initBrush() {
-	int i;
 	int idx;
 
 	initNodeMapper();
@@ -217,8 +229,8 @@ void brush_tesselate_stroke(int x0, int y0, int x1, int y1,float p0,float p1, un
 		float	radius = (float)(brush_size_mod);
 
         for(;;){
-            int jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
-            int jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
+            float jtr_x = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
+            float jtr_y = (((float)fastrand()) / RAND_MAX ) * (radius*brush_jitter_mod);
 
 		    brush_modulate_values();
 
@@ -267,13 +279,3 @@ __inline float map_intensity_square(float x,float y,float p) {
 */
 
 
-static int g_seed = 0;
-
-__inline int fastrand() { 
-  g_seed = (214013*g_seed+2531011); 
-  return (g_seed>>16)&0x7FFF; 
-} 
-
-void brush_reset_random() {
-	g_seed = 0;
-}

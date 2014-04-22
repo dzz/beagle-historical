@@ -177,7 +177,6 @@ void initPanels(SDL_Surface *target) {
 	initColorPicker();
 	initBrushEditor();
 	initTimeline();
-	initMapperEditorBank();
 	initToolbar();
 	initNodeMapEditor();
 	layoutPanels();
@@ -316,7 +315,6 @@ void renderPanels(SDL_Surface *target) {
 void dropPanels() {
 	destroyColorPicker();
 	destroyBrushEditor();
-	destroyMapperEditorBank();
 	destroyToolbar();
 	destroyNodeMapEditor();
 	{

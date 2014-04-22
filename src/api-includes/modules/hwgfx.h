@@ -10,7 +10,6 @@
 MODULE_FUNC hwgfx_rect_draw
 DEF_ARGS  {
     int x,y,w,h;
-    double r,g,b,a;
 
     if(!INPUT_ARGS(args,"iiii",&x,&y,&w,&h)) 
         return NULL;

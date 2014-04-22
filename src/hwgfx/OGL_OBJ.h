@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef OGL_LOG
 
     #define OGL_RECV    "acquired"

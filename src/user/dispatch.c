@@ -6,6 +6,7 @@
 #include "../document/animation.h"
 #include "../user/panels.h"
 #include "../user/yank_put.h"
+#include "../user/panels.h"
 #include "../hardware/hw_run_vars.h"
 #include "../drawing/node_mapper.h"
 #include "../drawing/node_resource_ids.h"
@@ -86,7 +87,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								animation_cursor_move(  0, DO_NOT_COMMIT_DRAWING_CONTEXT );
 								break;
 						case SDLK_x:
-								animation_export();
+								//animation_export();
 								break;
 						case SDLK_r:
 								if(getKeyframingMode() != KEYFRAME_MODE_RECORD) {

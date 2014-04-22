@@ -25,7 +25,7 @@ typedef struct {
 
 void init_gradient(gradient* g);
 void gradient_add_stop(gradient* g, double p);
-void gradient_del_stop(_gp* stop); 
+void gradient_del_stop(gradient* g, _gp* stop); 
 cp_color gradient_compute_color_at(gradient* g, double p);
 
 #endif

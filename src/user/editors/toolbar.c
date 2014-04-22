@@ -1,3 +1,5 @@
+/* scheduled for burning */
+#include <stdio.h>
 #include <SDL.h>
 
 #include "../../drawing/brush.h"
@@ -35,7 +37,7 @@ void toolbar_revert_to_previous_tool() {
 }
 
 void toolbar_mousedown(int x,int y, UI_AREA* area) {
-	int idx = x / BUTTON_SIZE;
+	unsigned int idx = x / BUTTON_SIZE;
 	if( idx<=loaded_tools ) {
 		previous_tool = selected_tool;
 		selected_tool = idx;
@@ -44,7 +46,7 @@ void toolbar_mousedown(int x,int y, UI_AREA* area) {
 }
 
 void renderToolbar(SDL_Surface* target, UI_AREA* area) {
-	int i;
+	unsigned int i;
 	for(i=0; i< loaded_tools; ++i) {
 		SDL_Rect r; 
 		r.x = area->x+i*BUTTON_SIZE;

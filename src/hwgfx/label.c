@@ -2,6 +2,7 @@
 #include "../drawing/drawingSurfaces.h"
 #include <string.h>
 #include <SDL.h>
+#include <SDL_image.h>
 #include "context.h"
 #include "texture.h"
 #include "shader.h"
@@ -57,11 +58,11 @@ void label_render(gfx_label* label, float x, float y,float r,float g, float b) {
 
     shader_bind         (&label_shader                              );
     shader_bind_vec2    (&label_shader, "label_pos",   x,y          );
-    shader_bind_vec2    (&label_shader, "scr_size",    dims.w,dims.h);
+    shader_bind_vec2    (&label_shader, "scr_size",    (float)dims.w,(float)dims.h);
     shader_bind_vec3    (&label_shader, "label_col",   r,g,b        );
     texture_bind        (&atlas_texture, TEX_UNIT_0                 );
 
-    primitive_render    (label->primitive);
+    primitive_render    ((gfx_coordinate_primitive*)label->primitive);
 }
 
 void label_generate(gfx_label* label) {
@@ -77,8 +78,8 @@ void label_generate(gfx_label* label) {
 
     uvw = 256.0/1024.0;
     uvh = 8.0/1024.0;
-    uo = (float)pt.x / 1024.0;
-    vo = (float)pt.y / 1024.0;
+    uo = (float)pt.x / 1024.0f;
+    vo = (float)pt.y / 1024.0f;
 
     {
         const gfx_float verts[4][2] = {
@@ -93,7 +94,7 @@ void label_generate(gfx_label* label) {
             {uo,     vo+uvh} };
         primitive_create_coordinate_uv_primitive
             (label->primitive,
-             verts, uvs, 4);
+             (gfx_float*)verts, (gfx_float*)uvs, 4);
     }
           
 }
@@ -142,6 +143,6 @@ void label_set_text(gfx_label* label, const char* text) {
 void label_drop(gfx_label* label) {
     texture_drop(label->texture);
     free(label->texture);
-    primitive_destroy_coordinate_primitive(label->primitive);
+    primitive_destroy_coordinate_primitive((gfx_coordinate_primitive*)label->primitive);
     free(label->primitive);
 }

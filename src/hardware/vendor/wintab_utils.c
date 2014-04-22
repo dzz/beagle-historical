@@ -24,10 +24,10 @@ BOOL initWintab( void )
 		return FALSE;
 	}
 
-	LOAD_WINTAB_FUNCTION( _wt_OpenA, WTOPENA, WTOpenA );
-	LOAD_WINTAB_FUNCTION( _wt_Close, WTOPENA, WTClose );
-	LOAD_WINTAB_FUNCTION( _wt_InfoA, WTOPENA, WTInfoA );
-	LOAD_WINTAB_FUNCTION( _wt_Packet, WTOPENA, WTPacket );
+	LOAD_WINTAB_FUNCTION( _wt_OpenA,	WTOPENA,	WTOpenA );
+	LOAD_WINTAB_FUNCTION( _wt_Close,	WTCLOSE,	WTClose );
+	LOAD_WINTAB_FUNCTION( _wt_InfoA,	WTINFOA,	WTInfoA );
+	LOAD_WINTAB_FUNCTION( _wt_Packet,	WTPACKET,	WTPacket );
 
 	return TRUE;
 }

@@ -14,7 +14,6 @@ void _validate_vp(){
 }
 
 void gfx_viewport_set_dims(viewport_dims dims) {
-    int i;
 
     glViewport( dims.x, 
                 dims.y, 

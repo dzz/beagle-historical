@@ -26,7 +26,7 @@ void curve_add_point(curve* c, double p,double y) {
 #define NO_POINT_FOUND -1
 
 void curve_del_point(curve* c, _cp* stop) {
-		int i;
+		unsigned int i;
 		int found = NO_POINT_FOUND;
 
 
@@ -38,7 +38,7 @@ void curve_del_point(curve* c, _cp* stop) {
 						}
 		}
 		if(found != NO_POINT_FOUND ) {
-			int j;
+			unsigned int j;
 			c->_stack_top--;
 			for(j = 0; j< c->_stack_top;++j) {
 				int src_idx =j;
@@ -46,7 +46,6 @@ void curve_del_point(curve* c, _cp* stop) {
 				if(src_idx>=found)
 						src_idx++;
 
-				printf("setting data[%d] to source[%d]\n",j,src_idx);
 				c->data[j] = c->data[src_idx];
 			}
 		}
@@ -54,7 +53,7 @@ void curve_del_point(curve* c, _cp* stop) {
 
 double curve_compute_y_at(curve* c, double p) {
 
-	int i;
+	unsigned int i;
 
 	_cp* min = 0;
 	_cp* max = 0;

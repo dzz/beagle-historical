@@ -3,7 +3,6 @@
 #include "../../../drawing/node_mapper.h"
 #include "../../../drawing/node_mapper/util_curve.h"
 #include "../../dispatch.h"
-#include "../mapperEditorBank.h"
 #include "../brushEditor.h"
 #include "node_interaction.h"
 
@@ -66,7 +65,7 @@ void node_mouseup_MAPPER(mapper_node* node){
 }
 
 void node_mousedown_MAPPER(mapper_node* node, int cmx, int cmy) {
-	int i;
+	unsigned int i;
 	double _sX = (double)(cmx-node->x) / (double)node->gui_width;
 	double _sY = (double)(cmy-node->y) / (double)node->gui_height;
   

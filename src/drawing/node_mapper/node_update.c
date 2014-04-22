@@ -36,10 +36,10 @@ void _node_update_cascade(mapper_node* node, unsigned int* touched) {
 
 void node_update_cascade(mapper_node* node) {
 		unsigned int touched[MAX_NODES] = {0};
-		_node_update_cascade(node, &touched);
+		_node_update_cascade(node, (unsigned int*)&touched);
 }
 
 void node_stale_cascade(mapper_node* node) {
 		unsigned int touched[MAX_NODES] = {0};
-		_node_stale_cascade(node, &touched);
+		_node_stale_cascade(node, (unsigned int*)&touched);
 }

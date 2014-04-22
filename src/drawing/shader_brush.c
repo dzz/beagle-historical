@@ -106,7 +106,7 @@ void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, flo
         shader_bind( &_context.dab_shader );
         shader_bind_vec3( &_context.dab_shader, "dab_location"  ,x,y,z );
         shader_bind_vec4( &_context.dab_shader, "base_color"    ,r,g,b,a );
-        shader_bind_vec2( &_context.dab_shader, "scr_size"      ,vd.w, vd.h);
+        shader_bind_vec2( &_context.dab_shader, "scr_size"      ,(float)vd.w, (float)vd.h);
         shader_bind_float(&_context.dab_shader, "noise"         ,noise); 
         shader_bind_float(&_context.dab_shader, "rot"           ,rot); 
         primitive_render( &_context.dab_primitive);
