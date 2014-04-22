@@ -17,7 +17,7 @@ def init():
     kittens.application.main.init()
 
 def finalize():
-    pass
+    kittens.application.main.finalize()
 
 def tick():
     gfx.blend_enter( gfx.BLENDMODE_OVER )

@@ -43,3 +43,4 @@ class window_renderer(area_renderer):
                            self.bgcol );
 
         self.label.draw (ui_area.r[0], ui_area.r[1])
+

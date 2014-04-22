@@ -158,8 +158,7 @@ void initOpenGL() {
 }
 
 void dropOpengl() {
-    printf("dropping ogl\n");
-    getch();
+    printf("Dropping ogl\n");
     SDL_GL_DeleteContext(gl_context);
 }
 
@@ -170,9 +169,9 @@ void dropPython(){
         PyErr_Print();
         printf("press a key...\n");
         getch();
-        api_drop();
-        Py_Finalize();
     }
+    api_drop();
+    Py_Finalize();
 }
 
 void initPython() {
@@ -283,12 +282,7 @@ int main(int argc, char **argv){
                 }
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 updateViewingSurface();
-
-                //DEBUG
-                finished=1;
             }
-
-
         }
     }
     /** FINISHED **/
@@ -301,8 +295,8 @@ int main(int argc, char **argv){
     dropYankPut();
     dropPython();
     dropExtendedVideo();
-    dropDisplay();
     dropOpengl();
+    dropDisplay();
     dropLog();
     SDL_Quit();
     return 0;

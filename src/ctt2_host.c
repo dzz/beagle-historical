@@ -47,7 +47,6 @@ int api_drop() {
     int ret; 
     ret = _pycall_noargs(client_if.finalize);
     #include "api-includes/client-handler-inventory.h"
-    Py_CLEAR(client_if.__module);
     return ret;
 }
 
