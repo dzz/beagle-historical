@@ -27,16 +27,16 @@ class window_renderer(area_renderer):
         self.clientcol      = style.get("window_client_color")
 
     def render(self, ui_area):
-        gfx.solid_rect( ui_area.r, self.bgcol)
-        gfx.solid_rect( [ui_area.r[0],
+        gfx.rect_solid( ui_area.r, self.bgcol)
+        gfx.rect_solid( [ui_area.r[0],
                          ui_area.r[1],
                          ui_area.r[2], 
                          ui_area.prop.get("titlebar_height")],
                          self.title_bgcol) 
 
-        gfx.solid_rect  ( ui_area.compute_client_area(), self.clientcol)
+        gfx.rect_solid  ( ui_area.compute_client_area(), self.clientcol)
 
-        gfx.solid_rect  ( [ui_area.r[0]+ui_area.r[2] - 9,
+        gfx.rect_solid  ( [ui_area.r[0]+ui_area.r[2] - 9,
                            ui_area.r[1]+ui_area.r[3] - 9,
                            9, 
                            9 ], 

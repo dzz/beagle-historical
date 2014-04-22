@@ -99,7 +99,6 @@ void destroyBrushContext(brush_context *ctxt) {
 void hw_brush_dab(float x,float y,float z, float r,float g, float b,float a, float noise, float rot) {
 
     viewport_dims vd = gfx_viewport_get_dims();
-
     framebuffer_render_start(&_context.brushing_framebuffer);
     texture_bind(&_context.dab_texture, TEX_UNIT_0);
     blend_enter( BLENDMODE_DAB_RENDERING ); 

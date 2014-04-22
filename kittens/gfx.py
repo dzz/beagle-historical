@@ -22,12 +22,21 @@ class label(object):
     def draw(self,x,y ):
         hwgfx.label_render(self._label,x,y,1,1,1);
 
-def solid_rect(r,color):
+def rect_solid(r,color):
     shader = shaders.get(  "hwgfx/rect", 
                            "hwgfx/rect_solid" )
 
     shader.bind         ( [( "color", color )] )
     hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
+
+def rect_vgrad(r,color0,color1):
+    shader = shaders.get(  "hwgfx/rect", 
+                           "hwgfx/rect_vgrad" )
+
+    shader.bind         ( [( "color0", color0 )] )
+    shader.bind         ( [( "color1", color1 )] )
+    hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
+
 
 
 def blend_enter(mode):

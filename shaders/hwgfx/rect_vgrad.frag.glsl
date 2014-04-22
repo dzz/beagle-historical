@@ -1,9 +1,9 @@
 #version 330 core
 
-uniform vec4 color_a;
-uniform vec4 color_b;
+uniform vec4 color0;
+uniform vec4 color1;
 in vec2 uv;
 
 void main(void) {
-    gl_FragColor = ((color_a) * uv.y) + ((color_b) * (1-uv.y));
+    gl_FragColor = ((color0) * uv.y) + ((color1) * (1-uv.y));
 }
