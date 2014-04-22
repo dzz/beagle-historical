@@ -30,11 +30,9 @@ void embed_modules();                       // fwd declaration for use in init
 #define CLIENT_FUNCTION(x,y) client_if.##x = PyObject_GetAttrString\
 (client_if.__module,y); if(client_if.##x==0) FAIL_RETURN
 int api_init() {
-    PyObject *module_name;
     embed_modules();
-    module_name         = PyString_FromString("kittens.main");
-    client_if.__module  = PyImport_Import(module_name);
-    Py_DECREF(module_name);
+    Py_Initialize();
+    client_if.__module = PyImport_ImportModule("client.ctt2.main");
     if(client_if.__module == 0) FAIL_RETURN
     #include "api-includes/client-handler-inventory.h"
     return _pycall_noargs(client_if.init);
@@ -60,12 +58,13 @@ int api_drop() {
 #define DEF_ARGS (PyObject *self, PyObject *args )
 #define INPUT_ARGS PyArg_ParseTuple
 
-#include "api-includes/modules/hwgfx.h"
 #include "api-includes/modules/host.h"
+#include "api-includes/modules/hwgfx.h"
 
 void embed_modules() {
-    Py_InitModule("hwgfx",  hwgfx_methods); 
-    Py_InitModule("host",   host_methods); 
+
+    PyImport_AppendInittab("host",  &PyInit_host);
+    PyImport_AppendInittab("hwgfx", &PyInit_hwgfx);
     api_checkfailure();
 }
 #undef CLIENT_FUNCTION

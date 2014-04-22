@@ -36,7 +36,7 @@ int _pycall_int_args(PyObject* func,int* args,int nargs) {
         PyObject* py_args = PyTuple_New(nargs);
         PyObject* py_vals [MAX_ARGS] = {0};
         for(i=0;i<nargs;++i) {
-            py_vals[i] = PyInt_FromLong((long)args[i]);
+            py_vals[i] = PyLong_FromLong((long)args[i]);
             PyTuple_SetItem(py_args,i,py_vals[i]);
         }
         PyObject_CallObject(func,py_args);

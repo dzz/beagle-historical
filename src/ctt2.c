@@ -176,8 +176,6 @@ void dropPython(){
 
 void initPython() {
     Py_SetProgramName("ctt2_py");
-    Py_Initialize();
-
     if( api_init() == API_FAILURE ) {
         dropPython();
         exit(1);

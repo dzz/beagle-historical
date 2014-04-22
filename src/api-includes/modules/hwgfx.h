@@ -210,3 +210,12 @@ static PyMethodDef hwgfx_methods[] = {
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };
+
+static PyModuleDef hwgfx_module = {
+    PyModuleDef_HEAD_INIT, "hwgfx", NULL, -1, hwgfx_methods,
+    NULL,NULL,NULL,NULL
+};
+
+static PyObject* PyInit_hwgfx() {
+    return PyModule_Create(&hwgfx_module);
+}

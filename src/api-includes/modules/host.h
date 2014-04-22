@@ -15,3 +15,12 @@ static PyMethodDef host_methods[] = {
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };
+
+static PyModuleDef host_module = {
+    PyModuleDef_HEAD_INIT, "host", NULL, -1, host_methods,
+    NULL,NULL,NULL,NULL
+};
+
+static PyObject* PyInit_host() {
+    return PyModule_Create(&host_module);
+}
