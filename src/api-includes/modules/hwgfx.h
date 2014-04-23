@@ -26,9 +26,6 @@ DEF_ARGS {
     gfx_label* label = malloc(sizeof(gfx_label));
 
     label_generate(label);
-    { 
-        unsigned int ptr = (unsigned int)label;
-    }
     return Py_BuildValue("I",(unsigned int)label);
 }
 
@@ -91,16 +88,87 @@ DEF_ARGS{
 }
 
 /**
+ * texture
+ */
+
+MODULE_FUNC hwgfx_texture_generate
+DEF_ARGS {
+    gfx_texture* texture;
+    int w,h,filtered;
+    if(!INPUT_ARGS(args, "iip", &w, &h, &filtered))
+        return NULL;
+
+    texture = malloc(sizeof(gfx_texture));
+    if( filtered == 0) 
+        texture_generate(texture,w,h);
+    else
+        texture_generate_filtered(texture,w,h);
+
+    return Py_BuildValue("I",(unsigned int)texture);
+}
+
+MODULE_FUNC hwgfx_texture_drop
+DEF_ARGS {
+    unsigned int ptr; 
+    gfx_texture* texture;
+
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    texture = (gfx_texture*)ptr;
+    texture_drop(texture);
+    free(texture);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_texture_bind
+DEF_ARGS {
+    unsigned int ptr; 
+    gfx_texture* texture;
+
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    texture = (gfx_texture*)ptr;
+    texture_bind(texture);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_texture_upload 
+DEF_ARGS {
+    unsigned int tptr,iptr;
+    gfx_texture* texture;
+    DRAWING_SURFACE ds;
+    if(!INPUT_ARGS(args,"II",&tptr,&iptr))
+        return NULL;
+    texture = (gfx_texture*)tptr;
+    ds      = (DRAWING_SURFACE)iptr;
+    texture_from_SDL_surface(texture,ds);
+}
+
+MODULE_FUNC hwgfx_texture_download 
+DEF_ARGS {
+    unsigned int tptr,iptr;
+    gfx_texture* texture;
+    DRAWING_SURFACE ds;
+    if(!INPUT_ARGS(args,"II",&tptr,&iptr))
+        return NULL;
+    texture = (gfx_texture*)tptr;
+    ds      = (DRAWING_SURFACE)iptr;
+    texture_download(texture,ds);
+}
+
+/**
  * shader
  */
 MODULE_FUNC hwgfx_shader_load
 DEF_ARGS {
-    gfx_shader* shader = malloc(sizeof(gfx_shader));
+    gfx_shader* shader;
     char*       vert;
     char*       frag;
 
-    if(!INPUT_ARGS(args, "ss", &vert, &frag))
+    if(!INPUT_ARGS(args, "ss", &vert, &frag)){
         return NULL;
+    }
+    shader = malloc(sizeof(gfx_shader));
     shader_load(shader, vert, frag);
     return Py_BuildValue("I",(unsigned int)shader);
 }
@@ -206,7 +274,12 @@ static PyMethodDef hwgfx_methods[] = {
     {"shader_bind_vec2" ,   hwgfx_shader_bind_vec2,     METH_VARARGS, NULL},
     {"shader_bind_vec3" ,   hwgfx_shader_bind_vec3,     METH_VARARGS, NULL},
     {"shader_bind_vec4" ,   hwgfx_shader_bind_vec4,     METH_VARARGS, NULL},
-
+    {"texture_generate",    hwgfx_texture_generate,     METH_VARARGS, NULL},
+    {"texture_bind",        hwgfx_texture_bind,         METH_VARARGS, NULL},
+    {"texture_drop",        hwgfx_texture_drop,         METH_VARARGS, NULL},
+    {"texture_upload",      hwgfx_texture_upload,       METH_VARARGS, NULL},
+    {"texture_download",    hwgfx_texture_download,     METH_VARARGS, NULL},
+    
     {NULL,NULL,0,NULL } /*terminator record*/
 };
 

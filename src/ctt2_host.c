@@ -2,13 +2,16 @@
 #include <stdio.h>
 #include <conio.h>
 #include <Python.h>
+#include <SDL_image.h>
 
+#include "drawing/drawingSurfaces.h"
 #include "system/ctt2_host.h"
 #include "system/ctt2.h"
 #include "hwgfx/shader.h"
 #include "hwgfx/label.h"
 #include "hwgfx/rect.h"
 #include "hwgfx/blend_control.h"
+#include "hwgfx/texture.h"
 
 //build a structure to hold required host callables inside of client
 #define CLIENT_FUNCTION(x,y) PyObject* x;
@@ -61,11 +64,12 @@ int api_drop() {
 
 #include "api-includes/modules/host.h"
 #include "api-includes/modules/hwgfx.h"
-
+#include "api-includes/modules/localgfx.h"
 void embed_modules() {
 
-    PyImport_AppendInittab("host",  &PyInit_host);
-    PyImport_AppendInittab("hwgfx", &PyInit_hwgfx);
+    PyImport_AppendInittab("host",      &PyInit_host);
+    PyImport_AppendInittab("hwgfx",     &PyInit_hwgfx);
+    PyImport_AppendInittab("localgfx",  &PyInit_localgfx);
     api_checkfailure();
 }
 #undef CLIENT_FUNCTION

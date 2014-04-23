@@ -42,6 +42,10 @@ void dropDrawingSurfaces() {
 	}
 }
 
+void destroyDrawingSurface(DRAWING_SURFACE ds) {
+    SDL_FreeSurface(ds);
+}
+
 uint_rgba_map sample_surface(SDL_Surface* ctxt, int x0, int y0) {
 		unsigned int sample_a = x0+(y0*ctxt->w);
 		unsigned int * pixels = ctxt->pixels;

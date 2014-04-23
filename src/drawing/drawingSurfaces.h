@@ -9,6 +9,7 @@ typedef SDL_Surface* DRAWING_CONTEXT;
 typedef SDL_Surface* DRAWING_SURFACE;
 
 SDL_Surface* createDrawingSurface(int w, int h);
+void destroyDrawingSurface(DRAWING_SURFACE ds);
 void dropDrawingSurfaces();
 SDL_Surface * getConvertedForBlit(SDL_Surface *drawingContext, SDL_Surface *screenSurface);
 
