@@ -123,12 +123,13 @@ DEF_ARGS {
 MODULE_FUNC hwgfx_texture_bind
 DEF_ARGS {
     unsigned int ptr; 
+    int tex_unit;
     gfx_texture* texture;
 
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,"Ii",&ptr, &tex_unit)) 
         return NULL;
     texture = (gfx_texture*)ptr;
-    texture_bind(texture);
+    texture_bind(texture, tex_unit);
     Py_RETURN_NONE;
 }
 

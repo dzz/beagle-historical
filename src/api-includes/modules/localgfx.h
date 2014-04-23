@@ -6,19 +6,21 @@
 MODULE_FUNC localgfx_img_create
 DEF_ARGS {
     int w,h;
+    DRAWING_SURFACE ds;
     if(!INPUT_ARGS(args,"ii",&w,&h)) 
        return  NULL;
 
-    DRAWING_SURFACE ds = createDrawingSurface(w,h);
+    ds = createDrawingSurface(w,h);
     return Py_BuildValue("I",(unsigned int)ds);
 }
 
 MODULE_FUNC localgfx_img_load
 DEF_ARGS {
     char* py_str_txt;
+    DRAWING_SURFACE ds;
     if(!INPUT_ARGS(args,"s", &py_str_txt)) 
         return NULL;
-    DRAWING_SURFACE ds = (DRAWING_SURFACE)IMG_Load(py_str_txt);
+    ds = (DRAWING_SURFACE)IMG_Load(py_str_txt);
     return Py_BuildValue("I",(unsigned int)ds);
 }
 
