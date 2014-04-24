@@ -143,6 +143,7 @@ DEF_ARGS {
     texture = (gfx_texture*)tptr;
     ds      = (DRAWING_SURFACE)iptr;
     texture_from_SDL_surface(texture,ds);
+	Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_texture_download 
@@ -155,6 +156,7 @@ DEF_ARGS {
     texture = (gfx_texture*)tptr;
     ds      = (DRAWING_SURFACE)iptr;
     texture_download(texture,ds);
+	Py_RETURN_NONE;
 }
 
 /**
@@ -265,24 +267,147 @@ DEF_ARGS {
 /**
  * primitive
  */
+
+#define PRIMITIVE_FLOAT_ERROR printf("non float passed to primitive constructor"); api_fail_hard();
 MODULE_FUNC hwgfx_primitive_create_coordinate_primitive
 DEF_ARGS {
+    int                             i;
+    gfx_coordinate_primitive*       primitive;
+    PyObject*                       coord_float_list;
+    int                             vlen;
+    int                             num_coord_floats;
+    gfx_float*                      coord_float_buffer;
+    float                           parsed;
+    PyObject*                       flObj;
+    int                             draw_mode;
+    //see python c API docs for how O! and &PyList_Type 
+    //works to validate list
+    if(!INPUT_ARGS(args,"O!i",&PyList_Type, &coord_float_list,
+                &vlen, &draw_mode))
+        return NULL;
+    num_coord_floats       = PyList_Size(coord_float_list);
+    coord_float_buffer    = malloc(sizeof(gfx_float)*num_coord_floats);
+    for(i=0; i<num_coord_floats;++i) {
+        flObj = PyList_GetItem(coord_float_list,i);
+        if(PyFloat_Check(flObj)) {
+            parsed=PyFloat_AsDouble(flObj);
+        } else {
+            PRIMITIVE_FLOAT_ERROR
+        }
+        coord_float_buffer[i] = parsed;
+    }
+    primitive = malloc(sizeof(gfx_coordinate_primitive));
+    primitive_create_coordinate_primitive(  primitive,
+                                            coord_float_buffer,
+                                            num_coord_floats,
+                                            vlen);
+    free(coord_float_buffer);
+    primitive->mode = draw_mode;
+    return Py_BuildValue("I",(unsigned int)primitive);
 }
 
+/* TODO:
+ *          primitives should be retooled to allow up to 
+ *          ..n additional vattrib arrays for maximum 
+ *          flexibility into shader inputs */
 MODULE_FUNC hwgfx_primitive_create_coordinate_uv_primitive
 DEF_ARGS {
+    int                             i;
+    gfx_coordinate_uv_primitive*    primitive;
+    PyObject*                       coord_float_list;
+    PyObject*                       uv_float_list;
+    int                             vlen;
+    int                             num_coord_floats; 
+    int                             num_uv_floats;
+    gfx_float*                      coord_float_buffer;
+    gfx_float*                      uv_float_buffer;
+    float                           parsed;
+    PyObject*                       flObj;
+    int                             draw_mode;
+    //see python c API docs for how O! and &PyList_Type 
+    //works to validate list
+    if(!INPUT_ARGS(args,"O!O!ii",
+                                &PyList_Type, &coord_float_list, 
+                                &PyList_Type, &uv_float_list,
+                                &vlen, &draw_mode))
+        return NULL;
+    num_coord_floats       = PyList_Size(coord_float_list);
+    num_uv_floats          = PyList_Size(uv_float_list);
+    
+    coord_float_buffer     = malloc(sizeof(gfx_float)*num_coord_floats);
+    uv_float_buffer        = malloc(sizeof(gfx_float)*num_uv_floats);
+
+    //coords
+    for(i=0; i<num_coord_floats;++i) {
+        flObj           = PyList_GetItem(coord_float_list,i);
+        if(PyFloat_Check(flObj)) {
+            parsed=PyFloat_AsDouble(flObj);
+        } else {
+            PRIMITIVE_FLOAT_ERROR;
+        }
+        coord_float_buffer[i] = parsed;
+    }
+    //uvs
+    for(i=0; i<num_uv_floats;++i) {
+        flObj           = PyList_GetItem(uv_float_list,i);
+        if(PyFloat_Check(flObj)) {
+            parsed=PyFloat_AsDouble(flObj);
+        } else {
+            PRIMITIVE_FLOAT_ERROR;
+        }
+        uv_float_buffer[i] = parsed;
+    }
+
+    primitive = malloc(sizeof(gfx_coordinate_uv_primitive));
+
+    primitive_create_coordinate_uv_primitive
+            (  primitive,
+               coord_float_buffer,
+               uv_float_buffer,
+               num_coord_floats,
+               vlen );
+
+    free(coord_float_buffer);
+    free(uv_float_buffer);
+
+    primitive->mode = draw_mode;
+    return Py_BuildValue("I",(unsigned int)primitive);
 }
 
 MODULE_FUNC hwgfx_primitive_render
 DEF_ARGS {
+    unsigned int ptr;
+
+    if(!INPUT_ARGS(args,"I",&ptr))
+        return NULL;
+    primitive_render((gfx_coordinate_primitive*)ptr);
+    Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_primitive_destroy_coordinate_primitive
 DEF_ARGS {
+    unsigned int ptr;
+    gfx_coordinate_primitive* primitive;
+
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    primitive = (gfx_coordinate_primitive*)ptr;
+    primitive_destroy_coordinate_primitive(primitive);
+    free(primitive);
+    Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_primitive_destroy_coordinate_uv_primitive
 DEF_ARGS {
+    unsigned int ptr;
+    gfx_coordinate_uv_primitive* primitive;
+
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    primitive = (gfx_coordinate_uv_primitive*)ptr;
+    primitive_destroy_coordinate_uv_primitive(primitive);
+    free(primitive);
+    Py_RETURN_NONE;
 }
 
 /**

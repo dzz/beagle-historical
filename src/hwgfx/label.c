@@ -94,7 +94,7 @@ void label_generate(gfx_label* label) {
             {uo,     vo+uvh} };
         primitive_create_coordinate_uv_primitive
             (label->primitive,
-             (gfx_float*)verts, (gfx_float*)uvs, 4);
+             (gfx_float*)verts, (gfx_float*)uvs, 4, 2);
     }
           
 }

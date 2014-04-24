@@ -1,3 +1,4 @@
+import hwgfx
 from enum import Enum
 
 _drawmode_map = []
@@ -15,4 +16,32 @@ class draw_mode(Enum):
 def INIT_set_drawmode_map(hwgfx_map):
     global _drawmode_map
     _drawmode_map = hwgfx_map
+    for mode in _drawmode_map:
+        print("PY: loaded drawing mode:", mode)
+
+class primitive:
+    def __init__(self,mode, floats_per_vertex, coords, uvs = None ):
+        if uvs is None:
+            self._prim = hwgfx.primitive_create_coordinate_primitive( 
+                    coords, 
+                    floats_per_vertex, 
+                    mode)
+            self._has_uvs = False
+        else:
+            self._prim = hwgfx.primitive_create_coordinate_uv_primitive(
+                    coords, uvs,
+                    floats_per_vertes,
+                    mode)
+            self._has_uvs = True
+        print("PY: acquired primitive ", self._prim, " uvs:", self._has_uvs)
+
+    def __del__(self):
+        if self._has_uvs:
+            hwgfx.primitive_destroy_coordinate_uv_primitive( self._prim )
+        else:
+            hwgfx.primitive_create_coordinate_primitive( self._prim )
+        print("PY: dropped primitive ", self._prim, " uvs:", self._has_uvs)
+
+    def render(self):
+        hwgfx.primitive_render(self._prim)
 

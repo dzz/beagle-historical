@@ -5,7 +5,6 @@
 
 #define COORDINATE_ATTRIBUTE_INDEX  0
 #define UV_ATTRIBUTE_INDEX 1
-#define FLOATS_PER_VERT 2
 
 #define NOT_NORMALIZED 0
 #define NO_STRIDE 0
@@ -13,7 +12,7 @@
 
 /** BASIC TYPE **/
 void primitive_create_coordinate_primitive(gfx_coordinate_primitive* 
-        primitive, gfx_float* coordinates, int verts ){
+        primitive, gfx_float* coordinates, int verts, int vlen ){
 
     primitive->_num_verts = verts;
     primitive->mode = GL_TRIANGLE_FAN;
@@ -25,12 +24,12 @@ void primitive_create_coordinate_primitive(gfx_coordinate_primitive*
     //install our coordinates
     glGenBuffers(1, &primitive->vert_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, primitive->vert_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (verts*FLOATS_PER_VERT) * sizeof(GLfloat), 
+    glBufferData(GL_ARRAY_BUFFER, (verts*vlen) * sizeof(GLfloat), 
             coordinates, 
             GL_STATIC_DRAW);
 
     glVertexAttribPointer(COORDINATE_ATTRIBUTE_INDEX, 
-            FLOATS_PER_VERT, 
+            vlen, 
             GL_FLOAT, 
             NOT_NORMALIZED, 
             NO_STRIDE, 
@@ -61,24 +60,25 @@ void primitive_render(gfx_coordinate_primitive*
 }
 
 
+#define UV_FLOATS_PER_VERT 2
 /** UV COORD TYPE **/
 void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive* 
         uv_primitive, gfx_float* coordinates, gfx_float* uvs,
-        int verts ){
+        int verts, int vlen ){
 
     //initialize basic object
     primitive_create_coordinate_primitive( 
             (gfx_coordinate_primitive*)uv_primitive, 
-            coordinates, verts);
+            coordinates, verts, vlen);
 
     //install our UVs
     glGenBuffers(1, &uv_primitive->uv_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, uv_primitive->uv_buffer);
-    glBufferData(GL_ARRAY_BUFFER, (verts*FLOATS_PER_VERT) * sizeof(GLfloat), 
+    glBufferData(GL_ARRAY_BUFFER, (verts*vlen) * sizeof(GLfloat), 
             uvs, GL_STATIC_DRAW);
 
     glVertexAttribPointer(UV_ATTRIBUTE_INDEX, 
-            FLOATS_PER_VERT, 
+            UV_FLOATS_PER_VERT, 
             GL_FLOAT, 
             NOT_NORMALIZED, 
             NO_STRIDE, 
@@ -112,7 +112,7 @@ void primitive_create_dab_primitive(gfx_coordinate_primitive* primitive) {
         {  1.0, -1.0 }, 
         {  1.0, 1.0 }, 
         {  -1.0, 1.0 } }; 
-    primitive_create_coordinate_primitive(primitive, (gfx_float*)dab_verts, 4);
+    primitive_create_coordinate_primitive(primitive, (gfx_float*)dab_verts, 4, 2);
 }
 
 void primitive_create_screen_primitive(gfx_coordinate_primitive* primitive) {
@@ -121,5 +121,5 @@ void primitive_create_screen_primitive(gfx_coordinate_primitive* primitive) {
         {  1.0, 0.0 }, 
         {  1.0, 1.0 }, 
         {  0.0, 1.0 } }; 
-    primitive_create_coordinate_primitive(primitive, (gfx_float*)context_verts, 4); 
+    primitive_create_coordinate_primitive(primitive, (gfx_float*)context_verts, 4, 2); 
 }

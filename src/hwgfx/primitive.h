@@ -21,16 +21,17 @@ typedef struct{
 
 
 void primitive_create_coordinate_primitive
-(gfx_coordinate_primitive* primitive, gfx_float* coordinates, int verts);
+(gfx_coordinate_primitive* primitive, gfx_float* coordinates, int verts, int vlen);
 
 void primitive_destroy_coordinate_primitive
 (gfx_coordinate_primitive* primitive);
 
+//accepts both coord and uv prims
 void primitive_render
 (gfx_coordinate_primitive* primitive);
 
 void primitive_create_coordinate_uv_primitive
-(gfx_coordinate_uv_primitive* uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts);
+(gfx_coordinate_uv_primitive* uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen);
 
 void primitive_destroy_coordinate_uv_primitive
 (gfx_coordinate_uv_primitive* uv_primitive);

@@ -12,6 +12,7 @@
 #include "hwgfx/rect.h"
 #include "hwgfx/blend_control.h"
 #include "hwgfx/texture.h"
+#include "hwgfx/primitive.h"
 
 //build a structure to hold required host callables inside of client
 #define CLIENT_FUNCTION(x,y) PyObject* x;
