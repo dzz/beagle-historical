@@ -261,13 +261,21 @@ DEF_ARGS {
 
 static PyMethodDef hwgfx_methods[] = {
     {"debug_displaykill",   hwgfx_debug_displaykill,    METH_VARARGS, NULL},
+
+    /*rect*/
     {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
+
+    /*label*/
     {"label_generate",      hwgfx_label_generate,       METH_VARARGS, NULL},
     {"label_drop",          hwgfx_label_drop,           METH_VARARGS, NULL},
     {"label_set_text",      hwgfx_label_set_text,       METH_VARARGS, NULL},
     {"label_render",        hwgfx_label_render,         METH_VARARGS, NULL},
+
+    /*blend*/
     {"blend_enter" ,        hwgfx_blend_enter,          METH_VARARGS, NULL},
     {"blend_exit" ,         hwgfx_blend_exit,           METH_VARARGS, NULL},
+
+    /*shader*/
     {"shader_load" ,        hwgfx_shader_load,          METH_VARARGS, NULL},
     {"shader_drop" ,        hwgfx_shader_drop,          METH_VARARGS, NULL},
     {"shader_bind" ,        hwgfx_shader_bind,          METH_VARARGS, NULL},
@@ -275,6 +283,8 @@ static PyMethodDef hwgfx_methods[] = {
     {"shader_bind_vec2" ,   hwgfx_shader_bind_vec2,     METH_VARARGS, NULL},
     {"shader_bind_vec3" ,   hwgfx_shader_bind_vec3,     METH_VARARGS, NULL},
     {"shader_bind_vec4" ,   hwgfx_shader_bind_vec4,     METH_VARARGS, NULL},
+
+    /*texture*/
     {"texture_generate",    hwgfx_texture_generate,     METH_VARARGS, NULL},
     {"texture_bind",        hwgfx_texture_bind,         METH_VARARGS, NULL},
     {"texture_drop",        hwgfx_texture_drop,         METH_VARARGS, NULL},

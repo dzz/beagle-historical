@@ -86,7 +86,7 @@ void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
     glTexSubImage2D(    GL_TEXTURE_2D,
                         _LOD,
                         0,0,
-                        surf->w,surf->h, 
+                        surf->w,surf->h,		
                         GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
                         (unsigned char*)surf->pixels);
     SDL_UnlockSurface(surf);

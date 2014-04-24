@@ -9,7 +9,7 @@
 
 static const int num_layers = 2;
 static const int layer_size = 45;
-static const int length = 1920;
+static const int length = 1366;
 
 #define TIMELINE_HEIGHT 90
 static SDL_Rect full_timeline;
@@ -20,8 +20,8 @@ static int frame_ticks = 24*6;
 void initTimeline() {
 	full_timeline.x=0;
 	full_timeline.h=num_layers*layer_size;
-	full_timeline.y=1080-full_timeline.h;
-	full_timeline.w=1920;
+	full_timeline.y=768-full_timeline.h;
+	full_timeline.w=1366; 
 }
 
 void renderTimelineBackground(SDL_Surface* target) {

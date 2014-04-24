@@ -8,16 +8,14 @@ typedef struct {
 } gfx_texture;
 
 
-void texture_generate(gfx_texture* texture, int w,int h);
-void texture_generate_filtered(gfx_texture* texture, int w,int h);
-void texture_generate_fp(gfx_texture* texture, int w,int h);
-void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf);
-void texture_from_SDL_surface_grayscale(gfx_texture* texture, SDL_Surface* surf);
-
-void texture_drop(gfx_texture* texture);
-void texture_bind(gfx_texture* texture, int texture_unit);
-
-void texture_download(gfx_texture* texture, SDL_Surface* target);
+void texture_generate                   (gfx_texture* texture, int w,int h);
+void texture_generate_filtered          (gfx_texture* texture, int w,int h);
+void texture_generate_fp                (gfx_texture* texture, int w,int h);
+void texture_from_SDL_surface           (gfx_texture* texture, SDL_Surface* surf);
+void texture_from_SDL_surface_grayscale (gfx_texture* texture, SDL_Surface* surf);
+void texture_drop                       (gfx_texture* texture);
+void texture_bind                       (gfx_texture* texture, int texture_unit);
+void texture_download                   (gfx_texture* texture, SDL_Surface* target);
 
 #define TEX_UNIT_0 0
 

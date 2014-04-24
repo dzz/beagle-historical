@@ -37,7 +37,7 @@ root_gfx_size
 	gfx_get_root_gfx_size(){
 
     root_gfx_size gfx_size;
-    gfx_size.w = 1920;
-    gfx_size.h = 1080;
+    gfx_size.w = 1366;
+    gfx_size.h = 768;
     return gfx_size;
 }

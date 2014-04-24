@@ -23,8 +23,8 @@ void stylusFilter_apply_pressure_impulse(double p) {
 			const double a = 0.9;
 			const double b = 0.1;
 			//alternate coefficients if we are in emulated stylus mode
-			const double a_emu = 0.93;
-			const double b_emu = 0.07;
+			const double a_emu = 0.999;
+			const double b_emu = 0.001;
 
 			filteredPressure = p;
 			return;

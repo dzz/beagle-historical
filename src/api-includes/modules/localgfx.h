@@ -33,11 +33,23 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC localgfx_img_dims
+DEF_ARGS {
+    unsigned int ptr;
+    SDL_Surface* surf;
+
+    if(!INPUT_ARGS(args,"I",&ptr))
+        return NULL;
+    surf = (SDL_Surface*)ptr;
+    return Py_BuildValue("ii",surf->w, surf->h);
+}
+
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 static PyMethodDef localgfx_methods[] = {
     {"localgfx_img_create",   localgfx_img_create,  METH_VARARGS, NULL},
     {"localgfx_img_load",     localgfx_img_load,    METH_VARARGS, NULL},
     {"localgfx_img_drop",     localgfx_img_drop,    METH_VARARGS, NULL},
+    {"localgfx_img_dims",     localgfx_img_dims,    METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };

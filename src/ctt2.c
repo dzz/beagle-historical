@@ -61,8 +61,8 @@ static SDL_GLContext gl_context;
 //#define CTT2_SCREENMODE_DEBUG
 
 #ifndef CTT2_SCREENMODE_DEBUG
-const int SCREEN_WIDTH = 500;
-const int SCREEN_HEIGHT = 500;
+const int SCREEN_WIDTH = 1366;
+const int SCREEN_HEIGHT = 768;
 #else
 const int SCREEN_WIDTH = 500;
 const int SCREEN_HEIGHT = 500;
@@ -189,7 +189,7 @@ void initPython() {
 
 int main(int argc, char **argv){ 
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 240;
-    int screenbuffer_cycles                         = 0;
+    int screenbuffer_cycles                         = 20;
     int finished                                    = 0;
 
     initLog();
@@ -207,7 +207,7 @@ int main(int argc, char **argv){
     initYankPut();
     initTablet(opengl_window);
 
-    ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
+    ui_surface = createDrawingSurface(1366,768);
 
     initPanels(ui_surface);
 

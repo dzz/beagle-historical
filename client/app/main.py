@@ -6,5 +6,4 @@ def init():
     client.ui.areas.register_ui_area( window() )
 
 def finalize():
-    print("pyapp finalize")
     pass

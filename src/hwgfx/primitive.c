@@ -16,6 +16,7 @@ void primitive_create_coordinate_primitive(gfx_coordinate_primitive*
         primitive, gfx_float* coordinates, int verts ){
 
     primitive->_num_verts = verts;
+    primitive->mode = GL_TRIANGLE_FAN;
 
     glGenVertexArrays(1, &primitive->vert_array);
     glBindVertexArray(primitive->vert_array);
@@ -56,7 +57,7 @@ void primitive_destroy_coordinate_primitive(gfx_coordinate_primitive*
 void primitive_render(gfx_coordinate_primitive*
         primitive) {
     glBindVertexArray(primitive->vert_array);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, primitive->_num_verts);
+    glDrawArrays(primitive->mode, 0, primitive->_num_verts);
 }
 
 
