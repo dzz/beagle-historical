@@ -21,17 +21,18 @@ def INIT_set_drawmode_map(hwgfx_map):
 
 class primitive:
     def __init__(self,mode, floats_per_vertex, coords, uvs = None ):
+        global _drawmode_map
         if uvs is None:
             self._prim = hwgfx.primitive_create_coordinate_primitive( 
                     coords, 
                     floats_per_vertex, 
-                    mode)
+                    _drawmode_map[mode])
             self._has_uvs = False
         else:
             self._prim = hwgfx.primitive_create_coordinate_uv_primitive(
                     coords, uvs,
                     floats_per_vertes,
-                    mode)
+                    _drawmode_map[mode])
             self._has_uvs = True
         print("PY: acquired primitive ", self._prim, " uvs:", self._has_uvs)
 
