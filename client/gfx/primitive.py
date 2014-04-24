@@ -3,7 +3,7 @@ from enum import Enum
 _drawmode_map = []
 
 #bindings as per api-includes/modules/hwgfx.h
-draw_mode(Enum):
+class draw_mode(Enum):
     POINTS          = 0
     LINE_STRIP      = 1
     LINE_LOOP       = 2

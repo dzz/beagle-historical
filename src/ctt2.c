@@ -61,8 +61,8 @@ static SDL_GLContext gl_context;
 //#define CTT2_SCREENMODE_DEBUG
 
 #ifndef CTT2_SCREENMODE_DEBUG
-const int SCREEN_WIDTH = 1366;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 500;
+const int SCREEN_HEIGHT = 500;
 #else
 const int SCREEN_WIDTH = 500;
 const int SCREEN_HEIGHT = 500;
