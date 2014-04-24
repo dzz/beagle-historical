@@ -20,17 +20,24 @@ typedef struct{
 } gfx_coordinate_uv_primitive;
 
 
-void primitive_create_coordinate_primitive(gfx_coordinate_primitive* 
-        primitive, gfx_float* coordinates, int verts);
-void primitive_destroy_coordinate_primitive(gfx_coordinate_primitive*
-        primitive);
-void primitive_render(gfx_coordinate_primitive* primitive);
-void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts);
-void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive);
-void primitive_render_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive);
+void primitive_create_coordinate_primitive
+(gfx_coordinate_primitive* primitive, gfx_float* coordinates, int verts);
+
+void primitive_destroy_coordinate_primitive
+(gfx_coordinate_primitive* primitive);
+
+void primitive_render
+(gfx_coordinate_primitive* primitive);
+
+void primitive_create_coordinate_uv_primitive
+(gfx_coordinate_uv_primitive* uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts);
+
+void primitive_destroy_coordinate_uv_primitive
+(gfx_coordinate_uv_primitive* uv_primitive);
+
+void primitive_render_coordinate_uv_primitive
+(gfx_coordinate_uv_primitive* uv_primitive);
+
 /** PRIMITIVE TEMPLATES **/
 void primitive_create_scrquad_primitive(gfx_coordinate_primitive*
         primitive);
@@ -38,6 +45,5 @@ void primitive_create_dab_primitive(gfx_coordinate_primitive*
         primitive);
 void primitive_create_screen_primitive(gfx_coordinate_primitive*
         primitive);
-
 
 #endif

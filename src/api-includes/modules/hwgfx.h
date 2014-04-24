@@ -246,6 +246,44 @@ DEF_ARGS {
     shader_bind_vec4(shader,param,x,y,z,w);
     Py_RETURN_NONE;
 }
+/**
+ * drawmode_map
+ */
+MODULE_FUNC hwgfx_drawmode_get_map
+DEF_ARGS {
+    return Py_BuildValue( 
+    /* primitive.py */
+    "[i,i,i,i,i,i,i]",  GL_POINTS,
+                        GL_LINE_STRIP,
+                        GL_LINE_LOOP,
+                        GL_LINES,
+                        GL_TRIANGLE_STRIP,
+                        GL_TRIANGLE_FAN,
+                        GL_TRIANGLES 
+                        );
+}
+/**
+ * primitive
+ */
+MODULE_FUNC hwgfx_primitive_create_coordinate_primitive
+DEF_ARGS {
+}
+
+MODULE_FUNC hwgfx_primitive_create_coordinate_uv_primitive
+DEF_ARGS {
+}
+
+MODULE_FUNC hwgfx_primitive_render
+DEF_ARGS {
+}
+
+MODULE_FUNC hwgfx_primitive_destroy_coordinate_primitive
+DEF_ARGS {
+}
+
+MODULE_FUNC hwgfx_primitive_destroy_coordinate_uv_primitive
+DEF_ARGS {
+}
 
 /**
  * debug
@@ -260,7 +298,6 @@ DEF_ARGS {
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 
 static PyMethodDef hwgfx_methods[] = {
-    {"debug_displaykill",   hwgfx_debug_displaykill,    METH_VARARGS, NULL},
 
     /*rect*/
     {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
@@ -290,6 +327,26 @@ static PyMethodDef hwgfx_methods[] = {
     {"texture_drop",        hwgfx_texture_drop,         METH_VARARGS, NULL},
     {"texture_upload",      hwgfx_texture_upload,       METH_VARARGS, NULL},
     {"texture_download",    hwgfx_texture_download,     METH_VARARGS, NULL},
+
+    /*drawmode_map*/
+    {"drawmode_get_map",    hwgfx_drawmode_get_map,     METH_VARARGS, NULL},
+
+    /*primitive*/
+    {"primitive_create_coordinate_primitive",
+                            hwgfx_primitive_create_coordinate_primitive,
+                                                        METH_VARARGS, NULL},
+    {"primitive_create_coordinate_uv_primitive",
+                            hwgfx_primitive_destroy_coordinate_uv_primitive,
+                                                        METH_VARARGS, NULL},
+    {"primitive_render",    hwgfx_primitive_render,     METH_VARARGS, NULL},
+    {"primitive_destroy_coordinate_primitive",
+                            hwgfx_primitive_destroy_coordinate_primitive,
+                                                        METH_VARARGS, NULL},
+    {"primitive_destroy_coordinate_uv_primitive",
+                            hwgfx_primitive_destroy_coordinate_uv_primitive,
+                                                        METH_VARARGS, NULL},
+    /*debug*/
+    {"debug_displaykill",   hwgfx_debug_displaykill,    METH_VARARGS, NULL},
     
     {NULL,NULL,0,NULL } /*terminator record*/
 };
