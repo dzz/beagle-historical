@@ -10,7 +10,6 @@
 
 #include "editors/colorPicker.h"
 #include "editors/brushEditor.h"
-#include "editors/timeline.h"
 #include "editors/toolbar.h"
 #include "editors/nodeMapEditor.h"
 
@@ -174,7 +173,6 @@ void initPanels() {
     bind_mouse_handlers();
     initColorPicker();
     initBrushEditor();
-    initTimeline();
     initToolbar();
     initNodeMapEditor();
     layoutPanels();
@@ -297,7 +295,6 @@ void renderPanels(SDL_Surface *target) {
             //renderColorSwatch(target);
             renderBrushEditor(target,brusheditor_area);
             renderColorPicker(target,colorpicker_area);
-            renderTimeline(target);
             //renderToolbar(target,toolbar_area);
         } else {
             int i;
