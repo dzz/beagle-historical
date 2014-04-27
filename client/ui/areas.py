@@ -2,29 +2,9 @@ import client.ui.style as style
 import client.gfx
 import hwgfx
 
-areas = []
-__mpos = [0,0]
 
-def set_absolute_mpos(mpos):
-    global __mpos
-    __mpos = mpos
-
-def abs_mpos():
-    global __mpos
-    return __mpos
-
-def _zsort(has_z):
-    has_z.sort( key=lambda x: x.z, reverse = True )
-    return has_z
-
-def xy_in_r(x,y,r):
-    return (x>=r[0] 
-            and y>=r[1] 
-            and (x < r[0]+r[2]) 
-            and (y < r[1]+r[3]))
-
-SIGNAL_EXIT_HANDLER = True
-SIGNAL_CONTINUE_HANDLING = False
+SIGNAL_EXIT_HANDLER         = True
+SIGNAL_CONTINUE_HANDLING    = False
 
 class ui_area(object):
     def __init__(self):
@@ -51,17 +31,17 @@ class ui_area(object):
         self.bring_top()
         for modifier in self.modifier_stack:
             if modifier.rcv_mouse_button(self,button,x,y,down) == SIGNAL_EXIT_HANDLER:
-                return
+                return SIGNAL_EXIT_HANDLER;
 
     def rcv_mousemotion(self,x,y):
         for modifier in self.modifier_stack:
             if modifier.rcv_mousemotion(self,x,y) == SIGNAL_EXIT_HANDLER:
-                return
+                return SIGNAL_EXIT_HANDLER;
             
     def rcv_key(self,key,down):
         for modifier in self.modifier_stack:
             if modifier.rcv_key(self,key,down) == SIGNAL_EXIT_HANDLER:
-                return
+                return SIGNAL_EXIT_HANDLER;
 
     def set_m(self,position):
         self.m_pos = position
@@ -73,9 +53,11 @@ class ui_area(object):
         self.z = 0
         order_areas()
 
+#controller
 
+areas = []
+__mpos = [0,0]
 
-#controller 
 def register_ui_area(area):
     get_ui_areas().append(area)
 
@@ -95,3 +77,23 @@ def find_ui_area(x,y):
                 y >= area.r[1] and y < area.r[1] + area.r[3] ):
                     return area
     return None
+
+#utility
+
+def set_absolute_mpos(mpos):
+    global __mpos
+    __mpos = mpos
+
+def abs_mpos():
+    global __mpos
+    return __mpos
+
+def _zsort(has_z):
+    has_z.sort( key=lambda x: x.z, reverse = True )
+    return has_z
+
+def xy_in_r(x,y,r):
+    return (x>=r[0] 
+            and y>=r[1] 
+            and (x < r[0]+r[2]) 
+            and (y < r[1]+r[3]))

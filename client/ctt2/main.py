@@ -37,6 +37,9 @@ def calculate_mouse_position(area,x,y):
     yt = min(max( 0, y - area.r[1] ),area.r[3])
     return [xt,yt] 
 
+SIGNAL_HANDLED      = True
+SIGNAL_DISCARDED    = False
+
 def dispatch_mouseup(button,x,y):
     global mouse_focused_area
     if mouse_focused_area is not None:
@@ -44,6 +47,8 @@ def dispatch_mouseup(button,x,y):
         mouse_focused_area.rcv_mouse_button(button,m_pos[0],m_pos[1], down = False)
         mouse_focused_area.active = False
         mouse_focused_area = None
+        return SIGNAL_HANDLED
+    return SIGNAL_DISCARDED
 
 def dispatch_mousedown(button,x,y):
     global mouse_focused_area
@@ -56,6 +61,8 @@ def dispatch_mousedown(button,x,y):
         area.rcv_mouse_button(button,m_pos[0],m_pos[1], down = True)
         area.active = True
         mouse_focused_area = area
+        return SIGNAL_HANDLED
+    return SIGNAL_DISCARDED
 
 def dispatch_mousemotion(x,y):
     global __mpos
@@ -66,8 +73,11 @@ def dispatch_mousemotion(x,y):
         area = ui_area.find_ui_area(x,y)
         if area is not None:
             area.set_m(calculate_mouse_position(area,x,y))
+            return SIGNAL_HANDLED
     else:
         mouse_focused_area.set_m(calculate_mouse_position(mouse_focused_area,x,y))
+        return SIGNAL_HANDLED
+    return SIGNAL_DISCARDED
 
 def dispatch_key(key,down):
     global caret_handler
@@ -75,8 +85,8 @@ def dispatch_key(key,down):
         dispatch_root_keybindings(key,down)
         if(mouse_focused_area is not None):
             area.rcv_key(key,down)
-        return
-    caret_handler.rcv_key(key,down)
+            return SIGNAL_HANDLED
+    return caret_handler.rcv_key(key,down)
 
 def dispatch_root_keybindings(key,down):
     pass
