@@ -1,56 +1,40 @@
 //#define CTT2_SCREENMODE_DEBUG 
-
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #ifdef _WIN32
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/wglext.h>
 #endif
-
 #ifdef __linux__
-/*
- *
- *
- */
+//todo: tablet / vsync
 #endif
-
 /*debug sux*/
 #undef _DEBUG
-
 #include <Python.h>
-
 #include <SDL.h>
 #include <SDL_syswm.h>
-
 #include "system/ctt2.h"
 #include "system/ctt2_host.h"
-
 #include "drawing/node_resource_ids.h"
 #include "system/extended_video.h"
 #include "system/wm_handler.h"
 #include "system/log.h"
 #include "system/surfaceCache.h"
 #include "hardware/tablet.h"
-
 #include "document/animation.h"
-
 #include "drawing/shader_brush.h"
 #include "drawing/brush.h"
 #include "drawing/drawingSurfaces.h"
-
 #include "compositor/compositor.h"
-
 #include "document/layers.h"
-
 #include "user/stylus.h"
 #include "user/panels.h"
 #include "user/dispatch.h"
 #include "user/yank_put.h"
-
 #include "user/editors/colorPicker.h"
+#include "hwgfx/context.h"
 
 static SDL_Window* opengl_window;
 static SDL_Surface* ui_surface = NULL;
@@ -60,13 +44,8 @@ static SDL_GLContext gl_context;
 
 //#define CTT2_SCREENMODE_DEBUG
 
-#ifndef CTT2_SCREENMODE_DEBUG
-const int SCREEN_WIDTH = 500;
-const int SCREEN_HEIGHT = 500;
-#else
-const int SCREEN_WIDTH = 500;
-const int SCREEN_HEIGHT = 500;
-#endif
+int SCREEN_WIDTH = 1200;
+int SCREEN_HEIGHT = 700;
 
 /**************************************/
 
@@ -132,8 +111,8 @@ void initDisplay() {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-    opengl_window = SDL_CreateWindow( "ctt2_hw", 0, 0, 
-            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+    opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
 
     if( opengl_window == NULL ) {
         printf( "%s\n", SDL_GetError() );
@@ -207,8 +186,8 @@ int main(int argc, char **argv){
     initYankPut();
     initTablet(opengl_window);
 
-    ui_surface = createDrawingSurface(1366,768);
-
+    ui_surface = createDrawingSurface(SCREEN_WIDTH,
+                                        SCREEN_HEIGHT);
     initPanels(ui_surface);
 
     /** MAIN DISPATCH LOOP **/
@@ -219,6 +198,28 @@ int main(int argc, char **argv){
             if(SDL_PollEvent(&event)) {
                 
                 switch (event.type) {
+                    case SDL_WINDOWEVENT:
+                        /*SDL_Log("Window %d resized to %dx%d",
+                                event->window.windowID, event->window.data1,
+                                event->window.data2);*/
+                        if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+                        {
+                            viewport_dims vd;
+                            vd.x = 0;
+                            vd.y = 0;
+                            vd.w = event.window.data1;
+                            vd.h = event.window.data2;
+                            SCREEN_WIDTH=vd.w;
+                            SCREEN_HEIGHT=vd.h;
+                            gfx_viewport_set_dims(vd);
+                            SDL_FreeSurface(ui_surface);
+                            ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
+                            dropHwBrush();
+                            initHwBrush();
+                            brush_setValuesFromUI();
+                            resizeExtendedVideo();
+                        }
+                        break;
                     case SDL_QUIT:
                         finished = 1;
                         break;

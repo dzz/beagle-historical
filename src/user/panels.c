@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include "../system/dirty.h"
+#include "../system/ctt2.h"
 
 #include "panels.h"
 #include "dispatch.h"
@@ -17,9 +18,6 @@ int panelsEnabled = 1;
 
 #define BRUSHEDITOR_WIDTH 256
 #define BRUSHEDITOR_HEIGHT 256
-
-int screenWidth = -1;
-int screenHeight = -1;
 
 static unsigned int dragging_panel_id = -1;
 
@@ -142,7 +140,7 @@ void layoutPanels() {
 
 void togglePanels(void) {
     panelsEnabled = !panelsEnabled;
-    invalidateDirty(0,0,screenWidth,screenHeight);
+    invalidateDirty(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 }
 
 static unsigned int dragmode = 0;
@@ -171,9 +169,7 @@ UI_AREA getPanelsArea(void) {
     return (*area);
 }
 
-void initPanels(SDL_Surface *target) {
-    screenWidth = target->w;
-    screenHeight = target->h; 
+void initPanels() {
     initUIAreas();
     bind_mouse_handlers();
     initColorPicker();
@@ -315,9 +311,10 @@ void renderPanels(SDL_Surface *target) {
 }
 
 void dropPanels() {
+    panelsEnabled = 0;
     destroyColorPicker();
     destroyBrushEditor();
-    destroyToolbar();
+    //destroyToolbar();
     destroyNodeMapEditor();
     {
         int i;

@@ -5,6 +5,7 @@
 
 void initExtendedVideo();
 void dropExtendedVideo();
+void resizeExtendedVideo();
 
 void gfx_surface_render( SDL_Surface* img);
 

@@ -11,6 +11,7 @@
 gfx_texture                     _ui;
 gfx_coordinate_uv_primitive     _screen_primitive;
 gfx_shader                      _screen_shader;
+unsigned int                    _extensions_loaded = 0;
 
 void gfx_surface_render( SDL_Surface* img) {
     blend_enter                 ( BLENDMODE_OVER        ); 
@@ -22,15 +23,15 @@ void gfx_surface_render( SDL_Surface* img) {
     blend_exit                  (                       );
 }
 
-void initGlew(){
-	glxwInit();
-  
-}
 
 void initExtendedVideo() {
     root_gfx_size rgs;   
 
-    initGlew();
+	if( _extensions_loaded == 0 ) {
+        glxwInit();
+        _extensions_loaded = 1;
+    }
+
     initRects();
     initLabels();
 
@@ -43,11 +44,16 @@ void initExtendedVideo() {
 }
 
 void dropExtendedVideo() {
-
     primitive_destroy_coordinate_primitive
                                         (&_screen_primitive);
     shader_drop                         (&_screen_shader);
     texture_drop                        (&_ui);
     dropLabels();
     dropRects();
+}
+
+void resizeExtendedVideo() {
+    root_gfx_size rgs = gfx_get_root_gfx_size();
+
+    texture_generate                    (&_ui, rgs.w, rgs.h);
 }

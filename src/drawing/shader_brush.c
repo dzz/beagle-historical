@@ -21,30 +21,27 @@ extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 
 typedef struct {
-    gfx_shader screen_shader;
-    gfx_shader dab_shader;
-    gfx_shader brush_composite_shader;
-
-    gfx_texture ui;
-
-    gfx_coordinate_primitive screen_primitive;
-    gfx_coordinate_primitive dab_primitive;
-
+    gfx_shader                      screen_shader;
+    gfx_shader                      dab_shader;
+    gfx_shader                      brush_composite_shader;
+    gfx_coordinate_primitive        screen_primitive;
+    gfx_coordinate_primitive        dab_primitive;
     /*active frame*/
-    gfx_texture drawing_context_texture;
-    gfx_framebuffer drawing_context_framebuffer;
-
+    gfx_texture                     drawing_context_texture;
+    gfx_framebuffer                 drawing_context_framebuffer;
     /*brush buffer*/
-    gfx_framebuffer brushing_framebuffer;
-    gfx_texture brushing_context_texture;
-
-    gfx_texture dab_texture;
+    gfx_framebuffer                 brushing_framebuffer;
+    gfx_texture                     brushing_context_texture;
+    gfx_texture                     dab_texture;
+    /*local buffer for proxying 
+     * SDL surf renders*/
+    gfx_texture                     local_buffer;
 
 } brush_context;
 
 brush_context _context;
 
-void _build_ctxt_gfx_data( gfx_texture* tex, gfx_framebuffer* fb ) {
+void _blocal_bufferld_ctxt_gfx_data( gfx_texture* tex, gfx_framebuffer* fb ) {
     texture_generate(tex, SCREEN_WIDTH,SCREEN_HEIGHT);
     framebuffer_create_framebuffer(fb);
     framebuffer_bind_texture(fb,tex);
@@ -72,13 +69,13 @@ void createBrushContext(brush_context *ctxt) {
     primitive_create_dab_primitive      (&ctxt->dab_primitive);
 
     texture_generate            ( &ctxt->brushing_context_texture, SCREEN_WIDTH, SCREEN_HEIGHT); 
-    texture_generate            ( &ctxt->ui,                       SCREEN_WIDTH, SCREEN_HEIGHT);
+    texture_generate            ( &ctxt->local_buffer,                       SCREEN_WIDTH, SCREEN_HEIGHT);
     texture_generate_filtered   ( &ctxt->dab_texture,              64, 64);
 
-    _build_ctxt_gfx_data( &ctxt->brushing_context_texture, 
+    _blocal_bufferld_ctxt_gfx_data( &ctxt->brushing_context_texture, 
                           &ctxt->brushing_framebuffer );
 
-    _build_ctxt_gfx_data(   &ctxt->drawing_context_texture, 
+    _blocal_bufferld_ctxt_gfx_data(   &ctxt->drawing_context_texture, 
                             &ctxt->drawing_context_framebuffer );
 }
 
@@ -86,10 +83,11 @@ void destroyBrushContext(brush_context *ctxt) {
     shader_drop(&ctxt->dab_shader);
     shader_drop(&ctxt->screen_shader);
 
-    texture_drop(&ctxt->ui);
+    texture_drop(&ctxt->local_buffer);
 
     _destroy_ctxt_gfx_data(&ctxt->brushing_context_texture, &ctxt->brushing_framebuffer);
     _destroy_ctxt_gfx_data(&ctxt->drawing_context_texture, &ctxt->drawing_context_framebuffer);
+
 
     primitive_destroy_coordinate_primitive(&ctxt->screen_primitive);
     primitive_destroy_coordinate_primitive(&ctxt->dab_primitive);
@@ -180,8 +178,8 @@ void hw_brush_commit_context(SDL_Surface* frdata) {
 void renderLocalBuffer( SDL_Surface* img) {
     blend_enter( BLENDMODE_OVER ); 
     shader_bind( &_context.screen_shader);
-    texture_from_SDL_surface(&_context.ui,img);
-    texture_bind(&_context.ui,TEX_UNIT_0);
+    texture_from_SDL_surface(&_context.local_buffer,img);
+    texture_bind(&_context.local_buffer,TEX_UNIT_0);
     primitive_render( &_context.screen_primitive );
     blend_exit();
 }

@@ -16,7 +16,7 @@ void hw_brush_dab
 void hw_brush_commit_context(SDL_Surface* frdata);
 void hw_brush_commit_brush_stroke();
 void hw_import_dab_texture( SDL_Surface* img);
-
 void hw_render_layerstack(frame* fr);
+
 
 #endif

@@ -1,5 +1,6 @@
 #include <GLXW/glxw.h>
 
+#include "../system/ctt2.h"
 #include "context.h"
 
 int _vp[4] = {0};
@@ -33,11 +34,11 @@ viewport_dims   gfx_viewport_get_dims() {
     return dims;
 }
 
+
 root_gfx_size
 	gfx_get_root_gfx_size(){
-
     root_gfx_size gfx_size;
-    gfx_size.w = 1366;
-    gfx_size.h = 768;
+    gfx_size.w = SCREEN_WIDTH;
+    gfx_size.h = SCREEN_HEIGHT;
     return gfx_size;
 }

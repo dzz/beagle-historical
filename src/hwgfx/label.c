@@ -28,7 +28,6 @@ void initLabels() {
 }
 
 void dropLabels() {
-
     shader_drop(&label_shader);
     SDL_FreeSurface(font);
     SDL_FreeSurface(atlas);
