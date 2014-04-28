@@ -55,8 +55,8 @@ class ui_area(object):
 
 #controller
 
-areas = []
-__mpos = [0,0]
+areas   = []
+__mpos  = [0,0]
 
 def register_ui_area(area):
     get_ui_areas().append(area)
