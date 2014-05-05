@@ -86,6 +86,7 @@ def dispatch_key(key,down):
         if(mouse_focused_area is not None):
             area.rcv_key(key,down)
             return SIGNAL_HANDLED
+        return SIGNAL_DISCARDED
     return caret_handler.rcv_key(key,down)
 
 def dispatch_root_keybindings(key,down):

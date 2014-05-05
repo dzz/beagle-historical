@@ -11,12 +11,16 @@ class ui_area(object):
         self.r = [0,0,0,0]
         self.client_area = [0,0,0,0]
         self.z = 0;
-        self.m = [0,0]
+        self.m_pos = [0,0]
+        self.client_m_pos = [0,0]
         self.active = False # set in main.py dispatch
         self.modifier_stack = []
         self.prop = {}
         self.renderers = []
         self.children = []
+
+    def get_children(self):
+        return self.children
 
     def add_child(self,ui_area):
         self.children.append(ui_area)
@@ -25,6 +29,9 @@ class ui_area(object):
         self.client_area = list(self.r)
         for modifier in self.modifier_stack:
             self.client_area = modifier.transform_client_area(self.client_area)
+        return self.client_area
+
+    def get_client_area(self):
         return self.client_area
 
     def rcv_mouse_button(self,button,x,y,down):
@@ -45,6 +52,9 @@ class ui_area(object):
 
     def set_m(self,position):
         self.m_pos = position
+        self.client_m_pos[0] = self.m_pos[0] - ( self.client_area[0] - self.r[0] )
+        self.client_m_pos[1] = self.m_pos[1] - ( self.client_area[1] - self.r[1] )
+
         self.rcv_mousemotion(self.m_pos[0],self.m_pos[1])
 
     def bring_top(self):
