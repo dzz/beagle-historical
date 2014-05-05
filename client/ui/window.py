@@ -5,6 +5,7 @@ from client.ui.mod_resize       import mod_resize
 from client.ui.mod_titlebar     import mod_titlebar
 from client.ui.mod_parent       import mod_parent
 from client.ui.window_renderer  import window_renderer
+from client.ui.default_renderer import default_renderer
 from client.ui.child_renderer   import child_renderer
 from client.gfx.rect            import rect_solid
 
@@ -27,12 +28,12 @@ class window(ui_area):
 
 
 class mouse_shower(ui_area):
-    def __init__(self,x=125,y =15,width=50,height=50):
-        self.r = [x,y,width,height]
+    def __init__(self,x=125,y =15,width=150,height=50):
         ui_area.__init__(self)
+        self.r = [x,y,width,height]
+        self.client_area = self.r
+        self.renderers = [ default_renderer() ]
 
     def render_client_area(self):
-        host.abort()
-        mr = [ self.client_m_pos[0], self.client_m_pos[1], 15,15 ]
-        rec_solid(self.r, [0.0,1.0,0.0,1.0])
-        rect_solid( mr, [1.0,0.0,0.0,1.0] )
+        rect_solid([0,0, self.r[2], self.r[3]], [0.0,1.0,0.0,1.0])
+        rect_solid([self.client_m_pos[0],self.client_m_pos[1], 8,8], [1.0,1.0,0.0,1.0])

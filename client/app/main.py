@@ -3,7 +3,7 @@ from    client.ui.window import window
 from    client.ui.window import mouse_shower
 
 def init():
-    pwin = window( title ="brush editor",x=0,y=0, width=210,height=210 );
+    pwin = window( title ="brush editor",x=0,y=0, width=400,height=400 );
     pwin.add_child( window() )
     pwin.add_child( mouse_shower() )
     client.ui.areas.register_ui_area( pwin ) 

@@ -35,13 +35,15 @@ def get_mouse_origin():
 class mod_parent(mod_empty):
     def rcv_mousemotion(self,ui_area,x,y):
         mo = get_mouse_origin()
-        mo.push_origin(ui_area.client_area[0], ui_area.client_area[1]) 
+        mo.push_origin(ui_area.r[0], ui_area.r[1]) 
         for child in ui_area.children:
             if(xy_in_r(x,y,child.r)):
+                mo.push_origin(child.r[0],child.r[1]);
                 origin = mo.get_origin()
-                xt = x - origin[0]
-                yt = y - origin[1]
+                xt = x - origin[0];
+                yt = y - origin[1] - 12;
                 child.set_m([xt,yt])
+                mo.pop_origin()
 
         mo.pop_origin()
 
