@@ -11,12 +11,17 @@ class ui_area(object):
         self.z = 0;
         self.m_pos = [0,0]
         self.client_m_pos = [0,0]
-        self.active = False # set in main.py dispatch
         self.modifier_stack = []
         self.prop = {}
+        self.layouts = []
         self.renderers = []
         self.children = []
         self.parent= None
+        self.is_focusable = False  #if true, z order updates on click
+
+    def layout(self):
+        for layout in self.layouts:
+            layout.perform_layout(self)
 
     def get_children(self):
         return self.children
@@ -35,7 +40,8 @@ class ui_area(object):
         return self.client_area
 
     def rcv_mouse_button(self,button,x,y,down):
-        self.bring_top()
+        if self.is_focusable:
+            self.bring_top()
         for modifier in self.modifier_stack:
             if modifier.rcv_mouse_button(self,button,x,y,down) == SIGNAL_EXIT_HANDLER:
                 return SIGNAL_EXIT_HANDLER;
@@ -104,8 +110,6 @@ def find_ui_area(x,y):
                 y >= area.r[1] and y < area.r[1] + area.r[3] ):
                     return area
     return None
-
-#utility
 
 def set_absolute_mpos(mpos):
     global __mpos

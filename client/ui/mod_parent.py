@@ -20,7 +20,6 @@ def find_child(x,y,children):
     return None
 
 class mod_parent(mod_empty):
-
     def __init__(self):
         self.focused_area = None
 
@@ -43,7 +42,6 @@ class mod_parent(mod_empty):
             rval = self.focused_area.rcv_mouse_button(button,xt,yt,down)
             self.focused_area = None
             return rval
-
         else:
             child_data = find_child(x,y,ui_area.children)
             if(child_data is not None):

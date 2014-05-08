@@ -11,9 +11,29 @@ from client.gfx.rect            import rect_solid
 from client.gfx.rect            import rect_vgrad
 import client.ui.style          as style
 
+class layout_grid:
+    def __init__(self, x=4,y=4):
+        self.x = x
+        self.y = y
+
+    def set_dims(x,y):
+        self.x = x
+        self.y = y
+
+    def perform_layout(self, ui_area):
+        width   = ui_area.r[2] // self.x
+        height  = ui_area.r[3] // self.y
+
+        for i in range(0, len(ui_area.children)):
+            x = (i % self.x) * width
+            y = (i // self.y) * height
+            child = ui_area.children[i]
+            child.r = [x,y,width,height]
+
 class window(ui_area):
     def __init__(self,title="ctt2_window",x=10,y=10,width=75,height=75):
         ui_area.__init__(self)
+        self.is_focusable = True
         self.r = [x,y,width,height]
         self.modifier_stack = [
                                mod_resize   ( handle_size = 9 ),
@@ -26,6 +46,8 @@ class window(ui_area):
                             child_renderer(self),
                             window_renderer(self)
                          ]
+
+        self.layouts = [ layout_grid(2,2) ]
 
         self.clientcol      = style.get("window_client_color")
 

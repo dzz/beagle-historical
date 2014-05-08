@@ -45,7 +45,6 @@ def dispatch_mouseup(button,x,y):
     if mouse_focused_area is not None:
         m_pos = calculate_mouse_position(mouse_focused_area,x,y);
         mouse_focused_area.rcv_mouse_button(button,m_pos[0],m_pos[1], down = False)
-        #mouse_focused_area.active = False
         mouse_focused_area = None
         return SIGNAL_HANDLED
     return SIGNAL_DISCARDED
@@ -59,7 +58,6 @@ def dispatch_mousedown(button,x,y):
     if area is not None:
         m_pos = calculate_mouse_position(area,x,y);
         area.rcv_mouse_button(button,m_pos[0],m_pos[1], down = True)
-        #area.active = True
         mouse_focused_area = area
         return SIGNAL_HANDLED
     return SIGNAL_DISCARDED
