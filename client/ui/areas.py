@@ -75,6 +75,9 @@ class ui_area(object):
         self.order_siblings()
         order_areas()
 
+    def render_client_area(self):
+        pass
+
 #controller
 
 areas   = []

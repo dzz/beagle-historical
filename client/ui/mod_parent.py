@@ -47,10 +47,3 @@ class mod_parent(mod_empty):
                     self.focused_area = child
                     return child.rcv_mouse_button(button,xt,yt,down)
 
-
-    #def rcv_mouse_button(self,ui_area,button,x,y,down):
-    #    return _cascade_signal(ui_area,ui_area.rcv_mouse_button, x,y, [down])
-
-    #def rcv_key(self,ui_area,key,down):
-    #    return _cascade_signal(ui_area,ui_area.rcv_mouse_button, x,y, [key,down])
-

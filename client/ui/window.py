@@ -22,10 +22,6 @@ class window(ui_area):
         self.renderers = [ window_renderer(self),
                            child_renderer(self) ]
 
-    def render_client_area(self):
-        mr = [ self.client_m_pos[0], self.client_m_pos[1], 15,15 ]
-        rect_solid( mr, [1.0,0.0,0.0,1.0] )
-
 
 class mouse_shower(ui_area):
     def __init__(self,x=125,y =15,width=150,height=50):

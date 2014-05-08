@@ -18,9 +18,22 @@ class nested_viewport:
             port = self.ports[ len(self.ports) -1 ]
             xt = port[0] + x
             yt = port[1] + y
+
+            new_right = xt+w
+            new_bottom = yt+h
+            current_right = port[0]+port[2]
+            current_bottom = port[1]+port[3]
+
+            if(new_right>current_right):
+                w -= (new_right-current_right)
+
+            if(new_bottom>current_bottom):
+                h -= (new_bottom-current_bottom)
+
         else:
             xt = x
             yt = y
+
 
         self.ports.append([xt,yt,w,h])
         viewport.set_dimensions(xt,yt,w,h)
