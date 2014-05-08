@@ -39,23 +39,25 @@ class ui_area(object):
         for modifier in self.modifier_stack:
             if modifier.rcv_mouse_button(self,button,x,y,down) == SIGNAL_EXIT_HANDLER:
                 return SIGNAL_EXIT_HANDLER;
+        return SIGNAL_CONTINUE_HANDLING
 
     def rcv_mousemotion(self,x,y):
+        self.set_m([x,y])
         for modifier in self.modifier_stack:
             if modifier.rcv_mousemotion(self,x,y) == SIGNAL_EXIT_HANDLER:
                 return SIGNAL_EXIT_HANDLER;
+        return SIGNAL_CONTINUE_HANDLING
             
     def rcv_key(self,key,down):
         for modifier in self.modifier_stack:
             if modifier.rcv_key(self,key,down) == SIGNAL_EXIT_HANDLER:
                 return SIGNAL_EXIT_HANDLER;
+        return SIGNAL_CONTINUE_HANDLING
 
     def set_m(self,position):
         self.m_pos = position
-        self.client_m_pos[0] = self.m_pos[0] - ( self.client_area[0] - self.r[0] )
-        self.client_m_pos[1] = self.m_pos[1] - ( self.client_area[1] - self.r[1] )
-
-        self.rcv_mousemotion(self.m_pos[0],self.m_pos[1])
+        self.client_m_pos[0] = self.m_pos[0]
+        self.client_m_pos[1] = self.m_pos[1]
 
     def bring_top(self):
         for area in get_ui_areas():

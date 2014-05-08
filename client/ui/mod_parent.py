@@ -16,14 +16,14 @@ class _mouse_origin:
 
     def push_origin(self,x,y):
         self.origins.append( [x,y] )
-        self.x = x
-        self.y = y
+        self.x += x
+        self.y += y
+        return self
 
     def pop_origin(self):
-        self.origins.pop()
-        origin = self.origins[ len(self.origins)-1 ] 
-        self.x = origin[0]
-        self.y = origin[1]
+        origin = self.origins.pop()
+        self.x -= origin[0]
+        self.y -= origin[1]
 
 _morg = _mouse_origin()
 
@@ -34,18 +34,11 @@ def get_mouse_origin():
 
 class mod_parent(mod_empty):
     def rcv_mousemotion(self,ui_area,x,y):
-        mo = get_mouse_origin()
-        mo.push_origin(ui_area.r[0], ui_area.r[1]) 
         for child in ui_area.children:
             if(xy_in_r(x,y,child.r)):
-                mo.push_origin(child.r[0],child.r[1]);
-                origin = mo.get_origin()
-                xt = x - origin[0];
-                yt = y - origin[1] - 12;
-                child.set_m([xt,yt])
-                mo.pop_origin()
-
-        mo.pop_origin()
+                xt = x - child.r[0];
+                yt = y - child.r[1];
+                child.rcv_mousemotion(xt,yt)
 
     #def rcv_mouse_button(self,ui_area,button,x,y,down):
     #    return _cascade_signal(ui_area,ui_area.rcv_mouse_button, x,y, [down])

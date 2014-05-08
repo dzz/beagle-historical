@@ -409,7 +409,33 @@ DEF_ARGS {
     free(primitive);
     Py_RETURN_NONE;
 }
+/**
+ * viewport
+ */
 
+MODULE_FUNC hwgfx_viewport_set
+DEF_ARGS {
+    viewport_dims dims;
+    root_gfx_size rs = gfx_get_root_gfx_size();
+    if(!INPUT_ARGS(args,"iiii", &dims.x, &dims.y, &dims.w, &dims.h))
+        return NULL;
+
+    dims.y = rs.h - dims.h - dims.y;
+    gfx_viewport_set_dims(dims);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_viewport_reset
+DEF_ARGS {
+    root_gfx_size rs = gfx_get_root_gfx_size();
+    viewport_dims def_dims;
+    def_dims.x=0;
+    def_dims.y=0;
+    def_dims.w = rs.w;
+    def_dims.h = rs.h;
+    gfx_viewport_set_dims(def_dims);
+    Py_RETURN_NONE;
+}
 /**
  * debug
  */
@@ -470,6 +496,9 @@ static PyMethodDef hwgfx_methods[] = {
     {"primitive_destroy_coordinate_uv_primitive",
                             hwgfx_primitive_destroy_coordinate_uv_primitive,
                                                         METH_VARARGS, NULL},
+    /*viewport*/
+    {"viewport_set",        hwgfx_viewport_set,         METH_VARARGS, NULL},
+    {"viewport_reset",      hwgfx_viewport_reset,       METH_VARARGS, NULL},
     /*debug*/
     {"debug_displaykill",   hwgfx_debug_displaykill,    METH_VARARGS, NULL},
     

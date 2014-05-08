@@ -72,10 +72,10 @@ def dispatch_mousemotion(x,y):
     if mouse_focused_area is None:
         area = ui_area.find_ui_area(x,y)
         if area is not None:
-            area.set_m(calculate_mouse_position(area,x,y))
+            area.rcv_mousemotion(*(calculate_mouse_position(area,x,y)))
             return SIGNAL_HANDLED
     else:
-        mouse_focused_area.set_m(calculate_mouse_position(mouse_focused_area,x,y))
+        mouse_focused_area.rcv_mousemotion(*(calculate_mouse_position(mouse_focused_area,x,y)))
         return SIGNAL_HANDLED
     return SIGNAL_DISCARDED
 
