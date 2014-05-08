@@ -6,6 +6,13 @@ from client.ui.areas        import SIGNAL_EXIT_HANDLER
 from client.ui.areas        import SIGNAL_CONTINUE_HANDLING
 from client.ui.areas        import xy_in_r
 
+
+
+def get_reversed(l):
+    rv = list(l)
+    rv.reverse()
+    return rv
+
 class mod_parent(mod_empty):
 
     def __init__(self):
@@ -17,7 +24,7 @@ class mod_parent(mod_empty):
             yt = y - self.focused_area.r[1];
             return self.focused_area.rcv_mousemotion(xt,yt)
 
-        for child in ui_area.children:
+        for child in get_reversed(ui_area.children):
             if(xy_in_r(x,y,child.r)):
                 xt = x - child.r[0];
                 yt = y - child.r[1];
@@ -33,7 +40,7 @@ class mod_parent(mod_empty):
             return rval
 
         else:
-            for child in ui_area.children:
+            for child in get_reversed(ui_area.children):
                 if(xy_in_r(x,y,child.r)):
                     xt = x - child.r[0];
                     yt = y - child.r[1];

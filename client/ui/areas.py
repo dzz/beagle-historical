@@ -16,12 +16,14 @@ class ui_area(object):
         self.prop = {}
         self.renderers = []
         self.children = []
+        self.parent= None
 
     def get_children(self):
         return self.children
 
     def add_child(self,ui_area):
         self.children.append(ui_area)
+        ui_area.parent = self
 
     def compute_client_area(self):
         self.client_area = list(self.r)
@@ -57,10 +59,20 @@ class ui_area(object):
         self.client_m_pos[0] = self.m_pos[0]
         self.client_m_pos[1] = self.m_pos[1]
 
+    def get_siblings(self):
+        if self.parent is None:
+            return get_ui_areas()
+        else:
+            return self.parent.children
+
+    def order_siblings(self):
+        _zsort(self.get_siblings())
+
     def bring_top(self):
-        for area in get_ui_areas():
+        for area in self.get_siblings():
             area.z +=1
         self.z = 0
+        self.order_siblings()
         order_areas()
 
 #controller
@@ -82,7 +94,9 @@ def get_ui_areas():
     return areas
 
 def find_ui_area(x,y):
-    for area in order_areas():
+    rev = list(order_areas())
+    rev.reverse()
+    for area in rev:
         if( x >= area.r[0] and x < area.r[0] + area.r[2] and
                 y >= area.r[1] and y < area.r[1] + area.r[3] ):
                     return area
@@ -101,6 +115,7 @@ def abs_mpos():
 def _zsort(has_z):
     has_z.sort( key=lambda x: x.z, reverse = True )
     return has_z
+
 
 def xy_in_r(x,y,r):
     return (x>=r[0] 
