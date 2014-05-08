@@ -1,7 +1,5 @@
-import client.ui.style as style
-import client.gfx
-import hwgfx
-
+#import client.gfx
+#import hwgfx
 
 SIGNAL_EXIT_HANDLER         = True
 SIGNAL_CONTINUE_HANDLING    = False
@@ -47,7 +45,7 @@ class ui_area(object):
             if modifier.rcv_mousemotion(self,x,y) == SIGNAL_EXIT_HANDLER:
                 return SIGNAL_EXIT_HANDLER;
         return SIGNAL_CONTINUE_HANDLING
-            
+
     def rcv_key(self,key,down):
         for modifier in self.modifier_stack:
             if modifier.rcv_key(self,key,down) == SIGNAL_EXIT_HANDLER:
