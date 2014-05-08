@@ -8,6 +8,8 @@ from client.ui.window_renderer  import window_renderer
 from client.ui.default_renderer import default_renderer
 from client.ui.child_renderer   import child_renderer
 from client.gfx.rect            import rect_solid
+from client.gfx.rect            import rect_vgrad
+import client.ui.style          as style
 
 class window(ui_area):
     def __init__(self,title="ctt2_window",x=10,y=10,width=75,height=75):
@@ -19,8 +21,16 @@ class window(ui_area):
                                mod_parent   ( )
                                ]
 
-        self.renderers = [ window_renderer(self),
-                           child_renderer(self) ]
+        self.renderers = [
+                            default_renderer(),
+                            child_renderer(self),
+                            window_renderer(self)
+                         ]
+
+        self.clientcol      = style.get("window_client_color")
+
+    def render_client_area(self):
+        rect_vgrad  ( [0,0,self.r[2],self.r[3]], self.clientcol[0],self.clientcol[1])
 
 
 class mouse_shower(ui_area):
