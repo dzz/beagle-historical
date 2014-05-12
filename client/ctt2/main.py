@@ -2,7 +2,6 @@ from client.ctt2.mouse_focus import mouse_focused_area
 import host
 import hwgfx
 import client.ui.areas as ui_area
-import client.ui.window as ui_window
 import client.app.main
 import client.gfx.blend as blend
 
@@ -18,16 +17,13 @@ def finalize():
     client.app.main.finalize()
 
 def tick():
-    with blend.state(blend.mode_over):
-        render()
+    render()
 
 def render():
-    global __mpos
-    global __clickpos
-    ui_area.find_ui_area(__mpos[0],__mpos[1])
-    for area in ui_area.order_areas():
-        for renderer in area.renderers:
-            renderer.render(area)
+    with blend.state(blend.mode_over):
+        for area in ui_area.order_areas():
+            for renderer in area.renderers:
+                renderer.render(area)
     
 def _get_mf_area():
     return mouse_focused_area

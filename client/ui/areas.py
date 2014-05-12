@@ -19,10 +19,39 @@ class ui_area(object):
         self.parent= None
         self.is_focusable = False  #if true, z order updates on click
 
+    def add_layout(layout):
+        self.layouts.append(layout)
+
+    def add_modifier(modifier):
+        self.modifiers.append(modifier)
+
     def layout(self):
         for layout in self.layouts:
             layout.perform_layout(self)
 
+    def get_width(self):
+        return self.r[3]
+
+    def get_height(self):
+        return self.r[4]
+
+    def set_width(self,w):
+        self.r[3] = w
+
+    def set_height(self,h):
+        self.r[4] = h
+
+    def set_x(self,x):
+        self.r[0] = x
+
+    def set_y(self,y):
+        self.r[1] = y
+
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
     def get_children(self):
         return self.children
 
@@ -108,7 +137,7 @@ def find_ui_area(x,y):
     for area in rev:
         if( x >= area.r[0] and x < area.r[0] + area.r[2] and
                 y >= area.r[1] and y < area.r[1] + area.r[3] ):
-                    return area
+            return area
     return None
 
 def set_absolute_mpos(mpos):

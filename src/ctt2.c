@@ -100,6 +100,7 @@ void initWindowingSystemMessages() {
 
 /**************************************/
 
+
 void initDisplay() {
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
         printf( "%s\n", SDL_GetError() );
@@ -181,6 +182,7 @@ int main(int argc, char **argv){
     initHwBrush();
     initBrush();
     initPython();
+
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 
     initYankPut();
@@ -199,9 +201,8 @@ int main(int argc, char **argv){
                 
                 switch (event.type) {
                     case SDL_WINDOWEVENT:
-                        /*SDL_Log("Window %d resized to %dx%d",
-                                event->window.windowID, event->window.data1,
-                                event->window.data2);*/
+
+                        /*reszie window*/
                         if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                         {
                             viewport_dims vd;

@@ -37,4 +37,7 @@ class mod_titlebar(mod_empty):
             ui_area.r[0] = self.origin[0] + mpos[0] - self.cursor_origin[0]
             ui_area.r[1] = self.origin[1] + mpos[1] - self.cursor_origin[1]
             self.move_origin = [x,y]
+
+            ui_area.r[0] = max(0, ui_area.r[0])
+            ui_area.r[1] = max(0, ui_area.r[1])
             return SIGNAL_EXIT_HANDLER

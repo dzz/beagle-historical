@@ -9,7 +9,6 @@ class child_renderer(area_renderer):
     def render(self, ui_area):
         ui_area.layout()
         with nested_view(*(ui_area.r)):
-            ui_area.render_client_area()
             for child in ui_area.get_children():
                 for renderer in child.renderers:
                     renderer.render(child)
