@@ -12,34 +12,41 @@ class ui_area(object):
         self.m_pos = [0,0]
         self.client_m_pos = [0,0]
         self.modifier_stack = []
-        self.prop = {}
         self.layouts = []
         self.renderers = []
         self.children = []
         self.parent= None
         self.is_focusable = False  #if true, z order updates on click
 
-    def add_layout(layout):
+    def add_layout(self,layout):
         self.layouts.append(layout)
 
-    def add_modifier(modifier):
-        self.modifiers.append(modifier)
+    def add_modifier(self,modifier):
+        self.modifier_stack.append(modifier)
 
     def layout(self):
         for layout in self.layouts:
             layout.perform_layout(self)
+        for modifier in self.modifier_stack:
+            modifier.layout_children(self.children)
+
+    def set_display_area(self,r):
+        self.r = r
+
+    def get_display_area(self):
+        return self.r
 
     def get_width(self):
-        return self.r[3]
+        return self.r[2]
 
     def get_height(self):
-        return self.r[4]
+        return self.r[3]
 
     def set_width(self,w):
-        self.r[3] = w
+        self.r[2] = w
 
     def set_height(self,h):
-        self.r[4] = h
+        self.r[3] = h
 
     def set_x(self,x):
         self.r[0] = x
@@ -52,6 +59,7 @@ class ui_area(object):
 
     def get_y(self):
         return self.y
+
     def get_children(self):
         return self.children
 
@@ -61,9 +69,6 @@ class ui_area(object):
 
     def compute_client_area(self):
         self.client_area = list(self.r)
-        for modifier in self.modifier_stack:
-            self.client_area = modifier.transform_client_area(self.client_area)
-        return self.client_area
 
     def get_client_area(self):
         return self.client_area

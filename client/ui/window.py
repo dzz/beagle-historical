@@ -17,13 +17,16 @@ import client.ui.style          as style
 
 
 class window(ui_area):
-    def __init__(self,title="ctt2_window",x=10,y=10,width=75,height=75):
+    def __init__(self,title="ctt2_window",x=10,y=10,width=75,height=75,titlebar_height=12,handle_size = 9):
         ui_area.__init__(self)
         self.is_focusable = True
-        self.r = [x,y,width,height]
+        self.set_display_area( [x,y,width,height] )
 
-        self.modifier_stack = [ mod_resize   ( handle_size = 9 ),
-                                mod_titlebar ( self, titlebar_text = title, height = 12 ),
+        self.title = title 
+        self.titlebar_height = titlebar_height
+
+        self.modifier_stack = [ mod_resize   ( handle_size = handle_size ),
+                                mod_titlebar ( self, titlebar_text = self.title, height = self.titlebar_height ),
                                 mod_parent   ( ) ]
 
         self.renderers = [

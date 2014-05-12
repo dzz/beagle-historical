@@ -1,7 +1,7 @@
 import hwgfx
 
 class label:
-    def __init__(self, text, fontsize ):
+    def __init__(self, text, fontsize = 8 ):
         self._label = hwgfx.label_generate()
         hwgfx.label_set_text(self._label,text)
         print("PY: acquired label ", self._label)

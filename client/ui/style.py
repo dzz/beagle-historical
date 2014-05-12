@@ -7,6 +7,7 @@ def get(key):
             "window_bg_color"               : [ 0.21, 0.25, 0.55,1.0 ],
             "window_client_color"           : [[ 1.0, 1.0, 1.0, 0.6 ], 
                                                [ 0.7, 0.7, 0.7, 0.3 ]],
-            "window_resize_handle_color"    : [ 0.9, 0.9, 0.9, 1.0 ] 
+            "window_resize_handle_color"    : [ 0.9, 0.9, 0.9, 1.0 ] ,
+            "default_label_color"           : [0.0,0.0,0.0]
             }
     return style_data.get(key)

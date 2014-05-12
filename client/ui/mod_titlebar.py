@@ -9,13 +9,10 @@ class mod_titlebar(mod_empty):
         self.origin = [0,0]
         self.height = height
         self.toggled = False
-        ui_area.prop["titlebar_text"] = titlebar_text
-        ui_area.prop["titlebar_height"] = height
 
-    def transform_client_area(self,r):
-        r[3] -= self.height
-        r[1] += self.height
-        return r
+    def layout_children(self,children):
+        for child in children:
+            child.r[1] += self.height
 
     def rcv_mouse_button(self,ui_area,button,x,y,down):
         if down == False:

@@ -16,3 +16,6 @@ class mod_empty(object):
 
     def transform_client_area(self,r):
         return r
+
+    def layout_children(self,children):
+        pass
