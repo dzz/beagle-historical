@@ -10,7 +10,7 @@ class label:
         hwgfx.label_drop(self._label)
         print("PY: dropped label", self._label)
 
-    def set_text(text):
+    def set_text(self, text):
         hwgfx.label_set_text(self._label,text)
 
     def draw(self,x,y, color):
