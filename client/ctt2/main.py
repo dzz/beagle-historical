@@ -4,6 +4,7 @@ import hwgfx
 import client.ui.areas as ui_area
 import client.app.main
 import client.gfx.blend as blend
+import gc
 
 caret_handler = None
 
@@ -18,6 +19,8 @@ def finalize():
 
 def tick():
     render()
+    gc.collect()
+    
 
 def render():
     with blend.state(blend.mode_over):

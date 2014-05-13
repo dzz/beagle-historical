@@ -2,8 +2,6 @@ from client.ui.window               import window
 from client.ui.layout_flexcolumn    import layout_flexcolumn
 from client.ui.text_box             import text_box
 
-
-
 class property_window(window):
     def __init__(self):
         window.__init__(self,"properties",x=0,y=0,width=400,height=400);

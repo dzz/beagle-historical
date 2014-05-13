@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "../system/ctt2.h"
 #include "../drawing/drawingSurfaces.h"
 #include <string.h>
@@ -17,6 +18,13 @@ gfx_texture atlas_texture;
 static int _atl_cursor;
 
 
+typedef struct {
+    int     cursor_pos;
+    void*   prev;
+} used_cursor;
+
+used_cursor* recycle_stack;
+
 void initLabels() {
     font        = IMG_Load("font\\cga8.png");
     atlas       = createDrawingSurface(1024,1024);
@@ -25,6 +33,8 @@ void initLabels() {
     texture_generate(&atlas_texture,1024,1024);
     shader_load(&label_shader, "shaders/hwgfx/label.vert.glsl",
                                "shaders/hwgfx/label.frag.glsl");
+
+    recycle_stack = 0;
 }
 
 void dropLabels() {
@@ -32,6 +42,21 @@ void dropLabels() {
     SDL_FreeSurface(font);
     SDL_FreeSurface(atlas);
     texture_drop(&atlas_texture);
+    
+    /*clean up atlas reuse stack*/
+    {
+        used_cursor* iterator = recycle_stack;
+        used_cursor* tmp;
+
+        for(;;) {
+            printf("C: LABELS - CLEARING ITERATOR: %x\n",iterator);
+            if(iterator == 0)
+                break;
+            tmp = iterator;
+            iterator = tmp->prev;
+            free(tmp);
+        }
+    }
 }
 
 
@@ -63,6 +88,23 @@ void label_render(gfx_label* label, float x, float y,float r,float g, float b) {
 
     primitive_render    ((gfx_coordinate_primitive*)label->primitive);
 }
+
+
+int dequeue_cursor_pos() {
+    if(recycle_stack ==0) {
+        int rval = _atl_cursor;
+        _atl_cursor++;
+        return rval;
+    } else {
+        int rval = recycle_stack->cursor_pos;
+        used_cursor* tmp = recycle_stack;
+        recycle_stack = tmp->prev;
+        free(tmp);
+        printf("FREED STACK:%x",tmp);
+        return rval;
+    }
+}
+
 
 void label_generate(gfx_label* label) {
     float uvw,uvh;
@@ -139,9 +181,26 @@ void label_set_text(gfx_label* label, const char* text) {
     SDL_FreeSurface(tex);
 }
 
+
+
 void label_drop(gfx_label* label) {
+
+    if(recycle_stack == 0) {
+        recycle_stack = malloc(sizeof(used_cursor));
+        recycle_stack->cursor_pos = label->_cursor;
+        recycle_stack->prev = 0;
+    } else {
+        used_cursor* next = malloc(sizeof(used_cursor));
+        next->prev = (void*)recycle_stack;
+        recycle_stack = next;
+        recycle_stack->cursor_pos = label->_cursor;
+    }
+
+    printf("C: LABELS: ADDED ATLAS TAG TO DEQUEU: %x\n", recycle_stack);
+
     texture_drop(label->texture);
     free(label->texture);
     primitive_destroy_coordinate_primitive((gfx_coordinate_primitive*)label->primitive);
     free(label->primitive);
+
 }
