@@ -1,6 +1,6 @@
 from client.ui.areas                import ui_area
-from client.gfx.rect            import rect_vgrad
-from client.gfx.label           import label
+from client.gfx.rect                import rect_vgrad
+from client.gfx.label               import label
 from client.ui.default_renderer     import default_renderer
 
 import client.ui.style      as style
