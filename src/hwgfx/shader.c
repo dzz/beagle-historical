@@ -76,8 +76,12 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
 gfx_shader* _bound = 0;
 
 void shader_bind(gfx_shader* shader){
-    glUseProgram(shader->shader_id);
-    _bound = shader;
+    /* lazy binding - don't take the driver hit
+     * if we're using this shader already */
+    if(_bound != shader ) {
+        glUseProgram(shader->shader_id);
+        _bound = shader;
+    }
 }
 
 gfx_shader* shader_get_bound() {
@@ -106,7 +110,14 @@ void shader_bind_float(gfx_shader* shader, const char* param, float x) {
 }
 
 void shader_drop(gfx_shader* shader) {
-    glUseProgram(0); 
+
+    /*if our current shader is bound, unbind it
+     * before attempting to delete GL resources */
+    if(_bound == shader) {
+        glUseProgram(0);
+        _bound = 0;
+    }
+
     glDetachShader(shader->shader_id, shader->vert_shader_id);
     glDetachShader(shader->shader_id, shader->frag_shader_id);
     glDeleteProgram(shader->shader_id);

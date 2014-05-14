@@ -168,7 +168,7 @@ void initPython() {
 /*****************************************************************************/
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 240;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 300;
     int screenbuffer_cycles                         = 20;
     int finished                                    = 0;
 
@@ -275,12 +275,13 @@ int main(int argc, char **argv){
                 screenbuffer_cycles = 0;
 
                 hw_render_layerstack(fr);
+                /*
                 if( getPanelsEnabled() == PANELS_ENABLED ){
                     SDL_FillRect(ui_surface, NULL, 
                             SDL_MapRGBA( ui_surface->format, 0,0,0,0));
                     renderPanels        (ui_surface);
                     gfx_surface_render  (ui_surface);
-                }
+                }*/
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 updateViewingSurface();
             }

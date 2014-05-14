@@ -19,7 +19,6 @@ def finalize():
 
 def tick():
     render()
-    gc.collect()
     
 
 def render():

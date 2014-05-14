@@ -11,6 +11,7 @@ def get(vert,frag):
         _shaders[( vert, frag)] = loaded
         return loaded
 
+
 class shader(object):
     def __init__(self,vert,frag):
         self._shader = hwgfx.shader_load(
@@ -19,7 +20,9 @@ class shader(object):
         print("PY: loaded shader ",self._shader)
 
     def bind(self,uniforms):
-        hwgfx.shader_bind(self._shader)
+        hwgfx.shader_bind(self._shader);
+
+
         for u in uniforms:
             name    = u[0]
             vector  = u[1]
