@@ -1,5 +1,4 @@
-#import client.gfx
-#import hwgfx
+import client.ctt2.caret as caret
 
 SIGNAL_EXIT_HANDLER         = True
 SIGNAL_CONTINUE_HANDLING    = False
@@ -17,6 +16,10 @@ class ui_area(object):
         self.children = []
         self.parent= None
         self.is_focusable = False  #if true, z order updates on click
+
+    def has_caret(self):
+        if self == caret.get_caret():
+            return True
 
     def add_layout(self,layout):
         self.layouts.append(layout)
@@ -63,6 +66,9 @@ class ui_area(object):
 
     def get_children(self):
         return self.children
+
+    def get_dims(self):
+        return [0,0,self.r[2],self.r[3]]
 
     def add_child(self,ui_area):
         self.children.append(ui_area)

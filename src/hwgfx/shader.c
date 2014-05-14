@@ -21,6 +21,7 @@ void _shader_err(GLuint shader_id) {
     free(infoLog);
     _getch();
 }
+
 void shader_load(gfx_shader* shader, const char* v_src_path, 
         const char* f_src_path ){
 

@@ -8,6 +8,7 @@ class color_window(window):
 
         for i in range(0,256):
             x = float(i) / 255.0
-            self.add_child( color_box( color = [x*x,1-x,x*0.5,1] ) )
+            y = float(i % 16)/16.0
+            self.add_child( color_box( color = [y*x,1-x,x*0.5-y,1] ) )
 
         self.add_layout( layout_grid(16,16) )

@@ -1,12 +1,11 @@
-from client.ctt2.mouse_focus import mouse_focused_area
+from client.ctt2.mouse_focus    import mouse_focused_area
 import host
 import hwgfx
-import client.ui.areas as ui_area
 import client.app.main
-import client.gfx.blend as blend
+import client.ui.areas          as ui_area
+import client.gfx.blend         as blend
+import client.ctt2.caret        as caret
 import gc
-
-caret_handler = None
 
 __clickpos  = [0,0]
 __mpos      = [0,0]
@@ -19,6 +18,7 @@ def finalize():
 
 def tick():
     render()
+    gc.collect()
     
 
 def render():
@@ -76,18 +76,18 @@ def dispatch_mousemotion(x,y):
     return SIGNAL_DISCARDED
 
 def dispatch_key(key,down):
-    global caret_handler
-    if(caret_handler == None):
-        dispatch_root_keybindings(key,down)
-        if(mouse_focused_area is not None):
-            area.rcv_key(key,down)
-            return SIGNAL_HANDLED
-        return SIGNAL_DISCARDED
-    return caret_handler.rcv_key(key,down)
+    KEY_ESCAPE = 33
+    caret_target = caret.get_caret()
+    if down:
+        if key == KEY_ESCAPE:
+            caret.drop()
+            return
+
+    if caret_target is not None:
+        caret_target.rcv_key(key,down)
+
 
 def dispatch_root_keybindings(key,down):
     pass
 
-def caret_release():
-    global caret_handler
-    caret_handler = None
+
