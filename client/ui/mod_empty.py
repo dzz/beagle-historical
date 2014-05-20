@@ -19,3 +19,6 @@ class mod_empty(object):
 
     def layout_children(self,children):
         pass
+
+    def rcv_text(self,ui_area,text):
+        pass

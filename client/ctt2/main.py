@@ -91,5 +91,7 @@ def dispatch_root_keybindings(key,down):
     pass
 
 def dispatch_text(text):
-    print("saw:",text)
+    caret_target = caret.get_caret()
+    if caret_target is not None:
+        caret_target.rcv_text(text)
     return

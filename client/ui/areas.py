@@ -101,6 +101,15 @@ class ui_area(object):
                 return SIGNAL_EXIT_HANDLER;
         return SIGNAL_CONTINUE_HANDLING
 
+    def rcv_text(self,text):
+
+        #this is coupled to the caret handling
+        #so we don't care about SIGNAL_EXIT_HANDLER etc. here,
+        #the caret is by nature a singleton
+
+        for modifier in self.modifier_stack:
+            modifier.rcv_text(self,text)
+
     def set_m(self,position):
         self.m_pos = position
         self.client_m_pos[0] = self.m_pos[0]

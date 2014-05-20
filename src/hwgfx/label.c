@@ -24,12 +24,16 @@ typedef struct {
 
 used_cursor* recycle_stack;
 
+static const int ATLAS_SIZE = 1024;
+static const int ATLAS_COLS = 4;
+static const int CHAR_DIMS = 8;
+
 void initLabels() {
     font        = IMG_Load("font\\cga8.png");
     atlas       = createDrawingSurface(1024,1024);
     _atl_cursor = 0;
 
-    texture_generate(&atlas_texture,1024,1024);
+    texture_generate(&atlas_texture,ATLAS_SIZE,ATLAS_SIZE);
     shader_load(&label_shader, "shaders/hwgfx/label.vert.glsl",
                                "shaders/hwgfx/label.frag.glsl");
 
@@ -64,13 +68,21 @@ typedef struct{
     int y;
 } _pt;
 
+int _get_atlas_cell_w() {
+    return ATLAS_SIZE / ATLAS_COLS;
+}
+
+int _get_atlas_cell_h() {
+    return CHAR_DIMS;
+}
+
 _pt get_cursor_position(int p) {
     _pt r;
-    int a = p % 4;
-    int b = p / 4;
+    int a = p % ATLAS_COLS;
+    int b = p / ATLAS_COLS;
 
-    r.x = a * (1024/4);
-    r.y = b*8;
+    r.x = a * (ATLAS_SIZE/ATLAS_COLS);
+    r.y = b*CHAR_DIMS;
     return r;
 }
 
@@ -116,6 +128,7 @@ void label_generate(gfx_label* label) {
 
     pt = get_cursor_position(label->_cursor);
 
+    /*TODO: link to constants */
     uvw = 256.0/1024.0;
     uvh = 8.0/1024.0;
     uo = (float)pt.x / 1024.0f;
@@ -140,43 +153,73 @@ void label_generate(gfx_label* label) {
 }
 
 void label_set_text(gfx_label* label, const char* text) {
-    int i;
-    int l;
-    SDL_Surface* tex; 
+    int i;                              
+    int l;                                      //hold length of text
+    SDL_Surface* tex;                           //buffer for label
 
-    l = strlen(text);
-    tex = createDrawingSurface(8*l,8);
-    label->w = l*8;
-    label->h = 8;
-    for( i=0; i<l; ++i) {
+    l = strlen(text);               
+    tex = createDrawingSurface(8*l,8);          //8x8 font, create buffer to hold rendered text
+    label->w = l*CHAR_DIMS;                             //calc dimensions
+    label->h = CHAR_DIMS;
+
+    for( i=0; i<l; ++i) {                       //render each char of text
         int val = (int)text[i];
-        int basex = val % 32; int basey = val / 32; 
 
-        SDL_Rect src; SDL_Rect dst;
+        int basex = val % 32;                   //calc our basic grid position for the char
+        int basey = val / 32;
 
-        src.x=basex*8;  src.y=basey*8;
-        src.w=8;        src.h=8;
+        SDL_Rect src; 
+        SDL_Rect dst;
 
-        dst.x=i*8;      dst.y=0;
-        dst.w=8;        dst.h=8;
+        src.x = basex*8;  
+        src.y = basey*8;
+        src.w = 8;        
+        src.h = 8;
+
+        dst.x = i*8;      
+        dst.y = 0;
+        dst.w = 8;        
+        dst.h = 8;
 
         SDL_BlitSurface(font,&src,tex,&dst);
     }
+
+    /* blank out the atlas where our label gonna live*/
+
+    {
+        _pt         pt;
+        SDL_Rect    r;
+
+        pt = get_cursor_position(label->_cursor );
+        r.x = pt.x;
+        r.y = pt.y;
+        r.w = _get_atlas_cell_w();
+        r.h = _get_atlas_cell_h();
+        SDL_FillRect( atlas, &r, SDL_MapRGBA( atlas->format, 0,0,0,0 ));
+    }
+
+    /* now blit our label onto the atlas */ 
     {
         SDL_Rect sr; SDL_Rect r;
         _pt pt;
 
         pt = get_cursor_position(label->_cursor );
         /*src*/
-        sr.x=0;     sr.y=0;
-        sr.w=label->w; sr.h=label->h;
+        sr.x=0;     
+        sr.y=0;
+        sr.w=label->w; 
+        sr.h=label->h;
         /*dst*/
-        r.x = pt.x;     r.y = pt.y;
-        r.w = label->w; r.h = label->h;
+        r.x = pt.x;     
+        r.y = pt.y;
+        r.w = label->w; 
+        r.h = label->h;
 
         SDL_BlitSurface(tex,&sr,atlas,&r);
     }
+
     texture_from_SDL_surface(&atlas_texture, atlas);
+
     SDL_FreeSurface(tex);
 }
 

@@ -10,4 +10,7 @@ def drop():
 
 def acquire( ui_area ):
     global _caret
+    if _caret is not None:
+        _caret.revert_edit()
     _caret = ui_area
+

@@ -20,10 +20,20 @@ class text_box(ui_area):
         self.editable = editable
         self.active_color = style.get("active_textbox_color")
         self.padding = padding
-
+      
         if self.editable:
             self.add_modifier(mod_caret_handler())
             self.add_modifier(mod_text_editor())
+            self.original_text = self.text
+
+    def begin_edit(self):
+        self.original_text = self.text
+
+    def revert_edit(self):
+        self.set_text(self.original_text)
+
+    def end_edit(self):
+        pass
 
     def set_text(self, text):
         self.text = text

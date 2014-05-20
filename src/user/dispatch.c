@@ -61,14 +61,13 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_LALT:
 								modifiers.LEFT_ALT = 1;
 								break;	
-		/*				case SDLK_0:
-								animation_preview();
-								break;*/
-						case SDLK_ESCAPE:
-								return SYSSIG_QUIT_CTT2;
-						case SDLK_SPACE:
+						case SDLK_F4:
+                                if( modifiers.LEFT_ALT == 1)
+								    return SYSSIG_QUIT_CTT2;
+                                break;
+				/*		case SDLK_SPACE:
 								panels_enable_dragmode();
-								break;
+								break;*/
 						case SDLK_TAB:
 								togglePanels();
 								break;
