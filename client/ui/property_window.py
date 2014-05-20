@@ -11,8 +11,8 @@ class layout_rowborders:
             child.set_height( child.get_height() - self.row_border );
 
 class property_window(window):
-    def __init__(self, property_map = {"default": ""} ):
-        window.__init__(self,"properties",x=0,y=0,width=400,height=400);
+    def __init__(self, title = "properties", property_map = {"default": ""} ):
+        window.__init__(self,title ,x=0,y=0,width=400,height=400)
 
         for k in property_map.keys():
             self.add_child( text_box( text=k ) )

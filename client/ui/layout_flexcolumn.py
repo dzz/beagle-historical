@@ -26,10 +26,11 @@ class layout_flexcolumn:
             width = int(self.normalized_weights[x] * ui_area.get_width())
 
             child = ui_area.children[i]
+            computed_row_height = child.mutate_layout_height(row_height)
             child.set_x(used_width)
-            child.set_y( y * row_height)
+            child.set_y( y * computed_row_height)
             child.set_width(width)
-            child.set_height( child.mutate_layout_height(row_height))
+            child.set_height( computed_row_height )
 
             used_width += width
 

@@ -37,7 +37,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_LALT:
 								modifiers.LEFT_ALT = 0;
 								break;	
-						case SDLK_SPACE:
+						/*case SDLK_SPACE:
 								panels_disable_dragmode();
 								break;
 						case SDLK_n:
@@ -48,7 +48,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								break;
 						case SDLK_4:
 								nodemapper_create_template(TEMPLATE_MUL);
-								break;
+								break;*/
 				}
 		}
 

@@ -8,6 +8,8 @@ from client.ui.default_renderer     import default_renderer
 from client.ui.mod_caret_handler    import mod_caret_handler
 from client.ui.mod_text_editor      import mod_text_editor
 
+from client.ui.controlled_eval      import evaluator
+
 from math import *  #this is so our magic text box evaluation can use sqrt n' shit
 
 import client.ui.style      as style
@@ -40,10 +42,11 @@ class text_box(ui_area):
     def revert_edit(self):
         self.set_text(self.original_text)
 
+
     def end_edit(self):
         if self.use_python:
             try:
-                self.evaluated = eval(self.text)
+                self.evaluated = evaluator(self.text)
                 set_status("res: {}".format(self.evaluated))
             except:
                 default_eval = None
@@ -57,7 +60,10 @@ class text_box(ui_area):
 
     def set_text(self, text):
         self.text = text
-        self.label.set_text(text)
+        if self.text is not "":
+            self.label.set_text(text)
+        else:
+            self.label.set_text(self.original_text)
 
     def get_text(self):
         return self.text

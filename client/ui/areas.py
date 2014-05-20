@@ -124,6 +124,9 @@ class ui_area(object):
     def mutate_layout_height(self,height):
         return height
 
+    def mutate_layout_width(self,width):
+        return width
+
     def order_siblings(self):
         _zsort(self.get_siblings())
 
