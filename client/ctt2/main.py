@@ -1,6 +1,10 @@
-from client.ctt2.mouse_focus    import mouse_focused_area
 import host
 import hwgfx
+
+from client.ctt2.mouse_focus    import mouse_focused_area
+from client.ctt2.status import render_status
+from client.ctt2.status import set_status
+
 import client.app.main
 import client.ui.areas          as ui_area
 import client.gfx.blend         as blend
@@ -12,6 +16,8 @@ __mpos      = [0,0]
 
 def init():
     client.app.main.init()
+    set_status("initialized application")
+
 
 def finalize():
     client.app.main.finalize()
@@ -19,13 +25,13 @@ def finalize():
 def tick():
     render()
     gc.collect()
-    
 
 def render():
     with blend.state(blend.mode_over):
         for area in ui_area.order_areas():
             for renderer in area.renderers:
                 renderer.render(area)
+        render_status()
     
 def _get_mf_area():
     return mouse_focused_area

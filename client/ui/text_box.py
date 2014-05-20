@@ -1,3 +1,5 @@
+from client.ctt2.status             import set_status
+from client.ctt2.status             import set_error
 from client.ui.areas                import ui_area
 from client.gfx.rect                import rect_solid
 from client.gfx.rect                import rect_vgrad
@@ -6,21 +8,27 @@ from client.ui.default_renderer     import default_renderer
 from client.ui.mod_caret_handler    import mod_caret_handler
 from client.ui.mod_text_editor      import mod_text_editor
 
+from math import *  #this is so our magic text box evaluation can use sqrt n' shit
+
 import client.ui.style      as style
+import host
 
 class text_box(ui_area):
-    def __init__(self, text="", editable = False, padding = 4 ):
+    def __init__(self, text="", editable = False, padding = 4, default_eval = None, use_python = False ):
         global _tmplabel
         ui_area.__init__(self)
         self.label_color = style.get("default_label_color");
+        self.default_eval = default_eval
         self.text = text
         self.label = label(self.text)
+        self.use_python = use_python
         self.client_color   = style.get("window_client_color")
         self.renderers = [ default_renderer() ]
         self.editable = editable
         self.active_color = style.get("active_textbox_color")
         self.padding = padding
-      
+        self.evaluated = None
+
         if self.editable:
             self.add_modifier(mod_caret_handler())
             self.add_modifier(mod_text_editor())
@@ -33,7 +41,19 @@ class text_box(ui_area):
         self.set_text(self.original_text)
 
     def end_edit(self):
-        pass
+        if self.use_python:
+            try:
+                self.evaluated = eval(self.text)
+                set_status("res: {}".format(self.evaluated))
+            except:
+                default_eval = None
+                if(self.default_eval == None):
+                    default_eval = self.text
+                else:
+                    default_eval = self.default_eval
+                set_error("noeval:`{}`".format(str(default_eval)))
+                self.evaluated = default_eval
+            self.set_text(str(self.evaluated))
 
     def set_text(self, text):
         self.text = text
@@ -42,6 +62,9 @@ class text_box(ui_area):
     def get_text(self):
         return self.text
 
+    def mutate_layout_height(self,height):
+        return 24
+        
     def render_client_area(self):
         pad_px = self.padding
         if(self.editable): 

@@ -244,7 +244,7 @@ int main(int argc, char **argv){
                         break;
                     case SDL_KEYUP:
                         dispatch_key(event.key.keysym.sym,0);
-                        if( api_dispatch_key(event.key.keysym.sym,1) 
+                        if( api_dispatch_key(event.key.keysym.sym,0) 
                                 == API_FAILURE ) finished = 1;
                         break;
                     case SDL_MOUSEBUTTONDOWN:

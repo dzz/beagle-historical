@@ -29,7 +29,7 @@ class layout_flexcolumn:
             child.set_x(used_width)
             child.set_y( y * row_height)
             child.set_width(width)
-            child.set_height(row_height)
+            child.set_height( child.mutate_layout_height(row_height))
 
             used_width += width
 

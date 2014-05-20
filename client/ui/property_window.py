@@ -11,18 +11,13 @@ class layout_rowborders:
             child.set_height( child.get_height() - self.row_border );
 
 class property_window(window):
-    def __init__(self):
+    def __init__(self, property_map = {"default": ""} ):
         window.__init__(self,"properties",x=0,y=0,width=400,height=400);
 
-        property_map = {}
-        property_map["color"] = "[1,2,3]"
-        property_map["evil"]  = "666"
+        for k in property_map.keys():
+            self.add_child( text_box( text=k ) )
+            self.add_child( text_box( text=property_map[k], editable=True, use_python=True ) )
 
-        for rep in range(0,6):
-            for k in property_map.keys():
-                self.add_child( text_box( text=k ) )
-                self.add_child( text_box( text=property_map[k], editable=True ) )
-        
         self.add_layout( layout_flexcolumn(weights = [1,3], row_height = None) )
         self.add_layout(layout_rowborders() )
 

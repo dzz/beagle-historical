@@ -76,6 +76,14 @@ int _get_atlas_cell_h() {
     return CHAR_DIMS;
 }
 
+int api_host_get_char_dims() {
+    return CHAR_DIMS;
+}
+
+int _max_strlen() {
+    return _get_atlas_cell_w() / CHAR_DIMS;
+}
+
 _pt get_cursor_position(int p) {
     _pt r;
     int a = p % ATLAS_COLS;
@@ -158,6 +166,10 @@ void label_set_text(gfx_label* label, const char* text) {
     SDL_Surface* tex;                           //buffer for label
 
     l = strlen(text);               
+
+    if( l > _max_strlen() )
+        l = _max_strlen();
+
     tex = createDrawingSurface(8*l,8);          //8x8 font, create buffer to hold rendered text
     label->w = l*CHAR_DIMS;                             //calc dimensions
     label->h = CHAR_DIMS;

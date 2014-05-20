@@ -15,12 +15,12 @@ class mod_caret_handler(mod_empty):
             if key == 27:  #escape
                 caret.drop()
                 ui_area.revert_edit()
-            if key == 8:    #backspace
+            if key == 8 and down:    #backspace
                 text = ui_area.get_text()
                 if(len(text)>0):
                     text = text [0:len(text)-1]
                     ui_area.set_text(text)
-            if key == 13:   #CR
+            if key == 13 and down:   #CR
                 caret.drop()
                 ui_area.end_edit()
 

@@ -12,7 +12,8 @@ class layout_grid:
         height  = ui_area.r[3] // self.y
 
         for i in range(0, len(ui_area.children)):
-            x = (i % self.x) * width
-            y = (i // self.y) * height
-            child = ui_area.children[i]
-            child.r = [x,y,width,height]
+            x                   = (i % self.x) * width
+            y                   = (i // self.y) * height
+            child               = ui_area.children[i]
+            mutated_height      = child.mutate_layout_height(height)
+            child.r             = [x,y,width,mutated_height]

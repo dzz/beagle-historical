@@ -6,7 +6,8 @@ import  client.ui.areas  as areas
 
 
 def init():
-        areas.register_ui_area( property_window() )
+        properties = {"my key": "", "what": "strval", "other" : "10.0" };
+        areas.register_ui_area( property_window( properties ) )
         areas.register_ui_area( color_window() )
 
 def finalize():
