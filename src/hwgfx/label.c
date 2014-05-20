@@ -17,7 +17,6 @@ gfx_texture atlas_texture;
 
 static int _atl_cursor;
 
-
 typedef struct {
     int     cursor_pos;
     void*   prev;
@@ -184,7 +183,6 @@ void label_set_text(gfx_label* label, const char* text) {
 
 
 void label_drop(gfx_label* label) {
-
     if(recycle_stack == 0) {
         recycle_stack = malloc(sizeof(used_cursor));
         recycle_stack->cursor_pos = label->_cursor;

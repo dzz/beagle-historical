@@ -28,6 +28,13 @@ int api_checkfailure_cleanargs(PyObject* args,PyObject** vals) {
     return API_NOFAILURE;
 }
 
+/* hax: should be variadic 
+ *
+ * ideal interface here would be to build calls
+ * with variadic and the default py tuple
+ * format e.g.
+ * _pycall( client_if.{$myfunc}, "sii", mystr, myint, myint2)
+ * */
 #define MAX_ARGS 16
 int _pycall_int_args(PyObject* func,int* args,int nargs) {
     int i;
@@ -41,5 +48,18 @@ int _pycall_int_args(PyObject* func,int* args,int nargs) {
         PyObject_CallObject(func,py_args);
         return api_checkfailure_cleanargs(py_args,py_vals);
     } 
+    return API_FAILURE;
+}
+
+int _pycall_str_arg(PyObject* func, char* arg) {
+    if(func && PyCallable_Check( func )) {
+        PyObject* py_args = PyTuple_New(1);
+        PyObject* py_vals[1] = {0};
+        py_vals[0] = Py_BuildValue("s",arg);
+        PyTuple_SetItem(py_args, 0, py_vals[0]);
+        PyObject_CallObject(client_if.dispatch_text, py_args);
+
+        return api_checkfailure_cleanargs(py_args,py_vals);
+    }
     return API_FAILURE;
 }

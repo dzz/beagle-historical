@@ -61,9 +61,9 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_LALT:
 								modifiers.LEFT_ALT = 1;
 								break;	
-						case SDLK_0:
+		/*				case SDLK_0:
 								animation_preview();
-								break;
+								break;*/
 						case SDLK_ESCAPE:
 								return SYSSIG_QUIT_CTT2;
 						case SDLK_SPACE:
@@ -72,7 +72,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 						case SDLK_TAB:
 								togglePanels();
 								break;
-						case SDLK_s:
+					/*	case SDLK_s:
 								animation_save();
 								break;
 						case SDLK_c:
@@ -123,7 +123,7 @@ SYSTEM_SIGNAL dispatch_key(SDL_Keycode sym, int mode) {
 								break;
 						case SDLK_p:
 								putDrawingContext();
-								break;
+								break;*/
 
 				}
 		}

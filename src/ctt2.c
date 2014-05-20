@@ -10,7 +10,7 @@
 #ifdef __linux__
 //todo: tablet / vsync
 #endif
-/*debug sux*/
+/*undef _DEBUG to get around py linking issues */
 #undef _DEBUG
 #include <Python.h>
 #include <SDL.h>
@@ -163,9 +163,15 @@ void initPython() {
     }
 }
 
-
-
 /*****************************************************************************/
+
+void initTextInput() {
+    SDL_StartTextInput();
+}
+
+void dropTextInput() {
+    SDL_StopTextInput();
+}
 
 int main(int argc, char **argv){ 
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 300;
@@ -181,6 +187,7 @@ int main(int argc, char **argv){
     initAnimation();
     initHwBrush();
     initBrush();
+    initTextInput();
     initPython();
 
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
@@ -192,6 +199,7 @@ int main(int argc, char **argv){
                                         SCREEN_HEIGHT);
     initPanels(ui_surface);
 
+
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
@@ -200,8 +208,10 @@ int main(int argc, char **argv){
             if(SDL_PollEvent(&event)) {
                 
                 switch (event.type) {
+                    case SDL_TEXTINPUT:
+                        api_dispatch_text( event.text.text );
+                        break;
                     case SDL_WINDOWEVENT:
-
                         /*reszie window*/
                         if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                         {
@@ -275,13 +285,13 @@ int main(int argc, char **argv){
                 screenbuffer_cycles = 0;
 
                 hw_render_layerstack(fr);
-                /*
+                
                 if( getPanelsEnabled() == PANELS_ENABLED ){
                     SDL_FillRect(ui_surface, NULL, 
                             SDL_MapRGBA( ui_surface->format, 0,0,0,0));
                     renderPanels        (ui_surface);
                     gfx_surface_render  (ui_surface);
-                }*/
+                }
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 updateViewingSurface();
             }
@@ -296,6 +306,7 @@ int main(int argc, char **argv){
     dropDrawingSurfaces();
     dropYankPut();
     dropPython();
+    dropTextInput();
     dropExtendedVideo();
     dropOpengl();
     dropDisplay();

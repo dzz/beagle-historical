@@ -8,5 +8,6 @@ CLIENT_FUNCTION( dispatch_mouseup,     "dispatch_mouseup"     )
 CLIENT_FUNCTION( dispatch_mousedown,   "dispatch_mousedown"   )
 CLIENT_FUNCTION( dispatch_mousemotion, "dispatch_mousemotion" )
 CLIENT_FUNCTION( dispatch_key,         "dispatch_key"         )
+CLIENT_FUNCTION( dispatch_text,        "dispatch_text"        )
 CLIENT_FUNCTION( finalize,             "finalize"             )
 

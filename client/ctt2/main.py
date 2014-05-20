@@ -90,4 +90,6 @@ def dispatch_key(key,down):
 def dispatch_root_keybindings(key,down):
     pass
 
-
+def dispatch_text(text):
+    print("saw:",text)
+    return
