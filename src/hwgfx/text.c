@@ -28,7 +28,7 @@ static void genPrims() {
     for(i=0; i< MAX_CH; ++i) { 
 
         int xIdx = i % charsPerRow;
-        int yIdx = i / charsPerCol;
+        int yIdx = i / charsPerRow;
 
         double uo = (double)xIdx / (double)charsPerRow;
         double vo = (double)yIdx / (double)charsPerCol;
@@ -57,7 +57,7 @@ void initText() {
         /*load font and texgen*/
         font        = IMG_Load("font\\cga8.png");
         texture_generate( &font_texture, font->w, font->h );
-
+        texture_from_SDL_surface( &font_texture, font);
         charsPerRow = font->w / CHAR_DIMS; 
         charsPerCol = font->h / CHAR_DIMS;
 
@@ -74,27 +74,32 @@ void renderChar(float x, float y, int v ) {
     viewport_dims dims = gfx_viewport_get_dims();
     shader_bind_vec2(&text_shader, "char_pos", x,y );
     primitive_render( &char_prims[v] );
+    printf("%d\n",&char_prims[v]);
 }
 
 void renderText( float x, float y,float r, float g, float b, const char* text ) {
     int l;
     int i;
+    int it;
     float yt = y;
 
     viewport_dims dims = gfx_viewport_get_dims();
 
-    texture_bind(&font_texture, TEX_UNIT_0);
     shader_bind(&text_shader);
     shader_bind_vec2(&text_shader,"scr_size",(float)dims.w,(float)dims.h);
     shader_bind_vec3(&text_shader,"label_col",r,g,b);
+    texture_bind(&font_texture, TEX_UNIT_0);
     l = strlen(text);
-
+    it = 0;
     for( i=0; i<l; ++i ) {
-        if( text[i] == '\r' ){
+        if( text[i] == '\n' ){
             yt += CHAR_DIMS;
+            it = 0;
+            
             continue;
         } 
-        renderChar( x + i*(CHAR_DIMS), yt, (int)text[i] );
+        renderChar( x + it*(CHAR_DIMS), yt, (int)text[i] );
+        it++;
     }
 }
 

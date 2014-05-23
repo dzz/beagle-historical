@@ -35,6 +35,7 @@
 #include "user/yank_put.h"
 #include "user/editors/colorPicker.h"
 #include "hwgfx/context.h"
+#include "hwgfx/text.h"
 
 static SDL_Window* opengl_window;
 static SDL_Surface* ui_surface = NULL;
@@ -284,15 +285,18 @@ int main(int argc, char **argv){
                 frame* fr           = getActiveFrame();
                 screenbuffer_cycles = 0;
 
-                hw_render_layerstack(fr);
+                /*hw_render_layerstack(fr);
                 
                 if( getPanelsEnabled() == PANELS_ENABLED ){
                     SDL_FillRect(ui_surface, NULL, 
                             SDL_MapRGBA( ui_surface->format, 0,0,0,0));
                     renderPanels        (ui_surface);
                     gfx_surface_render  (ui_surface);
-                }
+                }*/
                 if(api_tick() == API_FAILURE) { finished = 1; }
+
+                renderText( 25, 25, 1.0,0.0,1.0, "0123456789\n@ABCDE\nabcde");
+
                 updateViewingSurface();
             }
         }
