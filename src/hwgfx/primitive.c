@@ -92,6 +92,13 @@ void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
 void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
         uv_primitive) {
 
+    /* TODO: determine if this is required or 
+     * if the GL spec indicates that primitive_destroy_coordinate_primitive 
+     * is all that is required 
+     *
+     * notably used in label / text / hwgfx api module
+     */
+
     primitive_destroy_coordinate_primitive((gfx_coordinate_primitive*)
             uv_primitive);
 

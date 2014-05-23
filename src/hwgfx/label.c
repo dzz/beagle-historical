@@ -17,6 +17,7 @@ gfx_texture atlas_texture;
 
 static int _atl_cursor;
 
+
 typedef struct {
     int     cursor_pos;
     void*   prev;
@@ -99,13 +100,13 @@ void label_render(gfx_label* label, float x, float y,float r,float g, float b) {
 
     viewport_dims dims = gfx_viewport_get_dims();
 
-    shader_bind         (&label_shader                              );
-    shader_bind_vec2    (&label_shader, "label_pos",   x,y          );
-    shader_bind_vec2    (&label_shader, "scr_size",    (float)dims.w,(float)dims.h);
-    shader_bind_vec3    (&label_shader, "label_col",   r,g,b        );
-    texture_bind        (&atlas_texture, TEX_UNIT_0                 );
+    shader_bind(&label_shader);
+    shader_bind_vec2(&label_shader,"label_pos",x,y);
+    shader_bind_vec2(&label_shader,"scr_size",(float)dims.w,(float)dims.h);
+    shader_bind_vec3(&label_shader,"label_col",r,g,b);
+    texture_bind(&atlas_texture, TEX_UNIT_0);
 
-    primitive_render    ((gfx_coordinate_primitive*)label->primitive);
+    primitive_render((gfx_coordinate_primitive*)label->primitive);
 }
 
 
