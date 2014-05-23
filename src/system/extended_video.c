@@ -7,6 +7,7 @@
 #include "../hwgfx/rect.h"
 #include "../hwgfx/shader.h"
 #include "../hwgfx/context.h"
+#include "../hwgfx/text.h"
 
 gfx_texture                     _ui;
 gfx_coordinate_uv_primitive     _screen_primitive;
@@ -34,6 +35,7 @@ void initExtendedVideo() {
 
     initRects();
     initLabels();
+    initText();
 
     rgs = gfx_get_root_gfx_size();
 
@@ -48,6 +50,8 @@ void dropExtendedVideo() {
                                         (&_screen_primitive);
     shader_drop                         (&_screen_shader);
     texture_drop                        (&_ui);
+
+    dropText();
     dropLabels();
     dropRects();
 }

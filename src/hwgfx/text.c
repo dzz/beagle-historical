@@ -22,9 +22,9 @@ gfx_coordinate_uv_primitive char_prims[MAX_CH];
 
 
 static void genPrims() {
-        double uvw = 1.0 / (double) charsPerRow;
-        double uvh = 1.0 / (double) charsPerCol;
-		int i;
+    double uvw = 1.0 / (double) charsPerRow;
+    double uvh = 1.0 / (double) charsPerCol;
+    int i;
     for(i=0; i< MAX_CH; ++i) { 
 
         int xIdx = i % charsPerRow;
@@ -65,7 +65,7 @@ void initText() {
     }
 
     shader_load(&text_shader, "shaders/hwgfx/text.vert.glsl",
-                               "shaders/hwgfx/text.frag.glsl");
+            "shaders/hwgfx/text.frag.glsl");
 
     genPrims();
 }
@@ -98,9 +98,6 @@ void renderText( float x, float y,float r, float g, float b, const char* text ) 
     }
 }
 
-
-
-
 static void delPrims() {
     int i;
     for(i=0; i< MAX_CH; ++i) {
@@ -111,5 +108,6 @@ static void delPrims() {
 void dropText() {
     texture_drop(&font_texture);
     shader_drop(&text_shader);
+    delPrims();
 }
 
