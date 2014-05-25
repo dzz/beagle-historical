@@ -295,8 +295,6 @@ int main(int argc, char **argv){
                 }*/
                 if(api_tick() == API_FAILURE) { finished = 1; }
 
-                renderText( 25, 25, 1.0,0.0,1.0, "0123456789\n@ABCDE\nabcde");
-
                 updateViewingSurface();
             }
         }

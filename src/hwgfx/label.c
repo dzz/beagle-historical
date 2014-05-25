@@ -176,7 +176,7 @@ void label_set_text(gfx_label* label, const char* text) {
     label->h = CHAR_DIMS;
 
     for( i=0; i<l; ++i) {                       //render each char of text
-        int val = (int)text[i];
+        int val = (int)text[i]+256;
 
         int basex = val % 32;                   //calc our basic grid position for the char
         int basey = val / 32;

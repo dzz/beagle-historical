@@ -1,16 +1,16 @@
+import sys
 from client.ctt2.status             import set_status
 from client.ctt2.status             import set_error
 from client.ui.areas                import ui_area
 from client.gfx.rect                import rect_solid
 from client.gfx.rect                import rect_vgrad
 from client.gfx.label               import label
+from client.gfx.text                import render_text
 from client.ui.default_renderer     import default_renderer
 from client.ui.mod_caret_handler    import mod_caret_handler
 from client.ui.mod_text_editor      import mod_text_editor
 
 from client.ui.controlled_eval      import evaluator
-
-from math import *  #this is so our magic text box evaluation can use sqrt n' shit
 
 import client.ui.style      as style
 import host
@@ -30,6 +30,7 @@ class text_box(ui_area):
         self.active_color = style.get("active_textbox_color")
         self.padding = padding
         self.evaluated = None
+        self.editing = False
 
         if self.editable:
             self.add_modifier(mod_caret_handler())
@@ -42,8 +43,8 @@ class text_box(ui_area):
     def revert_edit(self):
         self.set_text(self.original_text)
 
-
     def end_edit(self):
+        self.editing = False
         if self.use_python:
             try:
                 self.evaluated = evaluator(self.text)
@@ -54,7 +55,7 @@ class text_box(ui_area):
                     default_eval = self.text
                 else:
                     default_eval = self.default_eval
-                set_error("noeval:`{}`".format(str(default_eval)))
+                set_error("noeval:`{}`\nexcp:{}".format(str(default_eval), sys.exc_info()[0]))
                 self.evaluated = default_eval
             self.set_text(str(self.evaluated))
 
@@ -70,12 +71,16 @@ class text_box(ui_area):
 
     def mutate_layout_height(self,height):
         return 24
+
         
     def render_client_area(self):
         pad_px = self.padding
         if(self.editable): 
             if(self.has_caret()):
                 rect_solid  ( self.get_dims() , self.active_color )
+                render_text( self.text, pad_px, pad_px, self.label_color )
+            else:
+                self.label.draw(pad_px,pad_px, self.label_color)
         else:
             rect_vgrad( self.get_dims(), self.client_color[0], self.client_color[1] ) 
-        self.label.draw(pad_px,pad_px, self.label_color)
+            self.label.draw(pad_px,pad_px, self.label_color)

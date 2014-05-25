@@ -16,6 +16,7 @@ from client.gfx.rect            import rect_vgrad
 import client.ui.style          as style
 
 
+
 class window(ui_area):
     def __init__(self,title="ctt2_window",x=30,y=30,width=75,height=75,titlebar_height=12,handle_size = 9):
         ui_area.__init__(self)

@@ -4,6 +4,6 @@
 void initText();
 void dropText();
 
-void renderText(float x, float y, float r, float g, float b, const char* text );
+void text_render(float x, float y, float r, float g, float b, const char* text );
 
 #endif

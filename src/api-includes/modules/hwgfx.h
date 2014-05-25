@@ -17,7 +17,20 @@ DEF_ARGS  {
     Py_RETURN_NONE;
 }
 
+/**
+ * text
+ */
+MODULE_FUNC hwgfx_text_render
+DEF_ARGS {
+    float x,y,r,g,b;
+    char* py_str_txt;
+    if(!INPUT_ARGS(args, "fffffs", &x, &y, &r, &g, &b, &py_str_txt))
+        return NULL;
 
+    text_render(x,y,r,g,b,py_str_txt);
+
+    Py_RETURN_NONE;
+}
 /**
  * label
  */
@@ -452,6 +465,9 @@ static PyMethodDef hwgfx_methods[] = {
 
     /*rect*/
     {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
+
+    /*text*/
+    {"text_render",         hwgfx_text_render,          METH_VARARGS, NULL},
 
     /*label*/
     {"label_generate",      hwgfx_label_generate,       METH_VARARGS, NULL},
