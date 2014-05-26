@@ -1,0 +1,71 @@
+UX requirements
+
+
+BRUSH ENGINE
+------------
+
+mapper
+-------------------------------------------
+  inputs-->node-->node-->node-->outputs
+-------------------------------------------
+
+
+node
+
++------------------+
+| node             |
++------------------+
+|in             out|
+|in             out|
++------------------+
+|                  |
+|  editor          |
+|                  |
++------------------+
+
+
+
+inputs
+   stylus
+     position
+     time
+     pressure
+     rotation
+     azimuth
+   animation
+     time
+   workspace
+     primary_color
+     seoncdary_color
+     palette color
+
+outputs
+    position
+    size
+    color
+    rotation      
+
+
+
+COLOR
+-----
+
+
++---------+
+| wheel   |
++---------+
+| S/V     |
++---------+
+
+PALETTE
+-------
+
++-----------+
+|c|c|c|c|c|c|
++-----------+
+|c|c|c|c|c|c|
++-----------+
+
+
+highlight for prim and second colors
+
