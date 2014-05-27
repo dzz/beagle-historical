@@ -1,6 +1,12 @@
 UX requirements
 
 
+WORKSPACE DATA
+--------------
+
+pallette    => array of colors
+gradients   => array of gradients
+
 BRUSH ENGINE
 ------------
 
@@ -35,15 +41,23 @@ inputs
    animation
      time
    workspace
-     primary_color
-     seoncdary_color
-     palette color
+     color
+     gradient
+
+nodes
+     slider
+     gradient_mapper
+     palette_color
+     function
+     curve_map
+     expression
 
 outputs
     position
     size
     color
     rotation      
+    dab_index
 
 
 
