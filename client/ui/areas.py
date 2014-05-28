@@ -28,11 +28,12 @@ class ui_area(object):
         self.modifier_stack.append(modifier)
 
     def layout(self):
-        for layout in self.layouts:
-            layout.perform_layout(self)
-        if len(self.layouts) > 0:
-            for modifier in self.modifier_stack:
-                modifier.layout_children(self.children)
+        if( self.children != [] ):
+            for layout in self.layouts:
+                layout.perform_layout(self)
+            if len(self.layouts) > 0:
+                for modifier in self.modifier_stack:
+                    modifier.layout_children(self.children)
 
     def set_display_area(self,r):
         self.r = r

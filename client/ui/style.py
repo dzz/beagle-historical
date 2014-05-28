@@ -11,6 +11,8 @@ def get(key):
                                                ],
             "window_resize_handle_color"    : [ 0.9, 0.9, 0.9, 1.0 ] ,
             "default_label_color"           : [0.0,0.0,0.0],
-            "active_textbox_color"          : [1.0,1.0,0.9,1.0]
+            "active_textbox_color"          : [1.0,1.0,0.9,1.0],
+            "input_tint_color"              : [0.6,0.7,0.8,0.7],
+            "output_tint_color"             : [0.9,0.7,0.8,0.6]
             }
     return style_data.get(key)
