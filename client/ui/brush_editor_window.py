@@ -8,6 +8,8 @@ from client.ui.child_renderer       import child_renderer
 from client.ui.default_renderer     import default_renderer
 from client.gfx.rect                import rect_vgrad
 from client.ui.panel                import panel
+from client.ui.layout_fill          import layout_fill
+from client.ui.layout_fill          import layout_fill_window
 
 
 class node_connection:
@@ -21,12 +23,32 @@ class node:
     output_names    = ["out"]
     input_cons      = []
     output_cons     = []
+    property_map = { "constant" : "1" }
+
 
 class node_window(window):
     node = node()
 
     def __init__(self):
         window.__init__(self, title=node.name )
+
+        cons_in_panel   = panel()
+        cons_out_panel  = panel()
+
+        cons_panel = panel( 
+                                children    = [ cons_in_panel, cons_out_panel], 
+                                layout      = layout_flexcolumn( weights = [1,1] ) 
+                            )
+
+        editor_panel = panel( 
+                                children  = [ property_editor( self.node.property_map ) ], 
+                                layout    = layout_fill() 
+                            )
+
+
+        self.add_children( [ cons_panel, editor_panel ] )
+        self.add_layout( layout_flexrow( weights=[1,2] ) )
+        
 
 class node_editor(ui_area):
     def __init__(self):
@@ -45,13 +67,6 @@ class brush_editor_window(window):
 
         window.__init__(self,title="brush editor" ,x=0,y=0,width=600,height=400)
 
-        npanel = panel()
-        npanel.add_child( node_editor() )
-
-        self.add_child( npanel )
-        self.add_child( property_editor( property_map ) )
         self.add_child( node_editor() )
-        self.add_child( property_editor( property_map ) )
-
-        self.add_layout( layout_flexrow( weights=[2, 4, 4,2] ) )
+        self.add_layout( layout_fill_window() )
 

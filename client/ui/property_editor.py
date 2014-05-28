@@ -25,6 +25,6 @@ class property_editor(ui_area):
 
         self.renderers = [ child_renderer(self) ]
 
-        self.add_layout( layout_flexcolumn(weights = [1,3], row_height = None) )
+        self.add_layout( layout_flexcolumn(weights = [2,3], row_height = None) )
         self.add_layout( layout_rowborders() )
 

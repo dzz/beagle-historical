@@ -74,6 +74,10 @@ class ui_area(object):
         self.children.append(ui_area)
         ui_area.parent = self
 
+    def add_children(self,areas):
+        for ui_area in areas:
+            self.add_child(ui_area)
+
     def compute_client_area(self):
         self.client_area = list(self.r)
 
