@@ -11,7 +11,6 @@ class layout_rowborders:
 
     def perform_layout(self,ui_area):
         for child in ui_area.children:
-            print(child.r)
             child.set_height( child.get_height() - self.row_border );
 
 class property_editor(ui_area):
@@ -21,7 +20,6 @@ class property_editor(ui_area):
         self.add_modifier( mod_parent() )
 
         for k in property_map.keys():
-            print(k)
             self.add_child( text_box( text=k ) )
             self.add_child( text_box( text=property_map[k], editable=True, use_python=True ) )
 

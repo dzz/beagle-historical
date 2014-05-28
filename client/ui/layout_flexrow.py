@@ -17,13 +17,13 @@ class layout_flexrow:
             row_width = ui_area.get_width() // (len(ui_area.children) // self.num_rows)
 
         for i in range(0, len(ui_area.children)):
-            x = i % self.num_rows
-            y = i // self.num_rows
+            x = i // self.num_rows
+            y = i % self.num_rows
 
-            if x == 0:
+            if y == 0:
                 used_height = 0
 
-            height = int(self.normalized_weights[x] * ui_area.get_height())
+            height = int(self.normalized_weights[y] * ui_area.get_height())
 
             child = ui_area.children[i]
             child.set_x( x * row_width ) 
