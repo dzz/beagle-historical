@@ -1,11 +1,12 @@
 import host
 import hwgfx
+import configparser
 
 from client.ctt2.mouse_focus    import mouse_focused_area
 from client.ctt2.status import render_status
 from client.ctt2.status import set_status
 
-import client.app.main
+import client.apps
 import client.ui.areas          as ui_area
 import client.gfx.blend         as blend
 import client.ctt2.caret        as caret
@@ -14,15 +15,27 @@ import gc
 __clickpos  = [0,0]
 __mpos      = [0,0]
 
+
+
+global app 
+
 def init():
-    client.app.main.init()
+    global app   
+    config = configparser.ConfigParser()
+    config.read("client/application.ini")
+    app_name = config["APPLICATION"]["name"]
+    app = client.apps.get_app(app_name) 
+    app.init()
     set_status("initialized application")
 
 
 def finalize():
-    client.app.main.finalize()
+    global app
+    app.finalize()
 
 def tick():
+    global app
+    app.tick()
     render()
     gc.collect()
 

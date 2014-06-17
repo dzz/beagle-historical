@@ -12,5 +12,8 @@ def init():
         areas.register_ui_area( brush_editor_window() )
         #areas.register_ui_area( color_window() )
 
+def tick():
+    pass
+
 def finalize():
     pass

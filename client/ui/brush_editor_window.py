@@ -42,6 +42,10 @@ class node:
     name            = "None"
     inputs          = []
     outputs         = []
+    #deprecated
+    input_names     =[]
+    output_names    =[]
+    #end deprecate
     property_map    = {}
 
 
