@@ -17,3 +17,6 @@ def tick():
 
 def finalize():
     pass
+
+def render():
+    pass

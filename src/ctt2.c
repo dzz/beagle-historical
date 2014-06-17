@@ -102,7 +102,7 @@ void initWindowingSystemMessages() {
 /**************************************/
 
 
-void initDisplay() {
+void initDisplay( int resizable ) {
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
         printf( "%s\n", SDL_GetError() );
         exit(1);
@@ -113,8 +113,14 @@ void initDisplay() {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-    opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+    if(resizable == 1 ) {
+        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+    } else {
+        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+
+    }
 
     if( opengl_window == NULL ) {
         printf( "%s\n", SDL_GetError() );
@@ -178,9 +184,18 @@ int main(int argc, char **argv){
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 300;
     int screenbuffer_cycles                         = 20;
     int finished                                    = 0;
+    int resizable                                   = 1;
+    
+
+
+    if(argc==4) {
+        SCREEN_WIDTH    = atoi( argv[1] );
+        SCREEN_HEIGHT   = atoi( argv[2] );
+        resizable       = atoi( argv[3] );
+    }
 
     initLog();
-    initDisplay();
+    initDisplay(resizable);
     initWindowingSystemMessages();
     initOpenGL();
     initCompositor();

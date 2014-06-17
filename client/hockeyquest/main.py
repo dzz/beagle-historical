@@ -1,8 +1,23 @@
+import client.gfx.text as text
+import client.ctt2.host_config  as host_config
+
+from client.hockeyquest.text_emu import get_default_scr
+
+from client.hockeyquest.root_game import get_game
+
+game = None
+
 def init():
-    pass
+    global game
+    game = get_game( get_default_scr() )
+    host_config.set_config("render_status",False)
+    game.init()
 
 def tick():
-    pass
+    game.tick()
+
+def render():
+    game.render()
 
 def finalize():
-    pass
+    game.finalize()

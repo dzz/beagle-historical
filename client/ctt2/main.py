@@ -6,6 +6,9 @@ from client.ctt2.mouse_focus    import mouse_focused_area
 from client.ctt2.status import render_status
 from client.ctt2.status import set_status
 
+
+
+import client.ctt2.host_config  as host_config
 import client.apps
 import client.ui.areas          as ui_area
 import client.gfx.blend         as blend
@@ -16,17 +19,17 @@ __clickpos  = [0,0]
 __mpos      = [0,0]
 
 
-
 global app 
 
 def init():
     global app   
+
     config = configparser.ConfigParser()
     config.read("client/application.ini")
     app_name = config["APPLICATION"]["name"]
     app = client.apps.get_app(app_name) 
     app.init()
-    set_status("initialized application")
+    set_status("initialized application:" + app_name)
 
 
 def finalize():
@@ -44,7 +47,9 @@ def render():
         for area in ui_area.order_areas():
             for renderer in area.renderers:
                 renderer.render(area)
-        render_status()
+        app.render()
+        if host_config.get_config("render_status"):
+            render_status()
     
 def _get_mf_area():
     return mouse_focused_area
