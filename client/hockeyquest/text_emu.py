@@ -18,6 +18,9 @@ class ascii_scr:
             self.buffer[ idx+ct ] = ord(char)
             ct+=1
 
+    def clear(self):
+        self.buffer=[0]* (self.width*self.height)
+
     def render(self):
         for row in range(0,self.height):
             idx = row*self.width
@@ -66,6 +69,12 @@ class ascii_scr:
         self.v_line(x,y+1,height-2,VRT_BORDER)
         self.v_line(x+width-1,y+1,height-2,VRT_BORDER)
         self.h_line(x,y+height-1,width,BOT_BORDER,CAP)
+
+    def draw_window(self,x,y,width,height,title,borders,full_border = False):
+        self.draw_rect(x,y,width,height,borders)
+        self.draw_str(x+1,y+1,title)
+        if(full_border):
+            self.h_line(x,y+2,width,borders[0],borders[3])
         
 
         
