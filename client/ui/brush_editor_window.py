@@ -1,3 +1,5 @@
+from enum import Enum
+
 from client.ui.areas                import ui_area
 from client.ui.property_editor      import property_editor
 from client.ui.window               import window
@@ -19,12 +21,27 @@ class node_connection:
     node    = None
     channel = None
 
+class contype(Enum):
+    float = 0
+    vec3  = 1
+
+class plug:
+    node = None
+
+class jack:
+    node = None
+    name = ""
+    contype = contype.float
+    plugs = []
+    value = 0.0
+
+    def set_value(self, v):
+        self.value = v
+
 class node:
     name            = "None"
-    input_names     = []
-    output_names    = []
-    input_cons      = []
-    output_cons     = []
+    inputs          = []
+    outputs         = []
     property_map    = {}
 
 
