@@ -1,3 +1,4 @@
+import textwrap
 from client.hockeyquest.player import player
 #TOP_BORDER  = chr(224)
 #BOT_BORDER  = chr(221)
@@ -29,7 +30,27 @@ def draw_interface(scr, game):
     scr.draw_window(0,3,40,35,"Current Location",BORDERS, True)
     scr.draw_window(0,37,40,23,"Actions",BORDERS)
     scr.draw_str(41,4,"Story")
+    scr.draw_str(41,5,"-------------")
 
+
+    ####story
+    story_last_n = 30
+    story_text = ""
+    story_n_textrows = 32
+    story_textrows = []
+    story_width = 38
+
+    story = player.Story[-story_last_n:]
+
+    for story_row in story:
+        story_text = story_text + story_row + ""
+
+    lines = story_text.split("\n")[-story_n_textrows:]
+    lists = (textwrap.TextWrapper(width=35,break_long_words=False).wrap(line) for line in lines)
+    body  = "\n".join("\n".join(list) for list in lists)
+
+
+    scr.draw_str(41,6,body)
     scr.draw_str(15,20,player.Location)
 
 

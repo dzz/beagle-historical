@@ -13,10 +13,19 @@ class ascii_scr:
         ct = 0
        
         for char in string:
+            if( char=='\n'):
+                y+=1
+                idx = (y*self.width)+x
+                ct = 0
+                continue
+
             if( ct+x > self.width):
-                break
+                ct+=1
+                continue
+
             self.buffer[ idx+ct ] = ord(char)
             ct+=1
+
 
     def clear(self):
         self.buffer=[0]* (self.width*self.height)
