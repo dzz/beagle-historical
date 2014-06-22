@@ -7,6 +7,7 @@ def pick(l):
 
 class _player:
 
+    Cash = 500000
     Ailing = False
     Dead = False
     Location = "Hotel"
@@ -76,14 +77,12 @@ class _player:
             tv = x.TimeVitals[k]
             if(tv[0]>tv[1]):
                 if(computed_tv_injure==0):
-                    print("computing tv injury")
                     computed_tv_injure=1
                 else:
                     computed_tv_injure+=((tv[1]-tv[0])/16)
                     computed_tv_injure*=1 + (computed_tv_injure/16)
 
         x.ComputedStatVitals["HP"][0]-= computed_tv_injure / delta_t
-        print(x.ComputedStatVitals["HP"])
 
         ##edge case for death
         if(x.ComputedStatVitals["HP"][0] <= 0):
@@ -102,6 +101,7 @@ class _player:
 
     def _computeStory(x):
         x.Story.append( "{1}\n".format(x.Age, x.Status) )
+        print ("{0} game hours::{1}".format(x.Age/60,x.Status))
 
     def _computeStatus(x):
         msgs =[]

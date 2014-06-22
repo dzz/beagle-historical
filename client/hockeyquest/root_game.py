@@ -8,7 +8,7 @@ class game:
     def __init__(self, scr_buf):
         self.timers = []
         self.scr_buf = scr_buf
-        self.date = datetime.date( 1983, 9, 20 )
+        self.date = datetime.date( 2003, 9, 20 )
         self.hour = 9
         self.minute = 0
         self._minute = 0
@@ -36,7 +36,6 @@ class game:
     def add_minute(self):
         player.tick(30)
         self._minute = (self._minute+30)%60
-        print(self._minute)
         if(self._minute == 0):
             self.hour+=1
             if(self.hour == 24):
