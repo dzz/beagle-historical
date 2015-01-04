@@ -7,4 +7,5 @@ C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.csproj.
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.exe
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.pdb
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.entityList.resources
-C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.topdownBrushEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.styleEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.topdownBrushEditor.resources

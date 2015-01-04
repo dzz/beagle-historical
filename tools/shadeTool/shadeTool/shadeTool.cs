@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using shadeTool.Models;
+using shadeTool.Views;
+using shadeTool.Controller;
 
 namespace shadeTool
 {
@@ -14,19 +16,28 @@ namespace shadeTool
     {
 
         SceneModel model;
+        EditController controller;
 
         public shadeTool()
         {
             model = new SceneModel();
+            controller = new EditController();
 
             this.WindowState = FormWindowState.Maximized;
             InitializeComponent();
             this.createBrushEditor();
+
+            styleEditor se = new styleEditor();
+            se.setModel(model);
+            se.MdiParent = this;
+            se.WindowState = FormWindowState.Normal;
+            se.Show();
     
         }
 
         private void createBrushEditor()
         {
+   
             topdownBrushEditor tbe = new topdownBrushEditor();
             tbe.setModel(model);
             tbe.MdiParent = this;

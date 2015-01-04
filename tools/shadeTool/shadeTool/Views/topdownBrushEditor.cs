@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using shadeTool.Models;
+using shadeTool.Controller;
 
-namespace shadeTool
+namespace shadeTool.Views
 {
-    public partial class topdownBrushEditor : Form
-    {
 
+
+    public partial class topdownBrushEditor : ModelControllerView
+    {
+        
         int unit_size   = 32;
         int half_unit   = 16;
         int camera_x    = 0;
@@ -26,23 +29,16 @@ namespace shadeTool
         const int STATE_NONE = 0;
         const int STATE_BRUSH_DEFINE_A = 1;
         const int STATE_BRUSH_DEFINE_B = 2;
-
-        
-        SceneModel model;
-
-        public void setModel( SceneModel model ){
-
-            this.model = model;
-        }
-       
+  
         public topdownBrushEditor()
         {
             InitializeComponent();
 
-            this.WindowState = FormWindowState.Maximized;
+          //  this.WindowState = FormWindowState.Maximized;
             this.DoubleBuffered = true;
 
         }
+
 
         private void topdownBrushEditor_Paint(object sender, PaintEventArgs e)
         {

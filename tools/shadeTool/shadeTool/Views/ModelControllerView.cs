@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using shadeTool.Models;
+using shadeTool.Controller;
+
+namespace shadeTool.Views
+{
+    public partial class ModelControllerView : Form
+    {
+        protected SceneModel model;
+        protected EditController controller;
+
+        public void setController(EditController controller)
+        {
+            this.controller = controller;
+        }
+
+        public void setModel(SceneModel model)
+        {
+            this.model = model;
+            this.synch(model);
+        }
+
+        public ModelControllerView()
+        {
+            InitializeComponent();
+        }
+
+        protected void synch(SceneModel model) { }
+    }
+}

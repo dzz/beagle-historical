@@ -1,0 +1,10 @@
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.entityList.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.shadeTool.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Properties.Resources.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Views.styleEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Views.topdownBrushEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.csproj.GenerateResource.Cache
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\bin\Release\shadeTool.exe
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\bin\Release\shadeTool.pdb
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.exe
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.pdb
