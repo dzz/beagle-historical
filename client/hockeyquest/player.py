@@ -5,6 +5,122 @@ def pick(l):
     r = random.random()*len(l)
     return l[ int(r) ]
 
+def pb(v):
+    r = random.random()
+    return r < v
+
+
+class schedule:
+    day_flags   = []
+    global_states = []
+    _trigger_age = {}
+    _day_queue = {}
+    BaseScheduleItems = { 
+                          "Game"    : 
+                                { "interval_days" : 3,
+                                  "when" : [ "home", "away" ],
+                                  "hours" : [ 17,18,19 ],
+                                  "day_flags" : ["gameday"],
+                                  "probability" : 0.75,
+                                  "set_location" : "Arena",
+                                  "set_status" : "Time to play a game...",
+                                  "state_changes" :[ 
+                                                     { "when" : "home", "set" : "-home+away" },
+                                                     { "when" : "away", "set" : "+home-away" }
+                                                    ]
+                                 },
+                          "Practice" : 
+                                { "interval_days" : 3,
+                                  "when" : [ "home" ],
+                                  "except_day_flags" : [ "gameday" ],
+                                  "hours" : [12,15],
+                                  "day_flags" : ["practice"],
+                                  "probability" : 0.75,
+                                  "set_location" : "Arena" ,
+                                  "set_status" : "Time to go to practice..."
+                                 },
+                          "Sleep" : 
+                                { "interval_days" : 0,
+                                  "when" : [ "home","away" ],
+                                  "except_day_flags" : [ ],
+                                  "hours" : [ 20,21,22,23 ] ,
+                                  "day_flags" : [],
+                                  "probability" : 1,
+                                  "set_location" : "Bedroom" ,
+                                  "set_status" : "Time to go to sleep..."
+                                 },
+                          "Wake" : 
+                                { "interval_days" : 0,
+                                  "when" : [ "home","away" ],
+                                  "except_day_flags" : [ ],
+                                  "hours" : [ 6,7,8 ] ,
+                                  "day_flags" : [],
+                                  "probability" : 1,
+                                  "set_location" : "Condo" ,
+                                  "set_status" : "Time to wake up..."
+                                 },
+                } 
+
+    def __init__(x):
+        x.global_states = ["home"]
+        s_items = x.BaseScheduleItems
+        for k in s_items:
+            x._trigger_age[k] = 0
+
+    def queue_day_item(x,k,i):
+        print("QUEUING DAY ITEM")
+        if "except_day_flags" in i:
+            for flag in x.day_flags:
+                if flag in i["except_day_flags"]:
+                    return
+
+        for flag in i["day_flags"]:
+            x.day_flags.append(flag)
+
+        x._trigger_age[k] = 0
+
+        hour = pick( i["hours"] )
+        x._day_queue[ hour ] = i
+
+
+    def tick( x, player ):
+        if player._RG_HOUR in x._day_queue:
+            i = x._day_queue[player._RG_HOUR]
+            player.Location = i["set_location"]
+            player.external_post( i["set_status"] )
+            del x._day_queue[player._RG_HOUR]
+
+
+
+    def start_day(x):
+        x.day_flags = []
+        x._day_queue = {}
+
+        items = x.BaseScheduleItems
+
+        for k in items:
+            i = items[k]
+
+            x._trigger_age[k] += 1
+
+            if (x._trigger_age[k] > i["interval_days"]):
+                passes_when = False
+
+                print(x.global_states)
+                print(i["when"])
+
+                for state in x.global_states:
+                    if state in i["when"]:
+                        passes_when = True
+                        print("HELLO WORLD")
+                        break
+
+                if passes_when:
+                    if( pb( i["probability"] )):
+                        x.queue_day_item(k,i)
+            
+        
+
 class _player:
 
     Cash = 500000
@@ -15,11 +131,15 @@ class _player:
     Status = "Welcome to Hockey Quest"
     Story = []
     Age = 0
+    schedule = schedule()
+
+    _RG_HOUR = 0
+
     _mins_since_prev_update = 0
 
     TimeVitals = {
-                "Hunger"    : [0, 60*6, [ "You could eat {{pronoun_large_eatable_animal}}.", "You could eat just about anything.", "You are hungry.", "You feel a rumbling in the pit of your stomach.", "You {{must}} eat soon.", "You're feeling your health draining from skipping meals" ]],
-                "Tiredness" : [0, 60*16, ["You are tired.", "Your eyelids feel heavy.", "You {{must}} sleep soon.", "You're feeling your {{health}} draining from not resting.",
+                "Hunger"    : [0, 60*48, [ "You could eat {{pronoun_large_eatable_animal}}.", "You could eat just about anything.", "You are hungry.", "You feel a rumbling in the pit of your stomach.", "You {{must}} eat soon.", "You're feeling your health draining from skipping meals" ]],
+                "Tiredness" : [0, 60*72, ["You are tired.", "Your eyelids feel heavy.", "You {{must}} sleep soon.", "You're feeling your {{health}} draining from not resting.",
                                             "Why haven't you slept yet?", "You are plagued by hallucinations", "You find yourself slipping out of consciousness",
                                             ]]
              }
@@ -45,6 +165,10 @@ class _player:
         x._computeStatus()
         x._computeStory()
 
+    def external_post(x,msg):
+        x.Status = msg
+        x._computeStory()
+
     def tick(x, delta_mins):
         commit_status_mins = 72
         x._mins_since_prev_update += delta_mins
@@ -55,9 +179,10 @@ class _player:
             x.Age += delta_mins
             x._do_playerscore(delta_mins)
             if( x._mins_since_prev_update > commit_status_mins):
-                if( random.random() > 0.5 ): #noise
+                if( random.random() > 0.95 ): #noise
                     x._mins_since_prev_update = 0
                     x._post_update()
+        x.schedule.tick(x)
 
 
     def _do_playerscore(x,delta_mins):
@@ -98,6 +223,9 @@ class _player:
 
     def signalDayChange(x,day):
         x.Story.append( "\n*** {0} ***\n--------------\n".format(day))
+        x.TimeVitals["Hunger"][0] = 0
+        x.TimeVitals["Tiredness"][0] =0
+        x.schedule.start_day()
 
     def _computeStory(x):
         x.Story.append( "{1}\n".format(x.Age, x.Status) )

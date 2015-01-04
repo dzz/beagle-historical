@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shadeTool", "shadeTool\shadeTool.csproj", "{1776E06E-BF90-4ED6-8DAE-3FD6339A7E77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1776E06E-BF90-4ED6-8DAE-3FD6339A7E77}.Debug|x86.ActiveCfg = Debug|x86
+		{1776E06E-BF90-4ED6-8DAE-3FD6339A7E77}.Debug|x86.Build.0 = Debug|x86
+		{1776E06E-BF90-4ED6-8DAE-3FD6339A7E77}.Release|x86.ActiveCfg = Release|x86
+		{1776E06E-BF90-4ED6-8DAE-3FD6339A7E77}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

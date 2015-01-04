@@ -15,7 +15,7 @@ class game:
 
     def init(self):
         interface.draw_interface(self.scr_buf, self)
-        self.timers = [ [ timer( 0.2 ), self.add_minute ], [ timer( 0.01 ), self.animate_minute ] ]
+        self.timers = [ [ timer( 0.02 ), self.add_minute ], [ timer( 0.01 ), self.animate_minute ] ]
         self.start_timers()
 
     def start_timers(self):
@@ -42,6 +42,7 @@ class game:
                 self.date+= datetime.timedelta(days=1)
                 self.hour = 0
                 player.signalDayChange( self.date.strftime("%A") )
+        player._RG_HOUR = self.hour
 
     def animate_minute(self):
         if(self.minute< self._minute):
