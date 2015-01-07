@@ -17,6 +17,7 @@ namespace shadeTool.Views
         protected EditController controller;
 
 
+
         public void setController(EditController controller)
         {
             this.controller = controller;

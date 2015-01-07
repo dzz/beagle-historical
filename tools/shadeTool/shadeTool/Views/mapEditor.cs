@@ -40,6 +40,17 @@ namespace shadeTool.Views
             this.DoubleBuffered = true;
 
         }
+        protected override void synchRootModel(Models.SceneModel model)
+        {
+
+            this.model.BrushesChanged += new SceneModel.ModelChangedHandler(model_BrushesChanged);
+        }
+
+        void model_BrushesChanged(SceneModel model)
+        {
+            this.Invalidate();
+        }
+
 
 
         private void mapEditor_Paint(object sender, PaintEventArgs e)
@@ -51,35 +62,39 @@ namespace shadeTool.Views
 
         private void drawBrushes(Graphics g)
         {
-            foreach (SceneBrush brush in model.brushes)
+            List<SceneBrush> sortedBrushes = model.brushes.OrderBy(b => b.z1).ToList();
+            foreach (SceneBrush brush in sortedBrushes)
             {
-                int[] pos = transformToScreen(brush.x, brush.y);
+                int[] pos = transformToScreen(brush.x, brush.y, brush.z1);
                 int w = brush.w * unit_size;
                 int h = brush.h * unit_size;
-                SolidBrush fillBrush = new SolidBrush(model.GetStyle(brush.styleName).UiColor);
-                g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
-
-                g.DrawRectangle(Pens.ForestGreen, pos[0], pos[1], w, h);
+                SolidBrush fillBrush = new SolidBrush(Color.FromArgb(128, model.GetStyle(brush.styleName).UiColor));
+                SolidBrush transBrush = new SolidBrush(Color.FromArgb(64,model.GetStyle(brush.styleName).UiColor));
                 int baseY = pos[1];
+                bool is_current_layer = (brush.z1 == camera_z);
 
-                for (int i = 0; i < 2; ++i )
+                if( is_current_layer) {
+                        g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
+                        g.DrawRectangle(Pens.ForestGreen, pos[0], pos[1], w, h);
+                } else {
+
+                     g.FillRectangle(transBrush, pos[0], pos[1], w, h);
+                }
+
+                
                 {
-                    pos[1] = baseY - i*unit_size;
-                    if (brush.z1 == camera_z)
+                    pos[1] = baseY - (unit_size*2);
+
+                    Pen WallPen;
+
+                    if (is_current_layer)
                     {
+                        WallPen = new Pen(Brushes.Honeydew, 2.0f) { DashStyle = DashStyle.Dash };
+                    } else {
+                        WallPen = new Pen(Brushes.LightCyan, 1.0f ) { DashStyle = DashStyle.Dot };
+                    }
 
-
-
-
-
-
-
-
-
-
-
-
-                        Pen WallPen = new Pen(Brushes.Honeydew, 2.2f) { DashStyle = DashStyle.DashDotDot };
+                    {
                         if (brush.Walls[SceneBrush.NORTH_WALL])
                         {
                             g.DrawLine(WallPen, pos[0], pos[1], pos[0] + w, pos[1]);
@@ -97,17 +112,21 @@ namespace shadeTool.Views
                             g.DrawLine(WallPen, pos[0], pos[1], pos[0], pos[1] + h);
                         }
                     }
+                  
                 }
 
-                g.DrawString(brush.name, this.Font, Brushes.Black, pos[0], pos[1]);
             }
         }
 
-        private int[] transformToScreen(int x, int y, bool center = false)
+        private int[] transformToScreen(int x, int y, int z, bool center = false)
         {
 
+          
+
+            int zDelta = z - this.camera_z;
+
             int scrX = (x - camera_x) * unit_size;
-            int scrY = (y - camera_y) * unit_size;
+            int scrY = (y - camera_y - (zDelta*2)) * unit_size;
 
             if (center)
             {
@@ -123,7 +142,7 @@ namespace shadeTool.Views
 
         private void drawCursor(Graphics g)
         {
-            int[] cScr = transformToScreen(cursor_x, cursor_y, false);
+            int[] cScr = transformToScreen(cursor_x, cursor_y, this.camera_z, false);
 
             g.DrawLine(Pens.LightBlue, 0, cScr[1], this.Width, cScr[1]);
             g.DrawLine(Pens.LightBlue, cScr[0], 0, cScr[0], this.Height);
@@ -148,7 +167,7 @@ namespace shadeTool.Views
 
         private void drawTempBrush(Graphics g)
         {
-            int[] pos = transformToScreen(tmp_brush_x, tmp_brush_y);
+            int[] pos = transformToScreen(tmp_brush_x, tmp_brush_y, this.camera_z);
             int w = tmp_brush_w * unit_size;
             int h = tmp_brush_h * unit_size;
 
@@ -258,12 +277,14 @@ namespace shadeTool.Views
         {
             this.camera_z += 1;
             this.controller.z_layer += 1;
+            this.Invalidate();
         }
 
         private void downLayer_Click(object sender, EventArgs e)
         {
             this.camera_z -= 1;
             this.controller.z_layer -= 1;
+            this.Invalidate();
         }
     }
 }
