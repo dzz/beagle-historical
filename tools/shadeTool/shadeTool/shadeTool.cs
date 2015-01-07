@@ -18,42 +18,51 @@ namespace shadeTool
         SceneModel model;
         EditController controller;
 
+        private void openView( ModelControllerView mcv, Rectangle layout ) {
+
+            mcv.setController(controller);
+            mcv.setModel( model );
+            mcv.MdiParent = this;
+            mcv.StartPosition = FormStartPosition.Manual;
+
+            mcv.Location = new Point(layout.X, layout.Y);
+
+            if (layout.Width > 0)
+                mcv.Size = new Size(layout.Width, layout.Height);
+
+            mcv.Show();
+
+
+           
+        }
+
         public shadeTool()
         {
             model = new SceneModel();
             controller = new EditController();
 
             this.WindowState = FormWindowState.Maximized;
-            InitializeComponent();
-            this.createBrushEditor();
 
-            styleEditor se = new styleEditor();
-            se.setModel(model);
-            se.MdiParent = this;
-            se.WindowState = FormWindowState.Normal;
-            se.Show();
+           
+            InitializeComponent();
+
+            this.openView(new brushStyleEditor(), new Rectangle( 1400,0, 0,0) );
+            this.openView(new mapEditor(), new Rectangle(0,0,1400,1000) );
+            this.openView(new sceneBrushEditor(), new Rectangle( 1400,400,0,0) );
+        
     
         }
 
-        private void createBrushEditor()
-        {
-   
-            topdownBrushEditor tbe = new topdownBrushEditor();
-            tbe.setModel(model);
-            tbe.MdiParent = this;
-            tbe.Show();
-        }
+    
 
         private void topDownBrushEditorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.createBrushEditor();
+         
         }
 
         private void entityListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            entityList el = new entityList();
-            el.MdiParent = this;
-            el.Show();
+ 
         }
     }
 }

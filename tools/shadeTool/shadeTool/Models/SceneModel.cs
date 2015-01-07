@@ -17,11 +17,19 @@ namespace shadeTool.Models
 
     public class SceneBrush
     {
-        string name = "Brush";
+        public string name = "default_brush";
         public int x, y, z1, z2, w, h, orientation;
 
-        bool isStaircase = false;
-        String styleName = "";
+        public const int NORTH_WALL = 0;
+        public const int EAST_WALL = 1;
+        public const int SOUTH_WALL = 2;
+        public const int WEST_WALL = 3;
+        public const int FLOOR = 4;
+
+        public bool[] walls = new bool[5] { true, true, true, true, true };
+
+        public bool[] Walls { get { return walls; } set { walls = value; } }
+        public String styleName = "brush_default_style";
 
         public override string ToString()
         {
@@ -44,6 +52,29 @@ namespace shadeTool.Models
 
         public delegate void ModelChangedHandler(SceneModel model);
         public event ModelChangedHandler StylesChanged;
+        public event ModelChangedHandler BrushesChanged;
+
+        public void AddBrush(SceneBrush brush)
+        {
+            this.brushes.Add(brush);
+
+            if (BrushesChanged != null)
+            {
+                BrushesChanged(this);
+            }
+            
+        }
+
+        public void DelBrush(SceneBrush brush)
+        {
+            this.brushes.Remove(brush);
+
+            if (BrushesChanged != null)
+            {
+                BrushesChanged(this);
+            }
+
+        }
 
         public void SetStyle(String key, BrushStyle style)
         {
@@ -55,9 +86,22 @@ namespace shadeTool.Models
             }
         }
 
+        public BrushStyle GetStyle(String key)
+        {
+            try
+            {
+                return this.styles[key];
+            }
+            catch
+            {
+                return new BrushStyle();
+            }
+        }
+
         public SceneModel()
         {
             styles.Add("brush_default_style", new BrushStyle());
         }
+
     }
 }

@@ -6,6 +6,6 @@ C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Propert
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.csproj.GenerateResource.Cache
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.exe
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.pdb
-C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.entityList.resources
-C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.styleEditor.resources
-C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.topdownBrushEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.sceneBrushEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.mapEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.brushStyleEditor.resources

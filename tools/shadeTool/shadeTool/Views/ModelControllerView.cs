@@ -16,15 +16,17 @@ namespace shadeTool.Views
         protected SceneModel model;
         protected EditController controller;
 
+
         public void setController(EditController controller)
         {
             this.controller = controller;
+            this.synchRootController(controller);
         }
 
         public void setModel(SceneModel model)
         {
             this.model = model;
-            this.synch(model);
+            this.synchRootModel(model);
         }
 
         public ModelControllerView()
@@ -32,6 +34,7 @@ namespace shadeTool.Views
             InitializeComponent();
         }
 
-        protected void synch(SceneModel model) { }
+        protected virtual void synchRootModel(SceneModel model) { }
+        protected virtual void synchRootController(EditController controller) { }
     }
 }
