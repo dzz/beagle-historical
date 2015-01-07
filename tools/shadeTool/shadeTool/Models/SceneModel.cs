@@ -31,6 +31,7 @@ namespace shadeTool.Models
         public bool[] Walls { get { return walls; } set { walls = value; } }
         public String styleName = "brush_default_style";
 
+  
         public override string ToString()
         {
             return name;
@@ -56,6 +57,7 @@ namespace shadeTool.Models
 
         public void AddBrush(SceneBrush brush)
         {
+      
             this.brushes.Add(brush);
 
             if (BrushesChanged != null)

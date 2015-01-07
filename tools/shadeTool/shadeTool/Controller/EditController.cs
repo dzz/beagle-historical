@@ -11,6 +11,11 @@ namespace shadeTool.Controller
         public delegate void BrushHandler(SceneBrush brush);
         public event BrushHandler ActiveBrushChanged;
 
+        public int DrawMode = 0;
+
+        public const int DRAWMODE_FLOOR = 0;
+        public const int DRAWMODE_WALL = 1;
+
         private SceneBrush _ActiveBrush;
         public SceneBrush ActiveBrush
         {

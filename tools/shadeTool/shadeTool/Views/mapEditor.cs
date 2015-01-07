@@ -44,6 +44,12 @@ namespace shadeTool.Views
         {
 
             this.model.BrushesChanged += new SceneModel.ModelChangedHandler(model_BrushesChanged);
+            this.controller.ActiveBrushChanged += new EditController.BrushHandler(controller_ActiveBrushChanged);
+        }
+
+        void controller_ActiveBrushChanged(SceneBrush brush)
+        {
+            this.Invalidate();
         }
 
         void model_BrushesChanged(SceneModel model)
@@ -62,20 +68,48 @@ namespace shadeTool.Views
 
         private void drawBrushes(Graphics g)
         {
-            List<SceneBrush> sortedBrushes = model.brushes.OrderBy(b => b.z1).ToList();
+
+            this.zLabel.Text = this.controller.z_layer.ToString();
+
+            List<SceneBrush> sortedBrushes;
+
+            if (!this.paintersMode) { sortedBrushes = model.brushes.OrderBy(b => b.z1).ToList(); }
+            else
+            {
+                sortedBrushes = model.brushes.OrderBy(b => b.z1).ToList();
+            }
+
+
             foreach (SceneBrush brush in sortedBrushes)
             {
                 int[] pos = transformToScreen(brush.x, brush.y, brush.z1);
                 int w = brush.w * unit_size;
                 int h = brush.h * unit_size;
-                SolidBrush fillBrush = new SolidBrush(Color.FromArgb(128, model.GetStyle(brush.styleName).UiColor));
-                SolidBrush transBrush = new SolidBrush(Color.FromArgb(64,model.GetStyle(brush.styleName).UiColor));
+                SolidBrush fillBrush;
+                SolidBrush transBrush;
+
+                if (this.paintersMode == false)
+                {
+                    fillBrush = new SolidBrush(model.GetStyle(brush.styleName).UiColor);
+
+                    transBrush = new SolidBrush(Color.FromArgb(64, model.GetStyle(brush.styleName).UiColor));
+                }
+                else
+                {
+                    fillBrush = new SolidBrush(model.GetStyle(brush.styleName).UiColor);
+                    transBrush = fillBrush;
+                }
+
                 int baseY = pos[1];
                 bool is_current_layer = (brush.z1 == camera_z);
 
                 if( is_current_layer) {
                         g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
-                        g.DrawRectangle(Pens.ForestGreen, pos[0], pos[1], w, h);
+
+                        if (brush == this.controller.ActiveBrush)
+                        {
+                            g.DrawRectangle(Pens.GhostWhite, pos[0], pos[1], w, h);
+                        }
                 } else {
 
                      g.FillRectangle(transBrush, pos[0], pos[1], w, h);
@@ -228,10 +262,26 @@ namespace shadeTool.Views
         int tmp_brush_w = 0;
         int tmp_brush_h = 0;
 
+        int nextId = 0;
+
         private void commitBrush()
         {
             SceneBrush newBrush = new SceneBrush() { x = tmp_brush_x, y = tmp_brush_y, w = tmp_brush_w, h = tmp_brush_h, orientation = 0, z1 = camera_z, z2 = camera_z, styleName = this.controller.ActiveStyleKey };
 
+
+            if (this.controller.DrawMode == EditController.DRAWMODE_FLOOR)
+            {
+                newBrush.walls = new bool[] { false, false, false, false };
+                newBrush.name = "floor " + this.nextId.ToString();
+            }
+            else
+            {
+                newBrush.name = "wall" + this.nextId.ToString();
+            }
+
+            this.nextId += 1;
+
+           
             this.model.AddBrush(newBrush);
             this.controller.ActiveBrush = newBrush;
 
@@ -285,6 +335,30 @@ namespace shadeTool.Views
             this.camera_z -= 1;
             this.controller.z_layer -= 1;
             this.Invalidate();
+        }
+
+        private void drawModeSelector_TextChanged(object sender, EventArgs e)
+        {
+            if (drawModeSelector.Text.Equals("floors"))
+                this.controller.DrawMode = EditController.DRAWMODE_FLOOR;
+            if (drawModeSelector.Text.Equals("walls"))
+                this.controller.DrawMode = EditController.DRAWMODE_WALL;
+        }
+
+        bool paintersMode = false;
+        private void previewModeSelector_TextChanged(object sender, EventArgs e)
+        {
+            if (previewModeSelector.Text.Equals("onion") ) {
+                this.paintersMode = false;
+            } 
+
+            if( previewModeSelector.Text.Equals("painters") ) {
+
+                this.paintersMode = true;
+            }
+
+            this.Invalidate();
+
         }
     }
 }
