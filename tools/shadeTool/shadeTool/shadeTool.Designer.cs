@@ -33,13 +33,15 @@
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.topDownBrushEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entityListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveButton = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1,
+            this.saveButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(949, 25);
@@ -72,6 +74,16 @@
             this.entityListToolStripMenuItem.Text = "Entity List";
             this.entityListToolStripMenuItem.Click += new System.EventHandler(this.entityListToolStripMenuItem_Click);
             // 
+            // saveButton
+            // 
+            this.saveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.saveButton.Image = ((System.Drawing.Image)(resources.GetObject("saveButton.Image")));
+            this.saveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(35, 22);
+            this.saveButton.Text = "Save";
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
             // shadeTool
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -82,6 +94,7 @@
             this.IsMdiContainer = true;
             this.Name = "shadeTool";
             this.Text = "shadeTool";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.shadeTool_FormClosed);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -95,6 +108,7 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem topDownBrushEditorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem entityListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton saveButton;
     }
 }
 

@@ -73,16 +73,16 @@ namespace shadeTool.Views
 
             List<SceneBrush> sortedBrushes;
 
-            if (!this.paintersMode) { sortedBrushes = model.brushes.OrderBy(b => b.z1).ToList(); }
+            if (!this.paintersMode) { sortedBrushes = model.brushes.OrderBy(b => b.z).ToList(); }
             else
             {
-                sortedBrushes = model.brushes.OrderBy(b => b.z1).ToList();
+                sortedBrushes = model.brushes.OrderBy(b => b.z).ToList();
             }
 
 
             foreach (SceneBrush brush in sortedBrushes)
             {
-                int[] pos = transformToScreen(brush.x, brush.y, brush.z1);
+                int[] pos = transformToScreen(brush.x, brush.y, brush.z);
                 int w = brush.w * unit_size;
                 int h = brush.h * unit_size;
                 SolidBrush fillBrush;
@@ -101,7 +101,7 @@ namespace shadeTool.Views
                 }
 
                 int baseY = pos[1];
-                bool is_current_layer = (brush.z1 == camera_z);
+                bool is_current_layer = (brush.z == camera_z);
 
                 if( is_current_layer) {
                         g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
@@ -266,7 +266,7 @@ namespace shadeTool.Views
 
         private void commitBrush()
         {
-            SceneBrush newBrush = new SceneBrush() { x = tmp_brush_x, y = tmp_brush_y, w = tmp_brush_w, h = tmp_brush_h, orientation = 0, z1 = camera_z, z2 = camera_z, styleName = this.controller.ActiveStyleKey };
+            SceneBrush newBrush = new SceneBrush() { x = tmp_brush_x, y = tmp_brush_y, w = tmp_brush_w, h = tmp_brush_h, orientation = 0, z = camera_z, styleName = this.controller.ActiveStyleKey };
 
 
             if (this.controller.DrawMode == EditController.DRAWMODE_FLOOR)

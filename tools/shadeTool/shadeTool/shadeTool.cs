@@ -38,7 +38,7 @@ namespace shadeTool
 
         public shadeTool()
         {
-            model = new SceneModel();
+            model = SceneModel.Load();
             controller = new EditController();
 
             this.WindowState = FormWindowState.Maximized;
@@ -63,6 +63,23 @@ namespace shadeTool
         private void entityListToolStripMenuItem_Click(object sender, EventArgs e)
         {
  
+        }
+
+        private void shadeTool_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.model.Save();
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.model.Save();
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message);
+            }
         }
     }
 }
