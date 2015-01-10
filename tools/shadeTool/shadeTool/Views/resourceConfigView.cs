@@ -34,7 +34,7 @@ namespace shadeTool.Views
             fbd.ShowNewFolderButton = true;
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                this.model.project_root = fbd.SelectedPath;
+                this.model.project_root = fbd.SelectedPath + "\\";
                 this.synchRootModel(this.model);
             }
         }

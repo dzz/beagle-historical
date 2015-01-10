@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using shadeTool.Models;
 using shadeTool.Views;
 using shadeTool.Controller;
+using System.IO;
 
 namespace shadeTool
 {
@@ -113,6 +114,44 @@ namespace shadeTool
                     child.Location = new Point(this.ClientRectangle.Width - 350, child.Location.Y);
                 }
             }
+        }
+
+        public static string browseLibraryFile(string resourceType, string resourceExtension, SceneModel model)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            string bootPath = Path.Combine(Path.GetDirectoryName(model.project_root), "texture");
+            ofd.InitialDirectory = bootPath;
+
+            ofd.Filter = resourceType + "|*." + resourceExtension;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                if (Path.GetDirectoryName(ofd.FileName) != bootPath)
+                {
+                    MessageBox.Show(
+                        String.Format( "Please select a {0} from the project's {0} directory", resourceType) 
+                        );
+                    ofd.ShowDialog();
+                }
+                return ofd.FileName;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            resourceConfigView rcv = new resourceConfigView();
+
+            rcv.setController(this.controller);
+            rcv.setModel(this.model);
+
+            rcv.ShowDialog();
+
         }
     }
 }

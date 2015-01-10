@@ -42,16 +42,15 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Colours = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textureBox = new System.Windows.Forms.PictureBox();
             this.texLibraryButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.Colours.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,7 +82,7 @@
             // 
             // ColorSwatch
             // 
-            this.ColorSwatch.Location = new System.Drawing.Point(9, 45);
+            this.ColorSwatch.Location = new System.Drawing.Point(13, 25);
             this.ColorSwatch.Name = "ColorSwatch";
             this.ColorSwatch.Size = new System.Drawing.Size(128, 128);
             this.ColorSwatch.TabIndex = 0;
@@ -92,9 +91,9 @@
             // SetColourButton
             // 
             this.SetColourButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.SetColourButton.Location = new System.Drawing.Point(6, 179);
+            this.SetColourButton.Location = new System.Drawing.Point(13, 161);
             this.SetColourButton.Name = "SetColourButton";
-            this.SetColourButton.Size = new System.Drawing.Size(135, 24);
+            this.SetColourButton.Size = new System.Drawing.Size(128, 24);
             this.SetColourButton.TabIndex = 1;
             this.SetColourButton.Text = "select ...";
             this.SetColourButton.UseVisualStyleBackColor = true;
@@ -126,19 +125,19 @@
             // 
             this.groupBox4.Controls.Add(this.radioButton2);
             this.groupBox4.Controls.Add(this.radioButton1);
-            this.groupBox4.Location = new System.Drawing.Point(4, 259);
+            this.groupBox4.Location = new System.Drawing.Point(160, 246);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(150, 48);
             this.groupBox4.TabIndex = 14;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "UV mode";
+            this.groupBox4.Text = "[ uv mode ]";
             // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.comboBox1);
-            this.groupBox6.Location = new System.Drawing.Point(158, 259);
+            this.groupBox6.Location = new System.Drawing.Point(4, 246);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(145, 48);
+            this.groupBox6.Size = new System.Drawing.Size(150, 48);
             this.groupBox6.TabIndex = 16;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "[ shader ]";
@@ -168,59 +167,48 @@
             this.Colours.Controls.Add(this.SetColourButton);
             this.Colours.Location = new System.Drawing.Point(4, 40);
             this.Colours.Name = "Colours";
-            this.Colours.Size = new System.Drawing.Size(150, 213);
+            this.Colours.Size = new System.Drawing.Size(150, 200);
             this.Colours.TabIndex = 18;
             this.Colours.TabStop = false;
             this.Colours.Text = "[ colour ]";
             // 
-            // pictureBox1
+            // textureBox
             // 
-            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(9, 43);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(128, 128);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 13;
-            this.pictureBox1.TabStop = false;
+            this.textureBox.InitialImage = ((System.Drawing.Image)(resources.GetObject("textureBox.InitialImage")));
+            this.textureBox.Location = new System.Drawing.Point(6, 25);
+            this.textureBox.Name = "textureBox";
+            this.textureBox.Size = new System.Drawing.Size(128, 128);
+            this.textureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.textureBox.TabIndex = 13;
+            this.textureBox.TabStop = false;
             // 
             // texLibraryButton
             // 
             this.texLibraryButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.texLibraryButton.Location = new System.Drawing.Point(9, 177);
+            this.texLibraryButton.Location = new System.Drawing.Point(6, 159);
             this.texLibraryButton.Name = "texLibraryButton";
             this.texLibraryButton.Size = new System.Drawing.Size(128, 26);
             this.texLibraryButton.TabIndex = 18;
             this.texLibraryButton.Text = "library ...";
             this.texLibraryButton.UseVisualStyleBackColor = true;
-            this.texLibraryButton.Click += new System.EventHandler(this.button1_Click);
+            this.texLibraryButton.Click += new System.EventHandler(this.browseTexture_Click);
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.comboBox2);
             this.groupBox1.Controls.Add(this.texLibraryButton);
-            this.groupBox1.Controls.Add(this.pictureBox1);
+            this.groupBox1.Controls.Add(this.textureBox);
             this.groupBox1.Location = new System.Drawing.Point(160, 40);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(152, 213);
+            this.groupBox1.Size = new System.Drawing.Size(152, 200);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "[ images ]";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(9, 16);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(128, 21);
-            this.comboBox2.TabIndex = 1;
-            this.comboBox2.Text = "[ texture unit 1 ]";
             // 
             // brushStyleEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 321);
+            this.ClientSize = new System.Drawing.Size(315, 304);
             this.ControlBox = false;
             this.Controls.Add(this.Colours);
             this.Controls.Add(this.groupBox4);
@@ -237,7 +225,7 @@
             this.groupBox6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.Colours.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textureBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -257,9 +245,8 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox Colours;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox textureBox;
         private System.Windows.Forms.Button texLibraryButton;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
     }
 }

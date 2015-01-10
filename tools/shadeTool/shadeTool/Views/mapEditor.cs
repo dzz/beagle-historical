@@ -13,8 +13,6 @@ using System.Drawing.Drawing2D;
 
 namespace shadeTool.Views
 {
-
-
     public partial class mapEditor : ModelControllerView
     {
         
@@ -31,7 +29,9 @@ namespace shadeTool.Views
         const int STATE_NONE = 0;
         const int STATE_BRUSH_DEFINE_A = 1;
         const int STATE_BRUSH_DEFINE_B = 2;
-  
+
+        Image testimg;
+
         public mapEditor()
         {
             InitializeComponent();
@@ -39,7 +39,10 @@ namespace shadeTool.Views
           //  this.WindowState = FormWindowState.Maximized;
             this.DoubleBuffered = true;
 
+      
         }
+        TextureBrush textureBrush;
+
         protected override void synchRootModel(Models.SceneModel model)
         {
 
@@ -61,9 +64,44 @@ namespace shadeTool.Views
 
         private void mapEditor_Paint(object sender, PaintEventArgs e)
         {
+
+          /*  using (TextureBrush tb = new TextureBrush(this.testimg, new Rectangle(0, 0, 100, 100)))
+            {
+                e.Graphics.FillRectangle(tb, new Rectangle(160, 120, 100, 100));
+            }*/
             this.drawBrushes(e.Graphics);
             this.drawCursor(e.Graphics);
           
+        }
+
+        Dictionary<string, Image> textureCache = new Dictionary<string, Image>();
+        Dictionary<Image, TextureBrush> brushCache = new Dictionary<Image, TextureBrush>();
+
+        List<string> loadedKeys = new List<string>();
+        private Image getImage(string key)
+        {
+            if (textureCache.ContainsKey(key) == false)
+            {
+                this.loadedKeys.Add(key);
+                textureCache[key] = Image.FromFile(key, true);
+                return textureCache[key];
+            }
+            else
+            {
+                return textureCache[key];
+            }
+        }
+
+        private TextureBrush getTextureBrush(Image key)
+        {
+            if (brushCache.ContainsKey(key) == false)
+            {  
+                
+                    brushCache[key] = new TextureBrush(key);
+                    return brushCache[key];
+
+            }
+            return brushCache[key];
         }
 
         private void drawBrushes(Graphics g)
@@ -80,24 +118,30 @@ namespace shadeTool.Views
             }
 
 
+            
+
             foreach (SceneBrush brush in sortedBrushes)
             {
                 int[] pos = transformToScreen(brush.x, brush.y, brush.z);
                 int w = brush.w * unit_size;
                 int h = brush.h * unit_size;
-                SolidBrush fillBrush;
-                SolidBrush transBrush;
+                Brush fillBrush;
+                Brush transBrush;
+                //Brush textureBrush;
 
                 if (this.paintersMode == false)
                 {
                     fillBrush = new SolidBrush(model.GetStyle(brush.styleName).UiColor);
-
                     transBrush = new SolidBrush(Color.FromArgb(64, model.GetStyle(brush.styleName).UiColor));
                 }
                 else
                 {
-                    fillBrush = new SolidBrush(model.GetStyle(brush.styleName).UiColor);
+
+                    fillBrush = this.getTextureBrush( this.getImage(this.model.GetStyle(brush.styleName).texture ));
                     transBrush = fillBrush;
+
+                    TextureBrush tb = (TextureBrush)fillBrush;
+
                 }
 
                 int baseY = pos[1];
@@ -147,7 +191,18 @@ namespace shadeTool.Views
                   
                 }
 
+                if (!(fillBrush is TextureBrush))
+                {
+                    fillBrush.Dispose();
+                }
+
+                if (!(transBrush is TextureBrush))
+                {
+                    transBrush.Dispose();
+                }
+
             }
+
         }
 
         private int[] transformToScreen(int x, int y, int z, bool center = false)
@@ -351,13 +406,35 @@ namespace shadeTool.Views
                 this.paintersMode = false;
             } 
 
-            if( previewModeSelector.Text.Equals("painters") ) {
+            if( previewModeSelector.Text.Equals("texture") ) {
 
                 this.paintersMode = true;
             }
 
             this.Invalidate();
 
+        }
+
+        private void mapEditor_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mapEditor_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                int center_x = (this.Width / unit_size) / 2;
+                int center_y = (this.Height / unit_size) / 2;
+
+           //     int delta_x = cursor_x - (camera_x+center_x;
+             //   int delta_y = cursor_y - (camera_y+center_y);
+                camera_x  = cursor_x - center_x;
+                camera_y  = cursor_y - center_y;
+
+                cursor_x = (e.X / unit_size) + camera_x;
+                cursor_y = (e.Y / unit_size) + camera_y;
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using shadeTool.Models;
 using shadeTool.Controller;
+using System.IO;
 
 namespace shadeTool.Views
 {
@@ -46,12 +47,20 @@ namespace shadeTool.Views
         }
 
 
-
         private void selectStyle(string styleKey)
         {
             this.controller.ActiveStyleKey = styleKey;
             this.selectedStyle = styleKey;
             this.ColorSwatch.Invalidate();
+
+            try
+            {
+                Image texture = Image.FromFile(this.styleModel.texture);
+                textureBox.Image = texture;
+            }
+            catch { }
+
+
         }
 
         public BrushStyle styleModel { get { 
@@ -147,9 +156,15 @@ namespace shadeTool.Views
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void browseTexture_Click(object sender, EventArgs e)
         {
+            string img = shadeTool.browseLibraryFile("texture", "png", this.model);
 
+            if (img != null ) {
+                BrushStyle style = this.model.GetStyle(this.selectedStyle);
+                style.texture = img;
+                this.model.SetStyle(this.selectedStyle, style);
+            }
         }
     }
 }

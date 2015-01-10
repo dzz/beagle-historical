@@ -28,26 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pathTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.browseRootButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pathTextBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // pathTextBox
-            // 
-            this.pathTextBox.Location = new System.Drawing.Point(72, 12);
-            this.pathTextBox.Name = "pathTextBox";
-            this.pathTextBox.Size = new System.Drawing.Size(452, 20);
-            this.pathTextBox.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "project root:";
             // 
             // browseRootButton
             // 
@@ -59,15 +43,32 @@
             this.browseRootButton.UseVisualStyleBackColor = true;
             this.browseRootButton.Click += new System.EventHandler(this.browseRootButton_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(63, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "project root:";
+            // 
+            // pathTextBox
+            // 
+            this.pathTextBox.Location = new System.Drawing.Point(72, 12);
+            this.pathTextBox.Name = "pathTextBox";
+            this.pathTextBox.ReadOnly = true;
+            this.pathTextBox.Size = new System.Drawing.Size(452, 20);
+            this.pathTextBox.TabIndex = 0;
+            // 
             // resourceConfigView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 46);
-            this.ControlBox = false;
             this.Controls.Add(this.browseRootButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pathTextBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "resourceConfigView";
             this.Text = "[ project settings ]";
             this.ResumeLayout(false);

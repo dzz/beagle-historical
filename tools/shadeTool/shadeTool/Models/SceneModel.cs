@@ -10,6 +10,7 @@ namespace shadeTool.Models
 {
     public class BrushStyle 
     {
+        public string texture { get; set; } 
         public const int GEOM_CONVEX = 0;
         public const int GEOM_CONCAVE = 1;
 
