@@ -18,6 +18,8 @@ namespace shadeTool
         SceneModel model;
         EditController controller;
 
+
+        int layout_top = 0;
         private void openView( ModelControllerView mcv, Rectangle layout ) {
 
             mcv.setController(controller);
@@ -25,15 +27,29 @@ namespace shadeTool
             mcv.MdiParent = this;
             mcv.StartPosition = FormStartPosition.Manual;
 
-            mcv.Location = new Point(layout.X, layout.Y);
+            mcv.Location = new Point(layout.X, layout_top);
+
+            if( (mcv is mapEditor)==false )
+                layout_top += mcv.Height;
 
             if (layout.Width > 0)
                 mcv.Size = new Size(layout.Width, layout.Height);
 
             mcv.Show();
 
+            if ((mcv is mapEditor) == false )
+            {
+                mcv.LocationChanged += new EventHandler(mcv_LocationChanged);
+            }
+
 
            
+        }
+
+        void mcv_LocationChanged(object sender, EventArgs e)
+        {
+            Form f = (Form)sender;
+            f.Location = new Point( this.Width-350, f.Location.Y);
         }
 
         public shadeTool()
@@ -79,6 +95,23 @@ namespace shadeTool
             catch (Exception x)
             {
                 MessageBox.Show(x.Message);
+            }
+        }
+
+        private void shadeTool_SizeChanged(object sender, EventArgs e)
+        {
+            foreach (Form child in this.MdiChildren)
+            {
+                if (child is mapEditor)
+                {
+                    child.Location = new Point(0, 0);
+                    child.Size = new Size( this.ClientRectangle.Width - 350, this.ClientRectangle.Height);
+                    
+                }
+                else
+                {
+                    child.Location = new Point(this.ClientRectangle.Width - 350, child.Location.Y);
+                }
             }
         }
     }

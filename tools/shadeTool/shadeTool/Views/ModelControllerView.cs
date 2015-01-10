@@ -37,5 +37,13 @@ namespace shadeTool.Views
 
         protected virtual void synchRootModel(SceneModel model) { }
         protected virtual void synchRootController(EditController controller) { }
+
+        private void ModelControllerView_LocationChanged(object sender, EventArgs e)
+        {
+            if (this is mapEditor)
+                return;
+
+        //    this.Location = new Point(this.MdiParent.Width-350, this.Location.Y);
+        }
     }
 }

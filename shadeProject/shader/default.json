@@ -1,0 +1,4 @@
+{
+    "vertex"    : "core/label.vert",
+    "fragment"  : "core/texture.frag"
+}

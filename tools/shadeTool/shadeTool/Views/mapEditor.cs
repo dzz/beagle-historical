@@ -117,8 +117,6 @@ namespace shadeTool.Views
 
                 
                 {
-                    pos[1] = baseY - (unit_size*2);
-
                     Pen WallPen;
 
                     if (is_current_layer)
@@ -160,7 +158,7 @@ namespace shadeTool.Views
             int zDelta = z - this.camera_z;
 
             int scrX = (x - camera_x) * unit_size;
-            int scrY = (y - camera_y - (zDelta*2)) * unit_size;
+            int scrY = (y - camera_y - zDelta) * unit_size;
 
             if (center)
             {
@@ -297,6 +295,7 @@ namespace shadeTool.Views
 
         private void mapEditor_Click(object sender, EventArgs e)
         {
+            
             if (state == mapEditor.STATE_BRUSH_DEFINE_A)
             {
 

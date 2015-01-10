@@ -56,6 +56,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\resourceConfigView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\resourceConfigView.Designer.cs">
+      <DependentUpon>resourceConfigView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\sceneBrushEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +98,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\ModelControllerView.resx">
+      <DependentUpon>ModelControllerView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\resourceConfigView.resx">
+      <DependentUpon>resourceConfigView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\sceneBrushEditor.resx">
       <DependentUpon>sceneBrushEditor.cs</DependentUpon>
     </EmbeddedResource>

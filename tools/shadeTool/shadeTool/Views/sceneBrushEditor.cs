@@ -26,6 +26,9 @@ namespace shadeTool.Views
 
             foreach (SceneBrush brush in model.brushes)
             {
+                if (brush.z != this.controller.z_layer)
+                    continue;
+
                 this.brushListing.Items.Add(brush);
 
                 if(brush == this.controller.ActiveBrush)
@@ -41,13 +44,18 @@ namespace shadeTool.Views
         {
 
             this.controller.ActiveBrushChanged += new Controller.EditController.BrushHandler(controller_ActiveBrushChanged);
+            this.controller.ZChanged += new Controller.EditController.ZHandler(controller_ZChanged);
+        }
+
+        void controller_ZChanged()
+        {
+            this.populateBrushListing();
         }
 
         void controller_ActiveBrushChanged(SceneBrush brush)
         {
             textBoxName.Text = brush.name;
             styleDisplay.Text = brush.styleName;
-            styleDisplay.ForeColor = model.GetStyle(brush.styleName).UiColor;
 
             this.northWall.Checked = brush.Walls[SceneBrush.NORTH_WALL];
             this.eastWall.Checked = brush.Walls[SceneBrush.EAST_WALL];

@@ -111,6 +111,7 @@ namespace shadeTool.Models
 
     public class SceneModel
     {
+        public string project_root;
         private List<SceneBrush> _brushes = new List<SceneBrush>();
         private XmlDictionary<String, BrushStyle> _styles = new XmlDictionary<string, BrushStyle>();
 

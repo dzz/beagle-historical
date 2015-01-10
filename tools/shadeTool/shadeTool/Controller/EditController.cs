@@ -11,6 +11,10 @@ namespace shadeTool.Controller
         public delegate void BrushHandler(SceneBrush brush);
         public event BrushHandler ActiveBrushChanged;
 
+        public delegate void ZHandler();
+        public event ZHandler ZChanged;
+
+
         public int DrawMode = 0;
 
         public const int DRAWMODE_FLOOR = 0;
@@ -34,7 +38,8 @@ namespace shadeTool.Controller
         }
         public string ActiveStyleKey { get; set; }
 
-        public int z_layer { get; set; }
+        private int _z_layer = 0;
+        public int z_layer { get { return _z_layer; } set { _z_layer = value; if (ZChanged != null) { ZChanged(); } } }
 
         public EditController()
         {

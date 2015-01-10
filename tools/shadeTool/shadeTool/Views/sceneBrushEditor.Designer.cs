@@ -65,7 +65,7 @@
             this.synchStyleButton.Name = "synchStyleButton";
             this.synchStyleButton.Size = new System.Drawing.Size(106, 46);
             this.synchStyleButton.TabIndex = 16;
-            this.synchStyleButton.Text = "Set from Style Editor";
+            this.synchStyleButton.Text = "[ use active ]";
             this.synchStyleButton.UseVisualStyleBackColor = true;
             this.synchStyleButton.Click += new System.EventHandler(this.synchStyleButton_Click);
             // 
@@ -74,18 +74,16 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(191, 290);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.Size = new System.Drawing.Size(40, 13);
             this.label2.TabIndex = 15;
-            this.label2.Text = "Style:";
+            this.label2.Text = "[ style ]";
             // 
             // styleDisplay
             // 
-            this.styleDisplay.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.styleDisplay.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.styleDisplay.Location = new System.Drawing.Point(199, 310);
             this.styleDisplay.Name = "styleDisplay";
             this.styleDisplay.ReadOnly = true;
-            this.styleDisplay.Size = new System.Drawing.Size(106, 18);
+            this.styleDisplay.Size = new System.Drawing.Size(106, 20);
             this.styleDisplay.TabIndex = 0;
             // 
             // toolStrip1
@@ -100,7 +98,7 @@
             this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(46, 406);
+            this.toolStrip1.Size = new System.Drawing.Size(59, 406);
             this.toolStrip1.TabIndex = 14;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -108,8 +106,8 @@
             // 
             this.toolStripLabel1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(43, 13);
-            this.toolStripLabel1.Text = "Order";
+            this.toolStripLabel1.Size = new System.Drawing.Size(56, 13);
+            this.toolStripLabel1.Text = "[ order ]";
             // 
             // toolStripButton2
             // 
@@ -118,7 +116,7 @@
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(43, 17);
+            this.toolStripButton2.Size = new System.Drawing.Size(56, 17);
             this.toolStripButton2.Text = "[up]";
             // 
             // toolStripButton1
@@ -140,8 +138,8 @@
             // 
             this.toolStripLabel2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(43, 13);
-            this.toolStripLabel2.Text = "Action";
+            this.toolStripLabel2.Size = new System.Drawing.Size(56, 13);
+            this.toolStripLabel2.Text = "[ action ]";
             // 
             // toolStripButton3
             // 
@@ -159,10 +157,9 @@
             this.brushListing.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.brushListing.FormattingEnabled = true;
             this.brushListing.ItemHeight = 15;
-            this.brushListing.Location = new System.Drawing.Point(49, -1);
+            this.brushListing.Location = new System.Drawing.Point(62, -1);
             this.brushListing.Name = "brushListing";
-            this.brushListing.ScrollAlwaysVisible = true;
-            this.brushListing.Size = new System.Drawing.Size(136, 409);
+            this.brushListing.Size = new System.Drawing.Size(123, 409);
             this.brushListing.TabIndex = 0;
             this.brushListing.SelectedIndexChanged += new System.EventHandler(this.brushListing_SelectedIndexChanged);
             // 
@@ -274,7 +271,7 @@
             this.floor.Name = "floor";
             this.floor.Size = new System.Drawing.Size(50, 50);
             this.floor.TabIndex = 9;
-            this.floor.Text = "floor";
+            this.floor.Text = "[ floor ]";
             this.floor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.floor.UseVisualStyleBackColor = true;
             this.floor.CheckedChanged += new System.EventHandler(this.floor_CheckedChanged);
@@ -340,9 +337,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(191, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Name:";
+            this.label1.Text = "[ name ]";
             // 
             // sceneBrushEditor
             // 
@@ -361,7 +358,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "sceneBrushEditor";
-            this.Text = "BrushList";
+            this.Text = "[ brush list ]";
             this.Load += new System.EventHandler(this.BrushList_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

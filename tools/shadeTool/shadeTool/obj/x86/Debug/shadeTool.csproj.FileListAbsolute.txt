@@ -9,3 +9,5 @@ C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.pdb
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.sceneBrushEditor.resources
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.mapEditor.resources
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.brushStyleEditor.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.resourceConfigView.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.ModelControllerView.resources
