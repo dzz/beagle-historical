@@ -203,5 +203,15 @@ namespace shadeTool.Views
             style.uv_mode = BrushStyle.uv_mode_scale;
             this.model.SetStyle(this.selectedStyle, style);
         }
+
+        private void originLocalButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.styleModel.origin_mode = BrushStyle.origin_mode_local;
+        }
+
+        private void originWorldButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.styleModel.origin_mode = BrushStyle.origin_mode_global;
+        }
     }
 }

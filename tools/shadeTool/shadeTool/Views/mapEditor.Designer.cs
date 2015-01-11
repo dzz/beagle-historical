@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mapEditor));
+            this.label1 = new System.Windows.Forms.Label();
             this.zLabel = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.coordsLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -49,13 +50,26 @@
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Red;
+            this.label1.Location = new System.Drawing.Point(115, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(225, 19);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "waiting for brush anchor";
+            this.label1.Visible = false;
+            // 
             // zLabel
             // 
             this.zLabel.AutoSize = true;
             this.zLabel.BackColor = System.Drawing.Color.Transparent;
             this.zLabel.Font = new System.Drawing.Font("Consolas", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.zLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.zLabel.Location = new System.Drawing.Point(142, 9);
+            this.zLabel.Location = new System.Drawing.Point(113, 28);
             this.zLabel.Name = "zLabel";
             this.zLabel.Size = new System.Drawing.Size(135, 32);
             this.zLabel.TabIndex = 2;
@@ -130,12 +144,13 @@
             // addBrushButton
             // 
             this.addBrushButton.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.addBrushButton.CheckOnClick = true;
             this.addBrushButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.addBrushButton.Image = ((System.Drawing.Image)(resources.GetObject("addBrushButton.Image")));
             this.addBrushButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addBrushButton.Name = "addBrushButton";
             this.addBrushButton.Size = new System.Drawing.Size(109, 17);
-            this.addBrushButton.Text = "add {ctrl-a}";
+            this.addBrushButton.Text = "add";
             this.addBrushButton.Click += new System.EventHandler(this.addBrush_Click);
             // 
             // selectBrushButton
@@ -203,7 +218,7 @@
             "texture all"});
             this.previewModeSelector.Name = "previewModeSelector";
             this.previewModeSelector.Size = new System.Drawing.Size(107, 21);
-            this.previewModeSelector.Text = "onion";
+            this.previewModeSelector.Text = "texture this layer";
             this.previewModeSelector.Click += new System.EventHandler(this.previewModeSelector_Click);
             this.previewModeSelector.TextChanged += new System.EventHandler(this.previewModeSelector_TextChanged);
             // 
@@ -213,16 +228,19 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(742, 977);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.zLabel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "mapEditor";
             this.Text = "topdownBrushEditor";
             this.Load += new System.EventHandler(this.mapEditor_Load);
             this.Click += new System.EventHandler(this.mapEditor_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.mapEditor_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mapEditor_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mapEditor_KeyPress);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mapEditor_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mapEditor_MouseMove);
             this.statusStrip1.ResumeLayout(false);
@@ -252,5 +270,6 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel3;
         private System.Windows.Forms.ToolStripComboBox previewModeSelector;
         private System.Windows.Forms.Label zLabel;
+        private System.Windows.Forms.Label label1;
     }
 }

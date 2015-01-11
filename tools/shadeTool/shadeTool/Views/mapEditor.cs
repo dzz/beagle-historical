@@ -142,7 +142,7 @@ namespace shadeTool.Views
             if (!this.paintersMode) { sortedBrushes = model.brushes.OrderBy(b => b.z).ToList(); }
             else
             {
-                sortedBrushes = model.brushes.OrderBy(b => b.type).ThenByDescending( b=>(10000000-b.z)).ToList();
+                sortedBrushes = model.brushes.OrderBy(b => b.type).ThenBy( b=>b.z).ToList();
             }
 
 
@@ -188,7 +188,11 @@ namespace shadeTool.Views
 
                             tb.ScaleTransform((float)sx, (float)sy);
                         }
-                        tb.TranslateTransform(pos[0], pos[1]);
+
+                        if (style.origin_mode == BrushStyle.origin_mode_local)
+                        {
+                            tb.TranslateTransform(pos[0], pos[1]);
+                        }
 
                     }
 
@@ -312,8 +316,6 @@ namespace shadeTool.Views
             if (state == mapEditor.STATE_BRUSH_DEFINE_A ||
                 state == mapEditor.STATE_BRUSH_DEFINE_B)
             {
-                statePen = Pens.LimeGreen;
-
                 if (state == mapEditor.STATE_BRUSH_DEFINE_B)
                 {
                     this.drawTempBrush(g);
@@ -415,7 +417,16 @@ namespace shadeTool.Views
 
         private void addBrush_Click(object sender, EventArgs e)
         {
-            state = mapEditor.STATE_BRUSH_DEFINE_A;
+            if (addBrushButton.Checked)
+            {
+                label1.Visible = true;
+                state = mapEditor.STATE_BRUSH_DEFINE_A;
+            }
+            else
+            {
+                label1.Visible = false;
+                state = mapEditor.STATE_NONE;
+            }
         }
 
         int def_origin_x = 0;
@@ -465,7 +476,7 @@ namespace shadeTool.Views
             
             if (state == mapEditor.STATE_BRUSH_DEFINE_A)
             {
-
+                label1.Visible = false;
                 def_origin_x = cursor_x;
                 def_origin_y = cursor_y;
                 tmp_brush_x = cursor_x;
@@ -478,8 +489,16 @@ namespace shadeTool.Views
 
             if (state == mapEditor.STATE_BRUSH_DEFINE_B)
             {
+               
                 this.commitBrush();
-                state = 0;
+                if (addBrushButton.Checked)
+                {
+                    state = STATE_BRUSH_DEFINE_A;
+                }
+                else
+                {
+                    state = STATE_NONE;
+                }
                 return;
             }
         }
@@ -511,8 +530,8 @@ namespace shadeTool.Views
                 this.controller.DrawMode = EditController.DRAWMODE_WALL;
         }
 
-        bool paintersMode = false;
-        bool paintCurrentOnly = false;
+        bool paintersMode = true;
+        bool paintCurrentOnly = true;
 
         private void previewModeSelector_TextChanged(object sender, EventArgs e)
         {
@@ -546,6 +565,8 @@ namespace shadeTool.Views
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
+                this.state = STATE_NONE;
+
                 int center_x = (this.Width / this.model.world_unit_size) / 2;
                 int center_y = (this.Height / this.model.world_unit_size) / 2;
 
@@ -566,7 +587,15 @@ namespace shadeTool.Views
 
         private void mapEditor_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.A)
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.state = STATE_NONE;
+            }
+        }
+
+        private void mapEditor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 'a' )
             {
                 this.addBrush_Click(sender, e);
             }

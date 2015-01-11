@@ -262,12 +262,13 @@
             this.groupBox1.Controls.Add(this.westWall);
             this.groupBox1.Controls.Add(this.southWall);
             this.groupBox1.Controls.Add(this.northWall);
-            this.groupBox1.Location = new System.Drawing.Point(200, 175);
+            this.groupBox1.Location = new System.Drawing.Point(315, 175);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(105, 111);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "[ surfaces ]";
+            this.groupBox1.Visible = false;
             // 
             // floor
             // 

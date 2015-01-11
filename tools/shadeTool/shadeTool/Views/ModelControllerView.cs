@@ -45,5 +45,10 @@ namespace shadeTool.Views
 
         //    this.Location = new Point(this.MdiParent.Width-350, this.Location.Y);
         }
+
+        private void ModelControllerView_MouseEnter(object sender, EventArgs e)
+        {
+            this.Focus();
+        }
     }
 }

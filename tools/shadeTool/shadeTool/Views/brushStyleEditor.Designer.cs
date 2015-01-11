@@ -231,6 +231,7 @@
             this.originLocalButton.TabStop = true;
             this.originLocalButton.Text = "local";
             this.originLocalButton.UseVisualStyleBackColor = true;
+            this.originLocalButton.CheckedChanged += new System.EventHandler(this.originLocalButton_CheckedChanged);
             // 
             // originWorldButton
             // 
@@ -242,6 +243,7 @@
             this.originWorldButton.TabStop = true;
             this.originWorldButton.Text = "world";
             this.originWorldButton.UseVisualStyleBackColor = true;
+            this.originWorldButton.CheckedChanged += new System.EventHandler(this.originWorldButton_CheckedChanged);
             // 
             // brushStyleEditor
             // 

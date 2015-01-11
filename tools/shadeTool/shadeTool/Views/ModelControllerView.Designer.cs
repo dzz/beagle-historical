@@ -32,12 +32,12 @@
             // 
             // ModelControllerView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(292, 277);
             this.Name = "ModelControllerView";
             this.Text = "ModelControllerView";
             this.LocationChanged += new System.EventHandler(this.ModelControllerView_LocationChanged);
+            this.MouseEnter += new System.EventHandler(this.ModelControllerView_MouseEnter);
             this.ResumeLayout(false);
 
         }
