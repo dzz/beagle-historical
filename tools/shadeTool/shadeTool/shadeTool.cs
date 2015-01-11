@@ -38,12 +38,18 @@ namespace shadeTool
 
             mcv.Show();
 
-            if ((mcv is mapEditor) == false )
+            mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            mcv.ControlBox = false;
+
+            if ((mcv is mapEditor) == false)
             {
                 mcv.LocationChanged += new EventHandler(mcv_LocationChanged);
             }
 
-
+            else
+            {
+                mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            }
            
         }
 
@@ -112,6 +118,7 @@ namespace shadeTool
                 else
                 {
                     child.Location = new Point(this.ClientRectangle.Width - 350, child.Location.Y);
+            
                 }
             }
         }

@@ -29,6 +29,18 @@ namespace shadeTool.Models
                             set{ UiColor = Color.FromArgb( UiColor.R, UiColor.G, value ); }
         }
 
+        public int uv_mode { get; set; }
+        public int origin_mode { get; set; }
+
+        public const int uv_mode_repeat = 0;
+        public const int uv_mode_scale = 1;
+
+        public const int origin_mode_local = 0;
+        public const int origin_mode_global = 1;
+
+        public int origin_x { get; set; }
+        public int origin_y { get; set; }
+
 
         public BrushStyle()
         {
@@ -48,6 +60,11 @@ namespace shadeTool.Models
         public string name { get; set; }
         public string styleName { get; set; }
 
+        public const int FLOOR_BRUSH = 0;
+        public const int WALL_BRUSH = 1;
+
+        public int type { get; set; }
+
         public int x { get;set;  }
         public int y { get; set; }
         public int z { get; set; }
@@ -64,6 +81,7 @@ namespace shadeTool.Models
         {
             styleName       = "default_brush_style";
             name            = "brush";
+            orientation = FLOOR;
         }
 
         public override string ToString()
@@ -112,6 +130,11 @@ namespace shadeTool.Models
 
     public class SceneModel
     {
+
+        private int _world_unit_size;
+        public int world_unit_size { get { return _world_unit_size; } set { _world_unit_size = value; if (this.SettingsChanged != null) this.SettingsChanged(this); } }
+
+
         public string project_root;
         private List<SceneBrush> _brushes = new List<SceneBrush>();
         private XmlDictionary<String, BrushStyle> _styles = new XmlDictionary<string, BrushStyle>();
@@ -122,6 +145,26 @@ namespace shadeTool.Models
         public delegate void ModelChangedHandler(SceneModel model);
         public event ModelChangedHandler StylesChanged;
         public event ModelChangedHandler BrushesChanged;
+        public event ModelChangedHandler SettingsChanged;
+
+        public void moveBrush(SceneBrush target, int delta)
+        {
+            if (_brushes.Contains(target))
+            {
+                int idx = _brushes.IndexOf(target);
+                if ( 
+                    ( delta==1) && (target!= brushes.Last()) ||
+                    ( delta==-1) && (target!=brushes.First())
+                    
+                    )
+                {
+                    _brushes.RemoveAt(idx);
+                    _brushes.Insert(idx + delta, target);
+                }
+            }
+
+            if (this.BrushesChanged != null) this.BrushesChanged(this);
+        }
 
 
         public static XmlSerializer getSerializer() {
@@ -156,12 +199,18 @@ namespace shadeTool.Models
                 StreamReader file = new StreamReader("shadeTool.xml", Encoding.Unicode);
                 tmpModel = (SceneModel)x.Deserialize( file );
                 file.Close();
+
+                if (tmpModel.world_unit_size == 0)
+                {
+                    tmpModel.world_unit_size = 32;
+                }
                 return tmpModel;
             }
             catch {
                  Console.WriteLine("error saving");
                 return new SceneModel();
             }
+
         }
 
         public void AddBrush(SceneBrush brush)

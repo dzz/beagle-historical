@@ -22,9 +22,16 @@ namespace shadeTool.Views
             this.synchStyles(this.model);
         }
 
+        bool badDevon = false;
+
         void model_StylesChanged(SceneModel model)
         {
-            this.synchStyles(model);
+            if (!badDevon)
+            {
+                badDevon = true;
+                this.synchStyles(model);
+            }
+            badDevon = false;
         }
        
         public void synchStyles(SceneModel model)
@@ -58,8 +65,14 @@ namespace shadeTool.Views
                 Image texture = Image.FromFile(this.styleModel.texture);
                 textureBox.Image = texture;
             }
-            catch { }
+            catch {
+                textureBox.Image = null;
+            }
 
+            if (this.styleModel.uv_mode == BrushStyle.uv_mode_repeat)
+                this.uvRepeatMode.Checked = true;
+            else
+                this.uvScaleMode.Checked = true;
 
         }
 
@@ -165,6 +178,30 @@ namespace shadeTool.Views
                 style.texture = img;
                 this.model.SetStyle(this.selectedStyle, style);
             }
+        }
+
+        private void uvRepeatMode_CheckedChanged(object sender, EventArgs e)
+        {
+            BrushStyle style = this.model.GetStyle(this.selectedStyle);
+
+            if (style.uv_mode == BrushStyle.uv_mode_repeat)
+                return;
+
+
+            style.uv_mode = BrushStyle.uv_mode_repeat;
+            this.model.SetStyle(this.selectedStyle, style);
+        }
+
+        private void uvScaleMode_CheckedChanged(object sender, EventArgs e)
+        {
+            
+            BrushStyle style = this.model.GetStyle(this.selectedStyle);
+
+            if (style.uv_mode == BrushStyle.uv_mode_scale)
+                return;
+
+            style.uv_mode = BrushStyle.uv_mode_scale;
+            this.model.SetStyle(this.selectedStyle, style);
         }
     }
 }

@@ -34,8 +34,8 @@
             this.styleDisplay = new System.Windows.Forms.TextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.moveBrushUpButton = new System.Windows.Forms.ToolStripButton();
+            this.moveBrushDownButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
@@ -91,8 +91,8 @@
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
-            this.toolStripButton2,
-            this.toolStripButton1,
+            this.moveBrushUpButton,
+            this.moveBrushDownButton,
             this.toolStripSeparator1,
             this.toolStripLabel2,
             this.toolStripButton3});
@@ -109,30 +109,32 @@
             this.toolStripLabel1.Size = new System.Drawing.Size(56, 13);
             this.toolStripLabel1.Text = "[ order ]";
             // 
-            // toolStripButton2
+            // moveBrushUpButton
             // 
-            this.toolStripButton2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(56, 17);
-            this.toolStripButton2.Text = "[up]";
+            this.moveBrushUpButton.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.moveBrushUpButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.moveBrushUpButton.Image = ((System.Drawing.Image)(resources.GetObject("moveBrushUpButton.Image")));
+            this.moveBrushUpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.moveBrushUpButton.Name = "moveBrushUpButton";
+            this.moveBrushUpButton.Size = new System.Drawing.Size(56, 17);
+            this.moveBrushUpButton.Text = "[back]";
+            this.moveBrushUpButton.Click += new System.EventHandler(this.moveBrushUpButton_Click);
             // 
-            // toolStripButton1
+            // moveBrushDownButton
             // 
-            this.toolStripButton1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(43, 17);
-            this.toolStripButton1.Text = "[down]";
+            this.moveBrushDownButton.BackColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.moveBrushDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.moveBrushDownButton.Image = ((System.Drawing.Image)(resources.GetObject("moveBrushDownButton.Image")));
+            this.moveBrushDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.moveBrushDownButton.Name = "moveBrushDownButton";
+            this.moveBrushDownButton.Size = new System.Drawing.Size(56, 17);
+            this.moveBrushDownButton.Text = "[front]";
+            this.moveBrushDownButton.Click += new System.EventHandler(this.moveBrushDownButton_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(43, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(56, 6);
             // 
             // toolStripLabel2
             // 
@@ -148,7 +150,7 @@
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(43, 17);
+            this.toolStripButton3.Size = new System.Drawing.Size(56, 17);
             this.toolStripButton3.Text = "[del]";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
@@ -191,6 +193,7 @@
             this.flatButton.TabStop = true;
             this.flatButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.flatButton.UseVisualStyleBackColor = true;
+            this.flatButton.CheckedChanged += new System.EventHandler(this.flatButton_CheckedChanged);
             // 
             // eastButton
             // 
@@ -205,6 +208,7 @@
             this.eastButton.Text = "E";
             this.eastButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.eastButton.UseVisualStyleBackColor = true;
+            this.eastButton.CheckedChanged += new System.EventHandler(this.eastButton_CheckedChanged);
             // 
             // westButton
             // 
@@ -219,6 +223,7 @@
             this.westButton.Text = "W";
             this.westButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.westButton.UseVisualStyleBackColor = true;
+            this.westButton.CheckedChanged += new System.EventHandler(this.westButton_CheckedChanged);
             // 
             // southButton
             // 
@@ -233,6 +238,7 @@
             this.southButton.Text = "S";
             this.southButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.southButton.UseVisualStyleBackColor = true;
+            this.southButton.CheckedChanged += new System.EventHandler(this.southButton_CheckedChanged);
             // 
             // northButton
             // 
@@ -247,6 +253,7 @@
             this.northButton.Text = "N";
             this.northButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.northButton.UseVisualStyleBackColor = true;
+            this.northButton.CheckedChanged += new System.EventHandler(this.northButton_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -391,8 +398,8 @@
         private System.Windows.Forms.ListBox brushListing;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton moveBrushUpButton;
+        private System.Windows.Forms.ToolStripButton moveBrushDownButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripButton toolStripButton3;

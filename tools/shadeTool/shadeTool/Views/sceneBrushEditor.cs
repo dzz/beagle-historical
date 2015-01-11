@@ -52,6 +52,7 @@ namespace shadeTool.Views
             this.populateBrushListing();
         }
 
+
         void controller_ActiveBrushChanged(SceneBrush brush)
         {
             textBoxName.Text = brush.name;
@@ -62,6 +63,11 @@ namespace shadeTool.Views
             this.southWall.Checked = brush.Walls[SceneBrush.SOUTH_WALL];
             this.westWall.Checked = brush.Walls[SceneBrush.WEST_WALL];
 
+            this.northButton.Checked = brush.orientation == SceneBrush.NORTH_WALL;
+            this.eastButton.Checked = brush.orientation == SceneBrush.EAST_WALL;
+            this.southButton.Checked = brush.orientation == SceneBrush.SOUTH_WALL;
+            this.westButton.Checked = brush.orientation == SceneBrush.WEST_WALL;
+            this.flatButton.Checked = brush.orientation == SceneBrush.FLOOR;
         }
 
         protected override void synchRootModel(Models.SceneModel model)
@@ -134,6 +140,57 @@ namespace shadeTool.Views
             if (this.brushListing.SelectedItem != null)
             {
                 this.model.DelBrush( (SceneBrush) this.brushListing.SelectedItem);
+            }
+        }
+
+        private void northButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.controller.ActiveBrush.orientation = SceneBrush.NORTH_WALL;
+
+            this.controller.notifyActiveBrushChanged();
+
+        }
+
+        private void southButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.controller.ActiveBrush.orientation = SceneBrush.SOUTH_WALL;
+
+            this.controller.notifyActiveBrushChanged();
+        }
+
+        private void westButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.controller.ActiveBrush.orientation = SceneBrush.WEST_WALL;
+
+            this.controller.notifyActiveBrushChanged();
+        }
+
+        private void eastButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.controller.ActiveBrush.orientation = SceneBrush.EAST_WALL;
+
+            this.controller.notifyActiveBrushChanged();
+        }
+
+        private void flatButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.controller.ActiveBrush.orientation = SceneBrush.FLOOR;
+            this.controller.notifyActiveBrushChanged();
+        }
+
+        private void moveBrushUpButton_Click(object sender, EventArgs e)
+        {
+            if (this.controller.ActiveBrush != null)
+            {
+                this.model.moveBrush(this.controller.ActiveBrush, -1);            
+            }
+        }
+
+        private void moveBrushDownButton_Click(object sender, EventArgs e)
+        {
+                    if (this.controller.ActiveBrush != null)
+            {
+                this.model.moveBrush(this.controller.ActiveBrush, 1);            
             }
         }
 

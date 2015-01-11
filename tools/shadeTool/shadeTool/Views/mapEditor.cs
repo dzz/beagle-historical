@@ -16,8 +16,7 @@ namespace shadeTool.Views
     public partial class mapEditor : ModelControllerView
     {
         
-        int unit_size   = 32;
-        int half_unit   = 16;
+
         int camera_x    = 0;
         int camera_y    = 0;
         int camera_z    = 0;
@@ -30,24 +29,42 @@ namespace shadeTool.Views
         const int STATE_BRUSH_DEFINE_A = 1;
         const int STATE_BRUSH_DEFINE_B = 2;
 
-        Image testimg;
+        Timer TextureGarbageCollectTimeout = new Timer();
 
         public mapEditor()
         {
             InitializeComponent();
-
-          //  this.WindowState = FormWindowState.Maximized;
             this.DoubleBuffered = true;
 
+            TextureGarbageCollectTimeout.Interval = 1000 * 60 * 15;
+            TextureGarbageCollectTimeout.Tick += new EventHandler(GarbageCollectTimeout_Tick);
+            TextureGarbageCollectTimeout.Enabled = true;
       
         }
-        TextureBrush textureBrush;
+
+        void GarbageCollectTimeout_Tick(object sender, EventArgs e)
+        {
+            this.textureCache.Clear();
+            this.brushCache.Clear();
+        }
 
         protected override void synchRootModel(Models.SceneModel model)
         {
 
             this.model.BrushesChanged += new SceneModel.ModelChangedHandler(model_BrushesChanged);
             this.controller.ActiveBrushChanged += new EditController.BrushHandler(controller_ActiveBrushChanged);
+            this.model.SettingsChanged += new SceneModel.ModelChangedHandler(model_SettingsChanged);
+            this.controller.ActiveBrushModified += new EditController.ActiveBrushModifiedHandler(controller_ActiveBrushModified);
+        }
+
+        void controller_ActiveBrushModified(SceneBrush brush)
+        {
+            this.Invalidate();
+        }
+
+        void model_SettingsChanged(SceneModel model)
+        {
+            this.Invalidate();
         }
 
         void controller_ActiveBrushChanged(SceneBrush brush)
@@ -65,10 +82,6 @@ namespace shadeTool.Views
         private void mapEditor_Paint(object sender, PaintEventArgs e)
         {
 
-          /*  using (TextureBrush tb = new TextureBrush(this.testimg, new Rectangle(0, 0, 100, 100)))
-            {
-                e.Graphics.FillRectangle(tb, new Rectangle(160, 120, 100, 100));
-            }*/
             this.drawBrushes(e.Graphics);
             this.drawCursor(e.Graphics);
           
@@ -77,13 +90,27 @@ namespace shadeTool.Views
         Dictionary<string, Image> textureCache = new Dictionary<string, Image>();
         Dictionary<Image, TextureBrush> brushCache = new Dictionary<Image, TextureBrush>();
 
-        List<string> loadedKeys = new List<string>();
         private Image getImage(string key)
         {
+
+            if (key == null)
+                key = "";
+
             if (textureCache.ContainsKey(key) == false)
             {
-                this.loadedKeys.Add(key);
-                textureCache[key] = Image.FromFile(key, true);
+                try
+                {
+                    textureCache[key] = Image.FromFile(key, true);
+
+                }
+                catch
+                {
+                    Bitmap bmp = new Bitmap(64, 64);
+                    Graphics g = Graphics.FromImage(bmp);
+                    g.Clear(Color.WhiteSmoke);
+                    g.DrawString("???", this.Font, new SolidBrush(Color.Red), new Point(0, 0));
+                    textureCache[key] = bmp;
+                }
                 return textureCache[key];
             }
             else
@@ -96,6 +123,7 @@ namespace shadeTool.Views
         {
             if (brushCache.ContainsKey(key) == false)
             {  
+
                 
                     brushCache[key] = new TextureBrush(key);
                     return brushCache[key];
@@ -114,82 +142,111 @@ namespace shadeTool.Views
             if (!this.paintersMode) { sortedBrushes = model.brushes.OrderBy(b => b.z).ToList(); }
             else
             {
-                sortedBrushes = model.brushes.OrderBy(b => b.z).ToList();
+                sortedBrushes = model.brushes.OrderBy(b => b.type).ThenByDescending( b=>(10000000-b.z)).ToList();
             }
 
 
             
-
             foreach (SceneBrush brush in sortedBrushes)
             {
                 int[] pos = transformToScreen(brush.x, brush.y, brush.z);
-                int w = brush.w * unit_size;
-                int h = brush.h * unit_size;
+                int w = brush.w * this.model.world_unit_size;
+                int h = brush.h * this.model.world_unit_size;
                 Brush fillBrush;
                 Brush transBrush;
                 //Brush textureBrush;
 
-                if (this.paintersMode == false)
-                {
-                    fillBrush = new SolidBrush(model.GetStyle(brush.styleName).UiColor);
-                    transBrush = new SolidBrush(Color.FromArgb(64, model.GetStyle(brush.styleName).UiColor));
-                }
-                else
-                {
+                BrushStyle style = model.GetStyle( brush.styleName );
 
-                    fillBrush = this.getTextureBrush( this.getImage(this.model.GetStyle(brush.styleName).texture ));
-                    transBrush = fillBrush;
+             
 
-                    TextureBrush tb = (TextureBrush)fillBrush;
+                    if (this.paintersMode == false)
+                    {
+                        fillBrush = new SolidBrush(style.UiColor);
+                        transBrush = new SolidBrush(Color.FromArgb(64, style.UiColor));
+                    }
+                    else
+                    {
 
-                }
+                        fillBrush = this.getTextureBrush(this.getImage(style.texture));
+
+                        if (this.paintCurrentOnly == false)
+                            transBrush = fillBrush;
+                        else
+                        {
+                            transBrush = new SolidBrush(Color.FromArgb(64, style.UiColor));
+                        }
+
+                        TextureBrush tb = (TextureBrush)fillBrush;
+
+                        tb.ResetTransform();
+
+                        if (style.uv_mode == BrushStyle.uv_mode_scale)
+                        {
+                            double sx = (double)w / (double)tb.Image.Width;
+                            double sy = (double)h / (double)tb.Image.Height;
+
+                            tb.ScaleTransform((float)sx, (float)sy);
+                        }
+                        tb.TranslateTransform(pos[0], pos[1]);
+
+                    }
 
                 int baseY = pos[1];
                 bool is_current_layer = (brush.z == camera_z);
 
+                if (brush.type == SceneBrush.WALL_BRUSH)
+                {
+                    Pen wallPen = is_current_layer ? Pens.White : Pens.Gray;
+                    g.DrawLine(wallPen, pos[0], pos[1], pos[0] + w, pos[1] + h);
+
+                    double nx = -h;
+                    double ny = w;
+
+                    double len = Math.Sqrt(nx * nx + ny * ny);
+
+                    if (len > double.Epsilon)
+                    {
+                        nx /= len;
+                        ny /= len;
+
+                        nx *= 32;
+                        ny *= 32;
+
+                        using (Pen normalPen = new Pen(Color.AliceBlue, 12))
+                        {
+                            if (is_current_layer)
+                            {
+                                normalPen.EndCap = LineCap.ArrowAnchor;
+                                g.DrawLine(normalPen, pos[0], pos[1], pos[0] + (int)nx, pos[1] + (int)ny);
+                            }
+                        }
+                    }
+                }
+
                 if( is_current_layer) {
+
+                    if (brush.type == SceneBrush.FLOOR_BRUSH)
+                    {
                         g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
+                    }
 
                         if (brush == this.controller.ActiveBrush)
                         {
                             g.DrawRectangle(Pens.GhostWhite, pos[0], pos[1], w, h);
                         }
-                } else {
 
-                     g.FillRectangle(transBrush, pos[0], pos[1], w, h);
+                        
+
+
+                } else {
+                    if (brush.type == SceneBrush.FLOOR_BRUSH)
+                    {
+                        g.FillRectangle(transBrush, pos[0], pos[1], w, h);
+                    }
                 }
 
                 
-                {
-                    Pen WallPen;
-
-                    if (is_current_layer)
-                    {
-                        WallPen = new Pen(Brushes.Honeydew, 2.0f) { DashStyle = DashStyle.Dash };
-                    } else {
-                        WallPen = new Pen(Brushes.LightCyan, 1.0f ) { DashStyle = DashStyle.Dot };
-                    }
-
-                    {
-                        if (brush.Walls[SceneBrush.NORTH_WALL])
-                        {
-                            g.DrawLine(WallPen, pos[0], pos[1], pos[0] + w, pos[1]);
-                        }
-                        if (brush.Walls[SceneBrush.EAST_WALL])
-                        {
-                            g.DrawLine(WallPen, pos[0] + w, pos[1], pos[0] + w, pos[1] + h);
-                        }
-                        if (brush.Walls[SceneBrush.SOUTH_WALL])
-                        {
-                            g.DrawLine(WallPen, pos[0], pos[1] + h, pos[0] + w, pos[1] + h);
-                        }
-                        if (brush.Walls[SceneBrush.WEST_WALL])
-                        {
-                            g.DrawLine(WallPen, pos[0], pos[1], pos[0], pos[1] + h);
-                        }
-                    }
-                  
-                }
 
                 if (!(fillBrush is TextureBrush))
                 {
@@ -201,25 +258,41 @@ namespace shadeTool.Views
                     transBrush.Dispose();
                 }
 
+                if (brush.orientation != SceneBrush.FLOOR && brush.type!=SceneBrush.WALL_BRUSH)
+                {
+                    using( Pen rampPen = new Pen( Color.FromArgb(128, Color.Red) , 32) ) {
+                        rampPen.EndCap = LineCap.ArrowAnchor;
+              
+
+                        switch (brush.orientation)
+                        {
+                            case SceneBrush.NORTH_WALL:
+                                g.DrawLine(rampPen, pos[0] + (w / 2), pos[1] + h, pos[0] + (w/2), pos[1]);
+                                break;
+                            case SceneBrush.SOUTH_WALL:
+
+                                g.DrawLine(rampPen, pos[0] + (w / 2), pos[1], pos[0] + (w / 2), pos[1]+h);
+                                break;
+                            case SceneBrush.EAST_WALL:
+                                g.DrawLine(rampPen, pos[0], pos[1] + h/2, pos[0]+w, pos[1] + h/2);
+                                break;
+                            case SceneBrush.WEST_WALL:
+                                  g.DrawLine(rampPen, pos[0]+w, pos[1] + h/2, pos[0], pos[1] + h/2);
+                                break;
+                        }
+                    }
+                }
+
             }
 
         }
 
-        private int[] transformToScreen(int x, int y, int z, bool center = false)
+        private int[] transformToScreen(int x, int y, int z)
         {
-
-          
-
             int zDelta = z - this.camera_z;
 
-            int scrX = (x - camera_x) * unit_size;
-            int scrY = (y - camera_y - zDelta) * unit_size;
-
-            if (center)
-            {
-                scrX += half_unit;
-                scrY += half_unit;
-            }
+            int scrX = (x - camera_x) * this.model.world_unit_size;
+            int scrY = (y - camera_y - zDelta) * this.model.world_unit_size;
 
 
             int[] r = new int[2] { scrX, scrY };
@@ -229,7 +302,7 @@ namespace shadeTool.Views
 
         private void drawCursor(Graphics g)
         {
-            int[] cScr = transformToScreen(cursor_x, cursor_y, this.camera_z, false);
+            int[] cScr = transformToScreen(cursor_x, cursor_y, this.camera_z);
 
             g.DrawLine(Pens.LightBlue, 0, cScr[1], this.Width, cScr[1]);
             g.DrawLine(Pens.LightBlue, cScr[0], 0, cScr[0], this.Height);
@@ -248,25 +321,50 @@ namespace shadeTool.Views
             }
 
             g.DrawRectangle(statePen, cScr[0]-4, cScr[1]-4, 8, 8);
-            
-           
         }
 
         private void drawTempBrush(Graphics g)
         {
             int[] pos = transformToScreen(tmp_brush_x, tmp_brush_y, this.camera_z);
-            int w = tmp_brush_w * unit_size;
-            int h = tmp_brush_h * unit_size;
+            int w = tmp_brush_w * this.model.world_unit_size;
+            int h = tmp_brush_h * this.model.world_unit_size;
 
-            g.DrawRectangle(Pens.White, pos[0], pos[1], w, h);
+            if (this.drawModeSelector.Text == "floors")
+            {
+                g.DrawRectangle(Pens.White, pos[0], pos[1], w, h);
+            }
+            else
+            {
+                g.DrawLine(Pens.White, pos[0], pos[1], pos[0] + w, pos[1] + h);
+
+                double nx = -h;
+                double ny = w;
+
+                double len = Math.Sqrt(nx * nx + ny * ny);
+
+                if ( len > double.Epsilon )
+                {
+                    nx /= len;
+                    ny /= len;
+
+                    nx *= 32;
+                    ny *= 32;
+
+                    using (Pen normalPen = new Pen(Color.AliceBlue, 12))
+                    {
+                        normalPen.EndCap = LineCap.ArrowAnchor;
+                        g.DrawLine(normalPen, pos[0], pos[1], pos[0] + (int)nx, pos[1] + (int)ny);
+                    }
+                }
+            }
         }
 
         private void mapEditor_MouseMove(object sender, MouseEventArgs e)
         {
 
             this.Invalidate();
-            cursor_x = (e.X / unit_size) + camera_x;
-            cursor_y = (e.Y / unit_size) + camera_y;
+            cursor_x = (e.X / this.model.world_unit_size) + camera_x;
+            cursor_y = (e.Y / this.model.world_unit_size) + camera_y;
 
             String curPosString = String.Format("Cusor : ({0},{1})", cursor_x, cursor_y);
             this.coordsLabel.Text = curPosString;
@@ -274,33 +372,45 @@ namespace shadeTool.Views
             if (state == mapEditor.STATE_BRUSH_DEFINE_B)
             {
 
-                int w = cursor_x - def_origin_x;
-                int h = cursor_y - def_origin_y;
+                bool walls = (this.drawModeSelector.Text == "walls");
 
-                if (w < 0)
-                {
-                    tmp_brush_x = cursor_x;
-                    tmp_brush_w = w * -1;
-                }
-                else
+                if (walls)
                 {
                     tmp_brush_x = def_origin_x;
-                    tmp_brush_w = w;
+                    tmp_brush_y = def_origin_y;
+                    tmp_brush_w = cursor_x - def_origin_x;
+                    tmp_brush_h = cursor_y - def_origin_y;
                 }
 
-                if (h < 0)
-                {
-                    tmp_brush_y = cursor_y;
-                    tmp_brush_h = h * -1;
-                }
                 else
                 {
-                    tmp_brush_y = def_origin_y;
-                    tmp_brush_h = h;
-                }
-              
+                    int w = cursor_x - def_origin_x;
+                    int h = cursor_y - def_origin_y;
 
+                    if (w < 0)
+                    {
+                        tmp_brush_x = cursor_x;
+                        tmp_brush_w = w * -1;
+                    }
+                    else
+                    {
+                        tmp_brush_x = def_origin_x;
+                        tmp_brush_w = w;
+                    }
+
+                    if (h < 0 & !walls)
+                    {
+                        tmp_brush_y = cursor_y;
+                        tmp_brush_h = h * -1;
+                    }
+                    else
+                    {
+                        tmp_brush_y = def_origin_y;
+                        tmp_brush_h = h;
+                    }
+                }
             }
+
         }
 
         private void addBrush_Click(object sender, EventArgs e)
@@ -319,17 +429,19 @@ namespace shadeTool.Views
 
         private void commitBrush()
         {
-            SceneBrush newBrush = new SceneBrush() { x = tmp_brush_x, y = tmp_brush_y, w = tmp_brush_w, h = tmp_brush_h, orientation = 0, z = camera_z, styleName = this.controller.ActiveStyleKey };
+            SceneBrush newBrush = new SceneBrush() { x = tmp_brush_x, y = tmp_brush_y, w = tmp_brush_w, h = tmp_brush_h, orientation = SceneBrush.FLOOR, z = camera_z, styleName = this.controller.ActiveStyleKey };
 
 
             if (this.controller.DrawMode == EditController.DRAWMODE_FLOOR)
             {
                 newBrush.walls = new bool[] { false, false, false, false };
                 newBrush.name = "floor " + this.nextId.ToString();
+                newBrush.type = SceneBrush.FLOOR_BRUSH;
             }
             else
             {
                 newBrush.name = "wall" + this.nextId.ToString();
+                newBrush.type = SceneBrush.WALL_BRUSH;
             }
 
             this.nextId += 1;
@@ -400,15 +512,25 @@ namespace shadeTool.Views
         }
 
         bool paintersMode = false;
+        bool paintCurrentOnly = false;
+
         private void previewModeSelector_TextChanged(object sender, EventArgs e)
         {
+            this.paintCurrentOnly = false;
             if (previewModeSelector.Text.Equals("onion") ) {
                 this.paintersMode = false;
             } 
 
-            if( previewModeSelector.Text.Equals("texture") ) {
+            if( previewModeSelector.Text.Equals("texture all") ) {
 
                 this.paintersMode = true;
+            }
+
+            if (previewModeSelector.Text.Equals("texture this layer"))
+            {
+
+                this.paintersMode = true;
+                this.paintCurrentOnly = true;
             }
 
             this.Invalidate();
@@ -424,16 +546,29 @@ namespace shadeTool.Views
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                int center_x = (this.Width / unit_size) / 2;
-                int center_y = (this.Height / unit_size) / 2;
+                int center_x = (this.Width / this.model.world_unit_size) / 2;
+                int center_y = (this.Height / this.model.world_unit_size) / 2;
 
            //     int delta_x = cursor_x - (camera_x+center_x;
              //   int delta_y = cursor_y - (camera_y+center_y);
                 camera_x  = cursor_x - center_x;
                 camera_y  = cursor_y - center_y;
 
-                cursor_x = (e.X / unit_size) + camera_x;
-                cursor_y = (e.Y / unit_size) + camera_y;
+                cursor_x = (e.X / this.model.world_unit_size) + camera_x;
+                cursor_y = (e.Y / this.model.world_unit_size) + camera_y;
+            }
+        }
+
+        private void previewModeSelector_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mapEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.A)
+            {
+                this.addBrush_Click(sender, e);
             }
         }
     }

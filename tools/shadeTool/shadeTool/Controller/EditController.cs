@@ -14,13 +14,22 @@ namespace shadeTool.Controller
         public delegate void ZHandler();
         public event ZHandler ZChanged;
 
-
         public int DrawMode = 0;
 
         public const int DRAWMODE_FLOOR = 0;
         public const int DRAWMODE_WALL = 1;
 
         private SceneBrush _ActiveBrush;
+
+        public delegate void ActiveBrushModifiedHandler(SceneBrush brush);
+        public event ActiveBrushModifiedHandler ActiveBrushModified;
+
+        public void notifyActiveBrushChanged()
+        {
+            if (ActiveBrushModified != null)
+                ActiveBrushModified(this._ActiveBrush);
+        }
+
         public SceneBrush ActiveBrush
         {
             get

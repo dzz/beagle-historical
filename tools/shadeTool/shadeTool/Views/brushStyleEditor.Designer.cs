@@ -35,8 +35,8 @@
             this.ColorSwatch = new System.Windows.Forms.Panel();
             this.SetColourButton = new System.Windows.Forms.Button();
             this.sceneModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.uvScaleMode = new System.Windows.Forms.RadioButton();
+            this.uvRepeatMode = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -45,6 +45,9 @@
             this.textureBox = new System.Windows.Forms.PictureBox();
             this.texLibraryButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.originLocalButton = new System.Windows.Forms.RadioButton();
+            this.originWorldButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -52,6 +55,7 @@
             this.Colours.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // addStyleButton
@@ -99,32 +103,34 @@
             this.SetColourButton.UseVisualStyleBackColor = true;
             this.SetColourButton.Click += new System.EventHandler(this.SetColourButton_Click);
             // 
-            // radioButton1
+            // uvScaleMode
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(78, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(50, 17);
-            this.radioButton1.TabIndex = 11;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "scale";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.uvScaleMode.AutoSize = true;
+            this.uvScaleMode.Location = new System.Drawing.Point(78, 19);
+            this.uvScaleMode.Name = "uvScaleMode";
+            this.uvScaleMode.Size = new System.Drawing.Size(50, 17);
+            this.uvScaleMode.TabIndex = 11;
+            this.uvScaleMode.TabStop = true;
+            this.uvScaleMode.Text = "scale";
+            this.uvScaleMode.UseVisualStyleBackColor = true;
+            this.uvScaleMode.CheckedChanged += new System.EventHandler(this.uvScaleMode_CheckedChanged);
             // 
-            // radioButton2
+            // uvRepeatMode
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(17, 19);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(55, 17);
-            this.radioButton2.TabIndex = 12;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "repeat";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.uvRepeatMode.AutoSize = true;
+            this.uvRepeatMode.Location = new System.Drawing.Point(17, 19);
+            this.uvRepeatMode.Name = "uvRepeatMode";
+            this.uvRepeatMode.Size = new System.Drawing.Size(55, 17);
+            this.uvRepeatMode.TabIndex = 12;
+            this.uvRepeatMode.TabStop = true;
+            this.uvRepeatMode.Text = "repeat";
+            this.uvRepeatMode.UseVisualStyleBackColor = true;
+            this.uvRepeatMode.CheckedChanged += new System.EventHandler(this.uvRepeatMode_CheckedChanged);
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.radioButton2);
-            this.groupBox4.Controls.Add(this.radioButton1);
+            this.groupBox4.Controls.Add(this.uvRepeatMode);
+            this.groupBox4.Controls.Add(this.uvScaleMode);
             this.groupBox4.Location = new System.Drawing.Point(160, 246);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(150, 48);
@@ -204,12 +210,46 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "[ images ]";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.originLocalButton);
+            this.groupBox2.Controls.Add(this.originWorldButton);
+            this.groupBox2.Location = new System.Drawing.Point(159, 300);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(150, 48);
+            this.groupBox2.TabIndex = 15;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "[ origin ]";
+            // 
+            // originLocalButton
+            // 
+            this.originLocalButton.AutoSize = true;
+            this.originLocalButton.Location = new System.Drawing.Point(17, 19);
+            this.originLocalButton.Name = "originLocalButton";
+            this.originLocalButton.Size = new System.Drawing.Size(47, 17);
+            this.originLocalButton.TabIndex = 12;
+            this.originLocalButton.TabStop = true;
+            this.originLocalButton.Text = "local";
+            this.originLocalButton.UseVisualStyleBackColor = true;
+            // 
+            // originWorldButton
+            // 
+            this.originWorldButton.AutoSize = true;
+            this.originWorldButton.Location = new System.Drawing.Point(78, 19);
+            this.originWorldButton.Name = "originWorldButton";
+            this.originWorldButton.Size = new System.Drawing.Size(50, 17);
+            this.originWorldButton.TabIndex = 11;
+            this.originWorldButton.TabStop = true;
+            this.originWorldButton.Text = "world";
+            this.originWorldButton.UseVisualStyleBackColor = true;
+            // 
             // brushStyleEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 304);
+            this.ClientSize = new System.Drawing.Size(315, 353);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Colours);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox6);
@@ -227,6 +267,8 @@
             this.Colours.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.textureBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -239,8 +281,8 @@
         private System.Windows.Forms.BindingSource sceneModelBindingSource;
         private System.Windows.Forms.Button addStyleButton;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton uvRepeatMode;
+        private System.Windows.Forms.RadioButton uvScaleMode;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Panel panel1;
@@ -248,5 +290,8 @@
         private System.Windows.Forms.PictureBox textureBox;
         private System.Windows.Forms.Button texLibraryButton;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton originLocalButton;
+        private System.Windows.Forms.RadioButton originWorldButton;
     }
 }
