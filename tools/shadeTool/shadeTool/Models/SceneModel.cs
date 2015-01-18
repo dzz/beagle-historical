@@ -60,7 +60,6 @@ namespace shadeTool.Models
         public string script            { get; set; }
         public string streamInitCode              { get; set; }
 
-        public Image image { get; set; }
 
         public int x { get; set; }
         public int y { get; set; }
@@ -71,6 +70,10 @@ namespace shadeTool.Models
             this.streamInitCode = "{}";
         }
 
+        public override string ToString()
+        {
+            return String.Format("entity:'{0}' [running:{1}]", this.name, this.script);
+        }
     }
 
     public class ScriptLibraryEntry

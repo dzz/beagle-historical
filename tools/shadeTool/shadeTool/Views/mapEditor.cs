@@ -352,34 +352,48 @@ namespace shadeTool.Views
             {
                 int[] pos = this.transformToScreen(entity.x, entity.y, camera_z);
 
-                g.DrawImage(this.getEntityImage(entity), pos[0], pos[1]);
+                g.DrawImage(this.getEntityImage(entity), pos[0] - (this.model.world_unit_size/2), pos[1]-(this.model.world_unit_size/2),this.model.world_unit_size,this.model.world_unit_size);
             }
 
-            g.DrawEllipse(Pens.Orange, ( (EntityCursorX-camera_x) * this.model.world_unit_size) - this.model.world_unit_size/2 , ( (EntityCursorY-camera_y) * this.model.world_unit_size) - this.model.world_unit_size/2, this.model.world_unit_size, this.model.world_unit_size);
+            g.DrawRectangle(Pens.Orange, ( (EntityCursorX-camera_x) * this.model.world_unit_size) - this.model.world_unit_size/2 , ( (EntityCursorY-camera_y) * this.model.world_unit_size) - this.model.world_unit_size/2, this.model.world_unit_size, this.model.world_unit_size);
         }
+
+        Dictionary<string, Image> imgCache = new Dictionary<string, Image>();
 
         private Image getEntityImage(SceneEntity e)
         {
-            if (e.image != null)
-                return e.image;
-            try
-            {
+
+   
                 string lookup = this.model.project_root + "script\\preview\\" + e.script + ".png";
+
+                if(imgCache.ContainsKey(lookup))
+                    return imgCache[lookup];
 
                 if (File.Exists(lookup))
                 {
-                    e.image = Image.FromFile(lookup);
+                    try
+                    {
+                        imgCache[lookup] = Image.FromFile(lookup);
+                    }
+                    catch
+                    {
+                        imgCache[lookup] = null;
+                    }
                 }
 
-                if ( e.image == null)
+                if ( imgCache.ContainsKey(lookup) == false )
                 {
                     string def_lookup = this.model.project_root + "script\\preview\\default.png";
-                    e.image = Image.FromFile(def_lookup);
-                }
-            }
-            catch { }
 
-            return e.image;
+                    if(imgCache.ContainsKey(def_lookup) == false)
+                        imgCache[def_lookup] = Image.FromFile(def_lookup);
+
+                    imgCache[lookup] = imgCache[def_lookup];
+                }
+
+            return imgCache[lookup];
+
+
         }
 
         private void drawTempBrush(Graphics g)
@@ -869,8 +883,13 @@ namespace shadeTool.Views
 
         public void synchTileEntity(SceneEntity ent)
         {
-            this.entityDefBox.Text = ent.streamInitCode;
+           
             this.loadTileEntityList();
+            if (ent != null)
+            {
+                this.entityDefBox.Text = ent.streamInitCode.Replace("\n", "\r\n");
+                this.entityName.Text = ent.name;
+            }
         }
 
         public void loadTileEntityList()
@@ -879,6 +898,24 @@ namespace shadeTool.Views
 
             this.entityListing.Items.Clear();
             this.entityListing.Items.AddRange(tel.ToArray());
+
+            if (tel.Contains(this.activeEntity) == false)
+            {
+                this.activeEntity = null;
+                this.entityDefBox.Text = "";
+                this.entityName.Text = "";
+
+                if (tel.Count > 0)
+                    this.entityListing.SelectedIndex = 0;
+
+                this.ActiveControl = null;
+            }
+            else
+            {
+
+                this.entityListing.SelectedItem = activeEntity;
+            }
+
         }
 
         private void addEntity_Click(object sender, EventArgs e)
@@ -908,10 +945,63 @@ namespace shadeTool.Views
 
             }
 
+            ent.name = ent.script + " instance";
+
             this.model.entities.Add(ent);
             this.Invalidate();
 
             this.synchTileEntity(ent);
+        }
+
+        private SceneEntity activeEntity = null;
+        private void entityListing_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (entityListing.SelectedIndex != -1 && entityListing.SelectedItem!=activeEntity )
+            {
+                activeEntity = (SceneEntity)this.entityListing.SelectedItem;
+                this.synchTileEntity(activeEntity);
+            }
+        }
+
+        private void entityName_TextChanged(object sender, EventArgs e)
+        {
+            if (this.activeEntity != null)
+            {
+                this.activeEntity.name = entityName.Text;
+                this.synchTileEntity(this.activeEntity);
+            }
+        }
+
+        private void entityDefBox_TextChanged(object sender, EventArgs e)
+        {
+            if (this.activeEntity != null)
+            {
+                this.activeEntity.streamInitCode = entityDefBox.Text.Replace("\r\n", "\n");
+            }
+        }
+
+        private void delEntity_Click(object sender, EventArgs e)
+        {
+            if (this.activeEntity != null)
+            {
+                this.model.entities.Remove(this.activeEntity);
+                this.activeEntity = null;
+
+            }
+
+            
+            this.synchTileEntity(null);
+        }
+
+        private void entityDefBox_MouseLeave(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
+
+        private void entityName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+                this.ActiveControl = null;
         }
 
     }

@@ -300,6 +300,8 @@
             this.entityDefBox.Size = new System.Drawing.Size(552, 194);
             this.entityDefBox.TabIndex = 4;
             this.entityDefBox.Text = "{}";
+            this.entityDefBox.TextChanged += new System.EventHandler(this.entityDefBox_TextChanged);
+            this.entityDefBox.MouseLeave += new System.EventHandler(this.entityDefBox_MouseLeave);
             // 
             // panel1
             // 
@@ -353,6 +355,7 @@
             this.delEntity.Name = "delEntity";
             this.delEntity.Size = new System.Drawing.Size(36, 22);
             this.delEntity.Text = "[del ]";
+            this.delEntity.Click += new System.EventHandler(this.delEntity_Click);
             // 
             // label2
             // 
@@ -370,6 +373,8 @@
             this.entityName.Name = "entityName";
             this.entityName.Size = new System.Drawing.Size(137, 20);
             this.entityName.TabIndex = 7;
+            this.entityName.TextChanged += new System.EventHandler(this.entityName_TextChanged);
+            this.entityName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.entityName_KeyDown);
             // 
             // label1
             // 
@@ -387,6 +392,7 @@
             this.entityListing.Name = "entityListing";
             this.entityListing.Size = new System.Drawing.Size(179, 108);
             this.entityListing.TabIndex = 5;
+            this.entityListing.SelectedIndexChanged += new System.EventHandler(this.entityListing_SelectedIndexChanged);
             // 
             // mapEditor
             // 
