@@ -90,6 +90,7 @@ namespace shadeTool.Views
                 this.uvScaleMode.Checked = true;
 
             this.shaderSelector.Text = this.styleModel.shader;
+            this.rateBox.Text = this.styleModel.parallax.ToString();
         }
 
         public BrushStyle styleModel { get { 
@@ -233,6 +234,15 @@ namespace shadeTool.Views
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             this.styleModel.shader = shaderSelector.Text;
+        }
+
+        private void rateBox_TextChanged(object sender, EventArgs e)
+        {
+            double d = 0;
+            if (double.TryParse(rateBox.Text, out d))
+            {
+                this.styleModel.parallax = d;
+            }
         }
     }
 }

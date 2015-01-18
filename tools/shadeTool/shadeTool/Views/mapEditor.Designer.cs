@@ -49,8 +49,22 @@
             this.renderModeOnion = new System.Windows.Forms.ToolStripMenuItem();
             this.renderModeTextureCurrent = new System.Windows.Forms.ToolStripMenuItem();
             this.renderModeTextureAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.entityDefBox = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.addEntity = new System.Windows.Forms.ToolStripButton();
+            this.delEntity = new System.Windows.Forms.ToolStripButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.entityName = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.entityListing = new System.Windows.Forms.ListBox();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // anchorLabel
@@ -83,9 +97,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.coordsLabel,
             this.brushLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 955);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 379);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(862, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(740, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.Click += new System.EventHandler(this.statusStrip1_Click);
@@ -113,12 +127,13 @@
             this.upLayerButton,
             this.downLayerButton,
             this.toolStripSeparator2,
-            this.renderModeDropDown});
+            this.renderModeDropDown,
+            this.toolStripButton3});
             this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(862, 23);
+            this.toolStrip1.Size = new System.Drawing.Size(740, 23);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
@@ -258,12 +273,128 @@
             this.renderModeTextureAll.Text = "texture all layers";
             this.renderModeTextureAll.CheckedChanged += new System.EventHandler(this.renderModeTextureAll_CheckedChanged);
             // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.Checked = true;
+            this.toolStripButton3.CheckOnClick = true;
+            this.toolStripButton3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(117, 17);
+            this.toolStripButton3.Text = "[ entity editor toggle ]";
+            this.toolStripButton3.CheckedChanged += new System.EventHandler(this.toolStripButton3_CheckedChanged);
+            // 
+            // entityDefBox
+            // 
+            this.entityDefBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.entityDefBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(32)))), ((int)(((byte)(48)))));
+            this.entityDefBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.entityDefBox.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.entityDefBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.entityDefBox.Location = new System.Drawing.Point(188, 0);
+            this.entityDefBox.Multiline = true;
+            this.entityDefBox.Name = "entityDefBox";
+            this.entityDefBox.Size = new System.Drawing.Size(552, 194);
+            this.entityDefBox.TabIndex = 4;
+            this.entityDefBox.Text = "{}";
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.panel2);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.entityName);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.entityListing);
+            this.panel1.Controls.Add(this.entityDefBox);
+            this.panel1.Location = new System.Drawing.Point(0, 185);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(740, 194);
+            this.panel1.TabIndex = 5;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.toolStrip2);
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(188, 30);
+            this.panel2.TabIndex = 9;
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addEntity,
+            this.delEntity});
+            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(188, 25);
+            this.toolStrip2.TabIndex = 0;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // addEntity
+            // 
+            this.addEntity.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.addEntity.Image = ((System.Drawing.Image)(resources.GetObject("addEntity.Image")));
+            this.addEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.addEntity.Name = "addEntity";
+            this.addEntity.Size = new System.Drawing.Size(43, 22);
+            this.addEntity.Text = "[ add ]";
+            this.addEntity.Click += new System.EventHandler(this.addEntity_Click);
+            // 
+            // delEntity
+            // 
+            this.delEntity.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.delEntity.Image = ((System.Drawing.Image)(resources.GetObject("delEntity.Image")));
+            this.delEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.delEntity.Name = "delEntity";
+            this.delEntity.Size = new System.Drawing.Size(36, 22);
+            this.delEntity.Text = "[del ]";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(3, 56);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(85, 13);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "[ tile entities ]";
+            // 
+            // entityName
+            // 
+            this.entityName.Location = new System.Drawing.Point(45, 33);
+            this.entityName.Name = "entityName";
+            this.entityName.Size = new System.Drawing.Size(137, 20);
+            this.entityName.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 36);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(36, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "name:";
+            // 
+            // entityListing
+            // 
+            this.entityListing.FormattingEnabled = true;
+            this.entityListing.Location = new System.Drawing.Point(3, 81);
+            this.entityListing.Name = "entityListing";
+            this.entityListing.Size = new System.Drawing.Size(179, 108);
+            this.entityListing.TabIndex = 5;
+            // 
             // mapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(862, 977);
+            this.ClientSize = new System.Drawing.Size(740, 401);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.anchorLabel);
             this.Controls.Add(this.zLabel);
             this.Controls.Add(this.statusStrip1);
@@ -283,6 +414,12 @@
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -310,5 +447,16 @@
         private System.Windows.Forms.ToolStripMenuItem renderModeOnion;
         private System.Windows.Forms.ToolStripMenuItem renderModeTextureCurrent;
         private System.Windows.Forms.ToolStripMenuItem renderModeTextureAll;
+        private System.Windows.Forms.TextBox entityDefBox;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox entityName;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox entityListing;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripButton addEntity;
+        private System.Windows.Forms.ToolStripButton delEntity;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
     }
 }

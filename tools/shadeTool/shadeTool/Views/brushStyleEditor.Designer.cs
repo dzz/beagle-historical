@@ -48,6 +48,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.originLocalButton = new System.Windows.Forms.RadioButton();
             this.originWorldButton = new System.Windows.Forms.RadioButton();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.rateBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -56,6 +59,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.textureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // addStyleButton
@@ -148,12 +152,12 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "[ shader ]";
             // 
-            // comboBox1
+            // shaderSelector
             // 
             this.shaderSelector.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.shaderSelector.FormattingEnabled = true;
             this.shaderSelector.Location = new System.Drawing.Point(6, 19);
-            this.shaderSelector.Name = "comboBox1";
+            this.shaderSelector.Name = "shaderSelector";
             this.shaderSelector.Size = new System.Drawing.Size(130, 21);
             this.shaderSelector.TabIndex = 0;
             this.shaderSelector.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
@@ -246,12 +250,42 @@
             this.originWorldButton.UseVisualStyleBackColor = true;
             this.originWorldButton.CheckedChanged += new System.EventHandler(this.originWorldButton_CheckedChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label1);
+            this.groupBox3.Controls.Add(this.rateBox);
+            this.groupBox3.Location = new System.Drawing.Point(4, 300);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(150, 48);
+            this.groupBox3.TabIndex = 19;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "[ parallax ]";
+            // 
+            // rateBox
+            // 
+            this.rateBox.Location = new System.Drawing.Point(102, 19);
+            this.rateBox.Name = "rateBox";
+            this.rateBox.Size = new System.Drawing.Size(42, 20);
+            this.rateBox.TabIndex = 0;
+            this.rateBox.Text = "1.0";
+            this.rateBox.TextChanged += new System.EventHandler(this.rateBox_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "rate: (1 = none )";
+            // 
             // brushStyleEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 353);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Colours);
             this.Controls.Add(this.groupBox4);
@@ -272,6 +306,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -296,5 +332,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton originLocalButton;
         private System.Windows.Forms.RadioButton originWorldButton;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox rateBox;
     }
 }

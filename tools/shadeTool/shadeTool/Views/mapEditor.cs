@@ -10,6 +10,7 @@ using shadeTool.Models;
 using shadeTool.Controller;
 
 using System.Drawing.Drawing2D;
+using System.IO;
 
 namespace shadeTool.Views
 {
@@ -188,7 +189,7 @@ namespace shadeTool.Views
 
                         if (style.origin_mode == BrushStyle.origin_mode_local)
                         {
-                            tb.TranslateTransform(pos[0], pos[1]);
+                            tb.TranslateTransform((float)pos[0]*(float)style.parallax, (float)pos[1]*(float)style.parallax);
                         }
 
                         if (style.uv_mode == BrushStyle.uv_mode_scale)
@@ -343,6 +344,42 @@ namespace shadeTool.Views
             }
 
             g.DrawRectangle(statePen, cScr[0]-4, cScr[1]-4, 8, 8);
+
+
+            List<SceneEntity> ses = this.model.entities.FindAll(o => o.z == camera_z);
+
+            foreach (SceneEntity entity in ses)
+            {
+                int[] pos = this.transformToScreen(entity.x, entity.y, camera_z);
+
+                g.DrawImage(this.getEntityImage(entity), pos[0], pos[1]);
+            }
+
+            g.DrawEllipse(Pens.Orange, ( (EntityCursorX-camera_x) * this.model.world_unit_size) - this.model.world_unit_size/2 , ( (EntityCursorY-camera_y) * this.model.world_unit_size) - this.model.world_unit_size/2, this.model.world_unit_size, this.model.world_unit_size);
+        }
+
+        private Image getEntityImage(SceneEntity e)
+        {
+            if (e.image != null)
+                return e.image;
+            try
+            {
+                string lookup = this.model.project_root + "script\\preview\\" + e.script + ".png";
+
+                if (File.Exists(lookup))
+                {
+                    e.image = Image.FromFile(lookup);
+                }
+
+                if ( e.image == null)
+                {
+                    string def_lookup = this.model.project_root + "script\\preview\\default.png";
+                    e.image = Image.FromFile(def_lookup);
+                }
+            }
+            catch { }
+
+            return e.image;
         }
 
         private void drawTempBrush(Graphics g)
@@ -599,16 +636,15 @@ namespace shadeTool.Views
 
         }
 
+        public int EntityCursorX = 0;
+        public int EntityCursorY = 0;
+
         private void mapEditor_MouseDown(object sender, MouseEventArgs e)
         {
             this.Focus();
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                if (this.state == STATE_BRUSH_DEFINE_B)
-                {
-                    this.state = STATE_BRUSH_DEFINE_A;
-                    return;
-                }
+      
 
                 this.addBrushButton.Checked = false;
                 this.unlockControlsForState();
@@ -630,6 +666,12 @@ namespace shadeTool.Views
             {
                 if (state == mapEditor.STATE_NONE)
                 {
+
+                    EntityCursorX = cursor_x;
+                    EntityCursorY = cursor_y;
+
+                    this.loadTileEntityList();
+
                     List<SceneBrush> thisLayerBrushes = this.model.brushes.FindAll(x => x.z == camera_z);
 
 
@@ -732,6 +774,16 @@ namespace shadeTool.Views
                 this.addBrushButton.Checked = true;
                 this.anchorLabel.Visible = true;
             }
+
+            if (e.KeyCode == Keys.W)
+            {
+                this.upLayer_Click(null, null);
+            }
+
+            if (e.KeyCode == Keys.S)
+            {
+                this.downLayer_Click(null, null);
+            }
         }
 
         private void mapEditor_KeyPress(object sender, KeyPressEventArgs e)
@@ -808,6 +860,58 @@ namespace shadeTool.Views
                 this.paintCurrentOnly = true;
 
             }
+        }
+
+        private void toolStripButton3_CheckedChanged(object sender, EventArgs e)
+        {
+            this.panel1.Visible = toolStripButton3.Checked;
+        }
+
+        public void synchTileEntity(SceneEntity ent)
+        {
+            this.entityDefBox.Text = ent.streamInitCode;
+            this.loadTileEntityList();
+        }
+
+        public void loadTileEntityList()
+        {
+            List<SceneEntity> tel = this.model.entities.FindAll(o => o.x == EntityCursorX && o.y == EntityCursorY && o.z == camera_z);
+
+            this.entityListing.Items.Clear();
+            this.entityListing.Items.AddRange(tel.ToArray());
+        }
+
+        private void addEntity_Click(object sender, EventArgs e)
+        {
+            SceneEntity ent = new SceneEntity();
+
+            ent.x = EntityCursorX;
+            ent.y = EntityCursorY;
+            ent.z = camera_z;
+
+            EntityTypeSelect ets = new EntityTypeSelect();
+
+            ets.setModel(this.model);
+            ets.ShowDialog();
+
+            ent.script = ets.value;
+
+            if (ent.script != "")
+            {
+                StreamReader sr = File.OpenText(this.model.project_root + "script/" + ent.script + ".default");
+
+                string s = sr.ReadToEnd();
+
+                sr.Close();
+
+                ent.streamInitCode = s;
+
+            }
+
+            this.model.entities.Add(ent);
+            this.Invalidate();
+
+            this.synchTileEntity(ent);
         }
 
     }

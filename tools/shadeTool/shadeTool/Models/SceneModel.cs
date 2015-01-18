@@ -8,8 +8,11 @@ using System.Xml.Serialization;
 
 namespace shadeTool.Models
 {
+
+    
     public class BrushStyle 
     {
+        public double parallax { get; set; }
         public string texture { get; set; }
         public string shader { get; set; } 
         public const int GEOM_CONVEX = 0;
@@ -46,6 +49,38 @@ namespace shadeTool.Models
         public BrushStyle()
         {
             UiColor = Color.Purple;
+            parallax = 1;
+        }
+    }
+
+    public class SceneEntity {
+
+        public string name              { get; set; }
+        public string previewSprite     { get; set; }
+        public string script            { get; set; }
+        public string streamInitCode              { get; set; }
+
+        public Image image { get; set; }
+
+        public int x { get; set; }
+        public int y { get; set; }
+        public int z { get; set; }
+
+        public SceneEntity()
+        {
+            this.streamInitCode = "{}";
+        }
+
+    }
+
+    public class ScriptLibraryEntry
+    {
+        public string name { get; set; }
+        public string script { get; set; }
+
+        public override string ToString()
+        {
+            return name;
         }
     }
 
@@ -145,6 +180,9 @@ namespace shadeTool.Models
     public class SceneModel
     {
 
+        private List<SceneEntity> _entities = new List<SceneEntity>();
+        public List<SceneEntity> entities { get { return _entities; } set { _entities = value; } }
+
         private int _world_unit_size;
         public int world_unit_size { get { return _world_unit_size; } set { _world_unit_size = value; if (this.SettingsChanged != null) this.SettingsChanged(this); } }
 
@@ -199,11 +237,16 @@ namespace shadeTool.Models
 
         public void Save()
         {
+            
            
                 XmlSerializer x = SceneModel.getSerializer();
                 StreamWriter file = new StreamWriter("shadeTool.xml",false,Encoding.Unicode);
+
+                StreamWriter file2 = new StreamWriter(this.project_root+"xml\\"+"shadeTool.xml", false, Encoding.Unicode);
                 x.Serialize( file, this );
+                x.Serialize(file2, this);
                 file.Close();
+                file2.Close();
          
         }
 

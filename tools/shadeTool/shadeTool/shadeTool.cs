@@ -44,13 +44,14 @@ namespace shadeTool
             if ((mcv is mapEditor) == false)
             {
                 mcv.LocationChanged += new EventHandler(mcv_LocationChanged);
+
+                mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             }
 
             else
             {
                 mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             }
-           
         }
 
         void mcv_LocationChanged(object sender, EventArgs e)
@@ -112,7 +113,7 @@ namespace shadeTool
                 if (child is mapEditor)
                 {
                     child.Location = new Point(0, 0);
-                    child.Size = new Size( this.ClientRectangle.Width - 350, this.ClientRectangle.Height);
+                    child.Size = new Size( this.ClientRectangle.Width - 350, this.ClientRectangle.Height-this.toolStrip1.Height);
                     
                 }
                 else
