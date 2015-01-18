@@ -29,14 +29,15 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mapEditor));
-            this.label1 = new System.Windows.Forms.Label();
+            this.anchorLabel = new System.Windows.Forms.Label();
             this.zLabel = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.coordsLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.brushLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.drawModeSelector = new System.Windows.Forms.ToolStripComboBox();
+            this.drawModeDropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.drawModeFloorsButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawModeWallsButton = new System.Windows.Forms.ToolStripMenuItem();
             this.addBrushButton = new System.Windows.Forms.ToolStripButton();
             this.selectBrushButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -44,24 +45,26 @@
             this.upLayerButton = new System.Windows.Forms.ToolStripButton();
             this.downLayerButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.previewModeSelector = new System.Windows.Forms.ToolStripComboBox();
+            this.renderModeDropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.renderModeOnion = new System.Windows.Forms.ToolStripMenuItem();
+            this.renderModeTextureCurrent = new System.Windows.Forms.ToolStripMenuItem();
+            this.renderModeTextureAll = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
+            // anchorLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.Red;
-            this.label1.Location = new System.Drawing.Point(115, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(225, 19);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "waiting for brush anchor";
-            this.label1.Visible = false;
+            this.anchorLabel.AutoSize = true;
+            this.anchorLabel.BackColor = System.Drawing.Color.Transparent;
+            this.anchorLabel.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.anchorLabel.ForeColor = System.Drawing.Color.Red;
+            this.anchorLabel.Location = new System.Drawing.Point(12, 23);
+            this.anchorLabel.Name = "anchorLabel";
+            this.anchorLabel.Size = new System.Drawing.Size(225, 19);
+            this.anchorLabel.TabIndex = 3;
+            this.anchorLabel.Text = "waiting for brush anchor";
+            this.anchorLabel.Visible = false;
             // 
             // zLabel
             // 
@@ -69,7 +72,7 @@
             this.zLabel.BackColor = System.Drawing.Color.Transparent;
             this.zLabel.Font = new System.Drawing.Font("Consolas", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.zLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.zLabel.Location = new System.Drawing.Point(113, 28);
+            this.zLabel.Location = new System.Drawing.Point(10, 42);
             this.zLabel.Name = "zLabel";
             this.zLabel.Size = new System.Drawing.Size(135, 32);
             this.zLabel.TabIndex = 2;
@@ -80,9 +83,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.coordsLabel,
             this.brushLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(112, 955);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 955);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(630, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(862, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             this.statusStrip1.Click += new System.EventHandler(this.statusStrip1_Click);
@@ -101,10 +104,8 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripLabel1,
-            this.drawModeSelector,
+            this.drawModeDropDown,
             this.addBrushButton,
             this.selectBrushButton,
             this.toolStripSeparator1,
@@ -112,34 +113,48 @@
             this.upLayerButton,
             this.downLayerButton,
             this.toolStripSeparator2,
-            this.toolStripLabel3,
-            this.previewModeSelector});
-            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
+            this.renderModeDropDown});
+            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(112, 977);
+            this.toolStrip1.Size = new System.Drawing.Size(862, 23);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
+            this.toolStrip1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.toolStrip1_KeyDown);
             // 
-            // toolStripLabel1
+            // drawModeDropDown
             // 
-            this.toolStripLabel1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(109, 13);
-            this.toolStripLabel1.Text = "[ build ]";
-            this.toolStripLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.drawModeDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.drawModeDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.drawModeFloorsButton,
+            this.drawModeWallsButton});
+            this.drawModeDropDown.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.drawModeDropDown.Image = ((System.Drawing.Image)(resources.GetObject("drawModeDropDown.Image")));
+            this.drawModeDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.drawModeDropDown.Name = "drawModeDropDown";
+            this.drawModeDropDown.Size = new System.Drawing.Size(93, 17);
+            this.drawModeDropDown.Text = "[draw mode]";
+            this.drawModeDropDown.ToolTipText = "[draw mode]";
             // 
-            // drawModeSelector
+            // drawModeFloorsButton
             // 
-            this.drawModeSelector.Items.AddRange(new object[] {
-            "floors",
-            "walls"});
-            this.drawModeSelector.Name = "drawModeSelector";
-            this.drawModeSelector.Size = new System.Drawing.Size(107, 21);
-            this.drawModeSelector.Text = "floors";
-            this.drawModeSelector.TextChanged += new System.EventHandler(this.drawModeSelector_TextChanged);
+            this.drawModeFloorsButton.Checked = true;
+            this.drawModeFloorsButton.CheckOnClick = true;
+            this.drawModeFloorsButton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.drawModeFloorsButton.Name = "drawModeFloorsButton";
+            this.drawModeFloorsButton.Size = new System.Drawing.Size(106, 22);
+            this.drawModeFloorsButton.Text = "floors";
+            this.drawModeFloorsButton.CheckedChanged += new System.EventHandler(this.drawModeFloorsButton_CheckedChanged);
+            // 
+            // drawModeWallsButton
+            // 
+            this.drawModeWallsButton.CheckOnClick = true;
+            this.drawModeWallsButton.Name = "drawModeWallsButton";
+            this.drawModeWallsButton.Size = new System.Drawing.Size(106, 22);
+            this.drawModeWallsButton.Text = "walls";
+            this.drawModeWallsButton.CheckedChanged += new System.EventHandler(this.drawModeWallsButton_CheckedChanged);
             // 
             // addBrushButton
             // 
@@ -149,7 +164,7 @@
             this.addBrushButton.Image = ((System.Drawing.Image)(resources.GetObject("addBrushButton.Image")));
             this.addBrushButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addBrushButton.Name = "addBrushButton";
-            this.addBrushButton.Size = new System.Drawing.Size(109, 17);
+            this.addBrushButton.Size = new System.Drawing.Size(29, 17);
             this.addBrushButton.Text = "add";
             this.addBrushButton.Click += new System.EventHandler(this.addBrush_Click);
             // 
@@ -159,19 +174,19 @@
             this.selectBrushButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.selectBrushButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.selectBrushButton.Name = "selectBrushButton";
-            this.selectBrushButton.Size = new System.Drawing.Size(109, 17);
+            this.selectBrushButton.Size = new System.Drawing.Size(39, 17);
             this.selectBrushButton.Text = "select";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 23);
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(109, 13);
+            this.toolStripLabel2.Size = new System.Drawing.Size(98, 13);
             this.toolStripLabel2.Text = "[ cursor height ]";
             this.toolStripLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -182,7 +197,7 @@
             this.upLayerButton.Image = ((System.Drawing.Image)(resources.GetObject("upLayerButton.Image")));
             this.upLayerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.upLayerButton.Name = "upLayerButton";
-            this.upLayerButton.Size = new System.Drawing.Size(109, 17);
+            this.upLayerButton.Size = new System.Drawing.Size(23, 17);
             this.upLayerButton.Text = "up";
             this.upLayerButton.Click += new System.EventHandler(this.upLayer_Click);
             // 
@@ -193,42 +208,63 @@
             this.downLayerButton.Image = ((System.Drawing.Image)(resources.GetObject("downLayerButton.Image")));
             this.downLayerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.downLayerButton.Name = "downLayerButton";
-            this.downLayerButton.Size = new System.Drawing.Size(109, 17);
+            this.downLayerButton.Size = new System.Drawing.Size(37, 17);
             this.downLayerButton.Text = "down";
             this.downLayerButton.Click += new System.EventHandler(this.downLayer_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(109, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 23);
             // 
-            // toolStripLabel3
+            // renderModeDropDown
             // 
-            this.toolStripLabel3.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(109, 13);
-            this.toolStripLabel3.Text = "[ preview display ]";
-            this.toolStripLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.renderModeDropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.renderModeDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderModeOnion,
+            this.renderModeTextureCurrent,
+            this.renderModeTextureAll});
+            this.renderModeDropDown.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.renderModeDropDown.Image = ((System.Drawing.Image)(resources.GetObject("renderModeDropDown.Image")));
+            this.renderModeDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.renderModeDropDown.Name = "renderModeDropDown";
+            this.renderModeDropDown.Size = new System.Drawing.Size(103, 17);
+            this.renderModeDropDown.Text = "[render mode]";
+            this.renderModeDropDown.ToolTipText = "[render mode]";
             // 
-            // previewModeSelector
+            // renderModeOnion
             // 
-            this.previewModeSelector.Items.AddRange(new object[] {
-            "onion",
-            "texture this layer",
-            "texture all"});
-            this.previewModeSelector.Name = "previewModeSelector";
-            this.previewModeSelector.Size = new System.Drawing.Size(107, 21);
-            this.previewModeSelector.Text = "texture this layer";
-            this.previewModeSelector.Click += new System.EventHandler(this.previewModeSelector_Click);
-            this.previewModeSelector.TextChanged += new System.EventHandler(this.previewModeSelector_TextChanged);
+            this.renderModeOnion.CheckOnClick = true;
+            this.renderModeOnion.Name = "renderModeOnion";
+            this.renderModeOnion.Size = new System.Drawing.Size(194, 22);
+            this.renderModeOnion.Text = "onion";
+            this.renderModeOnion.CheckedChanged += new System.EventHandler(this.renderModeOnion_CheckedChanged);
+            // 
+            // renderModeTextureCurrent
+            // 
+            this.renderModeTextureCurrent.Checked = true;
+            this.renderModeTextureCurrent.CheckOnClick = true;
+            this.renderModeTextureCurrent.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.renderModeTextureCurrent.Name = "renderModeTextureCurrent";
+            this.renderModeTextureCurrent.Size = new System.Drawing.Size(194, 22);
+            this.renderModeTextureCurrent.Text = "texture current layer";
+            this.renderModeTextureCurrent.CheckedChanged += new System.EventHandler(this.renderModeTextureCurrent_CheckedChanged);
+            // 
+            // renderModeTextureAll
+            // 
+            this.renderModeTextureAll.CheckOnClick = true;
+            this.renderModeTextureAll.Name = "renderModeTextureAll";
+            this.renderModeTextureAll.Size = new System.Drawing.Size(194, 22);
+            this.renderModeTextureAll.Text = "texture all layers";
+            this.renderModeTextureAll.CheckedChanged += new System.EventHandler(this.renderModeTextureAll_CheckedChanged);
             // 
             // mapEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(742, 977);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(862, 977);
+            this.Controls.Add(this.anchorLabel);
             this.Controls.Add(this.zLabel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
@@ -257,7 +293,6 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel coordsLabel;
         private System.Windows.Forms.ToolStripStatusLabel brushLabel;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton addBrushButton;
         private System.Windows.Forms.ToolStripButton selectBrushButton;
         private System.Windows.Forms.ToolStrip toolStrip1;
@@ -265,11 +300,15 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripButton upLayerButton;
         private System.Windows.Forms.ToolStripButton downLayerButton;
-        private System.Windows.Forms.ToolStripComboBox drawModeSelector;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.ToolStripComboBox previewModeSelector;
         private System.Windows.Forms.Label zLabel;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label anchorLabel;
+        private System.Windows.Forms.ToolStripDropDownButton drawModeDropDown;
+        private System.Windows.Forms.ToolStripMenuItem drawModeFloorsButton;
+        private System.Windows.Forms.ToolStripMenuItem drawModeWallsButton;
+        private System.Windows.Forms.ToolStripDropDownButton renderModeDropDown;
+        private System.Windows.Forms.ToolStripMenuItem renderModeOnion;
+        private System.Windows.Forms.ToolStripMenuItem renderModeTextureCurrent;
+        private System.Windows.Forms.ToolStripMenuItem renderModeTextureAll;
     }
 }

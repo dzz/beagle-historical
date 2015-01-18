@@ -48,7 +48,7 @@ namespace shadeTool.Views
 
         private void ModelControllerView_MouseEnter(object sender, EventArgs e)
         {
-            this.Focus();
+           // this.Focus();
         }
     }
 }

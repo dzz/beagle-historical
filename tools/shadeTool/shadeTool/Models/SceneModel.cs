@@ -10,7 +10,8 @@ namespace shadeTool.Models
 {
     public class BrushStyle 
     {
-        public string texture { get; set; } 
+        public string texture { get; set; }
+        public string shader { get; set; } 
         public const int GEOM_CONVEX = 0;
         public const int GEOM_CONCAVE = 1;
 
@@ -51,6 +52,8 @@ namespace shadeTool.Models
     public class SceneBrush
     {
 
+        public bool billboard { get; set; }
+
         public const int NORTH_WALL = 0;
         public const int EAST_WALL = 1;
         public const int SOUTH_WALL = 2;
@@ -77,6 +80,8 @@ namespace shadeTool.Models
         public bool[] Walls { get { return walls; } set { walls = value; } }
 
 
+        public int sortOrder { get; set; }
+
         public SceneBrush()
         {
             styleName       = "default_brush_style";
@@ -86,7 +91,16 @@ namespace shadeTool.Models
 
         public override string ToString()
         {
-            return name;
+            if (this.type == SceneBrush.FLOOR_BRUSH)
+            {
+                String billboardString = this.billboard ? "(billboard)" : "(floor)";
+
+                return String.Format("{1}{0}:{2}", billboardString, name, styleName);
+            }
+            else
+            {
+                return String.Format("(wall): {0}", this.name);
+            }
         }
 
         public int[] getCenter()
@@ -141,6 +155,8 @@ namespace shadeTool.Models
 
         public List<SceneBrush> brushes { get { return this._brushes; } set { this._brushes = value; } }
         public XmlDictionary<String, BrushStyle> styles { get { return this._styles; } set { this._styles = value; } }
+
+        private List<String> _shaders = new List<string>();
 
         public delegate void ModelChangedHandler(SceneModel model);
         public event ModelChangedHandler StylesChanged;
@@ -204,6 +220,8 @@ namespace shadeTool.Models
                 {
                     tmpModel.world_unit_size = 32;
                 }
+
+
                 return tmpModel;
             }
             catch {
@@ -211,6 +229,7 @@ namespace shadeTool.Models
                 return new SceneModel();
             }
 
+            
         }
 
         public void AddBrush(SceneBrush brush)

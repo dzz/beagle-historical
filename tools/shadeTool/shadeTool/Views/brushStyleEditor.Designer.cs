@@ -39,7 +39,7 @@
             this.uvRepeatMode = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.shaderSelector = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Colours = new System.Windows.Forms.GroupBox();
             this.textureBox = new System.Windows.Forms.PictureBox();
@@ -140,7 +140,7 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.comboBox1);
+            this.groupBox6.Controls.Add(this.shaderSelector);
             this.groupBox6.Location = new System.Drawing.Point(4, 246);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(150, 48);
@@ -150,12 +150,13 @@
             // 
             // comboBox1
             // 
-            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(6, 19);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(130, 21);
-            this.comboBox1.TabIndex = 0;
+            this.shaderSelector.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.shaderSelector.FormattingEnabled = true;
+            this.shaderSelector.Location = new System.Drawing.Point(6, 19);
+            this.shaderSelector.Name = "comboBox1";
+            this.shaderSelector.Size = new System.Drawing.Size(130, 21);
+            this.shaderSelector.TabIndex = 0;
+            this.shaderSelector.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             // 
             // panel1
             // 
@@ -286,7 +287,7 @@
         private System.Windows.Forms.RadioButton uvRepeatMode;
         private System.Windows.Forms.RadioButton uvScaleMode;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox shaderSelector;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox Colours;
         private System.Windows.Forms.PictureBox textureBox;

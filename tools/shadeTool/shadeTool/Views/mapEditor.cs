@@ -39,6 +39,7 @@ namespace shadeTool.Views
             TextureGarbageCollectTimeout.Interval = 1000 * 60 * 15;
             TextureGarbageCollectTimeout.Tick += new EventHandler(GarbageCollectTimeout_Tick);
             TextureGarbageCollectTimeout.Enabled = true;
+
       
         }
 
@@ -55,6 +56,7 @@ namespace shadeTool.Views
             this.controller.ActiveBrushChanged += new EditController.BrushHandler(controller_ActiveBrushChanged);
             this.model.SettingsChanged += new SceneModel.ModelChangedHandler(model_SettingsChanged);
             this.controller.ActiveBrushModified += new EditController.ActiveBrushModifiedHandler(controller_ActiveBrushModified);
+    
         }
 
         void controller_ActiveBrushModified(SceneBrush brush)
@@ -107,8 +109,8 @@ namespace shadeTool.Views
                 {
                     Bitmap bmp = new Bitmap(64, 64);
                     Graphics g = Graphics.FromImage(bmp);
-                    g.Clear(Color.WhiteSmoke);
-                    g.DrawString("???", this.Font, new SolidBrush(Color.Red), new Point(0, 0));
+                    g.Clear(Color.Transparent);
+                    g.DrawString("[notex]", this.Font, new SolidBrush(Color.Red), new Point(0, 0));
                     textureCache[key] = bmp;
                 }
                 return textureCache[key];
@@ -139,14 +141,15 @@ namespace shadeTool.Views
 
             List<SceneBrush> sortedBrushes;
 
+            for (int i = 0; i < model.brushes.Count; ++i)
+                model.brushes[i].sortOrder = i;
+
             if (!this.paintersMode) { sortedBrushes = model.brushes.OrderBy(b => b.z).ToList(); }
             else
             {
-                sortedBrushes = model.brushes.OrderBy(b => b.type).ThenBy( b=>b.z).ToList();
+                sortedBrushes = model.brushes.OrderBy(b => b.z).ThenBy( b=>b.billboard ? (b.y+b.h) : (b.y) ).ThenBy( b=>b.type).ToList();
             }
 
-
-            
             foreach (SceneBrush brush in sortedBrushes)
             {
                 int[] pos = transformToScreen(brush.x, brush.y, brush.z);
@@ -201,7 +204,16 @@ namespace shadeTool.Views
 
                 if (brush.type == SceneBrush.WALL_BRUSH)
                 {
-                    Pen wallPen = is_current_layer ? Pens.White : Pens.Gray;
+                    Pen wallPen = null;
+                    if (is_current_layer)
+                        if (this.controller.ActiveBrush != brush)
+                            wallPen = Pens.White;
+                        else
+                            wallPen = Pens.Red;
+                    else
+                        wallPen = Pens.Gray;
+
+
                     g.DrawLine(wallPen, pos[0], pos[1], pos[0] + w, pos[1] + h);
 
                     double nx = -h;
@@ -217,12 +229,18 @@ namespace shadeTool.Views
                         nx *= 32;
                         ny *= 32;
 
-                        using (Pen normalPen = new Pen(Color.AliceBlue, 12))
+                        using (Pen normalPen = new Pen(Color.BlueViolet, 12))
                         {
                             if (is_current_layer)
                             {
+
                                 normalPen.EndCap = LineCap.ArrowAnchor;
-                                g.DrawLine(normalPen, pos[0], pos[1], pos[0] + (int)nx, pos[1] + (int)ny);
+
+
+                                int midX = (pos[0] + (w / 2));
+                                int midY = (pos[1] + (h / 2));
+
+                                g.DrawLine(normalPen, midX, midY, midX + (int)nx, midY + (int)ny);
                             }
                         }
                     }
@@ -331,9 +349,35 @@ namespace shadeTool.Views
             int w = tmp_brush_w * this.model.world_unit_size;
             int h = tmp_brush_h * this.model.world_unit_size;
 
-            if (this.drawModeSelector.Text == "floors")
+            if (this.controller.DrawMode == EditController.DRAWMODE_FLOOR)
             {
+                BrushStyle style=this.model.styles[this.controller.ActiveStyleKey];
+                if (style != null)
+                {
+                    TextureBrush tb = this.getTextureBrush(this.getImage(style.texture));
+
+                    tb.ResetTransform();
+
+                    if (style.uv_mode == BrushStyle.uv_mode_scale)
+                    {
+                        double sx = (double)w / (double)tb.Image.Width;
+                        double sy = (double)h / (double)tb.Image.Height;
+
+                        tb.ScaleTransform((float)sx, (float)sy);
+                    }
+
+                    if (style.origin_mode == BrushStyle.origin_mode_local)
+                    {
+                        tb.TranslateTransform(pos[0], pos[1]);
+                    }
+
+
+
+                    g.FillRectangle(tb, pos[0], pos[1], w, h);
+                }
+
                 g.DrawRectangle(Pens.White, pos[0], pos[1], w, h);
+                
             }
             else
             {
@@ -355,7 +399,11 @@ namespace shadeTool.Views
                     using (Pen normalPen = new Pen(Color.AliceBlue, 12))
                     {
                         normalPen.EndCap = LineCap.ArrowAnchor;
-                        g.DrawLine(normalPen, pos[0], pos[1], pos[0] + (int)nx, pos[1] + (int)ny);
+
+                        int midX = (pos[0] + (w / 2));
+                        int midY = (pos[1] + (h / 2));
+
+                        g.DrawLine(normalPen, midX, midY, midX + (int)nx, midY + (int)ny);
                     }
                 }
             }
@@ -374,7 +422,7 @@ namespace shadeTool.Views
             if (state == mapEditor.STATE_BRUSH_DEFINE_B)
             {
 
-                bool walls = (this.drawModeSelector.Text == "walls");
+                bool walls = (this.controller.DrawMode == EditController.DRAWMODE_WALL);
 
                 if (walls)
                 {
@@ -419,13 +467,15 @@ namespace shadeTool.Views
         {
             if (addBrushButton.Checked)
             {
-                label1.Visible = true;
+                anchorLabel.Visible = true;
                 state = mapEditor.STATE_BRUSH_DEFINE_A;
+                this.lockControlsForState();
             }
             else
             {
-                label1.Visible = false;
+                anchorLabel.Visible = false;
                 state = mapEditor.STATE_NONE;
+                this.unlockControlsForState();
             }
         }
 
@@ -474,33 +524,7 @@ namespace shadeTool.Views
         private void mapEditor_Click(object sender, EventArgs e)
         {
             
-            if (state == mapEditor.STATE_BRUSH_DEFINE_A)
-            {
-                label1.Visible = false;
-                def_origin_x = cursor_x;
-                def_origin_y = cursor_y;
-                tmp_brush_x = cursor_x;
-                tmp_brush_y = cursor_y;
-                tmp_brush_w = 1;
-                tmp_brush_h = 1;
-                state = mapEditor.STATE_BRUSH_DEFINE_B;
-                return;
-            }
 
-            if (state == mapEditor.STATE_BRUSH_DEFINE_B)
-            {
-               
-                this.commitBrush();
-                if (addBrushButton.Checked)
-                {
-                    state = STATE_BRUSH_DEFINE_A;
-                }
-                else
-                {
-                    state = STATE_NONE;
-                }
-                return;
-            }
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -510,6 +534,9 @@ namespace shadeTool.Views
 
         private void upLayer_Click(object sender, EventArgs e)
         {
+            this.state = STATE_NONE;
+            this.addBrushButton.Checked = false;
+
             this.camera_z += 1;
             this.controller.z_layer += 1;
             this.Invalidate();
@@ -517,23 +544,29 @@ namespace shadeTool.Views
 
         private void downLayer_Click(object sender, EventArgs e)
         {
+            this.state = STATE_NONE;
+            this.addBrushButton.Checked = false;
+
             this.camera_z -= 1;
             this.controller.z_layer -= 1;
             this.Invalidate();
         }
 
-        private void drawModeSelector_TextChanged(object sender, EventArgs e)
-        {
-            if (drawModeSelector.Text.Equals("floors"))
-                this.controller.DrawMode = EditController.DRAWMODE_FLOOR;
-            if (drawModeSelector.Text.Equals("walls"))
-                this.controller.DrawMode = EditController.DRAWMODE_WALL;
-        }
+        //private void drawModeSelector_TextChanged(object sender, EventArgs e)
+        //{
+        //    if (drawModeSelector.Text.Equals("floors"))
+        //        this.controller.DrawMode = EditController.DRAWMODE_FLOOR;
+        //    if (drawModeSelector.Text.Equals("walls"))
+        //        this.controller.DrawMode = EditController.DRAWMODE_WALL;
+        //    SendKeys.Send("{ESC}");
+
+        //    this.Focus();
+        //}
 
         bool paintersMode = true;
         bool paintCurrentOnly = true;
 
-        private void previewModeSelector_TextChanged(object sender, EventArgs e)
+       /* private void previewModeSelector_TextChanged(object sender, EventArgs e)
         {
             this.paintCurrentOnly = false;
             if (previewModeSelector.Text.Equals("onion") ) {
@@ -553,8 +586,11 @@ namespace shadeTool.Views
             }
 
             this.Invalidate();
+            SendKeys.Send("{ESC}");
 
+            this.Focus();
         }
+        */
 
         private void mapEditor_Load(object sender, EventArgs e)
         {
@@ -563,9 +599,17 @@ namespace shadeTool.Views
 
         private void mapEditor_MouseDown(object sender, MouseEventArgs e)
         {
+            this.Focus();
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                this.state = STATE_NONE;
+                if (this.state == STATE_BRUSH_DEFINE_B)
+                {
+                    this.state = STATE_BRUSH_DEFINE_A;
+                    return;
+                }
+
+                this.addBrushButton.Checked = false;
+
 
                 int center_x = (this.Width / this.model.world_unit_size) / 2;
                 int center_y = (this.Height / this.model.world_unit_size) / 2;
@@ -578,6 +622,57 @@ namespace shadeTool.Views
                 cursor_x = (e.X / this.model.world_unit_size) + camera_x;
                 cursor_y = (e.Y / this.model.world_unit_size) + camera_y;
             }
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                if (state == mapEditor.STATE_NONE)
+                {
+                    List<SceneBrush> thisLayerBrushes = this.model.brushes.FindAll(x => x.z == camera_z);
+
+
+                    foreach (var b in thisLayerBrushes)
+                    {
+                        if (cursor_x >= b.x &&
+                            cursor_x < (b.x + b.w) &&
+                            cursor_y > b.y &&
+                            cursor_y < (b.y + b.h))
+                        {
+                            this.controller.ActiveBrush = b;
+                            return;
+                        }
+                    }
+                }
+
+                if (state == mapEditor.STATE_BRUSH_DEFINE_A)
+                {
+                    this.lockControlsForState();
+                    anchorLabel.Visible = false;
+                    def_origin_x = cursor_x;
+                    def_origin_y = cursor_y;
+                    tmp_brush_x = cursor_x;
+                    tmp_brush_y = cursor_y;
+                    tmp_brush_w = 1;
+                    tmp_brush_h = 1;
+                    state = mapEditor.STATE_BRUSH_DEFINE_B;
+                    return;
+                }
+
+                if (state == mapEditor.STATE_BRUSH_DEFINE_B)
+                {
+
+                    this.commitBrush();
+                    if (addBrushButton.Checked)
+                    {
+                        state = STATE_BRUSH_DEFINE_A;
+                    }
+                    else
+                    {
+                        state = STATE_NONE;
+                        this.unlockControlsForState();
+                    }
+                    return;
+                }
+            }
         }
 
         private void previewModeSelector_Click(object sender, EventArgs e)
@@ -585,20 +680,132 @@ namespace shadeTool.Views
 
         }
 
+        private ToolStripItem[] getStateLockableControls()
+        {
+            return new ToolStripItem[3]{
+            
+                 (ToolStripItem)this.upLayerButton,
+                 (ToolStripItem)this.downLayerButton,
+                 (ToolStripItem)this.selectBrushButton
+        };
+        }
+        private void lockControlsForState()
+        {
+            foreach (ToolStripItem comp in this.getStateLockableControls())
+            {
+                comp.Enabled = false;
+            }
+   
+        }
+
+        private void unlockControlsForState()
+        {
+            foreach (ToolStripItem comp in this.getStateLockableControls())
+            {
+                comp.Enabled = true;
+            }
+        }
+
         private void mapEditor_KeyDown(object sender, KeyEventArgs e)
         {
+          //  MessageBox.Show("kley");
+
+         //   MessageBox.Show(drawModeSelector.SelectedIndex.ToString());
             if (e.KeyCode == Keys.Escape)
             {
-                this.state = STATE_NONE;
+                if (this.state == STATE_BRUSH_DEFINE_A)
+                {
+                    this.state = STATE_NONE;
+                    this.addBrushButton.Checked = false;
+                    this.unlockControlsForState();
+                }
+                if (this.state == STATE_BRUSH_DEFINE_B)
+                    this.state = STATE_BRUSH_DEFINE_A;
+            }
+
+            if (e.KeyCode == Keys.A)
+            {
+                this.state = STATE_BRUSH_DEFINE_A;
+                this.addBrushButton.Checked = true;
+                this.anchorLabel.Visible = true;
             }
         }
 
         private void mapEditor_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 'a' )
+          
+        }
+
+        private void toolStrip1_KeyDown(object sender, KeyEventArgs e)
+        {
+           //this.mapEditor_KeyDown(sender, e);
+        }
+
+        private void previewModeSelector_KeyDown(object sender, KeyEventArgs e)
+        {
+          //  this.mapEditor_KeyDown(sender, e);
+            e.Handled = true;
+        }
+
+        private void drawModeFloorsButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (drawModeFloorsButton.Checked == true)
             {
-                this.addBrush_Click(sender, e);
+                drawModeWallsButton.Checked = false;
+
+                this.controller.DrawMode = EditController.DRAWMODE_FLOOR;
+            }
+
+        }
+
+        private void drawModeWallsButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (drawModeWallsButton.Checked == true)
+            {
+                drawModeFloorsButton.Checked = false;
+                this.controller.DrawMode = EditController.DRAWMODE_WALL;
             }
         }
+
+        private void renderModeOnion_CheckedChanged(object sender, EventArgs e)
+        {
+            if (renderModeOnion.Checked == true)
+            {
+                renderModeTextureAll.Checked = false;
+                renderModeTextureCurrent.Checked = false;
+
+                this.paintersMode = false;
+                this.paintCurrentOnly = false;
+          
+            }
+
+        }
+
+        private void renderModeTextureAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (renderModeTextureAll.Checked == true)
+            {
+                renderModeOnion.Checked = false;
+                renderModeTextureCurrent.Checked = false;
+
+                this.paintersMode = true;
+                this.paintCurrentOnly = false;
+
+            }
+        }
+
+        private void renderModeTextureCurrent_CheckedChanged(object sender, EventArgs e)
+        {
+            if (renderModeTextureCurrent.Checked == true)
+            {
+                renderModeTextureAll.Checked = false;
+                renderModeOnion.Checked = false;
+
+                this.paintersMode = true;
+                this.paintCurrentOnly = true;
+
+            }
+        }
+
     }
 }

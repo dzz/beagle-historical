@@ -20,6 +20,21 @@ namespace shadeTool.Views
         {
             this.model.StylesChanged += new SceneModel.ModelChangedHandler(model_StylesChanged);
             this.synchStyles(this.model);
+
+
+            List<string> shaders = new List<string>();
+
+            var path = model.project_root + "shader\\";
+
+            foreach (string filename in Directory.GetFiles(path, "*.json"))
+            {
+                shaders.Add(filename.Replace(path, ""));
+            }
+
+            foreach (string shader in shaders)
+            {
+                this.shaderSelector.Items.Add(shader);
+            }
         }
 
         bool badDevon = false;
@@ -74,6 +89,7 @@ namespace shadeTool.Views
             else
                 this.uvScaleMode.Checked = true;
 
+            this.shaderSelector.Text = this.styleModel.shader;
         }
 
         public BrushStyle styleModel { get { 
@@ -212,6 +228,11 @@ namespace shadeTool.Views
         private void originWorldButton_CheckedChanged(object sender, EventArgs e)
         {
             this.styleModel.origin_mode = BrushStyle.origin_mode_global;
+        }
+
+        private void comboBox1_TextChanged(object sender, EventArgs e)
+        {
+            this.styleModel.shader = shaderSelector.Text;
         }
     }
 }

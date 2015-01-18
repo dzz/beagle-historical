@@ -74,6 +74,8 @@ namespace shadeTool.Views
             this.westButton.Checked = brush.orientation == SceneBrush.WEST_WALL;
             this.flatButton.Checked = brush.orientation == SceneBrush.FLOOR;
 
+            this.checkBox1.Checked = brush.billboard == true;
+
             isUpdating = false;
         }
 
@@ -83,6 +85,7 @@ namespace shadeTool.Views
 
             this.model.BrushesChanged += new SceneModel.ModelChangedHandler(model_BrushesChanged);
             this.populateBrushListing();
+
         }
 
         void model_BrushesChanged(SceneModel model)
@@ -159,7 +162,8 @@ namespace shadeTool.Views
 
         private void northButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.controller.ActiveBrush.orientation = SceneBrush.NORTH_WALL;
+            if (isUpdating) return;
+            if(this.northButton.Checked) this.controller.ActiveBrush.orientation = SceneBrush.NORTH_WALL;
 
             this.controller.notifyActiveBrushChanged();
 
@@ -167,28 +171,35 @@ namespace shadeTool.Views
 
         private void southButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.controller.ActiveBrush.orientation = SceneBrush.SOUTH_WALL;
+
+            if (isUpdating) return;
+            if(this.southButton.Checked) this.controller.ActiveBrush.orientation = SceneBrush.SOUTH_WALL;
 
             this.controller.notifyActiveBrushChanged();
         }
 
         private void westButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.controller.ActiveBrush.orientation = SceneBrush.WEST_WALL;
 
+            if (isUpdating) return;
+            if( this.westButton.Checked) this.controller.ActiveBrush.orientation = SceneBrush.WEST_WALL;
             this.controller.notifyActiveBrushChanged();
         }
 
         private void eastButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.controller.ActiveBrush.orientation = SceneBrush.EAST_WALL;
+
+            if (isUpdating) return;
+            if( this.eastButton.Checked) this.controller.ActiveBrush.orientation = SceneBrush.EAST_WALL;
 
             this.controller.notifyActiveBrushChanged();
         }
 
         private void flatButton_CheckedChanged(object sender, EventArgs e)
         {
-            this.controller.ActiveBrush.orientation = SceneBrush.FLOOR;
+
+            if (isUpdating) return;
+            if(this.flatButton.Checked) this.controller.ActiveBrush.orientation = SceneBrush.FLOOR;
             this.controller.notifyActiveBrushChanged();
         }
 
@@ -196,7 +207,8 @@ namespace shadeTool.Views
         {
             if (this.controller.ActiveBrush != null)
             {
-                this.model.moveBrush(this.controller.ActiveBrush, -1);            
+                this.model.moveBrush(this.controller.ActiveBrush, -1);
+                this.controller.notifyActiveBrushChanged();
             }
         }
 
@@ -204,7 +216,30 @@ namespace shadeTool.Views
         {
                     if (this.controller.ActiveBrush != null)
             {
-                this.model.moveBrush(this.controller.ActiveBrush, 1);            
+                this.model.moveBrush(this.controller.ActiveBrush, 1);
+                this.controller.notifyActiveBrushChanged();
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.controller.ActiveBrush != null)
+            {
+                this.controller.ActiveBrush.billboard = checkBox1.Checked;
+                this.controller.notifyActiveBrushChanged();
+            }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            List<SceneBrush> items = new List<SceneBrush>();
+
+            foreach (SceneBrush sb in brushListing.Items)
+                items.Add(sb);
+
+            foreach (SceneBrush sb in items)
+            {
+                this.model.DelBrush(sb);
             }
         }
 
