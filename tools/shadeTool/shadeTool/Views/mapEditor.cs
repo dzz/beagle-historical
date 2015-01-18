@@ -184,17 +184,19 @@ namespace shadeTool.Views
 
                         tb.ResetTransform();
 
+               
+
+                        if (style.origin_mode == BrushStyle.origin_mode_local)
+                        {
+                            tb.TranslateTransform(pos[0], pos[1]);
+                        }
+
                         if (style.uv_mode == BrushStyle.uv_mode_scale)
                         {
                             double sx = (double)w / (double)tb.Image.Width;
                             double sy = (double)h / (double)tb.Image.Height;
 
                             tb.ScaleTransform((float)sx, (float)sy);
-                        }
-
-                        if (style.origin_mode == BrushStyle.origin_mode_local)
-                        {
-                            tb.TranslateTransform(pos[0], pos[1]);
                         }
 
                     }
@@ -358,6 +360,13 @@ namespace shadeTool.Views
 
                     tb.ResetTransform();
 
+               
+
+                    if (style.origin_mode == BrushStyle.origin_mode_local)
+                    {
+                        tb.TranslateTransform(pos[0], pos[1]);
+                    }
+
                     if (style.uv_mode == BrushStyle.uv_mode_scale)
                     {
                         double sx = (double)w / (double)tb.Image.Width;
@@ -365,13 +374,6 @@ namespace shadeTool.Views
 
                         tb.ScaleTransform((float)sx, (float)sy);
                     }
-
-                    if (style.origin_mode == BrushStyle.origin_mode_local)
-                    {
-                        tb.TranslateTransform(pos[0], pos[1]);
-                    }
-
-
 
                     g.FillRectangle(tb, pos[0], pos[1], w, h);
                 }
@@ -609,6 +611,7 @@ namespace shadeTool.Views
                 }
 
                 this.addBrushButton.Checked = false;
+                this.unlockControlsForState();
 
 
                 int center_x = (this.Width / this.model.world_unit_size) / 2;
