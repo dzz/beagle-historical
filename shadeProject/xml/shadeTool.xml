@@ -377,7 +377,7 @@ object.name = "Generic Monster"
       <z>0</z>
       <w>7</w>
       <h>7</h>
-      <orientation>4</orientation>
+      <orientation>0</orientation>
       <sortOrder>25</sortOrder>
     </SceneBrush>
     <SceneBrush>
@@ -403,7 +403,7 @@ object.name = "Generic Monster"
       <z>0</z>
       <w>7</w>
       <h>7</h>
-      <orientation>4</orientation>
+      <orientation>2</orientation>
       <sortOrder>27</sortOrder>
     </SceneBrush>
     <SceneBrush>
@@ -431,6 +431,19 @@ object.name = "Generic Monster"
       <h>-5</h>
       <orientation>0</orientation>
       <sortOrder>29</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall1</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>-21</x>
+      <y>4</y>
+      <z>0</z>
+      <w>6</w>
+      <h>7</h>
+      <orientation>2</orientation>
+      <sortOrder>30</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>

@@ -279,26 +279,22 @@ namespace shadeTool.Views
                     transBrush.Dispose();
                 }
 
-                if (brush.orientation != SceneBrush.FLOOR && brush.type!=SceneBrush.WALL_BRUSH)
+                if (brush.orientation != SceneBrush.FLOOR && brush.type==SceneBrush.WALL_BRUSH)
                 {
-                    using( Pen rampPen = new Pen( Color.FromArgb(128, Color.Red) , 32) ) {
+                    using( Pen rampPen = new Pen( Color.FromArgb(128, Color.Red) , 16) ) {
                         rampPen.EndCap = LineCap.ArrowAnchor;
-              
 
+
+                        int nx = -brush.h;
+                        int ny = brush.w;
+                        int len = 64;
                         switch (brush.orientation)
                         {
                             case SceneBrush.NORTH_WALL:
-                                g.DrawLine(rampPen, pos[0] + (w / 2), pos[1] + h, pos[0] + (w/2), pos[1]);
+                                g.DrawLine(rampPen, pos[0], pos[1], pos[0], pos[1] - len);
                                 break;
                             case SceneBrush.SOUTH_WALL:
-
-                                g.DrawLine(rampPen, pos[0] + (w / 2), pos[1], pos[0] + (w / 2), pos[1]+h);
-                                break;
-                            case SceneBrush.EAST_WALL:
-                                g.DrawLine(rampPen, pos[0], pos[1] + h/2, pos[0]+w, pos[1] + h/2);
-                                break;
-                            case SceneBrush.WEST_WALL:
-                                  g.DrawLine(rampPen, pos[0]+w, pos[1] + h/2, pos[0], pos[1] + h/2);
+                                g.DrawLine(rampPen, pos[0], pos[1], pos[0], pos[1] + len);
                                 break;
                         }
                     }
