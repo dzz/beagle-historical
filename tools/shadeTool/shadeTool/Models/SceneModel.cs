@@ -255,14 +255,15 @@ namespace shadeTool.Models
                 Dictionary<SceneEntity, String> repls = new Dictionary<SceneEntity, string>();
                 foreach (SceneEntity ent in this.entities)
                 {
+
                     repls[ent] = ent.streamInitCode;
                     ent.streamInitCode.Replace("\n", "\\n");
                   
                 }
 
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(this,Newtonsoft.Json.Formatting.Indented);
-
-                StreamWriter file3 = new StreamWriter(this.project_root + "json\\" + "compiled.json", false, Encoding.UTF8);
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+                var utf8WithoutBom = new System.Text.UTF8Encoding(false);
+                StreamWriter file3 = new StreamWriter(this.project_root + "json\\" + "compiled.json", false, utf8WithoutBom);
 
                 file3.Write(json);
                 file3.Close();

@@ -419,6 +419,19 @@ object.name = "Generic Monster"
       <orientation>4</orientation>
       <sortOrder>28</sortOrder>
     </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall0</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>23</x>
+      <y>21</y>
+      <z>0</z>
+      <w>-4</w>
+      <h>-5</h>
+      <orientation>0</orientation>
+      <sortOrder>29</sortOrder>
+    </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>

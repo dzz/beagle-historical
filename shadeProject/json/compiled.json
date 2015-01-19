@@ -1,4 +1,4 @@
-﻿{
+{
   "project_root": "C:\\ctt2_breezy\\whimsey\\shadeProject\\",
   "entities": [
     {
@@ -407,6 +407,19 @@
       "h": 7,
       "orientation": 4,
       "sortOrder": 28
+    },
+    {
+      "billboard": false,
+      "name": "wall0",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": 23,
+      "y": 21,
+      "z": 0,
+      "w": -4,
+      "h": -5,
+      "orientation": 0,
+      "sortOrder": 29
     }
   ],
   "styles": {

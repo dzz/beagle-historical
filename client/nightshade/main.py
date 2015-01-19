@@ -1,7 +1,7 @@
 from client.nightshade.scene import *
 
 def init():
-    print( loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\json\\compiled.json") )
+    loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\json\\compiled.json")
 
 def tick():
     pass

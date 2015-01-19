@@ -125,11 +125,8 @@ namespace shadeTool.Views
         {
             if (brushCache.ContainsKey(key) == false)
             {  
-
-                
                     brushCache[key] = new TextureBrush(key);
                     return brushCache[key];
-
             }
             return brushCache[key];
         }
@@ -306,9 +303,7 @@ namespace shadeTool.Views
                         }
                     }
                 }
-
             }
-
         }
 
         private int[] transformToScreen(int x, int y, int z)
