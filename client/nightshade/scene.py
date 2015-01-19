@@ -6,7 +6,7 @@ class renderBrush(object):
         self.r = [0.0,0.0,0,0.0]
         self.layer = 0
         self.texture = ""
-        self.colour = [0.0,0.0,0.0]
+        self.colour = [0.0,0.0,0.0,0.0]
         self.parralax = 1.0
         self.uv_mode = 0
         self_origin_mode = 0
@@ -40,18 +40,30 @@ def buildRenderables(parsed):
                 renderable.texture  = style["texture"]
                 renderable.parallax = style["parallax"]
                 renderable.shader = style["shader"]
-                renderable.colour = [ style["UIC_R"], style["UIC_G"],style["UIC_B"] ]
+                renderable.colour = [ style["UIC_R"]/255., style["UIC_G"]/255.,style["UIC_B"]/255.,1.0 ]
                 renderable.uv_mode = style["uv_mode"]
                 renderable.origin_mode = style["origin_mode"]
                 renderable.uv_origin = [ style["origin_x"], style["origin_y"] ]
 
             except:
                 pass
+            renderables.append( renderable )
+    return renderables
 
 class shadeScene(object):
     def __init__(self):
         self.renderables = []
         self.unit_size = 32
+
+    def applyScale(self):
+        for renderable in self.renderables:
+            renderable.r[0]*=self.unit_size
+            renderable.r[1]*=self.unit_size
+            renderable.r[2]*=self.unit_size
+            renderable.r[3]*=self.unit_size
+
+        self.renderables= sorted( self.renderables, 
+                key = lambda x: ( x.layer, x.r[1],x.sortOrder ) )
 
 def loadScene(filename):
         with open(filename, 'r') as f:
@@ -60,4 +72,5 @@ def loadScene(filename):
             newScene = shadeScene() 
             newScene.renderables = buildRenderables(json_parsed)
             newScene.unit_size = json_parsed["world_unit_size"]
+            newScene.applyScale()
             return newScene
