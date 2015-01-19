@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Xml.Serialization;
+using System.Windows.Forms;
 
 namespace shadeTool.Models
 {
@@ -255,23 +256,41 @@ namespace shadeTool.Models
 
         public static SceneModel Load() {
             try {
+                
+                
                 SceneModel tmpModel = new SceneModel();
 
                 XmlSerializer x = SceneModel.getSerializer();
-                StreamReader file = new StreamReader("shadeTool.xml", Encoding.Unicode);
-                tmpModel = (SceneModel)x.Deserialize( file );
-                file.Close();
 
-                if (tmpModel.world_unit_size == 0)
+                OpenFileDialog ofd = new OpenFileDialog();
+
+                ofd.Filter = "shadeTool Projects|shadeTool.xml";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    tmpModel.world_unit_size = 32;
+
+                    string dir = Path.GetDirectoryName(ofd.FileName);
+
+                    StreamReader file = new StreamReader(ofd.FileName, Encoding.Unicode);
+                    tmpModel = (SceneModel)x.Deserialize(file);
+                    file.Close();
+
+                    if (tmpModel.world_unit_size == 0)
+                    {
+                        tmpModel.world_unit_size = 32;
+                    }
+
+                    tmpModel.project_root = Directory.GetParent(dir).FullName + "\\";
+                    return tmpModel;
                 }
-
-
-                return tmpModel;
+                else
+                {
+                    Environment.Exit(0);
+                    return null;
+                }
             }
             catch {
-                 Console.WriteLine("error saving");
+                 Console.WriteLine("error loading");
                 return new SceneModel();
             }
 

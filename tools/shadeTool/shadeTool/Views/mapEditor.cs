@@ -84,7 +84,6 @@ namespace shadeTool.Views
 
         private void mapEditor_Paint(object sender, PaintEventArgs e)
         {
-
             this.drawBrushes(e.Graphics);
             this.drawCursor(e.Graphics);
           
@@ -352,7 +351,9 @@ namespace shadeTool.Views
             {
                 int[] pos = this.transformToScreen(entity.x, entity.y, camera_z);
 
-                g.DrawImage(this.getEntityImage(entity), pos[0] - (this.model.world_unit_size/2), pos[1]-(this.model.world_unit_size/2),this.model.world_unit_size,this.model.world_unit_size);
+                Image sprite = this.getEntityImage(entity);
+
+                g.DrawImage(this.getEntityImage(entity), pos[0] - (this.model.world_unit_size/2), pos[1]-(this.model.world_unit_size/2), sprite.Width, sprite.Height);
             }
 
             g.DrawRectangle(Pens.Orange, ( (EntityCursorX-camera_x) * this.model.world_unit_size) - this.model.world_unit_size/2 , ( (EntityCursorY-camera_y) * this.model.world_unit_size) - this.model.world_unit_size/2, this.model.world_unit_size, this.model.world_unit_size);
@@ -390,6 +391,7 @@ namespace shadeTool.Views
 
                     imgCache[lookup] = imgCache[def_lookup];
                 }
+
 
             return imgCache[lookup];
 

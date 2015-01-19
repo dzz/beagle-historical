@@ -62,17 +62,13 @@ namespace shadeTool
 
         public shadeTool()
         {
-            model = SceneModel.Load();
-            controller = new EditController();
 
-            this.WindowState = FormWindowState.Maximized;
+
+ 
 
            
             InitializeComponent();
-
-            this.openView(new brushStyleEditor(), new Rectangle( 1400,0, 0,0) );
-            this.openView(new mapEditor(), new Rectangle(0,0,1400,1000) );
-            this.openView(new sceneBrushEditor(), new Rectangle( 1400,400,0,0) );
+ 
         
     
         }
@@ -160,6 +156,20 @@ namespace shadeTool
 
             rcv.ShowDialog();
 
+        }
+
+        private void shadeTool_Shown(object sender, EventArgs e)
+        {
+            model = SceneModel.Load();
+            controller = new EditController();
+
+
+            this.openView(new mapEditor(), new Rectangle(0, 0, 1400, 1000));
+            this.openView(new brushStyleEditor(), new Rectangle(1400, 0, 0, 0));
+            this.openView(new sceneBrushEditor(), new Rectangle(1400, 400, 0, 0));
+
+
+            this.WindowState = FormWindowState.Maximized;
         }
     }
 }
