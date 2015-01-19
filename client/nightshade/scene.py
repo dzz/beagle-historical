@@ -48,9 +48,16 @@ def buildRenderables(parsed):
             except:
                 pass
 
+class shadeScene(object):
+    def __init__(self):
+        self.renderables = []
+        self.unit_size = 32
+
 def loadScene(filename):
         with open(filename, 'r') as f:
             json_data = f.read()
             json_parsed = json.loads(json_data)
-            buildRenderables(json_parsed)
-            return json_parsed
+            newScene = shadeScene() 
+            newScene.renderables = buildRenderables(json_parsed)
+            newScene.unit_size = json_parsed["world_unit_size"]
+            return newScene

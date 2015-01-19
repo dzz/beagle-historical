@@ -344,7 +344,7 @@
       "sortOrder": 23
     },
     {
-      "billboard": false,
+      "billboard": true,
       "name": "floor 0",
       "styleName": "brush_default_style",
       "type": 0,
@@ -433,6 +433,84 @@
       "h": 7,
       "orientation": 2,
       "sortOrder": 30
+    },
+    {
+      "billboard": false,
+      "name": "wall1",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": 1,
+      "y": 15,
+      "z": 0,
+      "w": -4,
+      "h": 4,
+      "orientation": 4,
+      "sortOrder": 31
+    },
+    {
+      "billboard": false,
+      "name": "wall2",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": -3,
+      "y": 19,
+      "z": 0,
+      "w": -8,
+      "h": -9,
+      "orientation": 4,
+      "sortOrder": 32
+    },
+    {
+      "billboard": false,
+      "name": "wall3",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": -11,
+      "y": 10,
+      "z": 0,
+      "w": 4,
+      "h": -4,
+      "orientation": 4,
+      "sortOrder": 33
+    },
+    {
+      "billboard": false,
+      "name": "wall5",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": 1,
+      "y": 15,
+      "z": 0,
+      "w": -8,
+      "h": -9,
+      "orientation": 0,
+      "sortOrder": 34
+    },
+    {
+      "billboard": false,
+      "name": "floor 6",
+      "styleName": "white_tile_dark",
+      "type": 0,
+      "x": -14,
+      "y": 3,
+      "z": 0,
+      "w": 22,
+      "h": 19,
+      "orientation": 0,
+      "sortOrder": 35
+    },
+    {
+      "billboard": false,
+      "name": "floor 7",
+      "styleName": "white_tile_dark",
+      "type": 0,
+      "x": 6,
+      "y": 8,
+      "z": 0,
+      "w": 9,
+      "h": 10,
+      "orientation": 4,
+      "sortOrder": 36
     }
   ],
   "styles": {

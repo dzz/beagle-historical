@@ -355,7 +355,7 @@ object.name = "Generic Monster"
       <sortOrder>23</sortOrder>
     </SceneBrush>
     <SceneBrush>
-      <billboard>false</billboard>
+      <billboard>true</billboard>
       <name>floor 0</name>
       <styleName>brush_default_style</styleName>
       <type>0</type>
@@ -444,6 +444,84 @@ object.name = "Generic Monster"
       <h>7</h>
       <orientation>2</orientation>
       <sortOrder>30</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall1</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>1</x>
+      <y>15</y>
+      <z>0</z>
+      <w>-4</w>
+      <h>4</h>
+      <orientation>4</orientation>
+      <sortOrder>31</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall2</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>-3</x>
+      <y>19</y>
+      <z>0</z>
+      <w>-8</w>
+      <h>-9</h>
+      <orientation>4</orientation>
+      <sortOrder>32</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall3</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>-11</x>
+      <y>10</y>
+      <z>0</z>
+      <w>4</w>
+      <h>-4</h>
+      <orientation>4</orientation>
+      <sortOrder>33</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall5</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>1</x>
+      <y>15</y>
+      <z>0</z>
+      <w>-8</w>
+      <h>-9</h>
+      <orientation>0</orientation>
+      <sortOrder>34</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 6</name>
+      <styleName>white_tile_dark</styleName>
+      <type>0</type>
+      <x>-14</x>
+      <y>3</y>
+      <z>0</z>
+      <w>22</w>
+      <h>19</h>
+      <orientation>0</orientation>
+      <sortOrder>35</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 7</name>
+      <styleName>white_tile_dark</styleName>
+      <type>0</type>
+      <x>6</x>
+      <y>8</y>
+      <z>0</z>
+      <w>9</w>
+      <h>10</h>
+      <orientation>4</orientation>
+      <sortOrder>36</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>
