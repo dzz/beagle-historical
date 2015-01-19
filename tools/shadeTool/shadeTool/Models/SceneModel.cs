@@ -246,17 +246,31 @@ namespace shadeTool.Models
                 XmlSerializer x = SceneModel.getSerializer();
                 StreamWriter file = new StreamWriter("shadeTool.xml",false,Encoding.Unicode);
 
-                StreamWriter file2 = new StreamWriter(this.project_root+"xml\\"+"shadeTool.xml", false, Encoding.Unicode);
+                StreamWriter file2 = new StreamWriter(this.project_root+"xml\\"+"shadeTool.xml", false, Encoding.UTF8);
                 x.Serialize( file, this );
                 x.Serialize(file2, this);
                 file.Close();
                 file2.Close();
 
-                string json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
-                StreamWriter file3 = new StreamWriter(this.project_root + "json\\" + "compiled.json", false, Encoding.Unicode);
+                Dictionary<SceneEntity, String> repls = new Dictionary<SceneEntity, string>();
+                foreach (SceneEntity ent in this.entities)
+                {
+                    repls[ent] = ent.streamInitCode;
+                    ent.streamInitCode.Replace("\n", "\\n");
+                  
+                }
+
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(this,Newtonsoft.Json.Formatting.Indented);
+
+                StreamWriter file3 = new StreamWriter(this.project_root + "json\\" + "compiled.json", false, Encoding.UTF8);
 
                 file3.Write(json);
                 file3.Close();
+
+                foreach (SceneEntity ent in this.entities)
+                {
+                    ent.streamInitCode = repls[ent];
+                }
          
         }
 
@@ -277,7 +291,7 @@ namespace shadeTool.Models
 
                     string dir = Path.GetDirectoryName(ofd.FileName);
 
-                    StreamReader file = new StreamReader(ofd.FileName, Encoding.Unicode);
+                    StreamReader file = new StreamReader(ofd.FileName, Encoding.UTF8);
                     tmpModel = (SceneModel)x.Deserialize(file);
                     file.Close();
 

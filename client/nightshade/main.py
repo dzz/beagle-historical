@@ -1,16 +1,12 @@
-from client.nightshade.battle import battle
-
-
-active_view = battle()
+from client.nightshade.scene import *
 
 def init():
-    pass
+    print( loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\json\\compiled.json") )
 
 def tick():
     pass
 
 def render():
-    active_view.render()
     pass
 
 def finalize():

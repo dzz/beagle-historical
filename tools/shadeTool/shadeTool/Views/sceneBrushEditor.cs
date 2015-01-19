@@ -63,10 +63,10 @@ namespace shadeTool.Views
             textBoxName.Text = brush.name;
             styleDisplay.Text = brush.styleName;
 
-            this.northWall.Checked = brush.Walls[SceneBrush.NORTH_WALL];
-            this.eastWall.Checked = brush.Walls[SceneBrush.EAST_WALL];
-            this.southWall.Checked = brush.Walls[SceneBrush.SOUTH_WALL];
-            this.westWall.Checked = brush.Walls[SceneBrush.WEST_WALL];
+       //     this.northWall.Checked = brush.Walls[SceneBrush.NORTH_WALL];
+        //    this.eastWall.Checked = brush.Walls[SceneBrush.EAST_WALL];
+         //   this.southWall.Checked = brush.Walls[SceneBrush.SOUTH_WALL];
+          //  this.westWall.Checked = brush.Walls[SceneBrush.WEST_WALL];
 
             this.northButton.Checked = brush.orientation == SceneBrush.NORTH_WALL;
             this.eastButton.Checked = brush.orientation == SceneBrush.EAST_WALL;
@@ -124,32 +124,32 @@ namespace shadeTool.Views
 
         private void floor_CheckedChanged(object sender, EventArgs e)
         {
-            if(!isUpdating)
-            this.controller.ActiveBrush.Walls[SceneBrush.FLOOR] = this.floor.Checked;
+       //     if(!isUpdating)
+          //  this.controller.ActiveBrush.Walls[SceneBrush.FLOOR] = this.floor.Checked;
         }
 
         private void northWall_CheckedChanged(object sender, EventArgs e)
         {
-            if (!isUpdating)
-                this.controller.ActiveBrush.Walls[SceneBrush.NORTH_WALL] = this.northWall.Checked;
+        //    if (!isUpdating)
+          //      this.controller.ActiveBrush.Walls[SceneBrush.NORTH_WALL] = this.northWall.Checked;
         }
 
         private void eastWall_CheckedChanged(object sender, EventArgs e)
         {
-            if (!isUpdating)
-               this.controller.ActiveBrush.Walls[SceneBrush.EAST_WALL] = this.eastWall.Checked;
+        //    if (!isUpdating)
+          //     this.controller.ActiveBrush.Walls[SceneBrush.EAST_WALL] = this.eastWall.Checked;
         }
 
         private void southWall_CheckedChanged(object sender, EventArgs e)
         {
-            if (!isUpdating)
-             this.controller.ActiveBrush.Walls[SceneBrush.SOUTH_WALL] = this.southWall.Checked;
+         //   if (!isUpdating)
+          //   this.controller.ActiveBrush.Walls[SceneBrush.SOUTH_WALL] = this.southWall.Checked;
         }
 
         private void westWall_CheckedChanged(object sender, EventArgs e)
         {
-            if (!isUpdating)
-              this.controller.ActiveBrush.Walls[SceneBrush.WEST_WALL] = this.westWall.Checked;
+         //   if (!isUpdating)
+          //    this.controller.ActiveBrush.Walls[SceneBrush.WEST_WALL] = this.westWall.Checked;
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
