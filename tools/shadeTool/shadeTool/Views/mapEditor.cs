@@ -550,7 +550,7 @@ namespace shadeTool.Views
 
             if (this.controller.DrawMode == EditController.DRAWMODE_FLOOR)
             {
-                newBrush.walls = new bool[] { false, false, false, false };
+                //newBrush.walls = new bool[] { false, false, false, false };
                 newBrush.name = "floor " + this.nextId.ToString();
                 newBrush.type = SceneBrush.FLOOR_BRUSH;
             }

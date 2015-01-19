@@ -12,3 +12,6 @@ C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.b
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.resourceConfigView.resources
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.ModelControllerView.resources
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Debug\shadeTool.Views.EntityTypeSelect.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\bin\Debug\Newtonsoft.Json.dll
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\bin\Debug\Newtonsoft.Json.pdb
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\bin\Debug\Newtonsoft.Json.xml

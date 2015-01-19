@@ -115,8 +115,8 @@ namespace shadeTool.Models
 
         public int orientation { get; set; }
 
-        public bool[] walls = new bool[5] { true, true, true, true, true };
-        public bool[] Walls { get { return walls; } set { walls = value; } }
+     //   public bool[] walls = new bool[5] { true, true, true, true, true };
+      //  public bool[] Walls { get { return walls; } set { walls = value; } }
 
 
         public int sortOrder { get; set; }
@@ -251,6 +251,12 @@ namespace shadeTool.Models
                 x.Serialize(file2, this);
                 file.Close();
                 file2.Close();
+
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+                StreamWriter file3 = new StreamWriter(this.project_root + "json\\" + "compiled.json", false, Encoding.Unicode);
+
+                file3.Write(json);
+                file3.Close();
          
         }
 
