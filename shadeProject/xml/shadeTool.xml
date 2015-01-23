@@ -44,484 +44,211 @@ object.name = "Generic Monster"
   <brushes>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 18</name>
+      <name>floor 1</name>
       <styleName>blacktile</styleName>
       <type>0</type>
-      <x>40</x>
-      <y>4</y>
-      <z>1</z>
-      <w>7</w>
-      <h>7</h>
+      <x>-3</x>
+      <y>-2</y>
+      <z>0</z>
+      <w>10</w>
+      <h>8</h>
       <orientation>4</orientation>
       <sortOrder>0</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 19</name>
-      <styleName>blacktile_dark</styleName>
+      <name>floor 2</name>
+      <styleName>blacktile</styleName>
       <type>0</type>
-      <x>40</x>
-      <y>11</y>
-      <z>1</z>
-      <w>7</w>
-      <h>2</h>
+      <x>10</x>
+      <y>-2</y>
+      <z>0</z>
+      <w>8</w>
+      <h>8</h>
       <orientation>4</orientation>
       <sortOrder>1</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 21</name>
-      <styleName>transparent</styleName>
+      <name>floor 3</name>
+      <styleName>blacktile</styleName>
       <type>0</type>
-      <x>40</x>
-      <y>4</y>
-      <z>1</z>
+      <x>-9</x>
+      <y>5</y>
+      <z>0</z>
       <w>3</w>
-      <h>7</h>
-      <orientation>3</orientation>
+      <h>4</h>
+      <orientation>4</orientation>
       <sortOrder>2</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 22</name>
-      <styleName>white_tile_dark</styleName>
+      <name>floor 4</name>
+      <styleName>white_tile</styleName>
       <type>0</type>
-      <x>3</x>
-      <y>0</y>
-      <z>-1</z>
-      <w>22</w>
-      <h>6</h>
+      <x>-9</x>
+      <y>-2</y>
+      <z>0</z>
+      <w>3</w>
+      <h>4</h>
       <orientation>4</orientation>
       <sortOrder>3</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 23</name>
-      <styleName>white_tile_dark</styleName>
+      <name>floor 5</name>
+      <styleName>white_tile</styleName>
       <type>0</type>
-      <x>25</x>
-      <y>-1</y>
-      <z>-1</z>
-      <w>9</w>
-      <h>6</h>
+      <x>-3</x>
+      <y>8</y>
+      <z>0</z>
+      <w>10</w>
+      <h>3</h>
       <orientation>4</orientation>
       <sortOrder>4</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 24</name>
-      <styleName>white_tile_dark</styleName>
+      <name>floor 6</name>
+      <styleName>white_tile</styleName>
       <type>0</type>
-      <x>34</x>
-      <y>-2</y>
-      <z>-1</z>
-      <w>6</w>
-      <h>5</h>
+      <x>17</x>
+      <y>10</y>
+      <z>0</z>
+      <w>3</w>
+      <h>3</h>
       <orientation>4</orientation>
       <sortOrder>5</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 25</name>
-      <styleName>white_tile_dark</styleName>
+      <name>floor 7</name>
+      <styleName>white_tile</styleName>
       <type>0</type>
-      <x>40</x>
+      <x>19</x>
       <y>-3</y>
-      <z>-1</z>
-      <w>8</w>
-      <h>5</h>
+      <z>0</z>
+      <w>2</w>
+      <h>2</h>
       <orientation>4</orientation>
       <sortOrder>6</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 26</name>
-      <styleName>white_tile</styleName>
+      <name>floor 8</name>
+      <styleName>white_tile_dark</styleName>
       <type>0</type>
-      <x>40</x>
-      <y>-4</y>
-      <z>-1</z>
-      <w>8</w>
+      <x>-9</x>
+      <y>2</y>
+      <z>0</z>
+      <w>3</w>
       <h>1</h>
       <orientation>4</orientation>
       <sortOrder>7</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 27</name>
-      <styleName>white_tile</styleName>
+      <name>floor 9</name>
+      <styleName>white_tile_dark</styleName>
       <type>0</type>
-      <x>34</x>
-      <y>-3</y>
-      <z>-1</z>
-      <w>6</w>
+      <x>-3</x>
+      <y>11</y>
+      <z>0</z>
+      <w>10</w>
       <h>1</h>
       <orientation>4</orientation>
       <sortOrder>8</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 28</name>
-      <styleName>white_tile</styleName>
+      <name>floor 10</name>
+      <styleName>white_tile_dark</styleName>
       <type>0</type>
-      <x>25</x>
-      <y>-2</y>
-      <z>-1</z>
-      <w>9</w>
+      <x>17</x>
+      <y>13</y>
+      <z>0</z>
+      <w>3</w>
       <h>1</h>
       <orientation>4</orientation>
       <sortOrder>9</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 29</name>
-      <styleName>white_tile</styleName>
+      <name>floor 11</name>
+      <styleName>white_tile_dark</styleName>
       <type>0</type>
-      <x>3</x>
+      <x>19</x>
       <y>-1</y>
-      <z>-1</z>
-      <w>22</w>
+      <z>0</z>
+      <w>2</w>
       <h>1</h>
       <orientation>4</orientation>
       <sortOrder>10</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall0</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>48</x>
-      <y>2</y>
-      <z>-1</z>
-      <w>10</w>
-      <h>2</h>
+      <name>floor 12</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>10</x>
+      <y>6</y>
+      <z>0</z>
+      <w>8</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>11</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall1</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>58</x>
-      <y>4</y>
-      <z>-1</z>
-      <w>5</w>
-      <h>7</h>
+      <name>floor 13</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-3</x>
+      <y>6</y>
+      <z>0</z>
+      <w>10</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>12</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall2</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>63</x>
-      <y>11</y>
-      <z>-1</z>
-      <w>-15</w>
-      <h>5</h>
+      <name>floor 14</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-9</x>
+      <y>9</y>
+      <z>0</z>
+      <w>3</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>13</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall3</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>48</x>
-      <y>16</y>
-      <z>-1</z>
-      <w>-18</w>
-      <h>-3</h>
+      <name>floor 15</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>18</x>
+      <y>12</y>
+      <z>1</z>
+      <w>1</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>14</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall4</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>30</x>
-      <y>13</y>
-      <z>-1</z>
-      <w>-19</w>
-      <h>0</h>
-      <orientation>4</orientation>
-      <sortOrder>15</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall5</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>11</x>
-      <y>13</y>
-      <z>-1</z>
-      <w>-9</w>
-      <h>-5</h>
-      <orientation>4</orientation>
-      <sortOrder>16</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall6</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>2</x>
-      <y>8</y>
-      <z>-1</z>
-      <w>-5</w>
-      <h>-9</h>
-      <orientation>4</orientation>
-      <sortOrder>17</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall7</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>-3</x>
-      <y>-1</y>
-      <z>-1</z>
-      <w>5</w>
-      <h>-4</h>
-      <orientation>4</orientation>
-      <sortOrder>18</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall8</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>2</x>
-      <y>-5</y>
-      <z>-1</z>
-      <w>7</w>
-      <h>-9</h>
-      <orientation>4</orientation>
-      <sortOrder>19</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall9</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>9</x>
-      <y>-14</y>
-      <z>-1</z>
-      <w>14</w>
-      <h>-1</h>
-      <orientation>4</orientation>
-      <sortOrder>20</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall10</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>23</x>
-      <y>-15</y>
-      <z>-1</z>
-      <w>5</w>
-      <h>9</h>
-      <orientation>4</orientation>
-      <sortOrder>21</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall11</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>28</x>
-      <y>-6</y>
-      <z>-1</z>
-      <w>-9</w>
-      <h>4</h>
-      <orientation>4</orientation>
-      <sortOrder>22</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall12</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>20</x>
-      <y>-2</y>
-      <z>-1</z>
-      <w>10</w>
-      <h>7</h>
-      <orientation>4</orientation>
-      <sortOrder>23</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>true</billboard>
-      <name>floor 0</name>
-      <styleName>brush_default_style</styleName>
+      <name>floor 16</name>
+      <styleName>blacktile</styleName>
       <type>0</type>
-      <x>3</x>
-      <y>-2</y>
-      <z>0</z>
-      <w>7</w>
-      <h>7</h>
-      <orientation>4</orientation>
-      <sortOrder>24</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 1</name>
-      <styleName>brush_default_style</styleName>
-      <type>0</type>
-      <x>17</x>
-      <y>-1</y>
-      <z>0</z>
-      <w>7</w>
-      <h>7</h>
-      <orientation>0</orientation>
-      <sortOrder>25</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 0</name>
-      <styleName>brush_default_style</styleName>
-      <type>0</type>
-      <x>26</x>
-      <y>8</y>
-      <z>0</z>
-      <w>7</w>
-      <h>7</h>
-      <orientation>4</orientation>
-      <sortOrder>26</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 1</name>
-      <styleName>brush_default_style</styleName>
-      <type>0</type>
-      <x>35</x>
-      <y>9</y>
-      <z>0</z>
-      <w>7</w>
-      <h>7</h>
-      <orientation>2</orientation>
-      <sortOrder>27</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 2</name>
-      <styleName>brush_default_style</styleName>
-      <type>0</type>
-      <x>50</x>
-      <y>12</y>
-      <z>0</z>
-      <w>7</w>
-      <h>7</h>
-      <orientation>4</orientation>
-      <sortOrder>28</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall0</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>23</x>
-      <y>21</y>
-      <z>0</z>
-      <w>-4</w>
-      <h>-5</h>
-      <orientation>0</orientation>
-      <sortOrder>29</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall1</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>-21</x>
-      <y>4</y>
-      <z>0</z>
-      <w>6</w>
-      <h>7</h>
-      <orientation>2</orientation>
-      <sortOrder>30</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall1</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>1</x>
-      <y>15</y>
-      <z>0</z>
-      <w>-4</w>
-      <h>4</h>
-      <orientation>4</orientation>
-      <sortOrder>31</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall2</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>-3</x>
-      <y>19</y>
-      <z>0</z>
-      <w>-8</w>
-      <h>-9</h>
-      <orientation>4</orientation>
-      <sortOrder>32</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall3</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>-11</x>
-      <y>10</y>
-      <z>0</z>
-      <w>4</w>
-      <h>-4</h>
-      <orientation>4</orientation>
-      <sortOrder>33</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>wall5</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>1</x>
-      <y>15</y>
-      <z>0</z>
-      <w>-8</w>
-      <h>-9</h>
-      <orientation>0</orientation>
-      <sortOrder>34</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 6</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>-14</x>
-      <y>3</y>
-      <z>0</z>
-      <w>22</w>
-      <h>19</h>
-      <orientation>0</orientation>
-      <sortOrder>35</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 7</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>6</x>
-      <y>8</y>
-      <z>0</z>
-      <w>9</w>
+      <x>18</x>
+      <y>2</y>
+      <z>1</z>
+      <w>1</w>
       <h>10</h>
       <orientation>4</orientation>
-      <sortOrder>36</sortOrder>
+      <sortOrder>15</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>

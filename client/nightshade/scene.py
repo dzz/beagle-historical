@@ -1,5 +1,8 @@
 import hwgfx
 import json
+import client.gfx.texture                   as Texture
+import client.gfx.local_image               as LocalImage
+
 
 class renderBrush(object):
     def __init__(self):
@@ -21,6 +24,26 @@ class collisionObject(object):
         self.vector = [0.0,0.0]
         self.ramp_direction = 0
         pass
+
+
+def buildTextures(parsed):
+    textures = {}
+    styles = parsed["styles"]
+
+    for styleKey in styles:
+        print("nightshade parsing style:" + styleKey)
+        style = styles[styleKey]
+        textureKey = style["texture"]
+        if textureKey is not None:
+            if textureKey not in textures:
+                print("nightshade loading tex:" + textureKey)
+                img = LocalImage.local_image.from_file(textureKey)
+                #textures[textureKey] = None
+                textures[textureKey] = Texture.texture.from_local_image(img)
+
+
+        
+
 
 
 def buildRenderables(parsed):
@@ -53,17 +76,20 @@ def buildRenderables(parsed):
 class shadeScene(object):
     def __init__(self):
         self.renderables = []
+        self.textures   = []
         self.unit_size = 32
 
     def applyScale(self):
+        self.renderables= sorted( self.renderables, 
+                key = lambda x: ( x.layer, x.r[1],x.sortOrder ) )
+
         for renderable in self.renderables:
             renderable.r[0]*=self.unit_size
             renderable.r[1]*=self.unit_size
+            renderable.r[1]-=renderable.layer * self.unit_size
             renderable.r[2]*=self.unit_size
             renderable.r[3]*=self.unit_size
 
-        self.renderables= sorted( self.renderables, 
-                key = lambda x: ( x.layer, x.r[1],x.sortOrder ) )
 
 def loadScene(filename):
         with open(filename, 'r') as f:
@@ -71,6 +97,7 @@ def loadScene(filename):
             json_parsed = json.loads(json_data)
             newScene = shadeScene() 
             newScene.renderables = buildRenderables(json_parsed)
+            newScene.textures = buildTextures(json_parsed)
             newScene.unit_size = json_parsed["world_unit_size"]
             newScene.applyScale()
             return newScene

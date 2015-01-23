@@ -18,9 +18,11 @@ class texture:
 
     @classmethod
     def from_local_image(cls, local_image, filtered=False):
-        tex = texture_generate( local_image.w, 
+        print ("PY: generating texture")
+        tex = hwgfx.texture_generate( local_image.w, 
                                 local_image.h, 
                                 filtered)
+        print ("PY: uploading texture")
         hwgfx.texture_upload(tex, local_image._img)
         return cls( tex, 
                     local_image.w, 
