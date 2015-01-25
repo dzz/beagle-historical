@@ -93,6 +93,20 @@ void disable_vsync()
 #endif
 }
 
+void vsync(int mode)
+{	
+#ifdef _WIN32
+    typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
+    PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
+    wglSwapIntervalEXT = 
+        (PFNWGLSWAPINTERVALPROC)SDL_GL_GetProcAddress( "wglSwapIntervalEXT" );
+    wglSwapIntervalEXT(mode);
+#endif
+#ifdef __linux__
+    printf("linux unimplemented vsync()");
+#endif
+}
+
 
 void initWindowingSystemMessages() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
@@ -140,7 +154,8 @@ void DIRTY_DISPLAY_ABORT() {
 
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
-    disable_vsync();
+    //disable_vsync();
+    vsync(1);
     initExtendedVideo();
 }
 
@@ -181,7 +196,7 @@ void dropTextInput() {
 }
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 300;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 15;
     int screenbuffer_cycles                         = 20;
     int finished                                    = 0;
     int resizable                                   = 1;

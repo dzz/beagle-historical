@@ -238,18 +238,31 @@
       "h": 10,
       "orientation": 4,
       "sortOrder": 15
+    },
+    {
+      "billboard": false,
+      "name": "floor 0",
+      "styleName": "brush_default_style",
+      "type": 0,
+      "x": -13,
+      "y": -8,
+      "z": -1,
+      "w": 37,
+      "h": 23,
+      "orientation": 4,
+      "sortOrder": 16
     }
   ],
   "styles": {
     "brush_default_style": {
-      "parallax": 1.0,
+      "parallax": 0.333,
       "texture": "C:\\ctt2_breezy\\whimsey\\shadeProject\\texture\\sphere2.png",
       "shader": "textured_quad.json",
       "UiColor": "128, 0, 255",
       "UIC_R": 128,
       "UIC_G": 0,
       "UIC_B": 255,
-      "uv_mode": 0,
+      "uv_mode": 1,
       "origin_mode": 0,
       "origin_x": 0,
       "origin_y": 0

@@ -81,15 +81,22 @@ void texture_generate_fp(gfx_texture* texture,int w,int h) {
 }
 
 void texture_from_SDL_surface(gfx_texture* texture, SDL_Surface* surf) {
-    SDL_LockSurface(surf);
-    glBindTexture(GL_TEXTURE_2D,texture->texture_id);
-    glTexSubImage2D(    GL_TEXTURE_2D,
-                        _LOD,
-                        0,0,
-                        surf->w,surf->h,		
-                        GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
-                        (unsigned char*)surf->pixels);
-    SDL_UnlockSurface(surf);
+
+    SDL_Surface *formattedSurface = SDL_ConvertSurfaceFormat(surf,SDL_PIXELFORMAT_RGBA8888,0);
+
+    if(formattedSurface!=0) {
+        SDL_LockSurface(formattedSurface);
+        glBindTexture(GL_TEXTURE_2D,texture->texture_id);
+        glTexSubImage2D(    GL_TEXTURE_2D,
+                _LOD,
+                0,0,
+                surf->w,surf->h,		
+                GL_RGBA, GL_UNSIGNED_INT_8_8_8_8,
+                (unsigned char*)formattedSurface->pixels);
+        SDL_UnlockSurface(surf);
+    }
+
+    SDL_FreeSurface(formattedSurface);
 
 }
 
@@ -119,7 +126,7 @@ void texture_bind(gfx_texture* texture, int texture_unit) {
 void texture_download(gfx_texture* texture, SDL_Surface* target) {
     texture_bind(texture, TEX_UNIT_0);
     SDL_LockSurface(target);
-    glGetTexImage(GL_TEXTURE_2D, _LOD, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, target->pixels );
+    glGetTexImage(GL_TEXTURE_2D, _LOD, GL_RGBA, GL_UNSIGNED_BYTE, target->pixels );
     SDL_UnlockSurface(target);
 }
 

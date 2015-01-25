@@ -18,6 +18,20 @@ DEF_ARGS  {
 }
 
 /**
+ *  rect_tex
+ */
+MODULE_FUNC hwgfx_rect_draw_tex
+DEF_ARGS  {
+    int x,y,w,h;
+    float u,v,tw,th;
+
+    if(!INPUT_ARGS(args,"iiiiffff",&x,&y,&w,&h,&u,&v,&tw,&th)) 
+        return NULL;
+    rect_draw_tex(x,y,w,h,u,v,tw,th);j
+    Py_RETURN_NONE;
+}
+
+/**
  * text
  */
 MODULE_FUNC hwgfx_text_render
@@ -465,6 +479,7 @@ static PyMethodDef hwgfx_methods[] = {
 
     /*rect*/
     {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
+    {"rect_draw_tex",       hwgfx_rect_draw_tex,        METH_VARARGS, NULL},
 
     /*text*/
     {"text_render",         hwgfx_text_render,          METH_VARARGS, NULL},

@@ -250,19 +250,32 @@ object.name = "Generic Monster"
       <orientation>4</orientation>
       <sortOrder>15</sortOrder>
     </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>brush_default_style</styleName>
+      <type>0</type>
+      <x>-13</x>
+      <y>-8</y>
+      <z>-1</z>
+      <w>37</w>
+      <h>23</h>
+      <orientation>4</orientation>
+      <sortOrder>16</sortOrder>
+    </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>
       <Entry>
         <Key>brush_default_style</Key>
         <Value>
-          <parallax>1</parallax>
+          <parallax>0.333</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>255</UIC_B>
-          <uv_mode>0</uv_mode>
+          <uv_mode>1</uv_mode>
           <origin_mode>0</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>
