@@ -25,12 +25,12 @@ tpf = 1.0/target_fps
 
 def tick():
     global T
-    a = time.clock()
+    a = time.clock() * 0.5
     T   = a
-    rad = 225
+    rad = 125
 
-    V.cam[0] = (sin( T ) * rad) - 350
-    V.cam[1] = (-cos( T) * rad) - 350
+    V.cam[0] = (sin( T ) * rad) - 550
+    V.cam[1] = (-cos( T) * rad) - 150
     pass
 
 def render():

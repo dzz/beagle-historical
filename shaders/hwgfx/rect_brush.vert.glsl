@@ -13,9 +13,9 @@ void main(void) {
     p_t.y = in_Position.y * rect_coords.w;
     p_t.x += rect_coords.x;
     p_t.y += rect_coords.y;
-    p_t.x /= scr_size.x;
+    p_t.x /= 1920;
     p_t.y = scr_size.y - p_t.y;
-    p_t.y /= scr_size.y;
+    p_t.y /= 1080;
     p_t *= 2;
     p_t -= 1;
 

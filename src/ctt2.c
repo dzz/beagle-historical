@@ -23,6 +23,7 @@
 #include "system/log.h"
 #include "system/surfaceCache.h"
 #include "hardware/tablet.h"
+#include "hardware/gamepad.h"
 #include "document/animation.h"
 #include "drawing/shader_brush.h"
 #include "drawing/brush.h"
@@ -70,7 +71,7 @@ void ctt2_insertkeyframe() {
 
 void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT);
 }
 
 SDL_Surface* getViewingSurface(){
@@ -117,7 +118,7 @@ void initWindowingSystemMessages() {
 
 
 void initDisplay( int resizable ) {
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER ) < 0 ) {
         printf( "%s\n", SDL_GetError() );
         exit(1);
     } 
@@ -154,8 +155,8 @@ void DIRTY_DISPLAY_ABORT() {
 
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
-    //disable_vsync();
-    vsync(1);
+    disable_vsync();
+    //vsync(1);
     initExtendedVideo();
 }
 
@@ -224,7 +225,8 @@ int main(int argc, char **argv){
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 
     initYankPut();
-    initTablet(opengl_window);
+    //initTablet(opengl_window);
+    initGamepad();
 
     ui_surface = createDrawingSurface(SCREEN_WIDTH,
                                         SCREEN_HEIGHT);
@@ -236,14 +238,24 @@ int main(int argc, char **argv){
         SDL_Event event;
 
         while(finished == 0) {
-            if(SDL_PollEvent(&event)) {
-                
+            while(SDL_PollEvent(&event)) {
                 switch (event.type) {
+                    case SDL_CONTROLLERDEVICEADDED:
+                        dropGamepad();
+                        initGamepad();
+                        break;
+                    case SDL_CONTROLLERDEVICEREMOVED:
+                        dropGamepad();
+                        initGamepad();
+                        break;
+                    case SDL_JOYAXISMOTION:
+                        GamepadHandleEvent( &event );
+                        break; 
                     case SDL_TEXTINPUT:
                         api_dispatch_text( event.text.text );
                         break;
                     case SDL_WINDOWEVENT:
-                        /*reszie window*/
+                        /*resize window*/
                         if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
                         {
                             viewport_dims vd;
@@ -332,11 +344,12 @@ int main(int argc, char **argv){
     /** FINISHED **/
     dropBrush();
     dropHwBrush();
-    dropTablet();
+    //dropTablet();
     dropAnimation();
     dropPanels();
     dropDrawingSurfaces();
     dropYankPut();
+    dropGamepad();
     dropPython();
     dropTextInput();
     dropExtendedVideo();

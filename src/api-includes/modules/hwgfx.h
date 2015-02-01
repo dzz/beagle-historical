@@ -27,7 +27,7 @@ DEF_ARGS  {
 
     if(!INPUT_ARGS(args,"iiiiffff",&x,&y,&w,&h,&u,&v,&tw,&th)) 
         return NULL;
-    rect_draw_tex(x,y,w,h,u,v,tw,th);j
+    rect_draw_tex(x,y,w,h,u,v,tw,th);
     Py_RETURN_NONE;
 }
 

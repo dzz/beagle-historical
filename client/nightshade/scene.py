@@ -11,7 +11,7 @@ class renderBrush(object):
         self.textureKey = None
         self.texture = None
         self.colour = [0.0,0.0,0.0,0.0]
-        self.parralax = 1.0
+        self.parallax = 1.0
         self.uv_mode = 0
         self.origin_mode = 0
         self.billboard = False
@@ -38,7 +38,7 @@ class renderBrush(object):
 
         if( self.origin_mode == MODE_GLOBAL ):
             pix_origin_x = self.uv_origin[0] + self.r[0] 
-            pix_origin_y = self.uv_origin[0] + self.r[1]
+            pix_origin_y = self.uv_origin[1] + self.r[1]
         elif( self.origin_mode == MODE_LOCAL ):
             pix_origin_x = self.uv_origin[0]
             pix_origin_y = self.uv_origin[1]
@@ -82,7 +82,7 @@ def buildTextures(parsed):
             if textureKey not in textures:
                 print("nightshade loading tex:" + textureKey)
                 img = LocalImage.local_image.from_file(textureKey)
-                textures[textureKey] = Texture.texture.from_local_image(img)
+                textures[textureKey] = Texture.texture.from_local_image(img, True)
 
 
     return textures

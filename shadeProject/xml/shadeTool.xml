@@ -263,6 +263,71 @@ object.name = "Generic Monster"
       <orientation>4</orientation>
       <sortOrder>16</sortOrder>
     </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 8</name>
+      <styleName>background</styleName>
+      <type>0</type>
+      <x>-36</x>
+      <y>-15</y>
+      <z>2</z>
+      <w>23</w>
+      <h>42</h>
+      <orientation>4</orientation>
+      <sortOrder>17</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 9</name>
+      <styleName>background</styleName>
+      <type>0</type>
+      <x>-13</x>
+      <y>-15</y>
+      <z>2</z>
+      <w>49</w>
+      <h>10</h>
+      <orientation>4</orientation>
+      <sortOrder>18</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 10</name>
+      <styleName>background</styleName>
+      <type>0</type>
+      <x>24</x>
+      <y>-5</y>
+      <z>2</z>
+      <w>12</w>
+      <h>32</h>
+      <orientation>4</orientation>
+      <sortOrder>19</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 11</name>
+      <styleName>background</styleName>
+      <type>0</type>
+      <x>-13</x>
+      <y>18</y>
+      <z>2</z>
+      <w>37</w>
+      <h>9</h>
+      <orientation>4</orientation>
+      <sortOrder>20</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>sdf</styleName>
+      <type>0</type>
+      <x>-48</x>
+      <y>-35</y>
+      <z>-2</z>
+      <w>102</w>
+      <h>75</h>
+      <orientation>4</orientation>
+      <sortOrder>21</sortOrder>
+    </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>
@@ -305,8 +370,8 @@ object.name = "Generic Monster"
           <UIC_R>0</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>0</UIC_B>
-          <uv_mode>1</uv_mode>
-          <origin_mode>0</origin_mode>
+          <uv_mode>0</uv_mode>
+          <origin_mode>1</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>
         </Value>
@@ -314,13 +379,14 @@ object.name = "Generic Monster"
       <Entry>
         <Key>sdf</Key>
         <Value>
-          <parallax>1</parallax>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\dust.png</texture>
+          <parallax>0.003</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\grad.png</texture>
+          <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
           <UIC_B>255</UIC_B>
           <uv_mode>0</uv_mode>
-          <origin_mode>0</origin_mode>
+          <origin_mode>1</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>
         </Value>

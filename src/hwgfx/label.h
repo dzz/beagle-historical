@@ -3,6 +3,7 @@
 
 #include "primitive.h"
 #include "texture.h"
+#include <stdio.h>
 
 typedef struct {
     gfx_texture *texture;
