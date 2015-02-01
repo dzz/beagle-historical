@@ -1,6 +1,7 @@
 import host
 import hwgfx
 import configparser
+import client.system.gamepad as gamepad
 
 from client.ctt2.mouse_focus    import mouse_focused_area
 from client.ctt2.status import render_status
@@ -22,15 +23,24 @@ __mpos      = [0,0]
 global app 
 
 def init():
+    def bool(v):
+        if v is False: 
+            return False
+        return v.lower() in ("true","1")
+
     global app   
 
     config = configparser.ConfigParser()
     config.read("client/application.ini")
     app_name = config["APPLICATION"]["name"]
+    controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     app = client.apps.get_app(app_name) 
+    app.controller_enabled = controller_enabled
     app.init()
     set_status("initialized application:" + app_name)
-
+    if(app.controller_enabled):
+        print("app requesting controller input")
+        gamepad.init()
 
 def finalize():
     global app
@@ -38,6 +48,8 @@ def finalize():
 
 def tick():
     global app
+    if(app.controller_enabled):
+        gamepad.tick()
     app.tick()
     render()
     gc.collect()

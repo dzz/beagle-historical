@@ -3,10 +3,18 @@
 #include "gamepad.h"
 #include <stdio.h>
 
-#define MAX_PADS 8
-
 hw_gamepad Gamepads[MAX_PADS];
 hw_gamepad* MappedPads[MAX_PADS];
+
+int _dirty = 0;
+
+int GamepadDequeueIsDirty() {
+    if(_dirty=1) {
+        _dirty=0;
+        return 1;
+    }
+    return 0;
+}
 
 void resetGamepad() {
     int i;
@@ -26,19 +34,31 @@ void GamepadHandleEvent( SDL_Event* event) {
 
     if( event->type == SDL_JOYAXISMOTION ) {
         hw_gamepad* gp = MappedPads[ event->jaxis.which ];
+        _dirty = 1;
         if(gp) {
             switch( event->jaxis.axis ) {
                 case 0:
-                    gp->left_x = (double)event->jaxis.value;
+                    gp->left_x = (double)event->jaxis.value / 32276.0;
                     break;
                 case 1:
-                    gp->left_y = (double)event->jaxis.value;
+                    gp->left_y = (double)event->jaxis.value / 32276.0;
+                    break;
+                case 2:
+                    gp->right_x = (double)event->jaxis.value / 32276.0;
+                    break;
+                case 3:
+                    gp->right_y = (double)event->jaxis.value / 32276.0;
                     break;
             }
 
-           // printf(" gp(%f,%f)\n",gp->left_x,gp->left_y);
+        //   printf(" gp(%-20f,%-20f,%-20f,%-20f)\n",gp->left_x,gp->left_y, gp->right_x, gp->right_y );
         }
     }
+}
+
+hw_gamepad* getGamepad(int index) {
+
+    return( &Gamepads[index] );
 }
 
 void initGamepad() {

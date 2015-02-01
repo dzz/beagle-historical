@@ -328,13 +328,91 @@ object.name = "Generic Monster"
       <orientation>4</orientation>
       <sortOrder>21</sortOrder>
     </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>brush_default_style</styleName>
+      <type>0</type>
+      <x>-21</x>
+      <y>-6</y>
+      <z>0</z>
+      <w>10</w>
+      <h>8</h>
+      <orientation>4</orientation>
+      <sortOrder>22</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall0</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>-3</x>
+      <y>2</y>
+      <z>0</z>
+      <w>3</w>
+      <h>-4</h>
+      <orientation>4</orientation>
+      <sortOrder>23</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall1</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>0</x>
+      <y>-2</y>
+      <z>0</z>
+      <w>7</w>
+      <h>0</h>
+      <orientation>4</orientation>
+      <sortOrder>24</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall2</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>7</x>
+      <y>-2</y>
+      <z>0</z>
+      <w>0</w>
+      <h>8</h>
+      <orientation>4</orientation>
+      <sortOrder>25</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall3</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>7</x>
+      <y>6</y>
+      <z>0</z>
+      <w>-10</w>
+      <h>0</h>
+      <orientation>4</orientation>
+      <sortOrder>26</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>wall4</name>
+      <styleName>brush_default_style</styleName>
+      <type>1</type>
+      <x>-3</x>
+      <y>6</y>
+      <z>0</z>
+      <w>0</w>
+      <h>-4</h>
+      <orientation>4</orientation>
+      <sortOrder>27</sortOrder>
+    </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>
       <Entry>
         <Key>brush_default_style</Key>
         <Value>
-          <parallax>0.333</parallax>
+          <parallax>0.5</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>128</UIC_R>
@@ -364,7 +442,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>background</Key>
         <Value>
-          <parallax>1</parallax>
+          <parallax>1.1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\big_bg.png</texture>
           <shader />
           <UIC_R>0</UIC_R>
@@ -380,7 +458,7 @@ object.name = "Generic Monster"
         <Key>sdf</Key>
         <Value>
           <parallax>0.003</parallax>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\grad.png</texture>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\dust.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
@@ -454,7 +532,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>sphere</Key>
         <Value>
-          <parallax>1</parallax>
+          <parallax>2</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader />
           <UIC_R>128</UIC_R>

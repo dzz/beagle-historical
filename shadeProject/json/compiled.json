@@ -316,11 +316,89 @@
       "h": 75,
       "orientation": 4,
       "sortOrder": 21
+    },
+    {
+      "billboard": false,
+      "name": "floor 0",
+      "styleName": "brush_default_style",
+      "type": 0,
+      "x": -21,
+      "y": -6,
+      "z": 0,
+      "w": 10,
+      "h": 8,
+      "orientation": 4,
+      "sortOrder": 22
+    },
+    {
+      "billboard": false,
+      "name": "wall0",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": -3,
+      "y": 2,
+      "z": 0,
+      "w": 3,
+      "h": -4,
+      "orientation": 4,
+      "sortOrder": 23
+    },
+    {
+      "billboard": false,
+      "name": "wall1",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": 0,
+      "y": -2,
+      "z": 0,
+      "w": 7,
+      "h": 0,
+      "orientation": 4,
+      "sortOrder": 24
+    },
+    {
+      "billboard": false,
+      "name": "wall2",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": 7,
+      "y": -2,
+      "z": 0,
+      "w": 0,
+      "h": 8,
+      "orientation": 4,
+      "sortOrder": 25
+    },
+    {
+      "billboard": false,
+      "name": "wall3",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": 7,
+      "y": 6,
+      "z": 0,
+      "w": -10,
+      "h": 0,
+      "orientation": 4,
+      "sortOrder": 26
+    },
+    {
+      "billboard": false,
+      "name": "wall4",
+      "styleName": "brush_default_style",
+      "type": 1,
+      "x": -3,
+      "y": 6,
+      "z": 0,
+      "w": 0,
+      "h": -4,
+      "orientation": 4,
+      "sortOrder": 27
     }
   ],
   "styles": {
     "brush_default_style": {
-      "parallax": 0.333,
+      "parallax": 0.5,
       "texture": "C:\\ctt2_breezy\\whimsey\\shadeProject\\texture\\sphere2.png",
       "shader": "textured_quad.json",
       "UiColor": "128, 0, 255",
@@ -346,7 +424,7 @@
       "origin_y": 0
     },
     "background": {
-      "parallax": 1.0,
+      "parallax": 1.1,
       "texture": "C:\\ctt2_breezy\\whimsey\\shadeProject\\texture\\big_bg.png",
       "shader": "",
       "UiColor": "0, 0, 0",
@@ -360,7 +438,7 @@
     },
     "sdf": {
       "parallax": 0.003,
-      "texture": "C:\\ctt2_breezy\\whimsey\\shadeProject\\texture\\grad.png",
+      "texture": "C:\\ctt2_breezy\\whimsey\\shadeProject\\texture\\dust.png",
       "shader": "",
       "UiColor": "128, 128, 255",
       "UIC_R": 128,
@@ -424,7 +502,7 @@
       "origin_y": 0
     },
     "sphere": {
-      "parallax": 1.0,
+      "parallax": 2.0,
       "texture": "C:\\ctt2_breezy\\whimsey\\shadeProject\\texture\\sphere2.png",
       "shader": "",
       "UiColor": "128, 128, 255",

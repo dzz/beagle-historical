@@ -3,6 +3,8 @@
 
 #include <SDL.H>
 
+#define MAX_PADS 8
+
 typedef struct {
     int index;
     SDL_GameController* controller;
@@ -18,6 +20,10 @@ typedef struct {
 
 void initGamepad();
 void dropGamepad();
+hw_gamepad* getGamepads();
 void GamepadHandleEvent(SDL_Event* event);
+hw_gamepad* getGamepad(int index);
+int GamepadDequeueIsDirty();
+
 
 #endif

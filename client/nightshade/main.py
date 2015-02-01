@@ -1,4 +1,5 @@
 import  time
+from    client.system.gamepad       import get_gamepad
 from    math import *
 import  hwgfx
 from    client.nightshade.scene     import *
@@ -29,8 +30,11 @@ def tick():
     T   = a
     rad = 125
 
-    V.cam[0] = (sin( T ) * rad) - 550
-    V.cam[1] = (-cos( T) * rad) - 150
+    pad = get_gamepad(0)
+
+    V.cam[0] += pad.leftStick[0];
+    V.cam[1] += pad.leftStick[1];
+
     pass
 
 def render():

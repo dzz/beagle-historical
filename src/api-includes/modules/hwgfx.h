@@ -309,7 +309,7 @@ DEF_ARGS {
     int                             draw_mode;
     //see python c API docs for how O! and &PyList_Type 
     //works to validate list
-    if(!INPUT_ARGS(args,"O!i",&PyList_Type, &coord_float_list,
+    ii0f(!INPUT_ARGS(args,"O!i",&PyList_Type, &coord_float_list,
                 &vlen, &draw_mode))
         return NULL;
     num_coord_floats       = PyList_Size(coord_float_list);

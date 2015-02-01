@@ -15,6 +15,7 @@
 #include "hwgfx/primitive.h"
 #include "hwgfx/text.h"
 #include "hwgfx/context.h"
+#include "hardware/gamepad.h"
 
 //build a structure to hold required host callables inside of client
 #define CLIENT_FUNCTION(x,y) PyObject* x;
