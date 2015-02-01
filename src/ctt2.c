@@ -133,7 +133,7 @@ void initDisplay( int resizable ) {
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
     } else {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
 
     }
 
@@ -197,7 +197,7 @@ void dropTextInput() {
 }
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 15;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 1;
     int screenbuffer_cycles                         = 20;
     int finished                                    = 0;
     int resizable                                   = 1;
@@ -278,7 +278,7 @@ int main(int argc, char **argv){
                         finished = 1;
                         break;
                     case SDL_SYSWMEVENT:
-                        handle_wm_event(event);
+                       // handle_wm_event(event);
                         break;
                     case SDL_KEYDOWN:
                         finished = dispatch_key(event.key.keysym.sym,1);
@@ -324,7 +324,7 @@ int main(int argc, char **argv){
 
 
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
-                frame* fr           = getActiveFrame();
+               // frame* fr           = getActiveFrame();
                 screenbuffer_cycles = 0;
 
                 /*hw_render_layerstack(fr);
@@ -336,8 +336,10 @@ int main(int argc, char **argv){
                     gfx_surface_render  (ui_surface);
                 }*/
                 if(api_tick() == API_FAILURE) { finished = 1; }
+				
+			   updateViewingSurface();
 
-                updateViewingSurface();
+             
             }
         }
     }
