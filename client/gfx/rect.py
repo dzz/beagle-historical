@@ -45,11 +45,11 @@ def rect_brush(brush, view):
     dif_y /= brush.texture.h
 
     hwgfx.rect_draw_tex( 
-                         pix_x,
-                         pix_y,
+                         int(par_x),
+                         int(par_y),
                          brush.r[2],
                          brush.r[3],
-                         brush.uvs[0] + dif_x, 
-                         brush.uvs[1] + dif_y, 
+                         brush.uvs[0],# + dif_x, 
+                         brush.uvs[1],# + dif_y, 
                          brush.uvs[2], 
                          brush.uvs[3] )

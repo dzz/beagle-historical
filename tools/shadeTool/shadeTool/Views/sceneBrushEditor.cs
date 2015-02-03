@@ -52,6 +52,7 @@ namespace shadeTool.Views
         void controller_ZChanged()
         {
             this.populateBrushListing();
+            
         }
 
 

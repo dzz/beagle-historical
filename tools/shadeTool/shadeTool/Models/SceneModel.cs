@@ -13,6 +13,7 @@ namespace shadeTool.Models
     
     public class BrushStyle 
     {
+        public int layer { get; set; }
         public double parallax { get; set; }
         public string texture { get; set; }
         public string shader { get; set; } 
@@ -183,6 +184,9 @@ namespace shadeTool.Models
 
     public class SceneModel
     {
+
+        private List<string> _layers = new List<string>();
+        public List<string> layers { get { return _layers; } set { _layers = value; } }
 
         private List<SceneEntity> _entities = new List<SceneEntity>();
         public List<SceneEntity> entities { get { return _entities; } set { _entities = value; } }
@@ -356,6 +360,7 @@ namespace shadeTool.Models
         public SceneModel()
         {
             styles.Add("brush_default_style", new BrushStyle());
+
         }
 
     }

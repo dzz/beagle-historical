@@ -165,7 +165,7 @@
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(340, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(331, 25);
             this.toolStrip1.TabIndex = 14;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -239,7 +239,7 @@
             this.brushListing.ItemHeight = 15;
             this.brushListing.Location = new System.Drawing.Point(0, 29);
             this.brushListing.Name = "brushListing";
-            this.brushListing.Size = new System.Drawing.Size(315, 364);
+            this.brushListing.Size = new System.Drawing.Size(328, 364);
             this.brushListing.TabIndex = 0;
             this.brushListing.SelectedIndexChanged += new System.EventHandler(this.brushListing_SelectedIndexChanged);
             // 
@@ -264,7 +264,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(340, 485);
+            this.ClientSize = new System.Drawing.Size(331, 485);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.wallNone);

@@ -49,8 +49,12 @@
             this.originLocalButton = new System.Windows.Forms.RadioButton();
             this.originWorldButton = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.rateBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.rateBox = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.layerSelector = new System.Windows.Forms.ListBox();
+            this.layerGroupBox = new System.Windows.Forms.GroupBox();
+            this.blendModeSelector = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -60,6 +64,8 @@
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            this.layerGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // addStyleButton
@@ -261,15 +267,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "[ parallax ]";
             // 
-            // rateBox
-            // 
-            this.rateBox.Location = new System.Drawing.Point(102, 19);
-            this.rateBox.Name = "rateBox";
-            this.rateBox.Size = new System.Drawing.Size(42, 20);
-            this.rateBox.TabIndex = 0;
-            this.rateBox.Text = "1.0";
-            this.rateBox.TextChanged += new System.EventHandler(this.rateBox_TextChanged);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -279,12 +276,73 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "rate: (1 = none )";
             // 
+            // rateBox
+            // 
+            this.rateBox.Location = new System.Drawing.Point(102, 19);
+            this.rateBox.Name = "rateBox";
+            this.rateBox.Size = new System.Drawing.Size(42, 20);
+            this.rateBox.TabIndex = 0;
+            this.rateBox.Text = "1.0";
+            this.rateBox.TextChanged += new System.EventHandler(this.rateBox_TextChanged);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.layerSelector);
+            this.groupBox5.Location = new System.Drawing.Point(159, 354);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(149, 99);
+            this.groupBox5.TabIndex = 20;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "[ render layer ]";
+            // 
+            // layerSelector
+            // 
+            this.layerSelector.FormattingEnabled = true;
+            this.layerSelector.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7"});
+            this.layerSelector.Location = new System.Drawing.Point(7, 20);
+            this.layerSelector.Name = "layerSelector";
+            this.layerSelector.Size = new System.Drawing.Size(136, 69);
+            this.layerSelector.TabIndex = 0;
+            this.layerSelector.SelectedIndexChanged += new System.EventHandler(this.layerSelector_SelectedIndexChanged);
+            // 
+            // layerGroupBox
+            // 
+            this.layerGroupBox.Controls.Add(this.blendModeSelector);
+            this.layerGroupBox.Location = new System.Drawing.Point(4, 354);
+            this.layerGroupBox.Name = "layerGroupBox";
+            this.layerGroupBox.Size = new System.Drawing.Size(150, 99);
+            this.layerGroupBox.TabIndex = 21;
+            this.layerGroupBox.TabStop = false;
+            // 
+            // blendModeSelector
+            // 
+            this.blendModeSelector.FormattingEnabled = true;
+            this.blendModeSelector.Items.AddRange(new object[] {
+            "alpha",
+            "multiply",
+            "screen",
+            "dodge"});
+            this.blendModeSelector.Location = new System.Drawing.Point(6, 20);
+            this.blendModeSelector.Name = "blendModeSelector";
+            this.blendModeSelector.Size = new System.Drawing.Size(138, 69);
+            this.blendModeSelector.TabIndex = 0;
+            this.blendModeSelector.SelectedIndexChanged += new System.EventHandler(this.blendModeSelector_SelectedIndexChanged);
+            // 
             // brushStyleEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 353);
+            this.ClientSize = new System.Drawing.Size(315, 458);
             this.ControlBox = false;
+            this.Controls.Add(this.layerGroupBox);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Colours);
@@ -308,6 +366,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.layerGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -335,5 +395,9 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox rateBox;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.ListBox layerSelector;
+        private System.Windows.Forms.GroupBox layerGroupBox;
+        private System.Windows.Forms.ListBox blendModeSelector;
     }
 }

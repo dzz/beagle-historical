@@ -20,8 +20,6 @@ namespace shadeTool.Views
         {
             this.model.StylesChanged += new SceneModel.ModelChangedHandler(model_StylesChanged);
             this.synchStyles(this.model);
-
-
             List<string> shaders = new List<string>();
 
             var path = model.project_root + "shader\\";
@@ -91,6 +89,29 @@ namespace shadeTool.Views
 
             this.shaderSelector.Text = this.styleModel.shader;
             this.rateBox.Text = this.styleModel.parallax.ToString();
+            try
+            {
+                this.blendModeSelector.Text = this.model.layers[this.styleModel.layer];
+            }
+            catch { }
+
+            this.layerSelector.Items.Clear();
+            populateLayers();
+
+            this.blendModeSelector.SelectedIndex = this.blendModeSelector.Items.IndexOf(this.blendModeSelector.Text);
+        }
+
+        private void populateLayers()
+        {
+           /* if (this.layerSelector.Items.Count > 0)
+                return;*/
+
+            int idx = 0;
+            foreach (string layer in this.model.layers)
+            {
+                this.layerSelector.Items.Add(idx.ToString() + ":" + layer);
+                ++idx;
+            }
         }
 
         public BrushStyle styleModel { get { 
@@ -104,12 +125,9 @@ namespace shadeTool.Views
             } 
         }
 
-
         public brushStyleEditor()
         {
             InitializeComponent();
-
-            
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -158,7 +176,6 @@ namespace shadeTool.Views
             this.selectStyle(newStyle);
             this.selectedStyle = newStyle;
             this.synchStyles(model);
-
         }
 
         private void styleSelector_DrawItem(object sender, DrawItemEventArgs e)
@@ -171,8 +188,6 @@ namespace shadeTool.Views
             BrushStyle styleModel = model.styles[styleKey];
             e.Graphics.DrawString(styleKey, e.Font, new
                SolidBrush(styleModel.UiColor), e.Bounds.Left, e.Bounds.Top);
-
-            
 
         }
 
@@ -244,5 +259,29 @@ namespace shadeTool.Views
                 this.styleModel.parallax = d;
             }
         }
+
+        private void layerSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.styleModel.layer = this.layerSelector.SelectedIndex;
+            this.blendModeSelector.SelectedIndex = this.blendModeSelector.Items.IndexOf(
+                this.model.layers[this.styleModel.layer]);
+        }
+
+
+        private void blendModeSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            try
+            {
+                this.model.layers[this.layerSelector.SelectedIndex] = this.blendModeSelector.Text;
+
+                this.layerSelector.Items.Clear();
+                this.populateLayers();
+
+                this.layerSelector.SelectedIndex = this.styleModel.layer;
+            }
+            catch { }
+        }
+
     }
 }

@@ -1,6 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SceneModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <project_root>C:\ctt2_breezy\whimsey\shadeProject\</project_root>
+  <layers>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>dodge</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+    <string>alpha</string>
+  </layers>
   <entities>
     <SceneEntity>
       <name>Light instance</name>
@@ -44,281 +67,8 @@ object.name = "Generic Monster"
   <brushes>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 1</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>-3</x>
-      <y>-2</y>
-      <z>0</z>
-      <w>10</w>
-      <h>8</h>
-      <orientation>4</orientation>
-      <sortOrder>0</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 2</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>10</x>
-      <y>-2</y>
-      <z>0</z>
-      <w>8</w>
-      <h>8</h>
-      <orientation>4</orientation>
-      <sortOrder>1</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 3</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>-9</x>
-      <y>5</y>
-      <z>0</z>
-      <w>3</w>
-      <h>4</h>
-      <orientation>4</orientation>
-      <sortOrder>2</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 4</name>
-      <styleName>white_tile</styleName>
-      <type>0</type>
-      <x>-9</x>
-      <y>-2</y>
-      <z>0</z>
-      <w>3</w>
-      <h>4</h>
-      <orientation>4</orientation>
-      <sortOrder>3</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 5</name>
-      <styleName>white_tile</styleName>
-      <type>0</type>
-      <x>-3</x>
-      <y>8</y>
-      <z>0</z>
-      <w>10</w>
-      <h>3</h>
-      <orientation>4</orientation>
-      <sortOrder>4</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 6</name>
-      <styleName>white_tile</styleName>
-      <type>0</type>
-      <x>17</x>
-      <y>10</y>
-      <z>0</z>
-      <w>3</w>
-      <h>3</h>
-      <orientation>4</orientation>
-      <sortOrder>5</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 7</name>
-      <styleName>white_tile</styleName>
-      <type>0</type>
-      <x>19</x>
-      <y>-3</y>
-      <z>0</z>
-      <w>2</w>
-      <h>2</h>
-      <orientation>4</orientation>
-      <sortOrder>6</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 8</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>-9</x>
-      <y>2</y>
-      <z>0</z>
-      <w>3</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>7</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 9</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>-3</x>
-      <y>11</y>
-      <z>0</z>
-      <w>10</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>8</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 10</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>17</x>
-      <y>13</y>
-      <z>0</z>
-      <w>3</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>9</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 11</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>19</x>
-      <y>-1</y>
-      <z>0</z>
-      <w>2</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>10</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 12</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>10</x>
-      <y>6</y>
-      <z>0</z>
-      <w>8</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>11</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 13</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-3</x>
-      <y>6</y>
-      <z>0</z>
-      <w>10</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>12</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 14</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-9</x>
-      <y>9</y>
-      <z>0</z>
-      <w>3</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>13</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 15</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>18</x>
-      <y>12</y>
-      <z>1</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>14</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 16</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>18</x>
-      <y>2</y>
-      <z>1</z>
-      <w>1</w>
-      <h>10</h>
-      <orientation>4</orientation>
-      <sortOrder>15</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
       <name>floor 0</name>
-      <styleName>brush_default_style</styleName>
-      <type>0</type>
-      <x>-13</x>
-      <y>-8</y>
-      <z>-1</z>
-      <w>37</w>
-      <h>23</h>
-      <orientation>4</orientation>
-      <sortOrder>16</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 8</name>
-      <styleName>background</styleName>
-      <type>0</type>
-      <x>-36</x>
-      <y>-15</y>
-      <z>2</z>
-      <w>23</w>
-      <h>42</h>
-      <orientation>4</orientation>
-      <sortOrder>17</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 9</name>
-      <styleName>background</styleName>
-      <type>0</type>
-      <x>-13</x>
-      <y>-15</y>
-      <z>2</z>
-      <w>49</w>
-      <h>10</h>
-      <orientation>4</orientation>
-      <sortOrder>18</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 10</name>
-      <styleName>background</styleName>
-      <type>0</type>
-      <x>24</x>
-      <y>-5</y>
-      <z>2</z>
-      <w>12</w>
-      <h>32</h>
-      <orientation>4</orientation>
-      <sortOrder>19</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 11</name>
-      <styleName>background</styleName>
-      <type>0</type>
-      <x>-13</x>
-      <y>18</y>
-      <z>2</z>
-      <w>37</w>
-      <h>9</h>
-      <orientation>4</orientation>
-      <sortOrder>20</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 0</name>
-      <styleName>sdf</styleName>
+      <styleName>gradient_sky</styleName>
       <type>0</type>
       <x>-48</x>
       <y>-35</y>
@@ -326,85 +76,423 @@ object.name = "Generic Monster"
       <w>102</w>
       <h>75</h>
       <orientation>4</orientation>
-      <sortOrder>21</sortOrder>
+      <sortOrder>0</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
       <name>floor 0</name>
-      <styleName>brush_default_style</styleName>
+      <styleName>gradient_clouds</styleName>
       <type>0</type>
-      <x>-21</x>
-      <y>-6</y>
+      <x>-48</x>
+      <y>5</y>
+      <z>-2</z>
+      <w>102</w>
+      <h>17</h>
+      <orientation>4</orientation>
+      <sortOrder>1</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 1</name>
+      <styleName>blacktile</styleName>
+      <type>0</type>
+      <x>-25</x>
+      <y>23</y>
       <z>0</z>
-      <w>10</w>
+      <w>35</w>
       <h>8</h>
+      <orientation>4</orientation>
+      <sortOrder>2</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 2</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-25</x>
+      <y>31</y>
+      <z>0</z>
+      <w>35</w>
+      <h>4</h>
+      <orientation>4</orientation>
+      <sortOrder>3</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 3</name>
+      <styleName>blacktile</styleName>
+      <type>0</type>
+      <x>-23</x>
+      <y>7</y>
+      <z>0</z>
+      <w>3</w>
+      <h>16</h>
+      <orientation>4</orientation>
+      <sortOrder>4</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 4</name>
+      <styleName>blacktile</styleName>
+      <type>0</type>
+      <x>-14</x>
+      <y>7</y>
+      <z>0</z>
+      <w>3</w>
+      <h>16</h>
+      <orientation>4</orientation>
+      <sortOrder>5</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 5</name>
+      <styleName>blacktile</styleName>
+      <type>0</type>
+      <x>-6</x>
+      <y>7</y>
+      <z>0</z>
+      <w>3</w>
+      <h>16</h>
+      <orientation>4</orientation>
+      <sortOrder>6</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 6</name>
+      <styleName>blacktile</styleName>
+      <type>0</type>
+      <x>3</x>
+      <y>7</y>
+      <z>0</z>
+      <w>3</w>
+      <h>16</h>
+      <orientation>4</orientation>
+      <sortOrder>7</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 8</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-24</x>
+      <y>23</y>
+      <z>0</z>
+      <w>5</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>8</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 9</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-15</x>
+      <y>23</y>
+      <z>0</z>
+      <w>5</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>9</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 10</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-7</x>
+      <y>23</y>
+      <z>0</z>
+      <w>5</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>10</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 11</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>2</x>
+      <y>23</y>
+      <z>0</z>
+      <w>5</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>11</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 12</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-24</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>12</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 13</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-22</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>13</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 14</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-20</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>14</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 15</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-15</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>15</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 16</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-13</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>16</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 17</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-11</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>17</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 18</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-7</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>18</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 19</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-5</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>19</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 20</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>-3</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>20</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 21</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>2</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
+      <orientation>4</orientation>
+      <sortOrder>21</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 22</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>4</x>
+      <y>22</y>
+      <z>0</z>
+      <w>1</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>22</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall0</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>-3</x>
-      <y>2</y>
+      <name>floor 23</name>
+      <styleName>blacktile_dark</styleName>
+      <type>0</type>
+      <x>6</x>
+      <y>22</y>
       <z>0</z>
-      <w>3</w>
-      <h>-4</h>
+      <w>1</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>23</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall1</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>0</x>
-      <y>-2</y>
-      <z>0</z>
-      <w>7</w>
-      <h>0</h>
+      <name>floor 27</name>
+      <styleName>white_tile</styleName>
+      <type>0</type>
+      <x>-26</x>
+      <y>5</y>
+      <z>1</z>
+      <w>36</w>
+      <h>6</h>
       <orientation>4</orientation>
       <sortOrder>24</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall2</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>7</x>
-      <y>-2</y>
-      <z>0</z>
-      <w>0</w>
-      <h>8</h>
+      <name>floor 28</name>
+      <styleName>white_tile_dark</styleName>
+      <type>0</type>
+      <x>-26</x>
+      <y>11</y>
+      <z>1</z>
+      <w>36</w>
+      <h>1</h>
       <orientation>4</orientation>
       <sortOrder>25</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall3</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>7</x>
-      <y>6</y>
-      <z>0</z>
-      <w>-10</w>
-      <h>0</h>
+      <name>floor 0</name>
+      <styleName>bush</styleName>
+      <type>0</type>
+      <x>-53</x>
+      <y>18</y>
+      <z>2</z>
+      <w>38</w>
+      <h>37</h>
       <orientation>4</orientation>
       <sortOrder>26</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>wall4</name>
-      <styleName>brush_default_style</styleName>
-      <type>1</type>
-      <x>-3</x>
-      <y>6</y>
-      <z>0</z>
-      <w>0</w>
-      <h>-4</h>
+      <name>floor 1</name>
+      <styleName>bush</styleName>
+      <type>0</type>
+      <x>-56</x>
+      <y>1</y>
+      <z>2</z>
+      <w>45</w>
+      <h>50</h>
       <orientation>4</orientation>
       <sortOrder>27</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 3</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>0</x>
+      <y>17</y>
+      <z>-1</z>
+      <w>21</w>
+      <h>16</h>
+      <orientation>4</orientation>
+      <sortOrder>28</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 4</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-11</x>
+      <y>7</y>
+      <z>-1</z>
+      <w>24</w>
+      <h>26</h>
+      <orientation>4</orientation>
+      <sortOrder>29</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 5</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-36</x>
+      <y>2</y>
+      <z>-1</z>
+      <w>32</w>
+      <h>33</h>
+      <orientation>4</orientation>
+      <sortOrder>30</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 6</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-16</x>
+      <y>15</y>
+      <z>-1</z>
+      <w>14</w>
+      <h>14</h>
+      <orientation>4</orientation>
+      <sortOrder>31</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>leaves</styleName>
+      <type>0</type>
+      <x>4</x>
+      <y>4</y>
+      <z>0</z>
+      <w>64</w>
+      <h>38</h>
+      <orientation>4</orientation>
+      <sortOrder>32</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>
@@ -412,6 +500,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>brush_default_style</Key>
         <Value>
+          <layer>0</layer>
           <parallax>0.5</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader>textured_quad.json</shader>
@@ -427,6 +516,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>asdfdsd</Key>
         <Value>
+          <layer>0</layer>
           <parallax>1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile.png</texture>
           <shader />
@@ -442,6 +532,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>background</Key>
         <Value>
+          <layer>0</layer>
           <parallax>1.1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\big_bg.png</texture>
           <shader />
@@ -457,8 +548,9 @@ object.name = "Generic Monster"
       <Entry>
         <Key>sdf</Key>
         <Value>
-          <parallax>0.003</parallax>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\dust.png</texture>
+          <layer>0</layer>
+          <parallax>0.6</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_sky.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
@@ -472,6 +564,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>white_tile</Key>
         <Value>
+          <layer>0</layer>
           <parallax>1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile.png</texture>
           <shader>textured_quad.json</shader>
@@ -487,6 +580,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>white_tile_dark</Key>
         <Value>
+          <layer>0</layer>
           <parallax>1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile_dark.png</texture>
           <shader />
@@ -502,6 +596,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>blacktile</Key>
         <Value>
+          <layer>0</layer>
           <parallax>1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\blacktile.png</texture>
           <shader>textured_quad.json</shader>
@@ -517,7 +612,8 @@ object.name = "Generic Monster"
       <Entry>
         <Key>blacktile_dark</Key>
         <Value>
-          <parallax>0.9</parallax>
+          <layer>0</layer>
+          <parallax>1</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\blacktile_dark.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>0</UIC_R>
@@ -532,6 +628,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>sphere</Key>
         <Value>
+          <layer>0</layer>
           <parallax>2</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader />
@@ -547,6 +644,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>transparent</Key>
         <Value>
+          <layer>0</layer>
           <parallax>1</parallax>
           <shader />
           <UIC_R>128</UIC_R>
@@ -561,6 +659,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>sphere2</Key>
         <Value>
+          <layer>0</layer>
           <parallax>0.7</parallax>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere.png</texture>
           <shader />
@@ -568,6 +667,83 @@ object.name = "Generic Monster"
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
           <uv_mode>0</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>gradient_sky</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>0.9</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_sky.png</texture>
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>0</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>gradient_clouds</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>0.7</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_clouds.png</texture>
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>0</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>bush</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>1.1</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\bush.png</texture>
+          <shader />
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>1</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>bush_far</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>0.95</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\bush.png</texture>
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>1</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>leaves</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>0.3</parallax>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\leaves.png</texture>
+          <shader />
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>1</uv_mode>
           <origin_mode>0</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>
