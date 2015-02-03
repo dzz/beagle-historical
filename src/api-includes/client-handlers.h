@@ -1,6 +1,10 @@
 /* C bindings for python functions the host
  * can call */
 
+int api_render() {
+    return _pycall_noargs(client_if.render);
+}
+
 int api_tick() {
     return _pycall_noargs(client_if.tick);
 }

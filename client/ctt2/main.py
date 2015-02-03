@@ -51,7 +51,6 @@ def tick():
     if(app.controller_enabled):
         gamepad.tick()
     app.tick()
-    render()
     gc.collect()
 
 def render():

@@ -27,16 +27,11 @@ target_fps = 60.
 tpf = 1000.0/target_fps
 
 def tick():
-    global T
-    a = host.get_hf_timer()
-    T   = a
-
     pad = get_gamepad(0)
 
     V.cam[0] += pad.leftStick[0]*32;
     V.cam[1] += pad.leftStick[1]*32;
 
-    pass
 
 def render():
     for renderable in N.scene.renderables:

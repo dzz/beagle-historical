@@ -1,7 +1,7 @@
 import host
 
 GamepadDeadzone = 0.1
-GamepadFilter   = 0.06
+GamepadFilter   = 0.5
 
 gf_a = 1.0-GamepadFilter
 gf_b = GamepadFilter

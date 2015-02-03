@@ -198,8 +198,8 @@ void dropTextInput() {
 }
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 2;
-    const int CYCLES_BETWEEN_YIELDS                 = 4;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 4;
+    const int CYCLES_BETWEEN_YIELDS                 = 64;
     int screenbuffer_cycles                         = 20;
     int yield_cycles                                = 0;
 
@@ -341,6 +341,7 @@ int main(int argc, char **argv){
 
             if(yield_cycles++ > CYCLES_BETWEEN_YIELDS) {
 
+                yield_cycles = 0;
                 Sleep(0);
             }
 
@@ -356,10 +357,10 @@ int main(int argc, char **argv){
                     renderPanels        (ui_surface);
                     gfx_surface_render  (ui_surface);
                 }*/
-                if(api_tick() == API_FAILURE) { finished = 1; }
 				
-			   updateViewingSurface();
                
+               api_render();
+               if(api_tick() == API_FAILURE) { finished = 1; }
                if(fps!=-1) {
                 double total_millis =  (getTimeMs()-base_millis);
                 double base = (frame_millis-total_millis)+frame_overflow;
@@ -369,6 +370,8 @@ int main(int argc, char **argv){
                 }
                 frame_overflow = base;
                }
+
+			   updateViewingSurface();
             }
         }
     }
