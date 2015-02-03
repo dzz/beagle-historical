@@ -23,6 +23,12 @@ DEF_ARGS {
     return Py_BuildValue("i",GamepadDequeueIsDirty() );
 }
 
+MODULE_FUNC host_get_hf_timer
+DEF_ARGS {
+    return Py_BuildValue("f",getTimeMs() );
+}
+
+
 MODULE_FUNC host_get_gamepad_sticks
 DEF_ARGS {
     int i;
@@ -50,6 +56,7 @@ static PyMethodDef host_methods[] = {
     {"get_gamepad_count",   host_get_gamepad_count,     METH_VARARGS, NULL},
     {"dequeue_gamepad_dirty",   
                             host_dequeue_gamepad_dirty, METH_VARARGS, NULL},
+    {"get_hf_timer",        host_get_hf_timer,          METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };

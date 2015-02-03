@@ -38,8 +38,6 @@
             this.uvScaleMode = new System.Windows.Forms.RadioButton();
             this.uvRepeatMode = new System.Windows.Forms.RadioButton();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.shaderSelector = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Colours = new System.Windows.Forms.GroupBox();
             this.textureBox = new System.Windows.Forms.PictureBox();
@@ -55,9 +53,10 @@
             this.layerSelector = new System.Windows.Forms.ListBox();
             this.layerGroupBox = new System.Windows.Forms.GroupBox();
             this.blendModeSelector = new System.Windows.Forms.ListBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).BeginInit();
             this.groupBox4.SuspendLayout();
-            this.groupBox6.SuspendLayout();
             this.panel1.SuspendLayout();
             this.Colours.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textureBox)).BeginInit();
@@ -147,26 +146,6 @@
             this.groupBox4.TabIndex = 14;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "[ uv mode ]";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.shaderSelector);
-            this.groupBox6.Location = new System.Drawing.Point(4, 246);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(150, 48);
-            this.groupBox6.TabIndex = 16;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "[ shader ]";
-            // 
-            // shaderSelector
-            // 
-            this.shaderSelector.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.shaderSelector.FormattingEnabled = true;
-            this.shaderSelector.Location = new System.Drawing.Point(6, 19);
-            this.shaderSelector.Name = "shaderSelector";
-            this.shaderSelector.Size = new System.Drawing.Size(130, 21);
-            this.shaderSelector.TabIndex = 0;
-            this.shaderSelector.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             // 
             // panel1
             // 
@@ -258,11 +237,13 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.radioButton2);
+            this.groupBox3.Controls.Add(this.radioButton1);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.rateBox);
-            this.groupBox3.Location = new System.Drawing.Point(4, 300);
+            this.groupBox3.Location = new System.Drawing.Point(4, 246);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(150, 48);
+            this.groupBox3.Size = new System.Drawing.Size(150, 102);
             this.groupBox3.TabIndex = 19;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "[ parallax ]";
@@ -270,7 +251,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 23);
+            this.label1.Location = new System.Drawing.Point(10, 21);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 1;
@@ -335,6 +316,29 @@
             this.blendModeSelector.TabIndex = 0;
             this.blendModeSelector.SelectedIndexChanged += new System.EventHandler(this.blendModeSelector_SelectedIndexChanged);
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(13, 54);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(96, 17);
+            this.radioButton1.TabIndex = 2;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "parallax texture";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(13, 77);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(93, 17);
+            this.radioButton2.TabIndex = 3;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "parallax object";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
             // brushStyleEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -347,7 +351,6 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.Colours);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -357,7 +360,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.groupBox6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.Colours.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.textureBox)).EndInit();
@@ -382,8 +384,6 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.RadioButton uvRepeatMode;
         private System.Windows.Forms.RadioButton uvScaleMode;
-        private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.ComboBox shaderSelector;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox Colours;
         private System.Windows.Forms.PictureBox textureBox;
@@ -399,5 +399,7 @@
         private System.Windows.Forms.ListBox layerSelector;
         private System.Windows.Forms.GroupBox layerGroupBox;
         private System.Windows.Forms.ListBox blendModeSelector;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }

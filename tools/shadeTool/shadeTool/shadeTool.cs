@@ -68,8 +68,8 @@ namespace shadeTool
 
            
             InitializeComponent();
- 
-        
+
+          
     
         }
 

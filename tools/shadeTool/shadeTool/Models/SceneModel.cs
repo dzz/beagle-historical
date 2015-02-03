@@ -15,6 +15,7 @@ namespace shadeTool.Models
     {
         public int layer { get; set; }
         public double parallax { get; set; }
+        public bool parallax_object { get; set; }
         public string texture { get; set; }
         public string shader { get; set; } 
         public const int GEOM_CONVEX = 0;

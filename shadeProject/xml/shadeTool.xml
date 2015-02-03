@@ -66,28 +66,28 @@ object.name = "Generic Monster"
   <world_unit_size>32</world_unit_size>
   <brushes>
     <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 0</name>
-      <styleName>gradient_sky</styleName>
+      <billboard>true</billboard>
+      <name>floor 3</name>
+      <styleName>gradient_clouds</styleName>
       <type>0</type>
-      <x>-48</x>
-      <y>-35</y>
-      <z>-2</z>
-      <w>102</w>
-      <h>75</h>
+      <x>-13</x>
+      <y>-9</y>
+      <z>0</z>
+      <w>199</w>
+      <h>15</h>
       <orientation>4</orientation>
       <sortOrder>0</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
       <name>floor 0</name>
-      <styleName>gradient_clouds</styleName>
+      <styleName>gradient_sky</styleName>
       <type>0</type>
-      <x>-48</x>
-      <y>5</y>
-      <z>-2</z>
-      <w>102</w>
-      <h>17</h>
+      <x>-69</x>
+      <y>-38</y>
+      <z>0</z>
+      <w>417</w>
+      <h>203</h>
       <orientation>4</orientation>
       <sortOrder>1</sortOrder>
     </SceneBrush>
@@ -96,11 +96,11 @@ object.name = "Generic Monster"
       <name>floor 1</name>
       <styleName>blacktile</styleName>
       <type>0</type>
-      <x>-25</x>
-      <y>23</y>
+      <x>-4</x>
+      <y>-5</y>
       <z>0</z>
-      <w>35</w>
-      <h>8</h>
+      <w>23</w>
+      <h>7</h>
       <orientation>4</orientation>
       <sortOrder>2</sortOrder>
     </SceneBrush>
@@ -109,390 +109,26 @@ object.name = "Generic Monster"
       <name>floor 2</name>
       <styleName>blacktile_dark</styleName>
       <type>0</type>
-      <x>-25</x>
-      <y>31</y>
+      <x>-4</x>
+      <y>2</y>
       <z>0</z>
-      <w>35</w>
-      <h>4</h>
+      <w>23</w>
+      <h>3</h>
       <orientation>4</orientation>
       <sortOrder>3</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 3</name>
-      <styleName>blacktile</styleName>
+      <name>floor 4</name>
+      <styleName>gradient_clouds_layer2</styleName>
       <type>0</type>
-      <x>-23</x>
-      <y>7</y>
+      <x>-31</x>
+      <y>-24</y>
       <z>0</z>
-      <w>3</w>
-      <h>16</h>
+      <w>172</w>
+      <h>20</h>
       <orientation>4</orientation>
       <sortOrder>4</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 4</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>-14</x>
-      <y>7</y>
-      <z>0</z>
-      <w>3</w>
-      <h>16</h>
-      <orientation>4</orientation>
-      <sortOrder>5</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 5</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>-6</x>
-      <y>7</y>
-      <z>0</z>
-      <w>3</w>
-      <h>16</h>
-      <orientation>4</orientation>
-      <sortOrder>6</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 6</name>
-      <styleName>blacktile</styleName>
-      <type>0</type>
-      <x>3</x>
-      <y>7</y>
-      <z>0</z>
-      <w>3</w>
-      <h>16</h>
-      <orientation>4</orientation>
-      <sortOrder>7</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 8</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-24</x>
-      <y>23</y>
-      <z>0</z>
-      <w>5</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>8</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 9</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-15</x>
-      <y>23</y>
-      <z>0</z>
-      <w>5</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>9</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 10</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-7</x>
-      <y>23</y>
-      <z>0</z>
-      <w>5</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>10</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 11</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>2</x>
-      <y>23</y>
-      <z>0</z>
-      <w>5</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>11</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 12</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-24</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>12</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 13</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-22</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>13</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 14</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-20</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>14</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 15</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-15</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>15</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 16</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-13</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>16</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 17</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-11</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>17</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 18</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-7</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>18</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 19</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-5</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>19</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 20</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>-3</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>20</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 21</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>2</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>21</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 22</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>4</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>22</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 23</name>
-      <styleName>blacktile_dark</styleName>
-      <type>0</type>
-      <x>6</x>
-      <y>22</y>
-      <z>0</z>
-      <w>1</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>23</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 27</name>
-      <styleName>white_tile</styleName>
-      <type>0</type>
-      <x>-26</x>
-      <y>5</y>
-      <z>1</z>
-      <w>36</w>
-      <h>6</h>
-      <orientation>4</orientation>
-      <sortOrder>24</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 28</name>
-      <styleName>white_tile_dark</styleName>
-      <type>0</type>
-      <x>-26</x>
-      <y>11</y>
-      <z>1</z>
-      <w>36</w>
-      <h>1</h>
-      <orientation>4</orientation>
-      <sortOrder>25</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 0</name>
-      <styleName>bush</styleName>
-      <type>0</type>
-      <x>-53</x>
-      <y>18</y>
-      <z>2</z>
-      <w>38</w>
-      <h>37</h>
-      <orientation>4</orientation>
-      <sortOrder>26</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 1</name>
-      <styleName>bush</styleName>
-      <type>0</type>
-      <x>-56</x>
-      <y>1</y>
-      <z>2</z>
-      <w>45</w>
-      <h>50</h>
-      <orientation>4</orientation>
-      <sortOrder>27</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 3</name>
-      <styleName>bush_far</styleName>
-      <type>0</type>
-      <x>0</x>
-      <y>17</y>
-      <z>-1</z>
-      <w>21</w>
-      <h>16</h>
-      <orientation>4</orientation>
-      <sortOrder>28</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 4</name>
-      <styleName>bush_far</styleName>
-      <type>0</type>
-      <x>-11</x>
-      <y>7</y>
-      <z>-1</z>
-      <w>24</w>
-      <h>26</h>
-      <orientation>4</orientation>
-      <sortOrder>29</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 5</name>
-      <styleName>bush_far</styleName>
-      <type>0</type>
-      <x>-36</x>
-      <y>2</y>
-      <z>-1</z>
-      <w>32</w>
-      <h>33</h>
-      <orientation>4</orientation>
-      <sortOrder>30</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 6</name>
-      <styleName>bush_far</styleName>
-      <type>0</type>
-      <x>-16</x>
-      <y>15</y>
-      <z>-1</z>
-      <w>14</w>
-      <h>14</h>
-      <orientation>4</orientation>
-      <sortOrder>31</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
-      <name>floor 0</name>
-      <styleName>leaves</styleName>
-      <type>0</type>
-      <x>4</x>
-      <y>4</y>
-      <z>0</z>
-      <w>64</w>
-      <h>38</h>
-      <orientation>4</orientation>
-      <sortOrder>32</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>
@@ -502,6 +138,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>0.5</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>128</UIC_R>
@@ -518,6 +155,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile.png</texture>
           <shader />
           <UIC_R>255</UIC_R>
@@ -534,6 +172,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1.1</parallax>
+          <parallax_object>false</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\big_bg.png</texture>
           <shader />
           <UIC_R>0</UIC_R>
@@ -550,6 +189,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>0.6</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_sky.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
@@ -566,6 +206,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
+          <parallax_object>false</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>255</UIC_R>
@@ -582,6 +223,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
+          <parallax_object>false</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile_dark.png</texture>
           <shader />
           <UIC_R>197</UIC_R>
@@ -598,6 +240,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\blacktile.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>0</UIC_R>
@@ -614,6 +257,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
+          <parallax_object>false</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\blacktile_dark.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>0</UIC_R>
@@ -630,6 +274,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>2</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
@@ -646,6 +291,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
+          <parallax_object>false</parallax_object>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
@@ -661,6 +307,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>0.7</parallax>
+          <parallax_object>false</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
@@ -677,11 +324,12 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>0.9</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_sky.png</texture>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
-          <uv_mode>0</uv_mode>
+          <uv_mode>1</uv_mode>
           <origin_mode>0</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>
@@ -692,6 +340,7 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>0.7</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_clouds.png</texture>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
@@ -706,7 +355,8 @@ object.name = "Generic Monster"
         <Key>bush</Key>
         <Value>
           <layer>0</layer>
-          <parallax>1.1</parallax>
+          <parallax>1.9</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\bush.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
@@ -722,11 +372,13 @@ object.name = "Generic Monster"
         <Key>bush_far</Key>
         <Value>
           <layer>0</layer>
-          <parallax>0.95</parallax>
+          <parallax>0.3</parallax>
+          <parallax_object>true</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\bush.png</texture>
-          <UIC_R>128</UIC_R>
-          <UIC_G>0</UIC_G>
-          <UIC_B>128</UIC_B>
+          <shader />
+          <UIC_R>75</UIC_R>
+          <UIC_G>70</UIC_G>
+          <UIC_B>41</UIC_B>
           <uv_mode>1</uv_mode>
           <origin_mode>0</origin_mode>
           <origin_x>0</origin_x>
@@ -738,8 +390,25 @@ object.name = "Generic Monster"
         <Value>
           <layer>0</layer>
           <parallax>0.3</parallax>
+          <parallax_object>false</parallax_object>
           <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\leaves.png</texture>
           <shader />
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>0</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>gradient_clouds_layer2</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>0.4</parallax>
+          <parallax_object>true</parallax_object>
+          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_clouds.png</texture>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>

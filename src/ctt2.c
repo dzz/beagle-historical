@@ -23,6 +23,7 @@
 #include "system/log.h"
 #include "system/surfaceCache.h"
 #include "hardware/tablet.h"
+#include "hardware/hf_timer.h"
 #include "hardware/gamepad.h"
 #include "document/animation.h"
 #include "drawing/shader_brush.h"
@@ -80,20 +81,6 @@ SDL_Surface* getViewingSurface(){
 
 /**************************************/
 
-void disable_vsync()
-{	
-#ifdef _WIN32
-    typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
-    PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
-    wglSwapIntervalEXT = 
-        (PFNWGLSWAPINTERVALPROC)SDL_GL_GetProcAddress( "wglSwapIntervalEXT" );
-    wglSwapIntervalEXT(0);
-#endif
-#ifdef __linux__
-    printf("linux unimplemented disable_vsync()");
-#endif
-}
-
 void vsync(int mode)
 {	
 #ifdef _WIN32
@@ -108,6 +95,21 @@ void vsync(int mode)
 #endif
 }
 
+void disable_vsync()
+{	
+#ifdef _WIN32
+    typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
+    PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
+    wglSwapIntervalEXT = 
+        (PFNWGLSWAPINTERVALPROC)SDL_GL_GetProcAddress( "wglSwapIntervalEXT" );
+    wglSwapIntervalEXT(0);
+#endif
+#ifdef __linux__
+    printf("linux unimplemented disable_vsync()");
+#endif
+}
+
+
 
 void initWindowingSystemMessages() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
@@ -117,7 +119,7 @@ void initWindowingSystemMessages() {
 /**************************************/
 
 
-void initDisplay( int resizable ) {
+void initDisplay( int fullscreen) {
     if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER ) < 0 ) {
         printf( "%s\n", SDL_GetError() );
         exit(1);
@@ -128,13 +130,12 @@ void initDisplay( int resizable ) {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
-    if(resizable == 1 ) {
-        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
-    } else {
+    if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
 			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
-
+    } else {
+        opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
+                SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
     }
 
     if( opengl_window == NULL ) {
@@ -155,8 +156,8 @@ void DIRTY_DISPLAY_ABORT() {
 
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
-    disable_vsync();
-    //vsync(1);
+    //disable_vsync();
+    vsync(1);
     initExtendedVideo();
 }
 
@@ -197,21 +198,32 @@ void dropTextInput() {
 }
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 1;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 2;
+    const int CYCLES_BETWEEN_YIELDS                 = 4;
     int screenbuffer_cycles                         = 20;
+    int yield_cycles                                = 0;
+
     int finished                                    = 0;
-    int resizable                                   = 1;
-    
+    //int resizable                                   = 0;
+    int fullscreen                                  = 0;
+    int fps                                         = -1;
+    double frame_millis                             = -1;
+    double init_millis                              = 0;
+    double frame_overflow                           = 0;
 
-
-    if(argc==4) {
+    if(argc==5) {
         SCREEN_WIDTH    = atoi( argv[1] );
         SCREEN_HEIGHT   = atoi( argv[2] );
-        resizable       = atoi( argv[3] );
+        fullscreen      = atoi( argv[3] );
+        fps             = atoi( argv[4] );
+        frame_millis    = (double)1000/(double)fps;
+        printf("frame millis:%f", frame_millis);
     }
 
+
+
     initLog();
-    initDisplay(resizable);
+    initDisplay(fullscreen);
     initWindowingSystemMessages();
     initOpenGL();
     initCompositor();
@@ -220,6 +232,7 @@ int main(int argc, char **argv){
     initHwBrush();
     initBrush();
     initTextInput();
+    initHfTimer();
     initPython();
 
     animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
@@ -233,11 +246,14 @@ int main(int argc, char **argv){
     initPanels(ui_surface);
 
 
+    init_millis = getTimeMs(); 
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
 
         while(finished == 0) {
+            double base_millis = getTimeMs();
+
             while(SDL_PollEvent(&event)) {
                 switch (event.type) {
                     case SDL_CONTROLLERDEVICEADDED:
@@ -323,6 +339,11 @@ int main(int argc, char **argv){
             }
 
 
+            if(yield_cycles++ > CYCLES_BETWEEN_YIELDS) {
+
+                Sleep(0);
+            }
+
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                // frame* fr           = getActiveFrame();
                 screenbuffer_cycles = 0;
@@ -338,8 +359,16 @@ int main(int argc, char **argv){
                 if(api_tick() == API_FAILURE) { finished = 1; }
 				
 			   updateViewingSurface();
-
-             
+               
+               if(fps!=-1) {
+                double total_millis =  (getTimeMs()-base_millis);
+                double base = (frame_millis-total_millis)+frame_overflow;
+                while(base>0) {
+                    total_millis =  (getTimeMs()-base_millis);
+                    base = (frame_millis-total_millis)+frame_overflow;
+                }
+                frame_overflow = base;
+               }
             }
         }
     }

@@ -1,3 +1,4 @@
+import  host
 import  time
 from    client.system.gamepad       import get_gamepad
 from    math import *
@@ -8,6 +9,7 @@ from    client.gfx.rect             import rect_solid, rect_brush
 class view(object):
     def __init__(self):
         self.cam = [0,0]
+        self.screen_center = [ 1920/2, 1080/2 ]
 
 class Nightshade(object):
     def __init__(self):
@@ -22,28 +24,23 @@ def init():
     N.scene = loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\json\\compiled.json")
 
 target_fps = 60.
-tpf = 1.0/target_fps
+tpf = 1000.0/target_fps
 
 def tick():
     global T
-    a = time.clock() * 0.5
+    a = host.get_hf_timer()
     T   = a
-    rad = 125
 
     pad = get_gamepad(0)
 
-    V.cam[0] += pad.leftStick[0];
-    V.cam[1] += pad.leftStick[1];
+    V.cam[0] += pad.leftStick[0]*32;
+    V.cam[1] += pad.leftStick[1]*32;
 
     pass
 
 def render():
     for renderable in N.scene.renderables:
         rect_brush( renderable, V )
-
-    delta = T + tpf - time.clock()
-    if delta>0:
-        time.sleep(delta)
 
 def finalize():
     pass

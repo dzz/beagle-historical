@@ -35,8 +35,8 @@ def rect_brush(brush, view):
     pix_x = brush.r[0] - int(view.cam[0])
     pix_y = brush.r[1] - int(view.cam[1])
     
-    par_x = (pix_x * brush.parallax)
-    par_y = (pix_y * brush.parallax)
+    par_x = ((pix_x - view.screen_center[0] + (brush.r[2]/2)) * brush.parallax) + view.screen_center[0] - (brush.r[2]/2)
+    par_y = ((pix_y - view.screen_center[1] + (brush.r[3]/2)) * brush.parallax) + view.screen_center[1] - (brush.r[3]/2)
 
     dif_x = pix_x - par_x
     dif_y = pix_y - par_y

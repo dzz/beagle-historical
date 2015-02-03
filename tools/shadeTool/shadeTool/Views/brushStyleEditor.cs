@@ -31,7 +31,7 @@ namespace shadeTool.Views
 
             foreach (string shader in shaders)
             {
-                this.shaderSelector.Items.Add(shader);
+        //        this.shaderSelector.Items.Add(shader);
             }
         }
 
@@ -87,7 +87,7 @@ namespace shadeTool.Views
             else
                 this.uvScaleMode.Checked = true;
 
-            this.shaderSelector.Text = this.styleModel.shader;
+           // this.shaderSelector.Text = this.styleModel.shader;
             this.rateBox.Text = this.styleModel.parallax.ToString();
             try
             {
@@ -97,6 +97,11 @@ namespace shadeTool.Views
 
             this.layerSelector.Items.Clear();
             populateLayers();
+
+            if (this.styleModel.parallax_object == false)
+                this.radioButton1.Checked = true;
+            else
+                this.radioButton2.Checked = true;
 
             this.blendModeSelector.SelectedIndex = this.blendModeSelector.Items.IndexOf(this.blendModeSelector.Text);
         }
@@ -248,7 +253,7 @@ namespace shadeTool.Views
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
-            this.styleModel.shader = shaderSelector.Text;
+           // this.styleModel.shader = shaderSelector.Text;
         }
 
         private void rateBox_TextChanged(object sender, EventArgs e)
@@ -281,6 +286,11 @@ namespace shadeTool.Views
                 this.layerSelector.SelectedIndex = this.styleModel.layer;
             }
             catch { }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            this.styleModel.parallax_object = radioButton2.Checked;
         }
 
     }

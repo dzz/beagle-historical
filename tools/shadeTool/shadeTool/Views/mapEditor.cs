@@ -150,15 +150,23 @@ namespace shadeTool.Views
             foreach (SceneBrush brush in sortedBrushes)
             {
                 int[] pos = transformToScreen(brush.x, brush.y, brush.z);
+               
+         
                 int w = brush.w * this.model.world_unit_size;
+                int w2 = w / 2;
                 int h = brush.h * this.model.world_unit_size;
+                int h2 = h/2;
                 Brush fillBrush;
                 Brush transBrush;
                 //Brush textureBrush;
 
                 BrushStyle style = model.GetStyle( brush.styleName );
 
-             
+
+                int cx = this.Width / 2;
+                int cy = this.Height / 2;
+
+                int[] para_pos = new int[2] { (int)((double)(pos[0]-cx+w2)*style.parallax)+cx-w2,(int)((double)(pos[1]-cy+h2)*style.parallax)+cy-h2 };
 
                     if (this.paintersMode == false)
                     {
@@ -185,7 +193,14 @@ namespace shadeTool.Views
 
                         if (style.origin_mode == BrushStyle.origin_mode_local)
                         {
-                            tb.TranslateTransform((float)pos[0]*(float)style.parallax, (float)pos[1]*(float)style.parallax);
+                            if (style.parallax_object == false)
+                            {
+                                tb.TranslateTransform((float)pos[0] * (float)style.parallax, (float)pos[1] * (float)style.parallax);
+                            }
+                            else
+                            {
+                                tb.TranslateTransform((float)para_pos[0], (float)para_pos[1]);
+                            }
                         }
 
                         if (style.uv_mode == BrushStyle.uv_mode_scale)
@@ -245,11 +260,22 @@ namespace shadeTool.Views
                     }
                 }
 
+ 
                 if( is_current_layer) {
 
                     if (brush.type == SceneBrush.FLOOR_BRUSH)
                     {
-                        g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
+                        if (style.parallax_object)
+                        {
+                            g.FillRectangle(fillBrush, para_pos[0], para_pos[1], w, h);
+                            Pen p = new Pen(Brushes.Azure, 2);
+                            g.DrawRectangle(p, pos[0], pos[1],w,h);
+                            p.Dispose();
+                        }
+                        else
+                        {
+                            g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
+                        }
                     }
 
                         if (brush == this.controller.ActiveBrush)
@@ -263,7 +289,15 @@ namespace shadeTool.Views
                 } else {
                     if (brush.type == SceneBrush.FLOOR_BRUSH)
                     {
-                        g.FillRectangle(transBrush, pos[0], pos[1], w, h);
+                        if (style.parallax_object)
+                        {
+                            g.FillRectangle(transBrush, para_pos[0], para_pos[1], w, h);
+                            g.DrawRectangle(Pens.LemonChiffon, pos[0], pos[1], w, h);
+                        }
+                        else
+                        {
+                            g.FillRectangle(transBrush, pos[0], pos[1], w, h);
+                        }
                     }
                 }
 
@@ -299,7 +333,9 @@ namespace shadeTool.Views
                         }
                     }
                 }
+             
             }
+           
         }
 
         private int[] transformToScreen(int x, int y, int z)
