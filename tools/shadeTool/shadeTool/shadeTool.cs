@@ -171,5 +171,23 @@ namespace shadeTool
 
             this.WindowState = FormWindowState.Maximized;
         }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            this.saveButton_Click(sender, e);
+
+            string[] lines = {
+                                 "[APPLICATION]",
+                                 "name=nightshade",
+                                 "controller_enabled=true",
+                                 "[nightshade]",
+                                 "scene_directory="+this.model.project_root
+                             };
+            System.IO.File.WriteAllLines("client\\generated_application.ini", lines);
+
+            engineRunDialog erd = new engineRunDialog();
+
+            erd.ShowDialog();
+        }
     }
 }
