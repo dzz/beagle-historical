@@ -13,6 +13,7 @@ import client.ui.areas          as ui_area
 import client.gfx.blend         as blend
 import client.ctt2.caret        as caret
 import gc
+import os
 
 __clickpos  = [0,0]
 __mpos      = [0,0]
@@ -28,7 +29,12 @@ def init():
     global app   
 
     config = configparser.ConfigParser()
-    config.read("client/application.ini")
+
+    if(os.path.isfile("client/generated_application.ini")):
+        config.read("client/generated_application.ini")
+    else:
+        config.read("client/application.ini")
+
     app_name = config["APPLICATION"]["name"]
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     app = client.apps.get_app(app_name) 

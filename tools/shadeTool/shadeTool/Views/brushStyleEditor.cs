@@ -75,7 +75,7 @@ namespace shadeTool.Views
 
             try
             {
-                Image texture = Image.FromFile(this.styleModel.texture);
+                Image texture = Image.FromFile(this.model.getTexturePath()+this.styleModel.texture);
                 textureBox.Image = texture;
             }
             catch {
@@ -161,10 +161,15 @@ namespace shadeTool.Views
             if (model.styles.ContainsKey(styleSelector.Text) == false)
             {
                 this.addStyleButton.Visible = true;
+                this.addStyleButton.Text = "+";
             }
             else
             {
-                this.addStyleButton.Visible = false;
+                if (styleSelector.Text != "brush_default_style")
+                {
+                    this.addStyleButton.Visible = true;
+                    this.addStyleButton.Text = "X";
+                }
             }
         }
 
@@ -175,6 +180,21 @@ namespace shadeTool.Views
 
         private void addStyleButton_Click(object sender, EventArgs e)
         {
+            if (this.addStyleButton.Text == "X")
+            {
+                this.model.styles.Remove(this.styleSelector.Text);
+
+                foreach (SceneBrush brush in this.model.brushes)
+                {
+                    if (brush.styleName == this.styleSelector.Text)
+                    {
+                        brush.styleName = "brush_default_style";
+                    }
+                }
+                this.selectStyle("brush_default_style");
+                this.selectedStyle = "brush_default_style";
+                this.synchStyles(model);
+            }
             string newStyle = this.styleSelector.Text;
             this.model.SetStyle(this.styleSelector.Text, new BrushStyle());
 

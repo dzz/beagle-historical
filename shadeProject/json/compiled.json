@@ -69,19 +69,6 @@
     },
     {
       "billboard": false,
-      "name": "floor 0",
-      "styleName": "gradient_sky",
-      "type": 0,
-      "x": -69,
-      "y": -38,
-      "z": 0,
-      "w": 417,
-      "h": 203,
-      "orientation": 4,
-      "sortOrder": 1
-    },
-    {
-      "billboard": false,
       "name": "floor 1",
       "styleName": "blacktile",
       "type": 0,
@@ -91,7 +78,7 @@
       "w": 23,
       "h": 7,
       "orientation": 4,
-      "sortOrder": 2
+      "sortOrder": 1
     },
     {
       "billboard": false,
@@ -104,7 +91,7 @@
       "w": 23,
       "h": 3,
       "orientation": 4,
-      "sortOrder": 3
+      "sortOrder": 2
     },
     {
       "billboard": false,
@@ -117,13 +104,52 @@
       "w": 172,
       "h": 20,
       "orientation": 4,
+      "sortOrder": 3
+    },
+    {
+      "billboard": true,
+      "name": "floor 0",
+      "styleName": "sphere2",
+      "type": 0,
+      "x": -6,
+      "y": -10,
+      "z": 0,
+      "w": 6,
+      "h": 6,
+      "orientation": 4,
       "sortOrder": 4
+    },
+    {
+      "billboard": false,
+      "name": "floor 0",
+      "styleName": "brush_default_style",
+      "type": 0,
+      "x": 1,
+      "y": -20,
+      "z": -1,
+      "w": 20,
+      "h": 18,
+      "orientation": 4,
+      "sortOrder": 5
+    },
+    {
+      "billboard": false,
+      "name": "floor 0",
+      "styleName": "gradient_sky",
+      "type": 0,
+      "x": -78,
+      "y": -44,
+      "z": -2,
+      "w": 234,
+      "h": 86,
+      "orientation": 4,
+      "sortOrder": 6
     }
   ],
   "styles": {
     "brush_default_style": {
       "layer": 0,
-      "parallax": 0.5,
+      "parallax": 0.25,
       "parallax_object": true,
       "texture": "sphere2.png",
       "shader": "textured_quad.json",
@@ -273,22 +299,22 @@
     },
     "sphere2": {
       "layer": 0,
-      "parallax": 0.7,
-      "parallax_object": false,
+      "parallax": 1.0,
+      "parallax_object": true,
       "texture": "sphere.png",
       "shader": "",
       "UiColor": "128, 0, 128",
       "UIC_R": 128,
       "UIC_G": 0,
       "UIC_B": 128,
-      "uv_mode": 0,
+      "uv_mode": 1,
       "origin_mode": 0,
       "origin_x": 0,
       "origin_y": 0
     },
     "gradient_sky": {
       "layer": 0,
-      "parallax": 0.9,
+      "parallax": 0.3,
       "parallax_object": true,
       "texture": "gradient_sky.png",
       "shader": null,

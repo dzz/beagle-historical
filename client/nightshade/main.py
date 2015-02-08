@@ -18,9 +18,10 @@ class Nightshade(object):
 N = Nightshade()
 V = view()
 T = 0.0
+scene_dir = ""
 
 def init():
-    N.scene = loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\")
+    N.scene = loadScene(scene_dir)
 
 target_fps = 60.
 tpf = 1000.0/target_fps
@@ -40,4 +41,6 @@ def finalize():
     pass
 
 def configure( configuration ):
+    global scene_dir
+    scene_dir = configuration["scene_directory"]
     pass

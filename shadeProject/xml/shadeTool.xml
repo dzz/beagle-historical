@@ -80,19 +80,6 @@ object.name = "Generic Monster"
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
-      <name>floor 0</name>
-      <styleName>gradient_sky</styleName>
-      <type>0</type>
-      <x>-69</x>
-      <y>-38</y>
-      <z>0</z>
-      <w>417</w>
-      <h>203</h>
-      <orientation>4</orientation>
-      <sortOrder>1</sortOrder>
-    </SceneBrush>
-    <SceneBrush>
-      <billboard>false</billboard>
       <name>floor 1</name>
       <styleName>blacktile</styleName>
       <type>0</type>
@@ -102,7 +89,7 @@ object.name = "Generic Monster"
       <w>23</w>
       <h>7</h>
       <orientation>4</orientation>
-      <sortOrder>2</sortOrder>
+      <sortOrder>1</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
@@ -115,7 +102,7 @@ object.name = "Generic Monster"
       <w>23</w>
       <h>3</h>
       <orientation>4</orientation>
-      <sortOrder>3</sortOrder>
+      <sortOrder>2</sortOrder>
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
@@ -128,7 +115,46 @@ object.name = "Generic Monster"
       <w>172</w>
       <h>20</h>
       <orientation>4</orientation>
+      <sortOrder>3</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>true</billboard>
+      <name>floor 0</name>
+      <styleName>sphere2</styleName>
+      <type>0</type>
+      <x>-6</x>
+      <y>-10</y>
+      <z>0</z>
+      <w>6</w>
+      <h>6</h>
+      <orientation>4</orientation>
       <sortOrder>4</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>brush_default_style</styleName>
+      <type>0</type>
+      <x>1</x>
+      <y>-20</y>
+      <z>-1</z>
+      <w>20</w>
+      <h>18</h>
+      <orientation>4</orientation>
+      <sortOrder>5</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>gradient_sky</styleName>
+      <type>0</type>
+      <x>-78</x>
+      <y>-44</y>
+      <z>-2</z>
+      <w>234</w>
+      <h>86</h>
+      <orientation>4</orientation>
+      <sortOrder>6</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>
@@ -137,7 +163,7 @@ object.name = "Generic Monster"
         <Key>brush_default_style</Key>
         <Value>
           <layer>0</layer>
-          <parallax>0.5</parallax>
+          <parallax>0.25</parallax>
           <parallax_object>true</parallax_object>
           <texture>sphere2.png</texture>
           <shader>textured_quad.json</shader>
@@ -306,14 +332,14 @@ object.name = "Generic Monster"
         <Key>sphere2</Key>
         <Value>
           <layer>0</layer>
-          <parallax>0.7</parallax>
-          <parallax_object>false</parallax_object>
+          <parallax>1</parallax>
+          <parallax_object>true</parallax_object>
           <texture>sphere.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
-          <uv_mode>0</uv_mode>
+          <uv_mode>1</uv_mode>
           <origin_mode>0</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>
@@ -323,7 +349,7 @@ object.name = "Generic Monster"
         <Key>gradient_sky</Key>
         <Value>
           <layer>0</layer>
-          <parallax>0.9</parallax>
+          <parallax>0.3</parallax>
           <parallax_object>true</parallax_object>
           <texture>gradient_sky.png</texture>
           <UIC_R>128</UIC_R>

@@ -57,36 +57,58 @@ namespace shadeTool.Views
             this.controller.ActiveBrushChanged += new EditController.BrushHandler(controller_ActiveBrushChanged);
             this.model.SettingsChanged += new SceneModel.ModelChangedHandler(model_SettingsChanged);
             this.controller.ActiveBrushModified += new EditController.ActiveBrushModifiedHandler(controller_ActiveBrushModified);
-    
+            this.dirty = true;
         }
 
         void controller_ActiveBrushModified(SceneBrush brush)
         {
+            this.dirty = true;
             this.Invalidate();
         }
 
         void model_SettingsChanged(SceneModel model)
         {
+            this.dirty = true;
             this.Invalidate();
         }
 
         void controller_ActiveBrushChanged(SceneBrush brush)
         {
+            this.dirty = true;
             this.Invalidate();
         }
 
         void model_BrushesChanged(SceneModel model)
         {
+            this.dirty = true;
             this.Invalidate();
         }
 
 
+        Bitmap bg = new Bitmap(1920, 1080);
 
         private void mapEditor_Paint(object sender, PaintEventArgs e)
         {
-            this.drawBrushes(e.Graphics);
+            //this.BackgroundImage = bg;
+
+            this.refreshBackground();
+            e.Graphics.DrawImage(bg,0,0);
+            //this.drawBrushes(e.Graphics);
+            
             this.drawCursor(e.Graphics);
           
+        }
+
+        private void refreshBackground()
+        {
+            if (dirty)
+            {
+                Graphics g = Graphics.FromImage(bg);
+                g.Clear(Color.Transparent);
+                this.drawBrushes(g);
+                g.Dispose();
+            }
+            dirty = false;
         }
 
         Dictionary<string, Image> textureCache = new Dictionary<string, Image>();
@@ -103,16 +125,8 @@ namespace shadeTool.Views
             {
                 try
                 {
-                    try
-                    {
-                        textureCache[key] = Image.FromFile(key, true);
-                    }
-                    catch
-                    {
-                      
-                            key = this.model.getTexturePath() + key;
-                            textureCache[key] = Image.FromFile(key, true);
-                    }
+
+                        textureCache[key] = Image.FromFile(this.model.getTexturePath()+key, true);
 
                 }
                 catch
@@ -449,8 +463,7 @@ namespace shadeTool.Views
                     TextureBrush tb = this.getTextureBrush(this.getImage(style.texture));
 
                     tb.ResetTransform();
-
-               
+                    g.SmoothingMode = SmoothingMode.None;
 
                     if (style.origin_mode == BrushStyle.origin_mode_local)
                     {
@@ -581,7 +594,9 @@ namespace shadeTool.Views
         int nextId = 0;
 
         private void commitBrush()
+        
         {
+            dirty = true;
             SceneBrush newBrush = new SceneBrush() { x = tmp_brush_x, y = tmp_brush_y, w = tmp_brush_w, h = tmp_brush_h, orientation = SceneBrush.FLOOR, z = camera_z, styleName = this.controller.ActiveStyleKey };
 
 
@@ -626,6 +641,7 @@ namespace shadeTool.Views
 
         private void upLayer_Click(object sender, EventArgs e)
         {
+            this.dirty = true;
             this.state = STATE_NONE;
             this.addBrushButton.Checked = false;
 
@@ -636,6 +652,7 @@ namespace shadeTool.Views
 
         private void downLayer_Click(object sender, EventArgs e)
         {
+            this.dirty = true;
             this.state = STATE_NONE;
             this.addBrushButton.Checked = false;
 
@@ -692,8 +709,11 @@ namespace shadeTool.Views
         public int EntityCursorX = 0;
         public int EntityCursorY = 0;
 
+        public Boolean dirty = false;
+
         private void mapEditor_MouseDown(object sender, MouseEventArgs e)
         {
+            dirty = true;
             this.Focus();
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
@@ -806,6 +826,7 @@ namespace shadeTool.Views
 
         private void mapEditor_KeyDown(object sender, KeyEventArgs e)
         {
+            dirty = true;
           //  MessageBox.Show("kley");
 
          //   MessageBox.Show(drawModeSelector.SelectedIndex.ToString());
@@ -857,6 +878,7 @@ namespace shadeTool.Views
 
         private void drawModeFloorsButton_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             if (drawModeFloorsButton.Checked == true)
             {
                 drawModeWallsButton.Checked = false;
@@ -868,6 +890,7 @@ namespace shadeTool.Views
 
         private void drawModeWallsButton_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             if (drawModeWallsButton.Checked == true)
             {
                 drawModeFloorsButton.Checked = false;
@@ -877,6 +900,7 @@ namespace shadeTool.Views
 
         private void renderModeOnion_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             if (renderModeOnion.Checked == true)
             {
                 renderModeTextureAll.Checked = false;
@@ -891,6 +915,7 @@ namespace shadeTool.Views
 
         private void renderModeTextureAll_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             if (renderModeTextureAll.Checked == true)
             {
                 renderModeOnion.Checked = false;
@@ -904,6 +929,7 @@ namespace shadeTool.Views
 
         private void renderModeTextureCurrent_CheckedChanged(object sender, EventArgs e)
         {
+            dirty = true;
             if (renderModeTextureCurrent.Checked == true)
             {
                 renderModeTextureAll.Checked = false;
@@ -1039,6 +1065,7 @@ namespace shadeTool.Views
 
         private void entityName_KeyDown(object sender, KeyEventArgs e)
         {
+            
             if (e.KeyCode == Keys.Enter)
                 this.ActiveControl = null;
         }
