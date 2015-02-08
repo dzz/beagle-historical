@@ -144,6 +144,32 @@
       "h": 86,
       "orientation": 4,
       "sortOrder": 6
+    },
+    {
+      "billboard": false,
+      "name": "floor 0",
+      "styleName": "brush_default_style",
+      "type": 0,
+      "x": -23,
+      "y": -19,
+      "z": 0,
+      "w": 15,
+      "h": 15,
+      "orientation": 4,
+      "sortOrder": 7
+    },
+    {
+      "billboard": false,
+      "name": "floor 1",
+      "styleName": "blacktile",
+      "type": 0,
+      "x": -44,
+      "y": -33,
+      "z": 1,
+      "w": 24,
+      "h": 20,
+      "orientation": 4,
+      "sortOrder": 8
     }
   ],
   "styles": {

@@ -86,6 +86,7 @@ namespace shadeTool.Views
 
 
         Bitmap bg = new Bitmap(1920, 1080);
+        Bitmap minimap = new Bitmap(150, 150);
 
         private void mapEditor_Paint(object sender, PaintEventArgs e)
         {
@@ -93,9 +94,12 @@ namespace shadeTool.Views
 
             this.refreshBackground();
             e.Graphics.DrawImage(bg,0,0);
+
+            
             //this.drawBrushes(e.Graphics);
             
             this.drawCursor(e.Graphics);
+            e.Graphics.DrawImage(minimap, this.Width-minimap.Width, 0);
           
         }
 
@@ -107,6 +111,35 @@ namespace shadeTool.Views
                 g.Clear(Color.Transparent);
                 this.drawBrushes(g);
                 g.Dispose();
+
+                /** minimap hack **/
+                int oldsize = this.model.world_unit_size;
+
+                this.model.world_unit_size = 2;
+
+                bool oldPainters = this.paintersMode;
+                bool oldPaintcurrent = this.paintCurrentOnly;
+
+                int center = 16;
+
+                this.camera_x -= center;
+                this.camera_y -= center;
+
+                this.paintersMode = false;
+                this.paintCurrentOnly = false;
+                Graphics g2 = Graphics.FromImage(minimap);
+                g2.Clear(Color.Black);
+                this.drawBrushes(g2);
+                g2.Dispose();
+
+                this.model.world_unit_size = oldsize;
+
+                this.paintersMode = oldPainters;
+                this.paintCurrentOnly = oldPaintcurrent;
+
+                this.camera_x += center;
+                this.camera_y += center;
+
             }
             dirty = false;
         }
@@ -316,7 +349,8 @@ namespace shadeTool.Views
                         if (style.parallax_object)
                         {
                             g.FillRectangle(transBrush, para_pos[0], para_pos[1], w, h);
-                            g.DrawRectangle(Pens.LemonChiffon, pos[0], pos[1], w, h);
+                           if(is_current_layer)
+                               g.DrawRectangle(Pens.LemonChiffon, pos[0], pos[1], w, h);
                         }
                         else
                         {

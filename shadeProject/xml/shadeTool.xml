@@ -156,6 +156,32 @@ object.name = "Generic Monster"
       <orientation>4</orientation>
       <sortOrder>6</sortOrder>
     </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>brush_default_style</styleName>
+      <type>0</type>
+      <x>-23</x>
+      <y>-19</y>
+      <z>0</z>
+      <w>15</w>
+      <h>15</h>
+      <orientation>4</orientation>
+      <sortOrder>7</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 1</name>
+      <styleName>blacktile</styleName>
+      <type>0</type>
+      <x>-44</x>
+      <y>-33</y>
+      <z>1</z>
+      <w>24</w>
+      <h>20</h>
+      <orientation>4</orientation>
+      <sortOrder>8</sortOrder>
+    </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>
