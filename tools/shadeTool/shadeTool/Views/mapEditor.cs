@@ -95,6 +95,7 @@ namespace shadeTool.Views
         private Image getImage(string key)
         {
 
+           
             if (key == null)
                 key = "";
 
@@ -102,7 +103,16 @@ namespace shadeTool.Views
             {
                 try
                 {
-                    textureCache[key] = Image.FromFile(key, true);
+                    try
+                    {
+                        textureCache[key] = Image.FromFile(key, true);
+                    }
+                    catch
+                    {
+                      
+                            key = this.model.getTexturePath() + key;
+                            textureCache[key] = Image.FromFile(key, true);
+                    }
 
                 }
                 catch

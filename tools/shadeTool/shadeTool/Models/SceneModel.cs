@@ -210,6 +210,12 @@ namespace shadeTool.Models
         public event ModelChangedHandler BrushesChanged;
         public event ModelChangedHandler SettingsChanged;
 
+        private string TexturePath = "";
+        public string getTexturePath()
+        {
+            return TexturePath;
+        }
+
         public void moveBrush(SceneBrush target, int delta)
         {
             if (_brushes.Contains(target))
@@ -307,6 +313,7 @@ namespace shadeTool.Models
                     }
 
                     tmpModel.project_root = Directory.GetParent(dir).FullName + "\\";
+                    tmpModel.TexturePath = tmpModel.project_root + "\\texture\\";
                     return tmpModel;
                 }
                 else

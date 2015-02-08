@@ -206,13 +206,23 @@ namespace shadeTool.Views
 
         }
 
+        string ReplaceFirst(string text, string search, string replace)
+        {
+            int pos = text.IndexOf(search);
+            if (pos < 0)
+            {
+                return text;
+            }
+            return text.Substring(0, pos) + replace + text.Substring(pos + search.Length);
+        }
+
         private void browseTexture_Click(object sender, EventArgs e)
         {
             string img = shadeTool.browseLibraryFile("texture", "png", this.model);
 
             if (img != null ) {
                 BrushStyle style = this.model.GetStyle(this.selectedStyle);
-                style.texture = img;
+                style.texture = ReplaceFirst(img, this.model.getTexturePath(), "");
                 this.model.SetStyle(this.selectedStyle, style);
             }
         }

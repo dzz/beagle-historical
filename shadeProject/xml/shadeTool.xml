@@ -139,7 +139,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.5</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
+          <texture>sphere2.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
@@ -156,7 +156,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile.png</texture>
+          <texture>white_tile.png</texture>
           <shader />
           <UIC_R>255</UIC_R>
           <UIC_G>128</UIC_G>
@@ -173,7 +173,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1.1</parallax>
           <parallax_object>false</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\big_bg.png</texture>
+          <texture>big_bg.png</texture>
           <shader />
           <UIC_R>0</UIC_R>
           <UIC_G>0</UIC_G>
@@ -190,7 +190,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.6</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_sky.png</texture>
+          <texture>gradient_sky.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
@@ -207,7 +207,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>false</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile.png</texture>
+          <texture>white_tile.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>255</UIC_R>
           <UIC_G>255</UIC_G>
@@ -224,7 +224,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>false</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\white_tile_dark.png</texture>
+          <texture>white_tile_dark.png</texture>
           <shader />
           <UIC_R>197</UIC_R>
           <UIC_G>145</UIC_G>
@@ -241,7 +241,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\blacktile.png</texture>
+          <texture>blacktile.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>0</UIC_R>
           <UIC_G>64</UIC_G>
@@ -258,7 +258,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>false</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\blacktile_dark.png</texture>
+          <texture>blacktile_dark.png</texture>
           <shader>textured_quad.json</shader>
           <UIC_R>0</UIC_R>
           <UIC_G>34</UIC_G>
@@ -275,7 +275,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>2</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere2.png</texture>
+          <texture>sphere2.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
@@ -308,7 +308,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.7</parallax>
           <parallax_object>false</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\sphere.png</texture>
+          <texture>sphere.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
@@ -325,7 +325,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.9</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_sky.png</texture>
+          <texture>gradient_sky.png</texture>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -341,7 +341,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.7</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_clouds.png</texture>
+          <texture>gradient_clouds.png</texture>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -357,7 +357,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1.9</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\bush.png</texture>
+          <texture>bush.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
@@ -374,7 +374,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.3</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\bush.png</texture>
+          <texture>bush.png</texture>
           <shader />
           <UIC_R>75</UIC_R>
           <UIC_G>70</UIC_G>
@@ -391,7 +391,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.3</parallax>
           <parallax_object>false</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\leaves.png</texture>
+          <texture>leaves.png</texture>
           <shader />
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
@@ -408,7 +408,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>0.4</parallax>
           <parallax_object>true</parallax_object>
-          <texture>C:\ctt2_breezy\whimsey\shadeProject\texture\gradient_clouds.png</texture>
+          <texture>gradient_clouds.png</texture>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
