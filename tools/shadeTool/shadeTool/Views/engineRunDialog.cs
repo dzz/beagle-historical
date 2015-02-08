@@ -28,6 +28,7 @@ namespace shadeTool.Views
         private void button1_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(this.listBox1.SelectedItem.ToString()+".bat");
+            this.Close();
         }
     }
 }
