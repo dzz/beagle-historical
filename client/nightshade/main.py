@@ -19,9 +19,8 @@ N = Nightshade()
 V = view()
 T = 0.0
 
-
 def init():
-    N.scene = loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\json\\compiled.json")
+    N.scene = loadScene("C:\\ctt2_breezy\\whimsey\\shadeProject\\")
 
 target_fps = 60.
 tpf = 1000.0/target_fps
@@ -40,3 +39,5 @@ def render():
 def finalize():
     pass
 
+def configure( configuration ):
+    pass

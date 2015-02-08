@@ -21,3 +21,6 @@ def render():
 
 def finalize():
     game.finalize()
+
+def configure( configuration ):
+    pass

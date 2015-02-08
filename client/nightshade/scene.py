@@ -70,7 +70,7 @@ class collisionObject(object):
         pass
 
 
-def buildTextures(parsed):
+def buildTextures(scene_dir,parsed):
     textures = {}
     styles = parsed["styles"]
 
@@ -81,7 +81,7 @@ def buildTextures(parsed):
         if textureKey is not None:
             if textureKey not in textures:
                 print("nightshade loading tex:" + textureKey)
-                img = LocalImage.local_image.from_file(textureKey)
+                img = LocalImage.local_image.from_file(scene_dir+"texture\\"+textureKey)
                 textures[textureKey] = Texture.texture.from_local_image(img, True)
 
 
@@ -139,13 +139,13 @@ class shadeScene(object):
             renderable.normalizeUVs()
 
 
-def loadScene(filename):
-        with open(filename, 'r') as f:
+def loadScene(scene_dir):
+        with open(scene_dir+"json\\compiled.json", 'r') as f:
             json_data = f.read()
             json_parsed = json.loads(json_data)
             newScene = shadeScene() 
             newScene.renderables = buildRenderables(json_parsed)
-            newScene.textures = buildTextures(json_parsed)
+            newScene.textures = buildTextures(scene_dir,json_parsed)
             newScene.unit_size = json_parsed["world_unit_size"]
             newScene.linkScene()
             return newScene

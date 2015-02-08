@@ -7,8 +7,6 @@ from client.ctt2.mouse_focus    import mouse_focused_area
 from client.ctt2.status import render_status
 from client.ctt2.status import set_status
 
-
-
 import client.ctt2.host_config  as host_config
 import client.apps
 import client.ui.areas          as ui_area
@@ -18,7 +16,6 @@ import gc
 
 __clickpos  = [0,0]
 __mpos      = [0,0]
-
 
 global app 
 
@@ -36,6 +33,8 @@ def init():
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     app = client.apps.get_app(app_name) 
     app.controller_enabled = controller_enabled
+    if config[app_name] is not None:
+        app.configure( config[app_name] );
     app.init()
     set_status("initialized application:" + app_name)
     if(app.controller_enabled):
@@ -45,6 +44,9 @@ def init():
 def finalize():
     global app
     app.finalize()
+
+def configure( configuration ):
+    pass
 
 def tick():
     global app
