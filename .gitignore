@@ -1,5 +1,4 @@
 *.pyc
-bin/*
 dev_screenshots/*
 ui_gen/generated/*
 project-data/*.png

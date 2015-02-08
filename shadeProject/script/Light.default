@@ -1,6 +1,0 @@
-#Light Object
-
-object.color = [ 1.0, 1.0, 1.0 ]
-object.range = 8
-object.color_modifiers = []
-
