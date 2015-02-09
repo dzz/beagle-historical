@@ -313,7 +313,7 @@ namespace shadeTool.Models
                     }
 
                     tmpModel.project_root = Directory.GetParent(dir).FullName + "\\";
-                    tmpModel.TexturePath = tmpModel.project_root + "\\texture\\";
+                    tmpModel.TexturePath = tmpModel.project_root + "texture\\";
                     return tmpModel;
                 }
                 else

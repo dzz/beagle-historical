@@ -122,7 +122,11 @@ class shadeScene(object):
 
     def applyScale(self):
         self.renderables= sorted( self.renderables, 
-                key = lambda x: ( x.layer, x.r[1],x.sortOrder ) )
+                key = lambda x: ( 
+                                    x.layer, 
+                                    x.r[1]+x.r[3] if x.billboard else x.r[1],
+                                    x.sortOrder 
+                                    ) )
 
         for renderable in self.renderables:
             renderable.r[0]*=self.unit_size
