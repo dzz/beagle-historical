@@ -20,6 +20,7 @@ namespace shadeTool.Models
         public string shader { get; set; }
         public bool stamp { get; set; }
 
+
         public const int GEOM_CONVEX = 0;
         public const int GEOM_CONCAVE = 1;
 

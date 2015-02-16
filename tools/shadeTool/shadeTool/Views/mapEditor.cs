@@ -325,13 +325,24 @@ namespace shadeTool.Views
                         if (style.parallax_object)
                         {
                             g.FillRectangle(fillBrush, para_pos[0], para_pos[1], w, h);
-                            Pen p = new Pen(Brushes.Azure, 2);
+                            Pen p = new Pen(Brushes.Azure, 1);
+                            p.DashStyle = DashStyle.Dot;
                             g.DrawRectangle(p, pos[0], pos[1],w,h);
                             p.Dispose();
                         }
                         else
                         {
-                            g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
+                            if (style.stamp == false)
+                            {
+                                g.FillRectangle(fillBrush, pos[0], pos[1], w, h);
+                            }
+                            else
+                            {
+                                if (transBrush != fillBrush)
+                                {
+                                    g.DrawImage(this.getImage(style.texture), pos[0], pos[1]);
+                                }
+                            }
                         }
                     }
 
@@ -492,7 +503,7 @@ namespace shadeTool.Views
             if (this.controller.DrawMode == EditController.DRAWMODE_FLOOR)
             {
                 BrushStyle style=this.model.styles[this.controller.ActiveStyleKey];
-                if (style != null)
+                if ( (style != null) && (style.stamp==false) )
                 {
                     TextureBrush tb = this.getTextureBrush(this.getImage(style.texture));
 
@@ -516,6 +527,9 @@ namespace shadeTool.Views
                 }
 
                 g.DrawRectangle(Pens.White, pos[0], pos[1], w, h);
+
+                if (style.stamp)
+                    g.DrawImage(this.getImage(style.texture), pos[0], pos[1]);
                 
             }
             else
@@ -1102,6 +1116,14 @@ namespace shadeTool.Views
             
             if (e.KeyCode == Keys.Enter)
                 this.ActiveControl = null;
+        }
+
+        private void mapEditor_SizeChanged(object sender, EventArgs e)
+        {
+            if (this.Size.Width > 1920)
+                this.Size = new Size(1920, this.Size.Height);
+            if (this.Size.Height > 1080)
+                this.Size = new Size(1080, this.Size.Width);
         }
 
     }

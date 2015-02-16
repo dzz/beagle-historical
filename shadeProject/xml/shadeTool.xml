@@ -286,6 +286,19 @@ object.name = "Generic Monster"
       <orientation>4</orientation>
       <sortOrder>16</sortOrder>
     </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>sphere</styleName>
+      <type>0</type>
+      <x>23</x>
+      <y>2</y>
+      <z>0</z>
+      <w>4</w>
+      <h>4</h>
+      <orientation>4</orientation>
+      <sortOrder>17</sortOrder>
+    </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>
@@ -295,6 +308,7 @@ object.name = "Generic Monster"
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>false</parallax_object>
+          <stamp>false</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -312,6 +326,7 @@ object.name = "Generic Monster"
           <parallax_object>false</parallax_object>
           <texture>white_tile_dark.png</texture>
           <shader />
+          <stamp>false</stamp>
           <UIC_R>197</UIC_R>
           <UIC_G>145</UIC_G>
           <UIC_B>35</UIC_B>
@@ -329,6 +344,7 @@ object.name = "Generic Monster"
           <parallax_object>true</parallax_object>
           <texture>blacktile.png</texture>
           <shader>textured_quad.json</shader>
+          <stamp>false</stamp>
           <UIC_R>0</UIC_R>
           <UIC_G>64</UIC_G>
           <UIC_B>64</UIC_B>
@@ -346,6 +362,7 @@ object.name = "Generic Monster"
           <parallax_object>false</parallax_object>
           <texture>blacktile_dark.png</texture>
           <shader>textured_quad.json</shader>
+          <stamp>false</stamp>
           <UIC_R>0</UIC_R>
           <UIC_G>34</UIC_G>
           <UIC_B>34</UIC_B>
@@ -359,10 +376,11 @@ object.name = "Generic Monster"
         <Key>sphere</Key>
         <Value>
           <layer>0</layer>
-          <parallax>2</parallax>
+          <parallax>1</parallax>
           <parallax_object>true</parallax_object>
           <texture>sphere2.png</texture>
           <shader />
+          <stamp>true</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
           <UIC_B>255</UIC_B>
@@ -379,6 +397,7 @@ object.name = "Generic Monster"
           <parallax>1</parallax>
           <parallax_object>false</parallax_object>
           <shader />
+          <stamp>false</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>128</UIC_G>
           <UIC_B>128</UIC_B>
@@ -395,6 +414,7 @@ object.name = "Generic Monster"
           <parallax>0.3</parallax>
           <parallax_object>true</parallax_object>
           <texture>gradient_sky.png</texture>
+          <stamp>true</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -411,6 +431,7 @@ object.name = "Generic Monster"
           <parallax>0.7</parallax>
           <parallax_object>true</parallax_object>
           <texture>gradient_clouds.png</texture>
+          <stamp>true</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -428,6 +449,7 @@ object.name = "Generic Monster"
           <parallax_object>true</parallax_object>
           <texture>bush.png</texture>
           <shader />
+          <stamp>false</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -445,6 +467,7 @@ object.name = "Generic Monster"
           <parallax_object>true</parallax_object>
           <texture>bush.png</texture>
           <shader />
+          <stamp>false</stamp>
           <UIC_R>75</UIC_R>
           <UIC_G>70</UIC_G>
           <UIC_B>41</UIC_B>
@@ -462,6 +485,7 @@ object.name = "Generic Monster"
           <parallax_object>false</parallax_object>
           <texture>leaves.png</texture>
           <shader />
+          <stamp>false</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -478,6 +502,7 @@ object.name = "Generic Monster"
           <parallax>0.4</parallax>
           <parallax_object>true</parallax_object>
           <texture>gradient_clouds.png</texture>
+          <stamp>false</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
@@ -494,6 +519,7 @@ object.name = "Generic Monster"
           <parallax>1</parallax>
           <parallax_object>true</parallax_object>
           <texture>wallpaper.png</texture>
+          <stamp>false</stamp>
           <UIC_R>128</UIC_R>
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>

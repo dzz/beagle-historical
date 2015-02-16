@@ -55,7 +55,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 457);
+            this.label4.Location = new System.Drawing.Point(7, 410);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 13);
             this.label4.TabIndex = 22;
@@ -66,7 +66,7 @@
             this.wallNone.Appearance = System.Windows.Forms.Appearance.Button;
             this.wallNone.AutoSize = true;
             this.wallNone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.wallNone.Location = new System.Drawing.Point(100, 451);
+            this.wallNone.Location = new System.Drawing.Point(100, 404);
             this.wallNone.MinimumSize = new System.Drawing.Size(50, 15);
             this.wallNone.Name = "wallNone";
             this.wallNone.Size = new System.Drawing.Size(50, 25);
@@ -81,7 +81,7 @@
             this.wallDown.Appearance = System.Windows.Forms.Appearance.Button;
             this.wallDown.AutoSize = true;
             this.wallDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.wallDown.Location = new System.Drawing.Point(149, 451);
+            this.wallDown.Location = new System.Drawing.Point(149, 404);
             this.wallDown.MinimumSize = new System.Drawing.Size(50, 15);
             this.wallDown.Name = "wallDown";
             this.wallDown.Size = new System.Drawing.Size(50, 25);
@@ -96,7 +96,7 @@
             this.wallUp.Appearance = System.Windows.Forms.Appearance.Button;
             this.wallUp.AutoSize = true;
             this.wallUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.wallUp.Location = new System.Drawing.Point(51, 451);
+            this.wallUp.Location = new System.Drawing.Point(51, 404);
             this.wallUp.MinimumSize = new System.Drawing.Size(50, 15);
             this.wallUp.Name = "wallUp";
             this.wallUp.Size = new System.Drawing.Size(50, 25);
@@ -109,7 +109,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 404);
+            this.label3.Location = new System.Drawing.Point(7, 357);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 18;
@@ -118,7 +118,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(219, 458);
+            this.checkBox1.Location = new System.Drawing.Point(219, 411);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(65, 17);
             this.checkBox1.TabIndex = 17;
@@ -128,7 +128,7 @@
             // 
             // synchStyleButton
             // 
-            this.synchStyleButton.Location = new System.Drawing.Point(219, 425);
+            this.synchStyleButton.Location = new System.Drawing.Point(219, 378);
             this.synchStyleButton.Name = "synchStyleButton";
             this.synchStyleButton.Size = new System.Drawing.Size(84, 27);
             this.synchStyleButton.TabIndex = 16;
@@ -139,7 +139,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 425);
+            this.label2.Location = new System.Drawing.Point(7, 378);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(31, 13);
             this.label2.TabIndex = 15;
@@ -147,7 +147,7 @@
             // 
             // styleDisplay
             // 
-            this.styleDisplay.Location = new System.Drawing.Point(49, 425);
+            this.styleDisplay.Location = new System.Drawing.Point(49, 378);
             this.styleDisplay.Name = "styleDisplay";
             this.styleDisplay.ReadOnly = true;
             this.styleDisplay.Size = new System.Drawing.Size(164, 20);
@@ -165,7 +165,7 @@
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(331, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(315, 25);
             this.toolStrip1.TabIndex = 14;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -239,13 +239,13 @@
             this.brushListing.ItemHeight = 15;
             this.brushListing.Location = new System.Drawing.Point(0, 29);
             this.brushListing.Name = "brushListing";
-            this.brushListing.Size = new System.Drawing.Size(328, 364);
+            this.brushListing.Size = new System.Drawing.Size(303, 319);
             this.brushListing.TabIndex = 0;
             this.brushListing.SelectedIndexChanged += new System.EventHandler(this.brushListing_SelectedIndexChanged);
             // 
             // textBoxName
             // 
-            this.textBoxName.Location = new System.Drawing.Point(49, 401);
+            this.textBoxName.Location = new System.Drawing.Point(49, 354);
             this.textBoxName.Name = "textBoxName";
             this.textBoxName.Size = new System.Drawing.Size(254, 20);
             this.textBoxName.TabIndex = 2;
@@ -264,7 +264,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(331, 485);
+            this.ClientSize = new System.Drawing.Size(315, 442);
             this.ControlBox = false;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.wallNone);

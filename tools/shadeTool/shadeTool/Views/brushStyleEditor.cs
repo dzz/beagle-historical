@@ -104,6 +104,7 @@ namespace shadeTool.Views
                 this.radioButton2.Checked = true;
 
             this.blendModeSelector.SelectedIndex = this.blendModeSelector.Items.IndexOf(this.blendModeSelector.Text);
+            this.checkBox1.Checked = this.styleModel.stamp;
         }
 
         private void populateLayers()
@@ -243,7 +244,9 @@ namespace shadeTool.Views
             if (img != null ) {
                 BrushStyle style = this.model.GetStyle(this.selectedStyle);
                 style.texture = ReplaceFirst(img, this.model.getTexturePath(), "");
+
                 this.model.SetStyle(this.selectedStyle, style);
+                
             }
         }
 
@@ -321,6 +324,11 @@ namespace shadeTool.Views
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             this.styleModel.parallax_object = radioButton2.Checked;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            this.styleModel.stamp = this.checkBox1.Checked;
         }
 
     }

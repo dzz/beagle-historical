@@ -410,6 +410,7 @@
             this.Name = "mapEditor";
             this.Text = "topdownBrushEditor";
             this.Load += new System.EventHandler(this.mapEditor_Load);
+            this.SizeChanged += new System.EventHandler(this.mapEditor_SizeChanged);
             this.Click += new System.EventHandler(this.mapEditor_Click);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.mapEditor_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mapEditor_KeyDown);

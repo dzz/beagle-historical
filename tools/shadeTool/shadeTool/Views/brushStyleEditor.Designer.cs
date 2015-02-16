@@ -47,14 +47,14 @@
             this.originLocalButton = new System.Windows.Forms.RadioButton();
             this.originWorldButton = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.rateBox = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.layerSelector = new System.Windows.Forms.ListBox();
-            this.layerGroupBox = new System.Windows.Forms.GroupBox();
             this.blendModeSelector = new System.Windows.Forms.ListBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.sceneModelBindingSource)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -64,7 +64,6 @@
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            this.layerGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // addStyleButton
@@ -206,7 +205,7 @@
             this.groupBox2.Controls.Add(this.originWorldButton);
             this.groupBox2.Location = new System.Drawing.Point(159, 300);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(150, 48);
+            this.groupBox2.Size = new System.Drawing.Size(149, 48);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "[ origin ]";
@@ -214,7 +213,7 @@
             // originLocalButton
             // 
             this.originLocalButton.AutoSize = true;
-            this.originLocalButton.Location = new System.Drawing.Point(17, 19);
+            this.originLocalButton.Location = new System.Drawing.Point(18, 19);
             this.originLocalButton.Name = "originLocalButton";
             this.originLocalButton.Size = new System.Drawing.Size(47, 17);
             this.originLocalButton.TabIndex = 12;
@@ -226,7 +225,7 @@
             // originWorldButton
             // 
             this.originWorldButton.AutoSize = true;
-            this.originWorldButton.Location = new System.Drawing.Point(78, 19);
+            this.originWorldButton.Location = new System.Drawing.Point(93, 19);
             this.originWorldButton.Name = "originWorldButton";
             this.originWorldButton.Size = new System.Drawing.Size(50, 17);
             this.originWorldButton.TabIndex = 11;
@@ -248,6 +247,29 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "[ parallax ]";
             // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(8, 67);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(93, 17);
+            this.radioButton2.TabIndex = 3;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "parallax object";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(8, 45);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(96, 17);
+            this.radioButton1.TabIndex = 2;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "parallax texture";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -268,10 +290,11 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.blendModeSelector);
             this.groupBox5.Controls.Add(this.layerSelector);
-            this.groupBox5.Location = new System.Drawing.Point(159, 354);
+            this.groupBox5.Location = new System.Drawing.Point(4, 354);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(149, 99);
+            this.groupBox5.Size = new System.Drawing.Size(304, 99);
             this.groupBox5.TabIndex = 20;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "[ render layer ]";
@@ -287,20 +310,11 @@
             "5",
             "6",
             "7"});
-            this.layerSelector.Location = new System.Drawing.Point(7, 20);
+            this.layerSelector.Location = new System.Drawing.Point(157, 19);
             this.layerSelector.Name = "layerSelector";
             this.layerSelector.Size = new System.Drawing.Size(136, 69);
             this.layerSelector.TabIndex = 0;
             this.layerSelector.SelectedIndexChanged += new System.EventHandler(this.layerSelector_SelectedIndexChanged);
-            // 
-            // layerGroupBox
-            // 
-            this.layerGroupBox.Controls.Add(this.blendModeSelector);
-            this.layerGroupBox.Location = new System.Drawing.Point(4, 354);
-            this.layerGroupBox.Name = "layerGroupBox";
-            this.layerGroupBox.Size = new System.Drawing.Size(150, 99);
-            this.layerGroupBox.TabIndex = 21;
-            this.layerGroupBox.TabStop = false;
             // 
             // blendModeSelector
             // 
@@ -310,42 +324,30 @@
             "add",
             "darken",
             "darken2"});
-            this.blendModeSelector.Location = new System.Drawing.Point(6, 20);
+            this.blendModeSelector.Location = new System.Drawing.Point(13, 19);
             this.blendModeSelector.Name = "blendModeSelector";
             this.blendModeSelector.Size = new System.Drawing.Size(138, 69);
             this.blendModeSelector.TabIndex = 0;
             this.blendModeSelector.SelectedIndexChanged += new System.EventHandler(this.blendModeSelector_SelectedIndexChanged);
             // 
-            // radioButton1
+            // checkBox1
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(13, 54);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(96, 17);
-            this.radioButton1.TabIndex = 2;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "parallax texture";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(13, 77);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(93, 17);
-            this.radioButton2.TabIndex = 3;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "parallax object";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(106, 461);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(200, 17);
+            this.checkBox1.TabIndex = 21;
+            this.checkBox1.Text = "Use texture size instead of brush size";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // brushStyleEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 458);
+            this.ClientSize = new System.Drawing.Size(315, 490);
             this.ControlBox = false;
-            this.Controls.Add(this.layerGroupBox);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -369,8 +371,8 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox5.ResumeLayout(false);
-            this.layerGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -397,9 +399,9 @@
         private System.Windows.Forms.TextBox rateBox;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.ListBox layerSelector;
-        private System.Windows.Forms.GroupBox layerGroupBox;
         private System.Windows.Forms.ListBox blendModeSelector;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

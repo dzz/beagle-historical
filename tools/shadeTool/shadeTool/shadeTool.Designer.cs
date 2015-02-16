@@ -89,6 +89,7 @@
             this.Name = "shadeTool";
             this.Text = "shadeTool";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.shadeTool_FormClosed);
+            this.Load += new System.EventHandler(this.shadeTool_Load);
             this.Shown += new System.EventHandler(this.shadeTool_Shown);
             this.SizeChanged += new System.EventHandler(this.shadeTool_SizeChanged);
             this.toolStrip1.ResumeLayout(false);

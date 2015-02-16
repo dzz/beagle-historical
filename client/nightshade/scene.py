@@ -23,6 +23,7 @@ class renderBrush(object):
         self.uvs = None # note: format is x,y,w,h not x1,y1,x2,y2
         self.renderLayer = 0
         self.blendMode = "alpha"
+        self.stamp = False
 
 
     def normalizeUVs(self):
@@ -113,7 +114,9 @@ def buildRenderables(parsed):
                 renderable.uv_origin = [ style["origin_x"], style["origin_y"] ]
                 renderable.renderLayer = [ style["layer"] ]
                 renderable.blendMode = parsed["layers"][renderable.renderLayer[0]]
+                renderable.stamp = style["stamp"]
             except:
+                print("Error Loading Scene - skipping:")
                 print(brush)
 
             renderables.append( renderable )
@@ -149,14 +152,16 @@ class shadeScene(object):
             try:
                 renderable.texture = self.textures[renderable.textureKey]
                 renderable.scene = self
+                if renderable.stamp:
+                    renderable.r[2] = renderable.texture.w
+                    renderable.r[3] = renderable.texture.h
+
                 renderable.normalizeUVs()
             except:
                 deleteList.append(renderable)
 
         for renderable in deleteList:
             self.renderables.remove(renderable)
-
-
 
 def loadScene(scene_dir):
         with open(scene_dir+"json\\compiled.json", 'r') as f:

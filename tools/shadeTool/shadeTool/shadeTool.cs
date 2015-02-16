@@ -38,7 +38,7 @@ namespace shadeTool
 
             mcv.Show();
 
-            mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+           // mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             mcv.ControlBox = false;
 
             if ((mcv is mapEditor) == false)
@@ -50,14 +50,14 @@ namespace shadeTool
 
             else
             {
-                mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+              //  mcv.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             }
         }
 
         void mcv_LocationChanged(object sender, EventArgs e)
         {
             Form f = (Form)sender;
-            f.Location = new Point( this.Width-350, f.Location.Y);
+          //  f.Location = new Point( this.Width-350, f.Location.Y);
         }
 
         public shadeTool()
@@ -188,6 +188,11 @@ namespace shadeTool
             engineRunDialog erd = new engineRunDialog();
 
             erd.ShowDialog();
+        }
+
+        private void shadeTool_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
