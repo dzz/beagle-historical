@@ -30,5 +30,10 @@ namespace shadeTool.Views
             System.Diagnostics.Process.Start(this.listBox1.SelectedItem.ToString()+".bat");
             this.Close();
         }
+
+        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.button1_Click(sender, e);
+        }
     }
 }

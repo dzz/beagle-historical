@@ -9,8 +9,15 @@
 
 #define BLENDMODE_TESTING 1
 
+#define BLENDMODE_ADD       5000
+#define BLENDMODE_DARKEN    6000
+#define BLENDMODE_DARKEN2   6001
+
+
 void blend_enter(unsigned int mode);
 void blend_exit();
+void manual_blend_enter(unsigned int mode);
+void manual_blend_exit();
 
 #endif 
 

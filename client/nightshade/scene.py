@@ -2,6 +2,7 @@ import hwgfx
 import json
 import client.gfx.texture                   as Texture
 import client.gfx.local_image               as LocalImage
+import client.gfx.blend                     as Blend
 
 
 class renderBrush(object):
@@ -20,6 +21,8 @@ class renderBrush(object):
         self.uv_origin = [0.0,0.0]
         self.scene = None
         self.uvs = None # note: format is x,y,w,h not x1,y1,x2,y2
+        self.renderLayer = 0
+        self.blendMode = "alpha"
 
 
     def normalizeUVs(self):
@@ -108,9 +111,11 @@ def buildRenderables(parsed):
                 renderable.uv_mode = style["uv_mode"]
                 renderable.origin_mode = style["origin_mode"]
                 renderable.uv_origin = [ style["origin_x"], style["origin_y"] ]
-
+                renderable.renderLayer = [ style["layer"] ]
+                renderable.blendMode = parsed["layers"][renderable.renderLayer[0]]
             except:
-                pass
+                print(brush)
+
             renderables.append( renderable )
     return renderables
 
@@ -125,7 +130,8 @@ class shadeScene(object):
                 key = lambda x: ( 
                                     x.layer, 
                                     x.r[1]+x.r[3] if x.billboard else x.r[1],
-                                    x.sortOrder 
+                                    x.sortOrder,
+                                    x.renderLayer
                                     ) )
 
         for renderable in self.renderables:
@@ -137,10 +143,19 @@ class shadeScene(object):
 
     def linkScene(self):
         self.applyScale()
+        deleteList = []
+
         for renderable in self.renderables:
-            renderable.texture = self.textures[renderable.textureKey]
-            renderable.scene = self
-            renderable.normalizeUVs()
+            try:
+                renderable.texture = self.textures[renderable.textureKey]
+                renderable.scene = self
+                renderable.normalizeUVs()
+            except:
+                deleteList.append(renderable)
+
+        for renderable in deleteList:
+            self.renderables.remove(renderable)
+
 
 
 def loadScene(scene_dir):

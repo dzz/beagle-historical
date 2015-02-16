@@ -15,3 +15,4 @@ C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Views
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Views.resourceConfigView.resources
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Views.brushStyleEditor.resources
 C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.Views.engineRunDialog.resources
+C:\ctt2_breezy\whimsey\tools\shadeTool\shadeTool\obj\x86\Release\shadeTool.csprojResolveAssemblyReference.cache

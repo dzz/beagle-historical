@@ -307,9 +307,9 @@
             this.blendModeSelector.FormattingEnabled = true;
             this.blendModeSelector.Items.AddRange(new object[] {
             "alpha",
-            "multiply",
-            "screen",
-            "dodge"});
+            "add",
+            "darken",
+            "darken2"});
             this.blendModeSelector.Location = new System.Drawing.Point(6, 20);
             this.blendModeSelector.Name = "blendModeSelector";
             this.blendModeSelector.Size = new System.Drawing.Size(138, 69);

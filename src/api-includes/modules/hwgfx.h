@@ -114,6 +114,21 @@ DEF_ARGS{
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC hwgfx_manual_blend_enter
+DEF_ARGS{
+    int mode;
+    if(!INPUT_ARGS(args,"i",&mode))
+        return NULL;
+    manual_blend_enter(mode);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_manual_blend_exit
+DEF_ARGS{
+    manual_blend_exit();
+    Py_RETURN_NONE;
+}
+
 /**
  * texture
  */
@@ -170,7 +185,7 @@ DEF_ARGS {
     texture = (gfx_texture*)tptr;
     ds      = (DRAWING_SURFACE)iptr;
     texture_from_SDL_surface(texture,ds);
-	Py_RETURN_NONE;
+    Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_texture_download 
@@ -183,7 +198,7 @@ DEF_ARGS {
     texture = (gfx_texture*)tptr;
     ds      = (DRAWING_SURFACE)iptr;
     texture_download(texture,ds);
-	Py_RETURN_NONE;
+    Py_RETURN_NONE;
 }
 
 /**
@@ -493,6 +508,8 @@ static PyMethodDef hwgfx_methods[] = {
     /*blend*/
     {"blend_enter" ,        hwgfx_blend_enter,          METH_VARARGS, NULL},
     {"blend_exit" ,         hwgfx_blend_exit,           METH_VARARGS, NULL},
+    {"manual_blend_enter" , hwgfx_manual_blend_enter,   METH_VARARGS, NULL},
+    {"manual_blend_exit" ,  hwgfx_manual_blend_exit,    METH_VARARGS, NULL},
 
     /*shader*/
     {"shader_load" ,        hwgfx_shader_load,          METH_VARARGS, NULL},

@@ -4,7 +4,7 @@
   <layers>
     <string>alpha</string>
     <string>alpha</string>
-    <string>alpha</string>
+    <string>add</string>
     <string>alpha</string>
     <string>alpha</string>
     <string>alpha</string>
@@ -120,7 +120,7 @@ object.name = "Generic Monster"
     <SceneBrush>
       <billboard>true</billboard>
       <name>floor 0</name>
-      <styleName>sphere2</styleName>
+      <styleName>brush_default_style</styleName>
       <type>0</type>
       <x>-6</x>
       <y>-10</y>
@@ -171,98 +171,132 @@ object.name = "Generic Monster"
     </SceneBrush>
     <SceneBrush>
       <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>wallpaper</styleName>
+      <type>0</type>
+      <x>-44</x>
+      <y>-47</y>
+      <z>1</z>
+      <w>14</w>
+      <h>14</h>
+      <orientation>4</orientation>
+      <sortOrder>8</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
       <name>floor 1</name>
-      <styleName>blacktile</styleName>
+      <styleName>wallpaper</styleName>
+      <type>0</type>
+      <x>-24</x>
+      <y>-47</y>
+      <z>1</z>
+      <w>12</w>
+      <h>14</h>
+      <orientation>4</orientation>
+      <sortOrder>9</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 4</name>
+      <styleName>wallpaper</styleName>
+      <type>0</type>
+      <x>-6</x>
+      <y>-47</y>
+      <z>1</z>
+      <w>11</w>
+      <h>14</h>
+      <orientation>4</orientation>
+      <sortOrder>10</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 5</name>
+      <styleName>blacktile_dark</styleName>
       <type>0</type>
       <x>-44</x>
       <y>-33</y>
       <z>1</z>
-      <w>24</w>
-      <h>20</h>
+      <w>49</w>
+      <h>19</h>
       <orientation>4</orientation>
-      <sortOrder>8</sortOrder>
+      <sortOrder>11</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 6</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-38</x>
+      <y>-45</y>
+      <z>0</z>
+      <w>16</w>
+      <h>14</h>
+      <orientation>4</orientation>
+      <sortOrder>12</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 7</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-21</x>
+      <y>-53</y>
+      <z>0</z>
+      <w>33</w>
+      <h>29</h>
+      <orientation>4</orientation>
+      <sortOrder>13</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 8</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-18</x>
+      <y>-40</y>
+      <z>0</z>
+      <w>10</w>
+      <h>10</h>
+      <orientation>4</orientation>
+      <sortOrder>14</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 9</name>
+      <styleName>bush_far</styleName>
+      <type>0</type>
+      <x>-27</x>
+      <y>-23</y>
+      <z>0</z>
+      <w>9</w>
+      <h>10</h>
+      <orientation>4</orientation>
+      <sortOrder>15</sortOrder>
+    </SceneBrush>
+    <SceneBrush>
+      <billboard>false</billboard>
+      <name>floor 0</name>
+      <styleName>white_tile</styleName>
+      <type>0</type>
+      <x>-25</x>
+      <y>-45</y>
+      <z>0</z>
+      <w>9</w>
+      <h>8</h>
+      <orientation>4</orientation>
+      <sortOrder>16</sortOrder>
     </SceneBrush>
   </brushes>
   <styles>
     <ArrayOfEntry>
-      <Entry>
-        <Key>brush_default_style</Key>
-        <Value>
-          <layer>0</layer>
-          <parallax>0.25</parallax>
-          <parallax_object>true</parallax_object>
-          <texture>sphere2.png</texture>
-          <shader>textured_quad.json</shader>
-          <UIC_R>128</UIC_R>
-          <UIC_G>0</UIC_G>
-          <UIC_B>255</UIC_B>
-          <uv_mode>1</uv_mode>
-          <origin_mode>0</origin_mode>
-          <origin_x>0</origin_x>
-          <origin_y>0</origin_y>
-        </Value>
-      </Entry>
-      <Entry>
-        <Key>asdfdsd</Key>
-        <Value>
-          <layer>0</layer>
-          <parallax>1</parallax>
-          <parallax_object>true</parallax_object>
-          <texture>white_tile.png</texture>
-          <shader />
-          <UIC_R>255</UIC_R>
-          <UIC_G>128</UIC_G>
-          <UIC_B>0</UIC_B>
-          <uv_mode>1</uv_mode>
-          <origin_mode>0</origin_mode>
-          <origin_x>0</origin_x>
-          <origin_y>0</origin_y>
-        </Value>
-      </Entry>
-      <Entry>
-        <Key>background</Key>
-        <Value>
-          <layer>0</layer>
-          <parallax>1.1</parallax>
-          <parallax_object>false</parallax_object>
-          <texture>big_bg.png</texture>
-          <shader />
-          <UIC_R>0</UIC_R>
-          <UIC_G>0</UIC_G>
-          <UIC_B>0</UIC_B>
-          <uv_mode>0</uv_mode>
-          <origin_mode>1</origin_mode>
-          <origin_x>0</origin_x>
-          <origin_y>0</origin_y>
-        </Value>
-      </Entry>
-      <Entry>
-        <Key>sdf</Key>
-        <Value>
-          <layer>0</layer>
-          <parallax>0.6</parallax>
-          <parallax_object>true</parallax_object>
-          <texture>gradient_sky.png</texture>
-          <shader />
-          <UIC_R>128</UIC_R>
-          <UIC_G>128</UIC_G>
-          <UIC_B>255</UIC_B>
-          <uv_mode>0</uv_mode>
-          <origin_mode>1</origin_mode>
-          <origin_x>0</origin_x>
-          <origin_y>0</origin_y>
-        </Value>
-      </Entry>
       <Entry>
         <Key>white_tile</Key>
         <Value>
           <layer>0</layer>
           <parallax>1</parallax>
           <parallax_object>false</parallax_object>
-          <texture>white_tile.png</texture>
-          <shader>textured_quad.json</shader>
-          <UIC_R>255</UIC_R>
-          <UIC_G>255</UIC_G>
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
           <uv_mode>0</uv_mode>
           <origin_mode>0</origin_mode>
@@ -290,7 +324,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>blacktile</Key>
         <Value>
-          <layer>0</layer>
+          <layer>1</layer>
           <parallax>1</parallax>
           <parallax_object>true</parallax_object>
           <texture>blacktile.png</texture>
@@ -355,23 +389,6 @@ object.name = "Generic Monster"
         </Value>
       </Entry>
       <Entry>
-        <Key>sphere2</Key>
-        <Value>
-          <layer>0</layer>
-          <parallax>1</parallax>
-          <parallax_object>true</parallax_object>
-          <texture>sphere.png</texture>
-          <shader />
-          <UIC_R>128</UIC_R>
-          <UIC_G>0</UIC_G>
-          <UIC_B>128</UIC_B>
-          <uv_mode>1</uv_mode>
-          <origin_mode>0</origin_mode>
-          <origin_x>0</origin_x>
-          <origin_y>0</origin_y>
-        </Value>
-      </Entry>
-      <Entry>
         <Key>gradient_sky</Key>
         <Value>
           <layer>0</layer>
@@ -390,7 +407,7 @@ object.name = "Generic Monster"
       <Entry>
         <Key>gradient_clouds</Key>
         <Value>
-          <layer>0</layer>
+          <layer>1</layer>
           <parallax>0.7</parallax>
           <parallax_object>true</parallax_object>
           <texture>gradient_clouds.png</texture>
@@ -465,6 +482,22 @@ object.name = "Generic Monster"
           <UIC_G>0</UIC_G>
           <UIC_B>128</UIC_B>
           <uv_mode>1</uv_mode>
+          <origin_mode>0</origin_mode>
+          <origin_x>0</origin_x>
+          <origin_y>0</origin_y>
+        </Value>
+      </Entry>
+      <Entry>
+        <Key>wallpaper</Key>
+        <Value>
+          <layer>0</layer>
+          <parallax>1</parallax>
+          <parallax_object>true</parallax_object>
+          <texture>wallpaper.png</texture>
+          <UIC_R>128</UIC_R>
+          <UIC_G>0</UIC_G>
+          <UIC_B>128</UIC_B>
+          <uv_mode>0</uv_mode>
           <origin_mode>0</origin_mode>
           <origin_x>0</origin_x>
           <origin_y>0</origin_y>

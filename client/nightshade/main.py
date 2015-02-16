@@ -5,6 +5,7 @@ from    math import *
 import  hwgfx
 from    client.nightshade.scene     import *
 from    client.gfx.rect             import rect_solid, rect_brush
+import  client.gfx.blend            as blend
 
 class view(object):
     def __init__(self):
@@ -35,7 +36,9 @@ def tick():
 
 def render():
     for renderable in N.scene.renderables:
+        blend.manual_blend_enter( blend.named_modes[renderable.blendMode] )
         rect_brush( renderable, V )
+    blend.manual_blend_exit()
 
 def finalize():
     pass

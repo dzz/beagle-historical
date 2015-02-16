@@ -17,7 +17,9 @@ namespace shadeTool.Models
         public double parallax { get; set; }
         public bool parallax_object { get; set; }
         public string texture { get; set; }
-        public string shader { get; set; } 
+        public string shader { get; set; }
+        public bool stamp { get; set; }
+
         public const int GEOM_CONVEX = 0;
         public const int GEOM_CONCAVE = 1;
 
