@@ -1,13 +1,7 @@
-import client.applications.ctt2_environment.main
-import client.applications.hockeyquest.main
-import client.applications.nightshade.main
+import os
+import importlib
 
 def get_app(app_name):
-    apps = { 
-            "ctt2"              : client.applications.ctt2_environment,
-            "hockeyquest"       : client.applications.hockeyquest.main,
-            "nightshade"        : client.applications.nightshade.main,
-            }
-
-    return apps[app_name]
-
+    application_list = [f for f in os.listdir("client/applications/") if not os.path.isfile(f)]
+    if(app_name in application_list):
+        return importlib.import_module("client.applications." + app_name + ".main")
