@@ -39,8 +39,12 @@ def init():
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     app = client.apps.get_app(app_name) 
     app.controller_enabled = controller_enabled
-    if config[app_name] is not None:
-        app.configure( config[app_name] );
+    try:
+        if config[app_name] is not None:
+            app.configure( config[app_name] );
+    except KeyError:
+        print("no configuration found, ignoring..")
+
     app.init()
     set_status("initialized application:" + app_name)
     if(app.controller_enabled):

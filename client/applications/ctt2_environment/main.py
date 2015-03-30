@@ -14,5 +14,8 @@ def tick():
 def finalize():
     pass
 
+def configure( configuration ):
+    pass
+
 def render():
     pass
