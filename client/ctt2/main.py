@@ -39,6 +39,8 @@ def init():
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     app = client.apps.get_app(app_name) 
     app.controller_enabled = controller_enabled
+    host_config.set_config("app_name", app_name)
+    host_config.set_config("app_dir", "client/applications/" + app_name +"/")
     try:
         if config[app_name] is not None:
             app.configure( config[app_name] );

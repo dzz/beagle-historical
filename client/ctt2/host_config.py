@@ -1,6 +1,6 @@
 
 settings = {
-        "render_status" : True
+        "render_status" : False
 }
 
 
