@@ -9,6 +9,7 @@ out vec2 uv;
 void main(void) {
     vec2 p_t;
 
+
     p_t.x = in_Position.x * rect_coords.z;
     p_t.y = in_Position.y * rect_coords.w;
     p_t.x += rect_coords.x;
@@ -18,6 +19,7 @@ void main(void) {
     p_t.y /= scr_size.y;
     p_t *= 2;
     p_t -= 1;
+
 
     uv.x = (in_Position.x*uv_coords.z) + uv_coords.x;
     uv.y = (in_Position.y*uv_coords.w) + uv_coords.y;

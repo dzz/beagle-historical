@@ -32,3 +32,8 @@ int api_dispatch_mousemotion(int x, int y) {
 int api_dispatch_text(char* text) {
     return _pycall_str_arg( client_if.dispatch_text, text );
 }
+
+int api_set_screensize(int w, int h) {
+    int args[2] = { w,h };
+    return _pycall_int_args(client_if.set_screensize, (int *)&args, 2);
+}

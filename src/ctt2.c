@@ -243,6 +243,8 @@ int main(int argc, char **argv){
 
     ui_surface = createDrawingSurface(SCREEN_WIDTH,
                                         SCREEN_HEIGHT);
+
+    api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
     initPanels(ui_surface);
 
 

@@ -1,4 +1,4 @@
-#include "texture.y"
+#include "texture.h"
 #include "quad.h"
 
 gfx_coordinate_uv_primitive _qprim;

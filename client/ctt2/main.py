@@ -87,6 +87,9 @@ def calculate_mouse_position(area,x,y):
 SIGNAL_HANDLED      = True
 SIGNAL_DISCARDED    = False
 
+def set_screensize(w,h):
+    host_config.set_config("screen_dims", [ w, h ] )
+
 def dispatch_mouseup(button,x,y):
     global mouse_focused_area
     if mouse_focused_area is not None:

@@ -26,3 +26,9 @@ host_config.get_config("app_dir")
 ```
 
 These values are set when the application host loads the application. When loading application resources, such as images,textures, tilesets, etc. they should be loaded relative to app_dir.
+
+```python
+host_config.get_config("screen_dims")
+```
+
+The screen_dims setting contains an array in the form of [ w, h ] which contains the dimensions of the current render target, irrespective of any viewports that have been configured.

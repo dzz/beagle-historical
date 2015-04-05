@@ -5,7 +5,7 @@ from client.gfx.texture import texture
 from client.gfx.local_image import local_image
 
 class tileset:
-    def __init__(self, configuration, img_path = "" ):
+    def __init__(self, configuration, img_path = "", filtered = False ):
 
         # tiled will write out tilemap defs with
         # a FQ path, or path relative to the TEX file,
@@ -15,6 +15,11 @@ class tileset:
 
         tail,head = os.path.split( configuration["image"] )
         self.image = host_config.get_config("app_dir") + img_path + head
+
+        print("----------")
+        print(self.image)
+        print("----------")
+
         self.imageheight = configuration["imageheight"]
         self.imagewidth = configuration["imagewidth"]
         self.margin = configuration["margin"]
@@ -22,15 +27,20 @@ class tileset:
         self.properties = configuration["properties"]
         self.firstgid = configuration["firstgid"]
         self.tileheight = configuration["tileheight"]
-        self.tileproperties = configuration["tileproperties"]
+        self.tileproperties = configuration.get("tileproperties")
+        if self.tileproperties is None:
+            self.tileproperties = {}
+
         self.gids = []
-        self.gidproperties = {}
+        self.gidproperties = []
         self.gidcount=0
+        self.gidrange = None
         self.texture = None
         self.compile()
 
-    def compile(self):
-        self.texture     = texture.from_local_image( local_image.from_file(self.image)  )
+    def compile(self, filtered = False ):
+        self.texture     = texture.from_local_image( local_image.from_file(self.image), filtered  )
+        print("loaded tilemap texture")
 
         uPix = self.margin
         vPix = self.margin
@@ -38,7 +48,8 @@ class tileset:
         tS = self.spacing
         while(vPix<self.imageheight):
             while(uPix<self.imagewidth):
-                self.gids.append( [uPix, vPix, uPix+tH, vPix+tH, {} ] )
+                self.gids.append( [uPix, vPix, tH, tH, {} ] )
+                self.gidproperties.append({})
                 uPix+= tS
                 uPix+= tH
             uPix = 0
@@ -61,14 +72,17 @@ class tileset:
             ikey = int(key)
             self.gidproperties[ikey] = self.tileproperties[key]
 
-    def bind():
-        self.texture.bind(0)
-
-    def drawTile(gid):
+    def get_gid(self, gid ):
         gid = gid - self.firstgid;
         if (gid<0) or (gid>self.gidcount):
-            #this tileset doesn't contain the requested gid
-            return
+            return False
+        return self.gids[gid]
 
-    def tileProps(gid):
-        return self.gidproperties[gid]        
+    def get_gid_no_check(self, gid ):
+        gid = gid - self.firstgid;
+        return self.gids[gid]
+
+
+
+    def tileProp(gid,key):
+        return self.gidproperties[gid].get(key)
