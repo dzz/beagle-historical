@@ -3,9 +3,6 @@
 ```python
 from client.system.gamepad       import get_gamepad
 ```
-
-# gamepad
-
 The gamepad module provides a function which you can use anywhere inside your application's tick() function to address a gamepad by its player id. 
 
 # usage
