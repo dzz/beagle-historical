@@ -34,12 +34,11 @@ shader.bind         ( [( "color1", [1.0,1.0,1.0,0.0] )] )
 
 shader.bind         ( [( "color0", [1.0,1.0,1.0,0.0] ),
                       ( "color1", [1.0,1.0,1.0,0.0] )])
-```
 
 # assuming r[] is in the form x,y,w,h, this low-level api call will draw a rectangle 
 # primitive, with the "rect" vertex shader and the "rect_vgrad" fragment shader 
 hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
-
+```
 #note
 
 in this example, we're using the rect shaders which is a dedicated code path in ctt2, which is binding scr_size and rect_coords automatically (by nature of calling hwgfx.rect_draw). If you were creating and rendering your own, you would have to bind those yourself. 
