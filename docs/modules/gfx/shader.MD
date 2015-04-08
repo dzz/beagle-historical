@@ -83,7 +83,6 @@ void main(void) {
     //which have been bound at the python layer
     gl_FragColor = ((color0) * uv.y) + ((color1) * (1-uv.y));
 }
-#version 330 core
 ```
 #note
 
