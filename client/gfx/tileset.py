@@ -83,6 +83,5 @@ class tileset:
         return self.gids[gid]
 
 
-
-    def tileProp(gid,key):
+    def tile_prop(gid,key):
         return self.gidproperties[gid].get(key)

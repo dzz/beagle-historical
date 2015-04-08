@@ -18,6 +18,31 @@ def rect_vgrad(r,color0,color1):
     hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
 
 
+def rect_tile_start(tileset):
+        shader = shaders.get(  "hwgfx/rect_tile", 
+                               "hwgfx/rect_text" )
+
+        shader.bind         ( [( "color0", [1.0,1.0,1.0,0.0] )] )
+        shader.bind         ( [( "color1", [1.0,1.0,1.0,0.0] )] )
+
+        tileset.texture.bind(texture.units[0])
+
+def rect_tile_change_tileset(tileset):
+        tileset.texture.bind(texture.units[0])
+
+
+def rect_tile_raw(tileset, gid, x,y, scale = 1):
+        tile = tileset.get_gid(gid)
+        hwgfx.rect_draw_tex( 
+                         x,
+                         y,
+                         tileset.tileheight*scale,
+                         tileset.tileheight*scale,
+                         tile[0],
+                         tile[1],
+                         tile[2], 
+                         tile[3] )
+
 def rect_tile(tileset, gid, x,y, scale = 1):
     tile = tileset.get_gid(gid)
     if(tile):

@@ -1,6 +1,6 @@
 import json
 from client.gfx.tileset         import tileset
-from client.gfx.rect            import rect_tile
+from client.gfx.rect            import rect_tile, rect_tile_start, rect_tile_raw
 import client.ctt2.host_config  as host_config
 
 class tilemap:
@@ -23,7 +23,8 @@ class tilemap:
             layer["data"] = layer_definition["data"]
             self.layers.append(layer)
           
-    def render(self,org_x,org_y,scale ):
+    def render(self,org_x,org_y,scale, debug=False ):
+        active_ts = None
         for layer in self.layers:
             gid_idx = 0
             for y in range(0, layer["height"]):
@@ -31,9 +32,23 @@ class tilemap:
                     gid_id = layer["data"][gid_idx]
                     if(gid_id>0):
                         ts = self.gid_tileset_map[gid_id]
-                        rect_tile( ts, gid_id, (org_x+(x*self.tileheight))*scale, (org_y+(y*self.tileheight))*scale, scale)
+                        if(ts is not active_ts):
+                            rect_tile_start(ts)
+                            active_ts = ts
+                        if not debug:
+                            rect_tile_raw( ts, gid_id, org_x+((x*self.tileheight))*scale, org_y+((y*self.tileheight))*scale, scale)
                     gid_idx+=1
 
+    def gid_via_coord(self,x,y,layer):
+        i = x+(y*self.layers[layer]["width"])
+        gid_id = self.layers[layer]["data"][i]
+        return gid_id
+
+    def tile_prop_via_coord(self,x,y,layer,key):
+        i = x+(y*self.layers[layer]["width"])
+        gid_id = self.layers[layer]["data"][i]
+        ts = self.gid_tileset_map[gid_id]
+        return ts.tile_prop(gid_id,key)
 
     @classmethod 
     def from_json_file(cls, path, img_path, filtered=False ):
