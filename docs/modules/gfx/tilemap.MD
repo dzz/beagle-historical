@@ -36,3 +36,10 @@ configuration = {
 
 tm = tilemap( configuration, img_path, filtered=False )
 ```
+
+#rendering a tilemap
+
+```python
+
+tm.render( x = int(camera[0]), y = int(camera[1]), scale = 2, False)
+```
