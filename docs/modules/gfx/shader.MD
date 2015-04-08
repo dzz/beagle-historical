@@ -39,10 +39,6 @@ shader.bind         ( [( "color0", [1.0,1.0,1.0,0.0] ),
 # primitive, with the "rect" vertex shader and the "rect_vgrad" fragment shader 
 hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
 ```
-#note
-
-in this example, we're using the rect shaders which is a dedicated code path in ctt2, which is binding scr_size and rect_coords automatically (by nature of calling hwgfx.rect_draw). If you were creating and rendering your own, you would have to bind those yourself. 
-
 
 ```glsl
 #version 330 core
@@ -75,14 +71,21 @@ void main(void) {
 ```glsl
 #version 330 core
 
-/rect_vgrad.frag.glsl
+/* rect_vgrad.frag.glsl */
 
+// these inputs are what maps to the "shader.bind" calls
 uniform vec4 color0;
 uniform vec4 color1;
 in vec2 uv;
 
 void main(void) {
+    //interpolate based on the y uv position between color0 and color1,
+    //which have been bound at the python layer
     gl_FragColor = ((color0) * uv.y) + ((color1) * (1-uv.y));
 }
 #version 330 core
 ```
+#note
+
+in this example, we're using the rect shaders which is a dedicated code path in ctt2, which is binding scr_size and rect_coords automatically (by nature of calling hwgfx.rect_draw). If you were creating and rendering your own, you would have to bind those yourself. 
+
