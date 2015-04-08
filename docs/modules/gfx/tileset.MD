@@ -46,7 +46,7 @@ Tiled allows you to define custom sets of properties on a per-tile basis. These 
 ```
 
 
-##Drawing a gid
+##Drawing a Tile (by gid)
 
 ```python
 from client.gfx.rect    import rect_tile
