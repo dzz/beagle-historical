@@ -4,7 +4,7 @@
     from client.gfx.texture import texture
 ``` 
 
-the texture object is an abstraction of a texture resource on the graphics card. Typically, you will first create a local_image (which represents an image in system memory) and then upload that to a new texture object.
+The texture object is an abstraction of a texture resource on the graphics card. Typically, you will first create a local_image (which represents an image in system memory) and then upload that to a new texture object.
 
 A texture object must be *bound* to a texture unit before being used. The default shaders will use texture unit 0, but if you are writing your own shaders, you can use up to 4 texture units as input. Many graphics cards support more than 4 texture units, and in the future CTT2 should allow you to address as many as the system provides.
 
