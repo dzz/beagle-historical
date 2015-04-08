@@ -17,25 +17,25 @@ from client.gfx.local_image import local_image
 from client.gfx.texture import texture
 from client.gfx.texture import units as texture_units
 
-    #create a 128x128 smoothed texture
-    tex = texture.from_dims( 128,128, filtered = True)
-    #create a 128x128 texture with no smoothing
-    tex = texture.from_dims( 128,128, filtered = False)
-    #create a texture from a local image
-    img = local_image.from_file("test.png")
-    tex = texture.from_local_image(img, filtered = True)    
+#create a 128x128 smoothed texture
+tex = texture.from_dims( 128,128, filtered = True)
+#create a 128x128 texture with no smoothing
+tex = texture.from_dims( 128,128, filtered = False)
+#create a texture from a local image
+img = local_image.from_file("test.png")
+tex = texture.from_local_image(img, filtered = True)    
 
-    #bind a texture for using in drawing
-    tex.bind(texture_units[0])
-    #any subsequent draws which reference texture unit 0 will now use "tex"
+#bind a texture for using in drawing
+tex.bind(texture_units[0])
+#any subsequent draws which reference texture unit 0 will now use "tex"
 
 
-    #download contents of a texture to a local image (for example,
-    #if you were rendering to a texture and now want to bring it 
-    #into system memory to save to disk)
-    tex.download_local_image( img )
-    #reupload a local image to a texture
-    tex.upload_local_image( img )
+#download contents of a texture to a local image (for example,
+#if you were rendering to a texture and now want to bring it 
+#into system memory to save to disk)
+tex.download_local_image( img )
+#reupload a local image to a texture
+tex.upload_local_image( img )
 ```
 
 
