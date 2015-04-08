@@ -4,13 +4,15 @@
 import client.gfx.shaders as shaders
 ```
 
-a shader represents a GLSL language text file, which has been loaded to the video driver and compiled. The first time you use a shader, it is lazy compiled and uploaded to the gpu. In order to use a particular shader configuration, you access the shaders module static method to get a handle to that particular GPU object. 
+A shader represents a GLSL language text file which has been loaded to the video driver and compiled. The first time you use a shader, it is lazy compiled and uploaded to the GPU. In order to use a particular shader configuration, you access the static method ``shaders.get`` to retrieve a handle to that particular GPU object for binding input variables to the shader program. 
 
-Upon calling the *bind* method to specify the shader uniform inputs ( if you ar unsure of what this refers to, please research OpenGL 3 shader pipeline ), the shader program is selected on the GPU and will be used for all subsequent draw calls.
+Upon calling the ``bind`` method to specify the inputs the shader program is selected on the GPU and will be used for all subsequent draw calls.
 
-vertex shaders are assumed to be stores as "{name}.vert.glsl" and fragment shaders are assumed to be "{name}.frag.glsl".
+Vertex shaders are assumed to be stored as "{name}.vert.glsl"  
 
-The are stored in the shaders directory from the root of the repo, or where the ctt2 binary is invoked.
+Fragment shaders are assumed to be "{name}.frag.glsl".
+
+Shader GLSL code should be stored in the ``shaders/`` directory, from the root of this repo, or in a path ``shader/`` relative to where the ctt2 binary is invoked.
 
 #usage
 
@@ -86,5 +88,4 @@ void main(void) {
 ```
 #note
 
-in this example, we're using the rect shaders which is a dedicated code path in ctt2, which is binding scr_size and rect_coords automatically (by nature of calling hwgfx.rect_draw). If you were creating and rendering your own, you would have to bind those yourself. 
-
+in this example, we did not bind scr_size or rect_coords because the ctt2 runtime does this for you when using the rectangle subsystem. When using custom geometry, you must bind *all* uniforms prior to invoking the shader.
