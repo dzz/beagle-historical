@@ -18,7 +18,11 @@ def rect_vgrad(r,color0,color1):
     hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
 
 
+pending_rect_draws = []
+
 def rect_tile_start(tileset):
+        rect_tile_flush_pending(tileset)
+
         shader = shaders.get(  "hwgfx/rect_tile", 
                                "hwgfx/rect_text" )
 
@@ -27,21 +31,57 @@ def rect_tile_start(tileset):
 
         tileset.texture.bind(texture.units[0])
 
+
+def rect_tile_end(tileset):
+        rect_tile_flush_pending(tileset)
+
+def rect_tile_flush_pending(tileset):
+        global pending_rect_draws
+        if len(pending_rect_draws) > 0:
+            hwgfx.rect_draw_tex_array( pending_rect_draws )
+            #for rect in pending_rect_draws:
+            #     hwgfx.rect_draw_tex( 
+            #                      rect[0],
+            #                      rect[1],
+            #                      rect[2],
+            #                      rect[3],
+            #                      rect[4],
+            #                      rect[5],
+            #                      rect[6], 
+            #                      rect[7] )
+        #print("flushed {0}".format(len(pending_rect_draws)))
+        pending_rect_draws = []
+
 def rect_tile_change_tileset(tileset):
+        rect_tile_flush_pending(tileset);
         tileset.texture.bind(texture.units[0])
 
 
 def rect_tile_raw(tileset, gid, x,y, scale = 1):
+        if gid is 0:
+            print( "early bail")
+            return
         tile = tileset.get_gid(gid)
-        hwgfx.rect_draw_tex( 
-                         x,
-                         y,
-                         tileset.tileheight*scale,
-                         tileset.tileheight*scale,
-                         tile[0],
-                         tile[1],
-                         tile[2], 
-                         tile[3] )
+        #hwgfx.rect_draw_tex( 
+        #                 x,
+        #                 y,
+        #                 tileset.tileheight*scale,
+        #                 tileset.tileheight*scale,
+        #                 tile[0],
+        #                 tile[1],
+        #                 tile[2], 
+        #                 tile[3] )
+
+        pending_rect_draws.append( [
+                         int(x),
+                         int(y),
+                         int(tileset.tileheight*scale),
+                         int(tileset.tileheight*scale),
+                         float(tile[0]),
+                         float(tile[1]),
+                         float(tile[2]), 
+                         float(tile[3]) ] )
+
 
 def rect_tile(tileset, gid, x,y, scale = 1):
     tile = tileset.get_gid(gid)
@@ -54,15 +94,15 @@ def rect_tile(tileset, gid, x,y, scale = 1):
 
         tileset.texture.bind(texture.units[0])
 
-        hwgfx.rect_draw_tex( 
-                         x,
-                         y,
-                         tileset.tileheight*scale,
-                         tileset.tileheight*scale,
-                         tile[0],
-                         tile[1],
-                         tile[2], 
-                         tile[3] )
+        hwgfx.rect_draw_tex_array( [[
+                         int(x),
+                         int(y),
+                         int(tileset.tileheight*scale),
+                         int(tileset.tileheight*scale),
+                         float(tile[0]),
+                         float(tile[1]),
+                         float(tile[2]), 
+                         float(tile[3]) ]] )
 
 
 

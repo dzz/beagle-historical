@@ -32,6 +32,48 @@ DEF_ARGS  {
 }
 
 /**
+ * rect_tex_array
+ */
+
+MODULE_FUNC hwgfx_rect_draw_tex_array
+DEF_ARGS {
+    
+    PyObject *array;
+	int i;
+    int size;
+
+    size = 10;
+
+    if(!INPUT_ARGS(args,"O", &array))
+        return NULL;
+    if(!PyList_Check(array))
+        return NULL;
+    
+    size = PyList_Size(array);
+    for(i=0; i< size; ++i) {
+        int x,y,w,h;
+        int t_size;
+        float u,v,tw,th;
+        PyObject *rect = PyList_GET_ITEM(array,i);
+        t_size = PyList_Size(rect);
+        if(t_size!= 8) {
+            return NULL;
+        }
+		x = PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
+        y = PyLong_AS_LONG( PyList_GET_ITEM(rect,1));
+        w = PyLong_AS_LONG( PyList_GET_ITEM(rect,2));
+        h = PyLong_AS_LONG( PyList_GET_ITEM(rect,3));
+        u = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,4));
+        v = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,5));
+        tw = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,6));
+        th = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,7));
+        rect_draw_tex(x,y,w,h,u,v,tw,th);
+
+    }
+    Py_RETURN_NONE;
+}
+
+/**
  * text
  */
 MODULE_FUNC hwgfx_text_render
@@ -495,6 +537,7 @@ static PyMethodDef hwgfx_methods[] = {
     /*rect*/
     {"rect_draw",           hwgfx_rect_draw,            METH_VARARGS, NULL},
     {"rect_draw_tex",       hwgfx_rect_draw_tex,        METH_VARARGS, NULL},
+    {"rect_draw_tex_array", hwgfx_rect_draw_tex_array,  METH_VARARGS, NULL},
 
     /*text*/
     {"text_render",         hwgfx_text_render,          METH_VARARGS, NULL},

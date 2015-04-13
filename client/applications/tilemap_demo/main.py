@@ -35,7 +35,7 @@ def tick():
 
 def render():
     tm.render(int(camera[0]),int(camera[1]),2, False)
-    tm.render(int(camera[0]),int(camera[1]),1,False)
+    #tm.render(int(camera[0]),int(camera[1]),1,False)
     for gid in range(0,32):
         rect_tile(ts, gid, gid*32, 0)
 
