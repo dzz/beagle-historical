@@ -14,6 +14,7 @@
 #include "hwgfx/texture.h"
 #include "hwgfx/primitive.h"
 #include "hwgfx/text.h"
+#include "hwgfx/misc.h"
 #include "hwgfx/context.h"
 #include "hardware/gamepad.h"
 #include "hardware/hf_timer.h"

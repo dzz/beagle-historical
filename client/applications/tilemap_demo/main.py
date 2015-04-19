@@ -1,7 +1,9 @@
-from client.gfx.rect    import rect_tile
-from client.gfx.tileset import tileset
-from client.gfx.tilemap import tilemap
+from client.gfx.rect             import rect_tile
+from client.gfx.tileset          import tileset
+from client.gfx.tilemap          import tilemap
 from client.system.gamepad       import get_gamepad
+
+import client.gfx.context     as gfx_context
 import client.system.keyboard as keyboard
 
 ts = None
@@ -12,6 +14,7 @@ def init():
     global ts
     global tm
     global camera
+
 
     def left():
         camera[0] = camera[0] - 32
@@ -49,6 +52,7 @@ def init():
 
     ts = tileset( configuration, "roguetiles/Spritesheet/" )
     tm = tilemap.from_json_file( "json/sample_indoor.json", "roguetiles/Spritesheet/", filtered=False)
+    gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
 
 
 
@@ -59,8 +63,8 @@ def tick():
     camera[1] += pad.leftStick[1]*32
 
 def render():
-    tm.render(int(camera[0]),int(camera[1]),2, False)
-    #tm.render(int(camera[0]),int(camera[1]),1,False)
+    gfx_context.clear()
+    tm.render(0 - int(camera[0]),0 - int(camera[1]),2, False)
     for gid in range(0,32):
         rect_tile(ts, gid, gid*32, 0)
 

@@ -521,6 +521,23 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 /**
+ * misc
+ **/
+MODULE_FUNC hwgfx_clear
+DEF_ARGS {
+    gfx_clear();
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_set_clear_color
+DEF_ARGS {
+    float r,g,b,a;
+    if(!INPUT_ARGS(args,"ffff", &r,&g,&b,&a))
+        return NULL;
+    gfx_set_clear_color(r,g,b,a);
+    Py_RETURN_NONE;
+}
+/**
  * debug
  */
 MODULE_FUNC hwgfx_debug_displaykill
@@ -590,6 +607,9 @@ static PyMethodDef hwgfx_methods[] = {
     /*viewport*/
     {"viewport_set",        hwgfx_viewport_set,         METH_VARARGS, NULL},
     {"viewport_reset",      hwgfx_viewport_reset,       METH_VARARGS, NULL},
+    /*misc*/
+    {"clear",               hwgfx_clear,                METH_VARARGS, NULL},
+    {"set_clear_color",     hwgfx_set_clear_color,      METH_VARARGS, NULL},
     /*debug*/
     {"debug_displaykill",   hwgfx_debug_displaykill,    METH_VARARGS, NULL},
     
