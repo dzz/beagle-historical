@@ -38,4 +38,7 @@ tex.download_local_image( img )
 tex.upload_local_image( img )
 ```
 
+##Rendering to Textures
+
+It is possible to render to a texture instead of the screen. Read about ```framebuffer``` objects for further information.
 
