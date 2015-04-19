@@ -2,90 +2,70 @@
 
 ```python
 import client.gfx.shaders as shaders
+from client.gfx.shaders import shader
 ```
 
-A shader represents a GLSL language text file which has been loaded to the video driver and compiled. The first time you use a shader, it is lazy compiled and uploaded to the GPU. In order to use a particular shader configuration, you access the static method ``shaders.get`` to retrieve a handle to that particular GPU object for binding input variables to the shader program. 
+A shader represents a compiled and linked shader program on the graphics server. Shaders are written in the *glsl* language. 
 
-Upon calling the ``bind`` method to specify the inputs the shader program is selected on the GPU and will be used for all subsequent draw calls.
+##vertex shader
 
-Vertex shaders are assumed to be stored as "{name}.vert.glsl"  
+The vertex shader program converts the input coordinates into clip space, which is a unit box ( extending from -1, +1 on both axis ) representing the entirety of the current ``viewport`` (which may be a different size depending on whether you are rendering to the screen, another texture, etc. )
 
-Fragment shaders are assumed to be "{name}.frag.glsl".
+##fragment shader
 
-Shader GLSL code should be stored in the ``shaders/`` directory, from the root of this repo, or in a path ``shader/`` relative to where the ctt2 binary is invoked.
+After the locations of the vertex have been computed by the graphics server, each pixels final color is computed by the fragment shader. 
 
 #usage
 
+There are two main ways to load shaders. The *shader registry*, or by managing your shader programs manually. The shader registery will lazy load shaders as needed, but will not flush any shaders from memory or the graphics server until the application exits. This is convenient when your application uses a minimal number of shaders. 
+
+The shader registry is accessed by the module function ``get_client_program``
+
+If you require more control over when the shaders get compiled or leave scope, you can create the shader object yourself. This functionality is exposed the class method ``from_application_library`` classmethod on the  ``shader`` object.
+
+Shaders can specify ``uniforms`` which are inputs to the shader program. For example, you may wish to warp the vertexes depending on the state of some property of an object in a game. Uniforms can be single floats, up to 4D vectors.
+
+The ``glsl`` source code for your application should live inside your applications ```shaders/``` folder. You can look at the tilemap_demo for an example.
+
+
+## loading
+
 ```python
 
-import hwgfx
-import client.gfx.shaders as shaders
+#method 1 - import a shader, use the global shader registry
+import client.gfx.shaders as shader
 
-#this will load and compile the shader if it hasn't
-#be compiled and linked on the gpu already
+my_shader   = shaders.get_client_program( "quad_vertex", "quad_fragment" )  
+my_shader2  = shaders.get_client_program( "quad_vertex", "quad_fragment" )  #my_shader2 and my_shader will refer to the same object on the graphics server
 
-shader = shaders.get(  "hwgfx/rect", 
-                       "hwgfx/rect_vgrad" )
+exit() # both shaders are cleaned up now
 
 
-#can bind individually
-shader.bind         ( [( "color0", [1.0,1.0,1.0,0.0] )] )
-shader.bind         ( [( "color1", [1.0,1.0,1.0,0.0] )] )
+#method 2 - import a shader directly, using classmethods
+from client.gfx.shaders import shader
 
-#or as an array
+my_shader = shader.from_application_library("quad_vertex", "quad_fragment" )        # quad_vertex/quad_fragment is compiled and loaded
 
-shader.bind         ( [( "color0", [1.0,1.0,1.0,0.0] ),
-                      ( "color1", [1.0,1.0,1.0,0.0] )])
+def scoped_load_shader():
+    my_shader2 = shader.from_application_library("quad_vertex","quad_fragment" )    # will reload and compile (does not reuse my_shader)
+    return                                                                          # my_shader2 will be garbage collected and eventually removed 
+                                                                                    # from the graphics server
 
-# assuming r[] is in the form x,y,w,h, this low-level api call will draw a rectangle 
-# primitive, with the "rect" vertex shader and the "rect_vgrad" fragment shader 
-hwgfx.rect_draw( r[0],r[1],r[2],r[3] )
 ```
 
-```glsl
-#version 330 core
+## binding uniforms and rendering
 
-/* shaders/hwgfx/rect.vert.glsl */
+To render using a shader, it must be bound. Only one shader can be bound at a time. After a shader is bound, any rendering will use that configuration.
 
-in vec2 in_Position;
-uniform vec2 scr_size;
-uniform vec4 rect_coords;
-out vec2 uv;
+At the time of binding, uniforms must also be configured. Uniforms are passed in as an array of tuples, with the value they will be set to.
 
-void main(void) {
-    vec2 p_t;
+```python
 
-    p_t.x = in_Position.x * rect_coords.z;
-    p_t.y = in_Position.y * rect_coords.w;
-    p_t.x += rect_coords.x;
-    p_t.y += rect_coords.y;
-    p_t.x /= scr_size.x;
-    p_t.y = scr_size.y - p_t.y;
-    p_t.y /= scr_size.y;
-    p_t *= 2;
-    p_t -= 1;
+# assume my_shader is a compiled shader object, and it accepts a uniform input "tint_color" which is an RGBA value
 
-    uv.x = in_Position.x;
-    uv.y = in_Position.y;
-    gl_Position = vec4(p_t.x,p_t.y,0.0,1.0);
-}
+my_shader.bind( [ ("tint_color", [1.0,0.5,0.5,1.0] ) ] )
+
+# subsequent render operations (such as primitive.render) will now use this shader. 
+
 ```
-```glsl
-#version 330 core
 
-/* rect_vgrad.frag.glsl */
-
-// these inputs are what maps to the "shader.bind" calls
-uniform vec4 color0;
-uniform vec4 color1;
-in vec2 uv;
-
-void main(void) {
-    //interpolate based on the y uv position between color0 and color1,
-    //which have been bound at the python layer
-    gl_FragColor = ((color0) * uv.y) + ((color1) * (1-uv.y));
-}
-```
-#note
-
-in this example, we did not bind scr_size or rect_coords because the ctt2 runtime does this for you when using the rectangle subsystem. When using custom geometry, you must bind *all* uniforms prior to invoking the shader.

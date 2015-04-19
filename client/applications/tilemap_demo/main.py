@@ -33,15 +33,17 @@ def bindKeyHandlers():
         print("goodbye!")
         exit()
 
-    keyboard.register_keypress_handler("escape", quit )
-    keyboard.register_keypress_handler("left",   left )
+    keyboard.register_keypress_handler("escape", quit  )
+    keyboard.register_keypress_handler("left",   left  )
     keyboard.register_keypress_handler("right",  right )
-    keyboard.register_keypress_handler("up",     up )
-    keyboard.register_keypress_handler("down",   down )
-    keyboard.register_keypress_handler("a",      left )
+    keyboard.register_keypress_handler("up",     up    )
+    keyboard.register_keypress_handler("down",   down  )
+    keyboard.register_keypress_handler("a",      left  )
     keyboard.register_keypress_handler("d",      right )
-    keyboard.register_keypress_handler("w",      up )
-    keyboard.register_keypress_handler("s",         down )
+    keyboard.register_keypress_handler("w",      up    )
+    keyboard.register_keypress_handler("s",      down  )
+
+
 
 def init():
     global ts
