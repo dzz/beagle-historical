@@ -58,9 +58,9 @@ def rect_tile_change_tileset(tileset):
 
 
 def rect_tile_raw(tileset, gid, x,y, scale = 1):
-        if gid is 0:
-            print( "early bail")
+        if( (x<0) or (y<0) or (x>1920) or (y>1080) ):
             return
+
         tile = tileset.get_gid(gid)
         #hwgfx.rect_draw_tex( 
         #                 x,

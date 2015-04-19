@@ -158,7 +158,7 @@ void DIRTY_DISPLAY_ABORT() {
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
     //disable_vsync();
-    vsync(1);
+    vsync(0);
     initExtendedVideo();
 }
 

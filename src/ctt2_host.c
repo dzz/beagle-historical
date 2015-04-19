@@ -13,6 +13,7 @@
 #include "hwgfx/blend_control.h"
 #include "hwgfx/texture.h"
 #include "hwgfx/primitive.h"
+#include "hwgfx/framebuffer.h"
 #include "hwgfx/text.h"
 #include "hwgfx/misc.h"
 #include "hwgfx/context.h"

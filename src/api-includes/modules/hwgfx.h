@@ -172,6 +172,65 @@ DEF_ARGS{
 }
 
 /**
+ * framebuffer
+ */
+
+MODULE_FUNC hwgfx_framebuffer_create
+DEF_ARGS {
+    gfx_framebuffer* framebuffer;
+    framebuffer = malloc(sizeof(framebuffer));
+    framebuffer_create_framebuffer(framebuffer);
+    return Py_BuildValue("I",(unsigned int)framebuffer);
+}
+
+MODULE_FUNC hwgfx_framebuffer_drop
+DEF_ARGS {
+    unsigned int ptr; 
+    gfx_framebuffer* framebuffer;
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    framebuffer = (gfx_texture*)ptr;
+    framebuffer_drop(framebuffer);
+    free(framebuffer);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_framebuffer_bind_texture
+DEF_ARGS {
+    unsigned int ptr_fb,ptr_tex; 
+    gfx_framebuffer* framebuffer;
+    gfx_texture* texture;
+    if(!INPUT_ARGS(args,"II",&ptr_fb,&ptr_tex)) 
+        return NULL;
+    framebuffer = (gfx_framebuffer*)ptr_fb;
+    texture = (gfx_texture*)ptr_tex;
+    framebuffer_bind_texture(framebuffer, texture);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_framebuffer_render_start
+DEF_ARGS {
+    unsigned int ptr; 
+    gfx_framebuffer* framebuffer;
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    framebuffer = (gfx_texture*)ptr;
+    framebuffer_render_start(framebuffer);
+    Py_RETURN_NONE;
+}
+
+MODULE_FUNC hwgfx_framebuffer_render_end
+DEF_ARGS {
+    unsigned int ptr; 
+    gfx_framebuffer* framebuffer;
+    if(!INPUT_ARGS(args,"I",&ptr)) 
+        return NULL;
+    framebuffer = (gfx_texture*)ptr;
+    framebuffer_render_end(framebuffer);
+    Py_RETURN_NONE;
+}
+
+/**
  * texture
  */
 
@@ -604,6 +663,13 @@ static PyMethodDef hwgfx_methods[] = {
     {"primitive_destroy_coordinate_uv_primitive",
                             hwgfx_primitive_destroy_coordinate_uv_primitive,
                                                         METH_VARARGS, NULL},
+    /*frame_buffer*/
+    {"framebuffer_create",        hwgfx_framebuffer_create,         METH_VARARGS, NULL},
+    {"framebuffer_drop",          hwgfx_framebuffer_drop,           METH_VARARGS, NULL},
+    {"framebuffer_bind_texture",  hwgfx_framebuffer_bind_texture,   METH_VARARGS, NULL},
+    {"framebuffer_render_start",  hwgfx_framebuffer_render_start,   METH_VARARGS, NULL},
+    {"framebuffer_render_end",    hwgfx_framebuffer_render_end,     METH_VARARGS, NULL},
+
     /*viewport*/
     {"viewport_set",        hwgfx_viewport_set,         METH_VARARGS, NULL},
     {"viewport_reset",      hwgfx_viewport_reset,       METH_VARARGS, NULL},
