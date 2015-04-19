@@ -25,11 +25,16 @@ class tilemap:
           
     def render(self,org_x,org_y,scale, debug=False ):
         active_ts = None
+
         for layer in self.layers:
+            rows = range(0,layer["height"])
+            columns = range(0,layer["width"])
+            layer_data = layer["data"]
+
             gid_idx = 0
-            for y in range(0, layer["height"]):
-                for x in range(0, layer["width"]):
-                    gid_id = layer["data"][gid_idx]
+            for y in rows:
+                for x in columns:
+                    gid_id = layer_data[gid_idx]
                     if(gid_id>0):
                         ts = self.gid_tileset_map[gid_id]
                         if(ts is not active_ts):

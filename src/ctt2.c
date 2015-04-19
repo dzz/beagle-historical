@@ -133,11 +133,14 @@ void initDisplay( int fullscreen) {
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP );
     } else {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
     }
+
+
+
 
     if( opengl_window == NULL ) {
         printf( "%s\n", SDL_GetError() );
@@ -158,7 +161,7 @@ void DIRTY_DISPLAY_ABORT() {
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
     //disable_vsync();
-    vsync(0);
+    vsync(1);
     initExtendedVideo();
 }
 
@@ -226,10 +229,11 @@ int main(int argc, char **argv){
 
 
 
-    initLog();                     printf("1.\n");
-    initDisplay(fullscreen);printf("1.\n");
-    initWindowingSystemMessages();printf("1.\n");
-    initOpenGL();printf("1.\n");
+
+    initLog();               
+    initDisplay(fullscreen);
+    initWindowingSystemMessages();
+    initOpenGL();
     //initCompositor();
     //initLayers();
     //initAnimation();
@@ -288,11 +292,11 @@ int main(int argc, char **argv){
                             SCREEN_WIDTH=vd.w;
                             SCREEN_HEIGHT=vd.h;
                             gfx_viewport_set_dims(vd);
-                            SDL_FreeSurface(ui_surface);
-                            ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
-                            dropHwBrush();
-                            initHwBrush();
-                            brush_setValuesFromUI();
+                            //SDL_FreeSurface(ui_surface);
+                            //ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
+                            //dropHwBrush();
+                            //initHwBrush();
+                            //brush_setValuesFromUI();
                             resizeExtendedVideo();
                         }
                         break;

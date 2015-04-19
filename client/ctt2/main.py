@@ -66,7 +66,7 @@ def tick():
     if(app.controller_enabled):
         gamepad.tick()
     app.tick()
-    gc.collect()
+    #gc.collect()
 
 def render():
     with blend.state(blend.mode_over):

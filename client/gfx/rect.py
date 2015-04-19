@@ -39,17 +39,6 @@ def rect_tile_flush_pending(tileset):
         global pending_rect_draws
         if len(pending_rect_draws) > 0:
             hwgfx.rect_draw_tex_array( pending_rect_draws )
-            #for rect in pending_rect_draws:
-            #     hwgfx.rect_draw_tex( 
-            #                      rect[0],
-            #                      rect[1],
-            #                      rect[2],
-            #                      rect[3],
-            #                      rect[4],
-            #                      rect[5],
-            #                      rect[6], 
-            #                      rect[7] )
-        #print("flushed {0}".format(len(pending_rect_draws)))
         pending_rect_draws = []
 
 def rect_tile_change_tileset(tileset):

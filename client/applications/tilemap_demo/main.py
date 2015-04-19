@@ -64,9 +64,9 @@ def init():
     ts = tileset( configuration, "roguetiles/Spritesheet/", filtered=True )
     tm = tilemap.from_json_file( "json/sample_indoor.json", "roguetiles/Spritesheet/", filtered=True)
 
-    test_fb =  framebuffer.from_texture( ts.texture )
+    test_fb =  framebuffer.from_texture( tm.tilesets[0].texture )
 
-    gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
+    #gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
 
     bindKeyHandlers()
 
@@ -80,13 +80,12 @@ def tick():
 
 def render():
     global test_fb
-    print(test_fb)
-    with framebuffer_as_render_target( test_fb ):
-        tm.render(0 - int(camera[0]),0 - int(camera[1]),1, False)
+    #with framebuffer_as_render_target( test_fb ):
+    #    tm.render(0 - int(camera[0]),0 - int(camera[1]),1, False)
 
     gfx_context.clear()
 
-    tm.render(0 - int(camera[0]),0 - int(camera[1]),1, False)
+    tm.render(0 - int(camera[0]),0 - int(camera[1]),3)
 
     for gid in range(0,32):
         rect_tile(ts, gid, gid*32, 0)
