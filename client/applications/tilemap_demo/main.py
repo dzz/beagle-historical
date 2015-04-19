@@ -53,6 +53,7 @@ def init():
     ts = tileset( configuration, "roguetiles/Spritesheet/" )
     tm = tilemap.from_json_file( "json/sample_indoor.json", "roguetiles/Spritesheet/", filtered=False)
     gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
+    print("made it out of here!")
 
 
 

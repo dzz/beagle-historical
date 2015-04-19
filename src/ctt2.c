@@ -221,25 +221,25 @@ int main(int argc, char **argv){
         fullscreen      = atoi( argv[3] );
         fps             = atoi( argv[4] );
         frame_millis    = (double)1000/(double)fps;
-        printf("frame millis:%f", frame_millis);
+        //printf("frame millis:%f", frame_millis);
     }
 
 
 
-    initLog();
-    initDisplay(fullscreen);
-    initWindowingSystemMessages();
-    initOpenGL();
-    initCompositor();
-    initLayers();
-    initAnimation();
-    initHwBrush();
-    initBrush();
-    initTextInput();
-    initHfTimer();
-    initPython();
+    initLog();                     printf("1.\n");
+    initDisplay(fullscreen);printf("1.\n");
+    initWindowingSystemMessages();printf("1.\n");
+    initOpenGL();printf("1.\n");
+    //initCompositor();
+    //initLayers();
+    //initAnimation();
+    //initHwBrush();
+    //initBrush();
+    initTextInput();printf("1.\n");
+    initHfTimer();printf("1.\n");
+    initPython();printf("1.\n");
 
-    animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
+    //animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
 
     initYankPut();
     //initTablet(opengl_window);
@@ -249,7 +249,7 @@ int main(int argc, char **argv){
                                         SCREEN_HEIGHT);
 
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
-    initPanels(ui_surface);
+    //initPanels(ui_surface);
 
 
     init_millis = getTimeMs(); 
@@ -313,9 +313,9 @@ int main(int argc, char **argv){
                                 == API_FAILURE ) finished = 1;
                         break;
                     case SDL_MOUSEBUTTONDOWN:
-                        dispatch_mousedown(event.button.button,
+                        /*dispatch_mousedown(event.button.button,
                                 event.button.x,
-                                event.button.y );
+                                event.button.y );*/
                         if(api_dispatch_mousedown(
                                     event.button.button, 
                                     event.button.x, 
@@ -323,9 +323,9 @@ int main(int argc, char **argv){
                                         finished = 1;
                         break;
                     case SDL_MOUSEBUTTONUP:
-                        dispatch_mouseup(event.button.button,
+                        /*dispatch_mouseup(event.button.button,
                                 event.button.x,
-                                event.button.y );
+                                event.button.y );*/
                         if(api_dispatch_mouseup(
                                     event.button.button, 
                                     event.button.x, 
@@ -333,8 +333,8 @@ int main(int argc, char **argv){
                                         finished = 1;
                         break;
                     case SDL_MOUSEMOTION:
-                        dispatch_mousemotion(event.motion.x, 
-                                event.motion.y );
+                        /*dispatch_mousemotion(event.motion.x, 
+                                event.motion.y );*/
 
                         if(api_dispatch_mousemotion(
                                     event.motion.x, 
@@ -382,13 +382,13 @@ int main(int argc, char **argv){
         }
     }
     /** FINISHED **/
-    dropBrush();
-    dropHwBrush();
+    //dropBrush();
+    //dropHwBrush();
     //dropTablet();
-    dropAnimation();
-    dropPanels();
+    //dropAnimation();
+    //dropPanels();
     dropDrawingSurfaces();
-    dropYankPut();
+    //dropYankPut();
     dropGamepad();
     dropPython();
     dropTextInput();
