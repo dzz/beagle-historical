@@ -234,29 +234,18 @@ int main(int argc, char **argv){
     initDisplay(fullscreen);
     initWindowingSystemMessages();
     initOpenGL();
-    //initCompositor();
-    //initLayers();
-    //initAnimation();
-    //initHwBrush();
-    //initBrush();
-    initTextInput();printf("1.\n");
-    initHfTimer();printf("1.\n");
-    initPython();printf("1.\n");
-
-    //animation_cursor_move(0,DO_NOT_COMMIT_DRAWING_CONTEXT);
-
-    initYankPut();
-    //initTablet(opengl_window);
+    initTextInput();
+    initHfTimer();
+    initPython();
     initGamepad();
 
     ui_surface = createDrawingSurface(SCREEN_WIDTH,
                                         SCREEN_HEIGHT);
 
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
-    //initPanels(ui_surface);
-
 
     init_millis = getTimeMs(); 
+
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
@@ -292,11 +281,6 @@ int main(int argc, char **argv){
                             SCREEN_WIDTH=vd.w;
                             SCREEN_HEIGHT=vd.h;
                             gfx_viewport_set_dims(vd);
-                            //SDL_FreeSurface(ui_surface);
-                            //ui_surface = createDrawingSurface(SCREEN_WIDTH,SCREEN_HEIGHT);
-                            //dropHwBrush();
-                            //initHwBrush();
-                            //brush_setValuesFromUI();
                             resizeExtendedVideo();
                         }
                         break;
@@ -386,13 +370,7 @@ int main(int argc, char **argv){
         }
     }
     /** FINISHED **/
-    //dropBrush();
-    //dropHwBrush();
-    //dropTablet();
-    //dropAnimation();
-    //dropPanels();
     dropDrawingSurfaces();
-    //dropYankPut();
     dropGamepad();
     dropPython();
     dropTextInput();
