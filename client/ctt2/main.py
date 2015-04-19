@@ -2,6 +2,7 @@ import host
 import hwgfx
 import configparser
 import client.system.gamepad as gamepad
+import client.system.keyboard as keyboard
 
 from client.ctt2.mouse_focus    import mouse_focused_area
 from client.ctt2.status import render_status
@@ -128,7 +129,7 @@ def dispatch_mousemotion(x,y):
     return SIGNAL_DISCARDED
 
 def dispatch_key(key,down):
-    print(key)
+    keyboard.update_key(key,down)
     KEY_ESCAPE = 33
     caret_target = caret.get_caret()
     if down:
@@ -150,5 +151,6 @@ def dispatch_text(text):
     return
 
 def map_keycode(code_definition):
-    print(code_definition)
+    parsed = code_definition.split(":")
+    keyboard.map_keycode_to_name(parsed[0],int(parsed[1]))
     return
