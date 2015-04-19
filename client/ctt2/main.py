@@ -128,6 +128,7 @@ def dispatch_mousemotion(x,y):
     return SIGNAL_DISCARDED
 
 def dispatch_key(key,down):
+    print(key)
     KEY_ESCAPE = 33
     caret_target = caret.get_caret()
     if down:
@@ -146,4 +147,8 @@ def dispatch_text(text):
     caret_target = caret.get_caret()
     if caret_target is not None:
         caret_target.rcv_text(text)
+    return
+
+def map_keycode(code_definition):
+    print(code_definition)
     return

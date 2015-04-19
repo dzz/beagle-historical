@@ -33,6 +33,10 @@ int api_dispatch_text(char* text) {
     return _pycall_str_arg( client_if.dispatch_text, text );
 }
 
+int api_map_keycode(char* code_definition) {
+    return _pycall_str_arg( client_if.map_keycode, code_definition );
+}
+
 int api_set_screensize(int w, int h) {
     int args[2] = { w,h };
     return _pycall_int_args(client_if.set_screensize, (int *)&args, 2);

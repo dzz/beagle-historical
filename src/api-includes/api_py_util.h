@@ -57,7 +57,7 @@ int _pycall_str_arg(PyObject* func, char* arg) {
         PyObject* py_vals[1] = {0};
         py_vals[0] = Py_BuildValue("s",arg);
         PyTuple_SetItem(py_args, 0, py_vals[0]);
-        PyObject_CallObject(client_if.dispatch_text, py_args);
+        PyObject_CallObject(func, py_args);
 
         return api_checkfailure_cleanargs(py_args,py_vals);
     }

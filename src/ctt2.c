@@ -15,6 +15,7 @@
 #include <Python.h>
 #include <SDL.h>
 #include <SDL_syswm.h>
+#include <SDL_keycode.h>
 #include "system/ctt2.h"
 #include "system/ctt2_host.h"
 #include "drawing/node_resource_ids.h"
@@ -180,12 +181,16 @@ void dropPython(){
 }
 
 void initPython() {
+    char buffer[1024];
     Py_SetProgramName("ctt2_py");
     if( api_init() == API_FAILURE ) {
         dropPython();
         exit(1);
-    }
+    } 
+
+    #include "system\client_key_map.h"
 }
+
 
 /*****************************************************************************/
 

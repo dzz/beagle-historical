@@ -12,4 +12,5 @@ CLIENT_FUNCTION( dispatch_text,        "dispatch_text"        )
 CLIENT_FUNCTION( finalize,             "finalize"             )
 CLIENT_FUNCTION( render,               "render"               )
 CLIENT_FUNCTION( set_screensize,       "set_screensize"       )
+CLIENT_FUNCTION( map_keycode,          "map_keycode"              )
 
