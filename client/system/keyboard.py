@@ -54,8 +54,8 @@ def register_keydown_handler( key_name, handler ):
 
 def register_keyup_handler( key_name, handler ):
     global key_up_handlers
-    key_up_handlers[key_name] = handler
+    key_up_handlers[key_name].append(handler)
 
 def register_keypress_handler( key_name, handler ):
     global key_press_handlers
-    key_press_handlers[key_name] = handler
+    key_press_handlers[key_name].append(handler)

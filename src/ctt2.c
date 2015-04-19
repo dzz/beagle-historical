@@ -188,7 +188,6 @@ void initPython() {
         exit(1);
     } 
 
-    #include "system\client_key_map.h"
 }
 
 

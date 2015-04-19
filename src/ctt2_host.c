@@ -38,11 +38,13 @@ void embed_modules();                       // fwd declaration for use in init
 #define CLIENT_FUNCTION(x,y) client_if.##x = PyObject_GetAttrString\
 (client_if.__module,y); if(client_if.##x==0) FAIL_RETURN
 int api_init() {
+    char buffer[1024];
     embed_modules();
     Py_Initialize();
     client_if.__module = PyImport_ImportModule("client.ctt2.main");
     if(client_if.__module == 0) FAIL_RETURN
     #include "api-includes/client-handler-inventory.h"
+    #include "system\client_key_map.h"
     return _pycall_noargs(client_if.init);
 }
 #undef CLIENT_FUNCTION
