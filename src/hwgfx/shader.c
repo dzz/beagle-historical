@@ -9,17 +9,16 @@
 #include "shader.h"
 
 
-void _shader_err(GLuint shader_id) {
+void _shader_err(GLuint shader_id, char* source) {
     int maxLength;
     char* infoLog;
     DIRTY_DISPLAY_ABORT();
-    printf("error compiling shader\n");
+    printf("error compiling shader: %s\n", source);
     glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &maxLength);
     infoLog = (char *)malloc(maxLength);
     glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
-    log_msg(infoLog);
+    //log_msg(infoLog);
     free(infoLog);
-    _getch();
 }
 
 void shader_load(gfx_shader* shader, const char* v_src_path, 
@@ -43,14 +42,14 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     glCompileShader(shader->vert_shader_id);
     glGetShaderiv(shader->vert_shader_id, GL_COMPILE_STATUS, &iv);
     if(iv == 0 ){
-        _shader_err(shader->vert_shader_id);
+        _shader_err(shader->vert_shader_id, shader->frag_name);
     }
 
     glShaderSource(shader->frag_shader_id, 1, (const GLchar**)&frag_src, 0);
     glCompileShader(shader->frag_shader_id);
     glGetShaderiv(shader->frag_shader_id, GL_COMPILE_STATUS, &iv);
     if(iv == 0 ){
-        _shader_err(shader->frag_shader_id);
+        _shader_err(shader->frag_shader_id, shader->vert_name);
     }
 
     shader->shader_id = glCreateProgram();
@@ -63,7 +62,6 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     glGetProgramiv(shader->shader_id, GL_LINK_STATUS, (int *)&iv);
     if(iv == 0) {
         printf("error linking shader\n");
-        exit(2);
     }
     free(vertex_src);
     free(frag_src);

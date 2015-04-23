@@ -5,14 +5,15 @@ from client.system.gamepad       import get_gamepad
 from client.gfx.framebuffer      import *
 from client.gfx.primitive        import primitive
 from client.gfx.primitive        import draw_mode as primitive_draw_mode
-
-import client.gfx.context     as gfx_context
-import client.system.keyboard as keyboard
+import client.gfx.shaders        as shaders
+import client.gfx.context        as gfx_context
+import client.system.keyboard    as keyboard
 
 ts = None
 tm = None
 camera = [0,0]
 test_fb = None
+test_primitive = None
 
 #bind arrow keys and WASD 
 
@@ -45,14 +46,20 @@ def bindKeyHandlers():
     keyboard.register_keypress_handler("w",      up    )
     keyboard.register_keypress_handler("s",      down  )
 
-
-
 def init():
     global ts
     global tm
     global test_fb
+    global test_primitive
 
-    test_primitive = primitive( primitive_draw_mode.LINES, 2, [ -1.0,-1.0,1.0,1.0 ] )
+    test_primitive = primitive( primitive_draw_mode.TRI_FAN,
+            [
+                [  -1.0,  -1.0 ],
+                [  1.0,   -0.0,],
+                [  1.0,    1.0,],
+                [  -1.0,   1.0 ]
+             ] 
+            )
 
     configuration = {
             "image"         : "roguelikeSheet_transparent.png",
@@ -85,15 +92,31 @@ def tick():
 
 def render():
     global test_fb
+    global test_primitive
+
     #with framebuffer_as_render_target( test_fb ):
     #    tm.render(0 - int(camera[0]),0 - int(camera[1]),1, False)
 
     gfx_context.clear()
 
+
+    #shader = shaders.get_client_program( "quad_vertex", "quad_fragment" )
+    #shader.bind([("color", [1.0,0.0,1.0,1.0])])
+
+    #test_primitive.render()
+
+    #test_primitive = primitive( primitive_draw_mode.TRI_FAN,
+    #        [
+    #            [  -1.0 + camera[0]/64,  -1.0 ],
+    #            [  1.0,   -0.0,],
+    #            [  1.0,    1.0,],
+    #            [  -1.0,   1.0 ]
+    #         ] 
+    #        )
     tm.render(0 - int(camera[0]),0 - int(camera[1]),3)
 
-    for gid in range(0,32):
-        rect_tile(ts, gid, gid*32, 0)
+    #for gid in range(0,32):
+    #    rect_tile(ts, gid, gid*32, 0)
 
 def finalize():
     pass

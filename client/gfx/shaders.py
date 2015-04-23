@@ -19,16 +19,23 @@ def get_client_program( vert, frag ):
 class shader(object):
     def __init__(self,vert,frag, path = None ):
 
-        if( path is None):
-            self._shader = hwgfx.shader_load(
-                    "shaders/" + vert + ".vert.glsl",
-                    "shaders/" + frag + ".frag.glsl")
+        if path is not None:
+            print("PYSHDR: Compiling shader: {0}{1},{2}".format(path,vert,frag))
         else:
-            self._shader = hwgfx.shader_load(
-                    path + vert + ".glsl",
-                    path + frag + ".glsl")
+            print("PYSHDR: Compiling core shader: {0}{1}".format(vert,frag))
+        if( path is None):
+            vpath =  "shaders/" + vert + ".vert.glsl"
+            fpath =  "shaders/" + frag + ".frag.glsl"
+        else:
+            vpath =  path + vert + ".glsl"
+            fpath =  path + frag + ".glsl"
 
-        print("PY: loaded shader ",self._shader)
+        print(vpath)
+        print(fpath)
+
+        self._shader = hwgfx.shader_load( vpath, fpath )
+
+        print("PYSHDR: Linked program:{3})".format(path,vert,frag,self._shader))
 
     def bind(self,uniforms):
         hwgfx.shader_bind(self._shader);
@@ -59,7 +66,7 @@ class shader(object):
                         vector[3])
 
     def __del__(self):
-        print("PY:deleting shader", self._shader)
+        print("PYSHDR:deleting shader program {0}".format(self._shader))
         hwgfx.shader_drop(self._shader)
 
     @classmethod

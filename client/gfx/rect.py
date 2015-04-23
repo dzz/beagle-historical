@@ -26,9 +26,7 @@ def rect_tile_start(tileset):
         shader = shaders.get(  "hwgfx/rect_tile", 
                                "hwgfx/rect_text" )
 
-        shader.bind         ( [( "color0", [1.0,1.0,1.0,0.0] )] )
-        shader.bind         ( [( "color1", [1.0,1.0,1.0,0.0] )] )
-
+        shader.bind([])
         tileset.texture.bind(texture.units[0])
 
 
@@ -47,7 +45,7 @@ def rect_tile_change_tileset(tileset):
 
 
 def rect_tile_raw(tileset, gid, x,y, scale = 1):
-        if( (x<0) or (y<0) or (x>1920) or (y>1080) ):
+        if ( (x< (0-tileset.tileheight*scale)) or (y<(0-tileset.tileheight*scale)) or (x>1920) or (y>1080) ):
             return
 
         tile = tileset.get_gid(gid)

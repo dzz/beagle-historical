@@ -4,12 +4,12 @@ class local_image:
     def __init__(self,img):
         self._img           = img
         [ self.w, self.h ]  = localgfx.img_dims(self._img)
-        print("PY: acquired local image:", self._img," with dims:", 
+        print("PYLIMG: acquired local image:", self._img," with dims:", 
                 [self.w, self.h])
         
     def __del__(self):
         localgfx.img_drop( self._img )
-        print("PY: dopped local image", self._img)
+        print("PYLIMG: dopped local image", self._img)
 
     @classmethod
     def from_file(cls, filename):

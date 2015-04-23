@@ -1,8 +1,6 @@
 #version 330 core
 
 uniform sampler2D brush_texture;
-uniform vec4 color0;
-uniform vec4 color1;
 uniform vec2 view;
 
 in vec2 uv;

@@ -7,11 +7,10 @@ double pcf;
 
 void initHfTimer()
 {
-
     QueryPerformanceFrequency(&Frequency);
     pcf = (double)Frequency.QuadPart;
-    printf("frequency:%i\n", Frequency.QuadPart);
-    printf("time:%f\n", getTimeMs());
+    printf("HF_TIMER: frequency     :%i\n", Frequency.QuadPart);
+    printf("HF_TIMER: time          :%f\n", getTimeMs());
 }
 
 double getTimeMs()

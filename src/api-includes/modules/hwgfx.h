@@ -425,15 +425,17 @@ DEF_ARGS {
     int                             draw_mode;
     //see python c API docs for how O! and &PyList_Type 
     //works to validate list
-    if (!INPUT_ARGS(args,"O!i",&PyList_Type, &coord_float_list,
+    if (!INPUT_ARGS(args,"O!ii",&PyList_Type, &coord_float_list,
                 &vlen, &draw_mode))
         return NULL;
+
     num_coord_floats       = PyList_Size(coord_float_list);
     coord_float_buffer    = malloc(sizeof(gfx_float)*num_coord_floats);
     for(i=0; i<num_coord_floats;++i) {
         flObj = PyList_GetItem(coord_float_list,i);
         if(PyFloat_Check(flObj)) {
             parsed=PyFloat_AsDouble(flObj);
+            printf("   parsed: %f\n",parsed);
         } else {
             PRIMITIVE_FLOAT_ERROR
         }
@@ -442,7 +444,7 @@ DEF_ARGS {
     primitive = malloc(sizeof(gfx_coordinate_primitive));
     primitive_create_coordinate_primitive(  primitive,
                                             coord_float_buffer,
-                                            num_coord_floats,
+                                            num_coord_floats ,
                                             vlen);
     free(coord_float_buffer);
     primitive->mode = draw_mode;

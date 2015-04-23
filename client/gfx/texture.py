@@ -10,19 +10,19 @@ class texture:
         self._tex   = tex
         self.w      = w
         self.h      = h
-        print("PY: acquired texture ", self._tex)
+        print("PYTEX: acquired texture ", self._tex)
 
     def __del__(self):
         hwgfx.texture_drop(self._tex)
-        print("PY: dropped texture", self._tex)
+        print("PYTEX dropped texture", self._tex)
 
     @classmethod
     def from_local_image(cls, local_image, filtered=False):
-        print ("PY: generating texture")
+        print ("PYTEX generating texture")
         tex = hwgfx.texture_generate( local_image.w, 
                                 local_image.h, 
                                 filtered)
-        print ("PY: uploading texture")
+        print ("PYTEX uploading texture")
         hwgfx.texture_upload(tex, local_image._img)
         return cls( tex, 
                     local_image.w, 
