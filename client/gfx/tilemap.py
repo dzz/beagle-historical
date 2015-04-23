@@ -40,8 +40,9 @@ class tilemap:
                         if(ts is not active_ts):
                             if active_ts is not None:
                                 rect_tile_end(active_ts)
+                            else:
+                                rect_tile_start(ts)
                             active_ts = ts
-                            rect_tile_start(ts)
                         if not debug:
                             rect_tile_raw( ts, gid_id, org_x+((x*self.tileheight))*scale, org_y+((y*self.tileheight))*scale, scale)
                     gid_idx+=1

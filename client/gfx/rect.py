@@ -26,8 +26,8 @@ def rect_tile_start(tileset):
         shader = shaders.get(  "hwgfx/rect_tile", 
                                "hwgfx/rect_text" )
 
-        shader.bind([])
         tileset.texture.bind(texture.units[0])
+        shader.bind([])
 
 
 def rect_tile_end(tileset):

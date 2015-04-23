@@ -656,7 +656,7 @@ static PyMethodDef hwgfx_methods[] = {
                             hwgfx_primitive_create_coordinate_primitive,
                                                         METH_VARARGS, NULL},
     {"primitive_create_coordinate_uv_primitive",
-                            hwgfx_primitive_destroy_coordinate_uv_primitive,
+                            hwgfx_primitive_create_coordinate_uv_primitive,
                                                         METH_VARARGS, NULL},
     {"primitive_render",    hwgfx_primitive_render,     METH_VARARGS, NULL},
     {"primitive_destroy_coordinate_primitive",

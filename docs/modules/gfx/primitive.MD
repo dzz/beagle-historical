@@ -1,4 +1,4 @@
-#shader
+#primitive
 
 ```python
 from client.gfx.primitive import primitive
@@ -6,6 +6,8 @@ from client.gfx.primitive        import draw_mode
 ```
 
 A primitive is a collection of vertexes, which can be two, three or four dimensional. These primitives are stored on the graphics server for efficient rendering. 
+
+A primitive can be created with, or without UV coordinates.
 
 
 #draw mode
@@ -21,12 +23,43 @@ class draw_mode(IntEnum):
     TRIS            = 6
 ```
 
-the draw mode specifies how the graphics server should render a primitive
+The draw mode specifies how the graphics server should render a primitive
 
+#construction
+
+##vertices only
+```python
+basic_primitive = primitive( draw_mode.TRI_FAN,
+        [
+           [  -1.0,  -1.0 ],
+           [  1.0,   -0.0,],
+           [  1.0,    1.0,],
+           [  -1.0,   1.0 ]
+         ] 
+        )
+```
+
+##vertices and UV coords
+```python
+test_primitive = primitive( primitive_draw_mode.TRI_FAN,
+        [
+            [  -1.0,  -1.0 ],
+            [  1.0,   -0.0,],
+            [  1.0,    1.0,],
+            [  -1.0,   1.0 ]
+        ] ,
+         [
+            [0.0,0.0],
+            [0.0,1.0],
+            [1.0,1.0],
+            [1.0,0.0]
+         ]
+        )
+```
 #usage
 
 ```python
-from client.gfx.primitive import primitive
+from client.gfx.primitive        import primitive
 import client.gfx.shaders        as shaders
 from client.gfx.primitive        import draw_mode 
 

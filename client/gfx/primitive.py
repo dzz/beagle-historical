@@ -24,14 +24,22 @@ def INIT_set_drawmode_map(hwgfx_map):
 class primitive:
     def __init__(self,mode, coords, uvs = None ):
         global _drawmode_map
+
+        if(uvs and len(coords) != len(uvs) ):
+            raise ValueError("PYPRIM: uvs vertex count must match coords")
+
         total_coords = len(coords)
         floats_per_vertex = len(coords[0]);
         coords = list(itertools.chain.from_iterable(coords))
         gpu_mode = _drawmode_map[mode]
 
+        if uvs:
+            uvs = list(itertools.chain.from_iterable(uvs));
+            if(len(uvs) != total_coords*2):
+                raise ValueError("PYPRIM: uvs dont make sense")
+
         if(total_coords != len(coords)/floats_per_vertex):
             raise ValueError("PYPRIM: coords array doesn't make sense as vertices")
-
 
         print("local mode {0}, gpu drawmode: {1}".format(mode, gpu_mode))
         if uvs is None:
@@ -43,6 +51,7 @@ class primitive:
         else:
             self._prim = hwgfx.primitive_create_coordinate_uv_primitive(
                     coords, uvs,
+                    floats_per_vertex,
                     gpu_mode )
             self._has_uvs = True
         print("PYPRIM: acquired primitive ", self._prim, " uvs:", self._has_uvs)

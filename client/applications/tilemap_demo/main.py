@@ -58,7 +58,13 @@ def init():
                 [  1.0,   -0.0,],
                 [  1.0,    1.0,],
                 [  -1.0,   1.0 ]
-             ] 
+            ] ,
+             [
+                [0.0,0.0],
+                [0.0,1.0],
+                [1.0,1.0],
+                [1.0,0.0]
+             ]
             )
 
     configuration = {
@@ -95,28 +101,18 @@ def render():
     global test_primitive
 
     #with framebuffer_as_render_target( test_fb ):
-    #    tm.render(0 - int(camera[0]),0 - int(camera[1]),1, False)
 
     gfx_context.clear()
 
 
-    #shader = shaders.get_client_program( "quad_vertex", "quad_fragment" )
-    #shader.bind([("color", [1.0,0.0,1.0,1.0])])
+    shader = shaders.get_client_program( "quad_vertex", "quad_fragment" )
+    shader.bind([("color", [1.0,0.0,1.0,1.0])])
 
-    #test_primitive.render()
+    test_primitive.render()
 
-    #test_primitive = primitive( primitive_draw_mode.TRI_FAN,
-    #        [
-    #            [  -1.0 + camera[0]/64,  -1.0 ],
-    #            [  1.0,   -0.0,],
-    #            [  1.0,    1.0,],
-    #            [  -1.0,   1.0 ]
-    #         ] 
-    #        )
+    for gid in range(0,32):
+        rect_tile(ts, gid, gid*32, 0)
     tm.render(0 - int(camera[0]),0 - int(camera[1]),3)
-
-    #for gid in range(0,32):
-    #    rect_tile(ts, gid, gid*32, 0)
 
 def finalize():
     pass
