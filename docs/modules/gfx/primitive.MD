@@ -2,7 +2,7 @@
 
 ```python
 from client.gfx.primitive import primitive
-from client.gfx.primitive        import draw_mode 
+from client.gfx.primitive import draw_mode 
 ```
 
 A primitive is a collection of vertexes, which can be two, three or four dimensional. These primitives are stored on the graphics server for efficient rendering. 
