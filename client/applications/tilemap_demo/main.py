@@ -3,6 +3,8 @@ from client.gfx.tileset          import tileset
 from client.gfx.tilemap          import tilemap
 from client.system.gamepad       import get_gamepad
 from client.gfx.framebuffer      import *
+from client.gfx.primitive        import primitive
+from client.gfx.primitive        import draw_mode as primitive_draw_mode
 
 import client.gfx.context     as gfx_context
 import client.system.keyboard as keyboard
@@ -50,6 +52,7 @@ def init():
     global tm
     global test_fb
 
+    test_primitive = primitive( primitive_draw_mode.LINES, 2, [ -1.0,-1.0,1.0,1.0 ] )
 
     configuration = {
             "image"         : "roguelikeSheet_transparent.png",

@@ -1,10 +1,10 @@
 import hwgfx
-from enum import Enum
+from enum import IntEnum
 
 _drawmode_map = []
 
 #bindings as per api-includes/modules/hwgfx.h
-class draw_mode(Enum):
+class draw_mode(IntEnum):
     POINTS          = 0
     LINE_STRIP      = 1
     LINE_LOOP       = 2
@@ -25,7 +25,6 @@ class primitive:
         if uvs is None:
             self._prim = hwgfx.primitive_create_coordinate_primitive( 
                     coords, 
-                    floats_per_vertex, 
                     _drawmode_map[mode])
             self._has_uvs = False
         else:
