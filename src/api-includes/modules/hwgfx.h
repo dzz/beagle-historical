@@ -435,16 +435,17 @@ DEF_ARGS {
         flObj = PyList_GetItem(coord_float_list,i);
         if(PyFloat_Check(flObj)) {
             parsed=PyFloat_AsDouble(flObj);
-            printf("   parsed: %f\n",parsed);
         } else {
             PRIMITIVE_FLOAT_ERROR
         }
         coord_float_buffer[i] = parsed;
     }
     primitive = malloc(sizeof(gfx_coordinate_primitive));
+
+    printf("leaving hwgfx");
     primitive_create_coordinate_primitive(  primitive,
                                             coord_float_buffer,
-                                            num_coord_floats ,
+                                            num_coord_floats / vlen ,
                                             vlen);
     free(coord_float_buffer);
     primitive->mode = draw_mode;
@@ -509,7 +510,7 @@ DEF_ARGS {
             (  primitive,
                coord_float_buffer,
                uv_float_buffer,
-               num_coord_floats,
+               num_coord_floats / vlen ,
                vlen );
 
     free(coord_float_buffer);

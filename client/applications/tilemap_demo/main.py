@@ -55,7 +55,7 @@ def init():
     test_primitive = primitive( primitive_draw_mode.TRI_FAN,
             [
                 [  -1.0,  -1.0 ],
-                [  1.0,   -0.0,],
+                [  1.0,    1.0,],
                 [  1.0,    1.0,],
                 [  -1.0,   1.0 ]
             ] ,
@@ -111,7 +111,7 @@ def render():
     test_primitive.render()
 
     for gid in range(0,32):
-        rect_tile(ts, gid, gid*32, 0)
+        rect_tile(ts, gid, gid*32, camera[1])
     tm.render(0 - int(camera[0]),0 - int(camera[1]),3)
 
 def finalize():

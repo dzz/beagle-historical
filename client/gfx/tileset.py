@@ -15,11 +15,6 @@ class tileset:
 
         tail,head = os.path.split( configuration["image"] )
         self.image = host_config.get_config("app_dir") + img_path + head
-
-        print("----------")
-        print(self.image)
-        print("----------")
-
         self.imageheight = configuration["imageheight"]
         self.imagewidth = configuration["imagewidth"]
         self.margin = configuration["margin"]
@@ -40,8 +35,6 @@ class tileset:
 
     def compile(self, filtered = False ):
         self.texture     = texture.from_local_image( local_image.from_file(self.image), filtered  )
-        print("loaded tilemap texture")
-
         uPix = self.margin
         vPix = self.margin
         tH = self.tileheight
@@ -63,11 +56,6 @@ class tileset:
             gid[3]/=self.imageheight
 
         self.gidcount = len(self.gids)
-
-        print("loaded tileset")
-        print("--------------")
-        print("gidcount:{0}".format(self.gidcount) )
-
         for key in self.tileproperties:
             ikey = int(key)
             self.gidproperties[ikey] = self.tileproperties[key]

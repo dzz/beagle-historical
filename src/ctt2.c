@@ -217,6 +217,7 @@ int main(int argc, char **argv){
     double frame_millis                             = -1;
     double init_millis                              = 0;
     double frame_overflow                           = 0;
+    int tick_next                                   = 0;
 
     if(argc==5) {
         SCREEN_WIDTH    = atoi( argv[1] );
@@ -249,9 +250,14 @@ int main(int argc, char **argv){
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
+        double base_millis = getTimeMs();
 
         while(finished == 0) {
-            double base_millis = getTimeMs();
+            if(tick_next == 1)  {
+                if(api_tick() == API_FAILURE) { finished = 1; }
+                tick_next = 0;
+            }
+
 
             while(SDL_PollEvent(&event)) {
                 switch (event.type) {
@@ -333,11 +339,6 @@ int main(int argc, char **argv){
             }
 
 
-            if(yield_cycles++ > CYCLES_BETWEEN_YIELDS) {
-
-                yield_cycles = 0;
-                Sleep(0);
-            }
 
             if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
                // frame* fr           = getActiveFrame();
@@ -354,7 +355,7 @@ int main(int argc, char **argv){
 				
                
                api_render();
-               if(api_tick() == API_FAILURE) { finished = 1; }
+               tick_next=1;
                if(fps!=-1) {
                 double total_millis =  (getTimeMs()-base_millis);
                 double base = (frame_millis-total_millis)+frame_overflow;

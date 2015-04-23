@@ -11,23 +11,30 @@
 #define NO_POINTER_OFFSET 0
 
 /** BASIC TYPE **/
-void primitive_create_coordinate_primitive(gfx_coordinate_primitive* 
-        primitive, gfx_float* coordinates, int verts, int vlen ){
+void primitive_create_coordinate_primitive(gfx_coordinate_primitive* primitive, gfx_float* coordinates, int verts, int vlen ){
 
+    //printf("common init : verts( %i) vlen(%i)\n", verts,vlen);
     primitive->_num_verts = verts;
     primitive->mode = GL_TRIANGLE_FAN;
 
+    //printf("genarray\n");
+
     glGenVertexArrays(1, &primitive->vert_array);
+    //printf("bind\n");
     glBindVertexArray(primitive->vert_array);
 
 
+    //printf("genbuffer\n");
     //install our coordinates
     glGenBuffers(1, &primitive->vert_buffer);
+    //printf("genbind\n");
     glBindBuffer(GL_ARRAY_BUFFER, primitive->vert_buffer);
+    //printf("upload\n");
     glBufferData(GL_ARRAY_BUFFER, (verts*vlen) * sizeof(GLfloat), 
             coordinates, 
             GL_STATIC_DRAW);
 
+    //printf("attr index\n");
     glVertexAttribPointer(COORDINATE_ATTRIBUTE_INDEX, 
             vlen, 
             GL_FLOAT, 
@@ -35,6 +42,7 @@ void primitive_create_coordinate_primitive(gfx_coordinate_primitive*
             NO_STRIDE, 
             NO_POINTER_OFFSET ); 
 
+    //printf("enable array\n");
     glEnableVertexAttribArray(COORDINATE_ATTRIBUTE_INDEX);
     
     OGL_OBJ("varray",   primitive->vert_array,  OGL_RECV);
@@ -66,17 +74,22 @@ void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
         uv_primitive, gfx_float* coordinates, gfx_float* uvs,
         int verts, int vlen ){
 
+    //printf("common init\n");
     //initialize basic object
     primitive_create_coordinate_primitive( 
             (gfx_coordinate_primitive*)uv_primitive, 
             coordinates, verts, vlen);
 
     //install our UVs
+    //printf("gen\n");
     glGenBuffers(1, &uv_primitive->uv_buffer);
+    //printf("bind\n");
     glBindBuffer(GL_ARRAY_BUFFER, uv_primitive->uv_buffer);
+    //printf("buffer\n");
     glBufferData(GL_ARRAY_BUFFER, (verts*vlen) * sizeof(GLfloat), 
             uvs, GL_STATIC_DRAW);
 
+    //printf("attrib\n");
     glVertexAttribPointer(UV_ATTRIBUTE_INDEX, 
             UV_FLOATS_PER_VERT, 
             GL_FLOAT, 
@@ -84,6 +97,7 @@ void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
             NO_STRIDE, 
             NO_POINTER_OFFSET ); 
 
+    //printf("enable idx\n");
     glEnableVertexAttribArray(UV_ATTRIBUTE_INDEX);
 
     OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_RECV);
