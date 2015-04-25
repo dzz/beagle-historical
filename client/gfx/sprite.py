@@ -43,7 +43,7 @@ class sprite():
                                                             [ tile[0]        , tile[1]+tile[3] ],
                                                             [ tile[0],         tile[1]         ] ]) )
 
-    def select_animation( key ):
+    def select_animation( self, key ):
         self.current_animation = key
         self.frame_index = 0
 

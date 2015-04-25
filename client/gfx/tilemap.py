@@ -98,7 +98,7 @@ class tilemap:
 
         self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
           
-    def render(self,org_x,org_y,scale, debug=False ):
+    def render(self,org_x,org_y,scale ):
         self.primaryTileset.texture.bind(0)
         self.shader.bind([ ("scale", [scale]), ("view", self.coordinates), ("translation",[float(org_x),float(org_y)])])
         self.primitive.render()
@@ -116,11 +116,11 @@ class tilemap:
         return ts.tile_prop(gid_id,key)
 
     @classmethod 
-    def from_json_file(cls, path, img_path, filtered=False ):
+    def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None ):
         root = host_config.get_config("app_dir")
         json_parsed = {}
         with open("{0}{1}".format(root,path)) as f:
             json_data = f.read()
             json_parsed = json.loads(json_data)
-        return cls(json_parsed, img_path, filtered)
+        return cls(json_parsed, img_path, filtered, coordinates, tileheight )
 
