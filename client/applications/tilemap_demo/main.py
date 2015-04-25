@@ -9,12 +9,18 @@ from client.gfx.coordinates      import centered_view, Y_Axis_Down
 import client.gfx.shaders        as shaders
 import client.gfx.context        as gfx_context
 import client.system.keyboard    as keyboard
+from client.gfx.sprite           import sprite, sprite_renderer
+
+
 
 ts = None
 tm = None
 camera = [0,0]
 test_fb = None
 test_primitive = None
+test_sprite = None
+test_animated_sprite = None
+test_sprite_renderer = None
 
 #bind arrow keys and WASD 
 
@@ -52,10 +58,14 @@ def init():
     global tm
     global test_fb
     global test_primitive
+    global test_sprite_renderer
+    global test_sprite
 
     #set the global clear color to black
     gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
 
+    #create a coordinate system to se tup our tilemap / sprite renderer
+    coord_system = centered_view(1920,1080,Y_Axis_Down)
 
     #Load a tileset via a configuration dict
     configuration = {
@@ -72,11 +82,18 @@ def init():
     #we can use this tileset later to render sprites
     ts = tileset( configuration, "roguetiles/Spritesheet/", filtered=True )
 
+    #sprites need to be rendered by a sprite renderer, we create that first
+    test_sprite_renderer = sprite_renderer( tileset = ts, coordinates = coord_system )
+
+    #create the sprite object 
+    test_sprite = sprite( sprite_renderer = test_sprite_renderer, named_animations = { "default" : [125, 100, 52 ] }, ticks_per_frame = 10 )
+
+
     #here's our tilemap - it loads an maintains its own tileset independent of the one we just set up
     tm = tilemap.from_json_file( "json/sample_indoor.json", "roguetiles/Spritesheet/", filtered=True)
 
     #set a coordinate space the tilemap will use when rendering
-    tm.set_coordinates( centered_view( 1920,1080, Y_Axis_Down ) ) 
+    tm.set_coordinates( coord_system ) 
 
     bindKeyHandlers()
 
@@ -103,18 +120,26 @@ def tick():
     camera[0] += pad.leftStick[0]*32
     camera[1] += pad.leftStick[1]*32
 
+    #animate our sprite
+    test_sprite.tick()
+
 def render():
     global test_fb
     global test_primitive
+    global test_sprite_renderer
+    global test_sprite
 
     gfx_context.clear()
 
     #render our tilemap
     tm.render(0 - int(camera[0]),0 - int(camera[1]),4)
 
-    #render some sprites
-    for gid in range(0,32):
-        rect_tile(ts, gid, gid*32, camera[1])
+
+    test_sprite_renderer.render( 
+           [ 
+            [ test_sprite, [camera[0]/64,camera[1]/64],6] ,
+            [ test_sprite, [camera[1]/32,camera[0]/32],12] 
+           ])
 
 def finalize():
     pass

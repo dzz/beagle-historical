@@ -3,6 +3,9 @@ import hwgfx
 
 _shaders = {}
 
+def get_unique(vert,frag, path=None):
+    return shader(vert,frag,path)
+
 def get(vert,frag, path = None ):
     global _shaders
     if (vert,frag,path) in _shaders.keys():
@@ -14,6 +17,9 @@ def get(vert,frag, path = None ):
 
 def get_client_program( vert, frag ):
     return get(vert,frag, host_config.get("app_dir") + "shaders/")
+
+def get_unique_client_program( vert, frag ):
+    return get_unique(vert,frag, host_config.get("app_dir") + "shaders/")
 
 
 class shader(object):
