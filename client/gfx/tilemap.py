@@ -9,14 +9,20 @@ import client.ctt2.host_config  as host_config
 import client.gfx.shaders       as shaders
 
 class tilemap:
-    def __init__(self, configuration, img_path, filtered = False ):
+    def __init__(self, configuration, img_path, filtered = False, coordinates = [1.0,1.0], tileheight = None ):
+        self.coordinates = coordinates
         self.tilesets = []
         self.gid_tileset_map = {}  
         self.layers = []
-        self.tileheight = configuration["tileheight"]
+
+        if(tileheight is None):
+            self.tileheight = configuration["tileheight"]
+        else:
+            self.tileheight = tileheight
+
         self.primitive = None
         self.primaryTileset = None
-        self.shader = shaders.get_client_program( "quad_vertex", "quad_fragment" )
+        self.shader = shaders.get( "hwgfx/tilemap", "hwgfx/tilemap" )
 
         for tileset_definition in configuration["tilesets"]:
             ts = tileset( tileset_definition, img_path) 
@@ -38,8 +44,12 @@ class tilemap:
 
         self.compile()
 
+    def set_coordinates(self,coordinates):
+        self.coordinates = coordinates
+
     def compile(self):
 
+        print("PYTILE: Compiling tilemap")
         tile_coords = []
         tile_uvs    = []
 
@@ -56,14 +66,17 @@ class tilemap:
                         ts = self.gid_tileset_map[gid_id]
                         tile = ts.get_gid(gid_id)
                         if(tile):
-                            tx = float(x)
-                            ty = float(y)
-                            tile_coords.extend(   [ [ tx,  ty   ], 
-                                                    [ tx+1,ty   ], 
-                                                    [ tx+1,ty+1 ], 
+                            overlap = 500
+                            tx = float(x) - (float(self.tileheight) / overlap )
+                            ty = float(y) - (float(self.tileheight) / overlap )
+                            sz = 1.0 + (float(self.tileheight)/overlap)
 
-                                                    [ tx+1,ty+1 ], 
-                                                    [ tx,  ty+1 ], 
+                            tile_coords.extend(   [ [ tx,  ty   ], 
+                                                    [ tx+sz,ty   ], 
+                                                    [ tx+sz,ty+sz ], 
+
+                                                    [ tx+sz,ty+sz ], 
+                                                    [ tx,  ty+sz ], 
                                                     [ tx,  ty   ] ] )
 
                             tile_uvs.extend( [ 
@@ -78,38 +91,18 @@ class tilemap:
                     gid_idx+=1
 
 
+        for coord in tile_coords:
+            coord[0] = coord[0] * self.tileheight
+            coord[1] = coord[1] * self.tileheight
+
+
         self.primitive = primitive( draw_mode.TRIS, tile_coords, tile_uvs )
           
     def render(self,org_x,org_y,scale, debug=False ):
-        
         self.primaryTileset.texture.bind(0)
-        self.shader.bind([])
+        self.shader.bind([ ("scale", [scale]), ("view", self.coordinates), ("translation",[float(org_x),float(org_y)])])
         self.primitive.render()
         return
-
-
-        active_ts = None
-
-    #    for layer in self.layers:
-    #        rows = range(0,layer["height"])
-    #        columns = range(0,layer["width"])
-    #        layer_data = layer["data"]
-
-    #        gid_idx = 0
-    #        for y in rows:
-    #            for x in columns:
-    #                gid_id = layer_data[gid_idx]
-    #                if(gid_id>0):
-    #                    ts = self.gid_tileset_map[gid_id]
-    #                    if(ts is not active_ts):
-    #                        if active_ts is not None:
-    #                            rect_tile_end(active_ts)
-    #                        else:
-    #                            rect_tile_start(ts)
-    #                        active_ts = ts
-    #                    if not debug:
-    #                        rect_tile_raw( ts, gid_id, org_x+((x*self.tileheight))*scale, org_y+((y*self.tileheight))*scale, scale)
-    #                gid_idx+=1
 
     def gid_via_coord(self,x,y,layer):
         i = x+(y*self.layers[layer]["width"])

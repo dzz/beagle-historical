@@ -5,6 +5,7 @@ from client.system.gamepad       import get_gamepad
 from client.gfx.framebuffer      import *
 from client.gfx.primitive        import primitive
 from client.gfx.primitive        import draw_mode as primitive_draw_mode
+from client.gfx.coordinates      import centered_view, Y_Axis_Down
 import client.gfx.shaders        as shaders
 import client.gfx.context        as gfx_context
 import client.system.keyboard    as keyboard
@@ -52,21 +53,11 @@ def init():
     global test_fb
     global test_primitive
 
-    test_primitive = primitive( primitive_draw_mode.TRI_FAN,
-            [
-                [  -1.0,  -1.0 ],
-                [  1.0,    1.0,],
-                [  1.0,    1.0,],
-                [  -1.0,   1.0 ]
-            ] ,
-             [
-                [0.0,0.0],
-                [0.0,1.0],
-                [1.0,1.0],
-                [1.0,0.0]
-             ]
-            )
+    #set the global clear color to black
+    gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
 
+
+    #Load a tileset via a configuration dict
     configuration = {
             "image"         : "roguelikeSheet_transparent.png",
             "imageheight"   : 526,
@@ -78,16 +69,32 @@ def init():
             "tileheight"    : 16,
             "tileproperties" : {} 
             }
-
+    #we can use this tileset later to render sprites
     ts = tileset( configuration, "roguetiles/Spritesheet/", filtered=True )
+
+    #here's our tilemap - it loads an maintains its own tileset independent of the one we just set up
     tm = tilemap.from_json_file( "json/sample_indoor.json", "roguetiles/Spritesheet/", filtered=True)
 
-    test_fb =  framebuffer.from_texture( tm.tilesets[0].texture )
-
-    #gfx_context.set_clear_color(0.0,0.0,1.0,0.0)
+    #set a coordinate space the tilemap will use when rendering
+    tm.set_coordinates( centered_view( 1920,1080, Y_Axis_Down ) ) 
 
     bindKeyHandlers()
 
+    #how to create custom geometry
+    test_primitive = primitive( primitive_draw_mode.TRI_FAN,
+            coords = [
+                [  -1.0,  -1.0 ],
+                [   1.0,   1.0,],
+                [   1.0,   1.0,],
+                [  -1.0,   1.0 ]
+            ] ,
+            uvs = [
+                [0.0,0.0],
+                [0.0,1.0],
+                [1.0,1.0],
+                [1.0,0.0]
+             ]
+            )
 
 
 def tick():
@@ -100,19 +107,14 @@ def render():
     global test_fb
     global test_primitive
 
-    #with framebuffer_as_render_target( test_fb ):
-
     gfx_context.clear()
 
+    #render our tilemap
+    tm.render(0 - int(camera[0]),0 - int(camera[1]),4)
 
-    shader = shaders.get_client_program( "quad_vertex", "quad_fragment" )
-    shader.bind([("color", [1.0,0.0,1.0,1.0])])
-
-    test_primitive.render()
-
+    #render some sprites
     for gid in range(0,32):
         rect_tile(ts, gid, gid*32, camera[1])
-    tm.render(0 - int(camera[0]),0 - int(camera[1]),3)
 
 def finalize():
     pass
