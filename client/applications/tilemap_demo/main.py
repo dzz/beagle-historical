@@ -86,7 +86,7 @@ def init():
     test_sprite_renderer = sprite_renderer( tileset = ts, coordinates = coord_system )
 
     #create the sprite object 
-    test_sprite = sprite( sprite_renderer = test_sprite_renderer, named_animations = { "default" : [125, 100, 52 ], "other" : [322,223] }, ticks_per_frame = 10 )
+    test_sprite = sprite( sprite_renderer = test_sprite_renderer, named_animations = { "default" : [125, 100, 52 ], "other" : [322,23] }, ticks_per_frame = 10 )
 
 
     #here's our tilemap - it loads an maintains its own tileset independent of the one we just set up
@@ -116,6 +116,9 @@ def init():
 
 flip_flop = 0
 
+def clamp_to_region( v, left,top,right,bottom):
+    return [ max( left, min( v[0], right )),  max( top, min( v[1], bottom )) ]
+
 def tick():
     global camera
     global flip_flop
@@ -130,6 +133,9 @@ def tick():
     pad = get_gamepad(0)
     camera[0] += pad.leftStick[0]*32
     camera[1] += pad.leftStick[1]*32
+
+    camera = clamp_to_region( camera, 0,0,500,500)
+
 
     #animate our sprite
     test_sprite.tick()
