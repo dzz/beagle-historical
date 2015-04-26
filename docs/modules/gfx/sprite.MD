@@ -59,6 +59,8 @@ renderer.render( [ [ my_sprite, [ 10.0, -10.0 ], 16 ],    #render my_sprite at 1
 In order to animate a sprite you have to call the ``tick`` function on the sprite object. 
 You can change the animation with the ``select_animation`` method. Changing the animation will reset the animation cycle, so you only want to issue a select_animation call during a state change, i.e. do not issue a select_animation call on every frame, since that will result in only the first frame of animation showing.
 
+You can disable/enable a sprite from animating by using the method ``set_animation_enabled``
+
 ```python
 #during tick
 

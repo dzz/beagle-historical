@@ -1,17 +1,18 @@
 from client.gfx.coordinates      import centered_view, Y_Axis_Down
 from client.gfx.sprite           import sprite, sprite_renderer
 from client.gfx.tilemap          import tilemap
-import client.gfx.context as gfx_context
+import client.gfx.context        as gfx_context
 from client.system.gamepad       import get_gamepad
 from client.gfx.tileset          import tileset
 from .player import player
 
 class game:
     def __init__(self):
+        self.player_sprite = None
         self.coord_system = centered_view(1920,1080,Y_Axis_Down)
         self.load_sprites()
         self.load_tilemap()
-        self.player = player()
+        self.player = player( self )
 
         #
         #setting unit size to 16 - tilemap/sprites are 16x16 and we're 
@@ -24,8 +25,11 @@ class game:
 
         self.unit_size = 16.0   
 
-        self.magnification = 6
+        self.magnification = 8
         gfx_context.set_clear_color(1.0,1.0,1.0,0.0)
+
+    def get_tile(self, x, y):
+        return self.tilemap.get_layer_tile(0, x,y)
 
     def load_sprites(self):
         configuration = {
@@ -43,14 +47,13 @@ class game:
 
         self.sprite_tileset  = tileset( configuration = configuration, img_path = "tiles/" )
         self.sprite_renderer = sprite_renderer( tileset = self.sprite_tileset, coordinates = self.coord_system )
-
         self.player_sprite = sprite( 
                                     sprite_renderer = self.sprite_renderer, 
                                     named_animations = { 
                                                             "up"   : [4, 5, 6 ], 
-                                                            "left" : [6, 7, 8 ], 
-                                                            "down" : [9, 10,11], 
-                                                            "right": [12,13,14]
+                                                            "left" : [7, 8, 9 ], 
+                                                            "down" : [10, 11,12], 
+                                                            "right": [13,14,15]
                                                        }, 
                                     current_animation = "up",
                                     ticks_per_frame = 10 )

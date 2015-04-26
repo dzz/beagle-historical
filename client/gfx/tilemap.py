@@ -47,6 +47,16 @@ class tilemap:
     def set_coordinates(self,coordinates):
         self.coordinates = coordinates
 
+    def get_layer_tile(self,layer_index,x,y):
+        try:
+            x = int(x)
+            y = int(y)
+            layer = self.layers[layer_index]
+            index = int( layer["width"]*y+x )
+            return layer["data"][index]
+        except IndexError:
+            return None
+
     def compile(self):
 
         print("PYTILE: Compiling tilemap")

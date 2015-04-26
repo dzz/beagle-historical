@@ -12,6 +12,7 @@ class sprite():
         self.primitives = {}
         self.sprite_renderer = sprite_renderer
         self.size = size
+        self.animating = True
 
         if self.size is None:
             self.size = self.sprite_renderer.tileset.tileheight
@@ -22,11 +23,9 @@ class sprite():
         for animation in self.named_animations:
             self.primitives[animation] = []
             for frame in self.named_animations[animation]:
-                print("trying to compile frame:{0}".format(frame))
                 tile = self.sprite_renderer.tileset.get_gid( frame )
                 if not tile:
                     continue
-                print("------compiling---")
                 sz = self.size
                 self.primitives[animation].append( primitive( draw_mode.TRIS, [ 
                                                                      [ 0.0,    0.0,  ],
@@ -43,11 +42,16 @@ class sprite():
                                                             [ tile[0]        , tile[1]+tile[3] ],
                                                             [ tile[0],         tile[1]         ] ]) )
 
+    def set_animation_enabled(self,enabled):
+        self.animating = enabled
+
     def select_animation( self, key ):
         self.current_animation = key
         self.frame_index = 0
 
     def tick(self):
+        if not self.animating:
+            return
         self.ticks = (self.ticks + 1) % (self.ticks_per_frame)
         if(self.ticks == 0 ):
             self.frame_index = (self.frame_index + 1) % len( self.named_animations[self.current_animation] )
