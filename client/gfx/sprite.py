@@ -64,16 +64,25 @@ class sprite_renderer():
     def __init__( self, tileset, coordinates = [1.0,1.0],):
         self.tileset = tileset
         self.coordinates = coordinates
-        self.shader = shaders.get_unique( "hwgfx/tilemap", "hwgfx/tilemap" )
+        self.shader = shaders.get_unique( "hwgfx/sprite", "hwgfx/tilemap" )
 
     def render(self, sprite_render_operations):
         self.tileset.texture.bind(0)
         self.shader.bind([ ("view", self.coordinates) ])
         for sprite_render_operation in sprite_render_operations:
-            sprite = sprite_render_operation[0]
-            translation = sprite_render_operation[1]
-            scale = sprite_render_operation[2]
-            self.shader.bind([ ("scale", [scale]), ("translation", translation ) ])
-            sprite.get_current_primitive().render()
+            if(len(sprite_render_operation)==3):
+                sprite = sprite_render_operation[0]
+                translation_local = sprite_render_operation[1]
+                scale = sprite_render_operation[2]
+                self.shader.bind([ ("scale_local", [scale]), ("translation_local", translation_local ), ("scale_world",[1.0] ),("translation_world",[0.0,0.0]) ])
+                sprite.get_current_primitive().render()
+            elif(len(sprite_render_operation)==5):
+                sprite = sprite_render_operation[0]
+                translation_local = sprite_render_operation[1]
+                scale = sprite_render_operation[2]
+                translation_world = sprite_render_operation[3]
+                scale_world = sprite_render_operation[4]
+                self.shader.bind([ ("scale_local", [scale]), ("translation_local", translation_local ), ("scale_world",[scale_world] ),("translation_world",translation_world) ])
+                sprite.get_current_primitive().render()
 
 

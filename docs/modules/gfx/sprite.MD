@@ -54,6 +54,10 @@ renderer.render( [ [ my_sprite, [ 10.0, -10.0 ], 16 ],    #render my_sprite at 1
                    [ my_sprite, [  0.0,   0.0 ], 2  ] ] )
 
 ```
+#more complex transformations:
+
+the ``sprite_renderer`` accepts a list of sprite render operations in the basic form: ``[ sprite, [x,y], scale]``; but sometimes more control is required; in which case you can supply render operations in the form: ``[ sprite, [local_x,local_y], local_scale, [world_x,world_y],world_scale ]``
+
 #animation
 
 In order to animate a sprite you have to call the ``tick`` function on the sprite object. 

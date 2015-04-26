@@ -9,8 +9,7 @@ class player:
         self.x = 16.0
         self.y = 16.0
         self.player_speed = 0.1
-        self.animation_threshold = 0.1
-
+        self.animation_threshold = 0.05
         #if this value was 0.5 (1.0/2) the player would take up an entire 'unit' e.g.
         #tile. We set it to something slightly smaller so the player can fit through
         #cooridors without being perfectly aligned
@@ -48,6 +47,11 @@ class player:
         velocity_y  = pad.leftStick[1]*self.player_speed
 
         update_animation( self.game.player_sprite, velocity_x, velocity_y)
+
+        # this is an implementation of AABB collision detection. First we move 
+        # a 'test' rectangle along the x axis, keeping the old y value, and test.
+        # If that test succeeds, we set the new value for x against self. Then
+        # we run the check again, but on the veritcal axis
 
         collision_rects = []
 
