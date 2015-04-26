@@ -4,6 +4,7 @@ from client.gfx.tilemap          import tilemap
 import client.gfx.context        as gfx_context
 from client.system.gamepad       import get_gamepad
 from client.gfx.tileset          import tileset
+from math import sin
 from .player import player
 from .ghost import ghost
 
@@ -16,6 +17,9 @@ class game:
         self.load_tilemap()
         self.player = player( self )
         self.ghosts = self.create_ghosts()
+        self.wobble_index = 0.0   #use this to drive an oscilator to wobble the scale of our ghosts
+        self.wobble_speed = 0.1
+        self.ghost_scale = 1
 
         #
         #setting unit size to 16 - tilemap/sprites are 16x16 and we're 
@@ -68,7 +72,7 @@ class game:
                                                             "right": [13,14,15, 14]
                                                        }, 
                                     current_animation = "up",
-                                    ticks_per_frame = 4 )
+                                    ticks_per_frame = 7 )
 
         self.ghost_sprite = sprite( 
                                     sprite_renderer = self.sprite_renderer, 
@@ -76,12 +80,17 @@ class game:
                                                             "wobble"   : [18, 19 ], 
                                                        }, 
                                     current_animation = "wobble",
-                                    ticks_per_frame = 7 )
+                                    ticks_per_frame = 13 )
 
     def load_tilemap(self):
         self.tilemap = tilemap.from_json_file( "map/room.json", "tiles/", coordinates = self.coord_system )
 
     def update(self):
+
+        #as time increases, the input to the sin function changes
+        self.wobble_index += self.wobble_speed
+        self.ghost_scale = 1.25 + ((sin( self.wobble_index))*0.25)
+
         self.player_sprite.tick()
         self.ghost_sprite.tick()
         self.player.update()
@@ -99,6 +108,6 @@ class game:
         batch = []
         batch.append( [self.player_sprite, [ -8.0,-8.0 ],self.magnification, [0.0,0.0], 1.0 ] )
         for ghost in self.ghosts:
-            batch.append( [self.ghost_sprite, [ -8.0,-8.0 ],1.0, [ (ghost.x-self.player.x) * self.unit_size,(ghost.y-self.player.y)*self.unit_size], self.magnification ] )
+            batch.append( [self.ghost_sprite, [ -8.0,-8.0 ],self.ghost_scale, [ (ghost.x-self.player.x) * self.unit_size,(ghost.y-self.player.y)*self.unit_size], self.magnification ] )
         self.sprite_renderer.render(batch)
                         
