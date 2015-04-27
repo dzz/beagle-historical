@@ -8,9 +8,11 @@ from math import sin
 from .player import player
 from .ghost import ghost, SLEEPING
 from .ball import ball
+from .background import background
 
 class game:
     def __init__(self):
+        self.background = background()
         self.player_sprite = None
         self.ghost_sprite = None
         self.sleeping_ghost_sprite = None
@@ -26,6 +28,9 @@ class game:
         self.wobble_index = 0.0   #use this to drive an oscilator to wobble the scale of our ghosts
         self.wobble_speed = 0.09
         self.ghost_scale = 1
+
+        self.player_score = 0
+        self.ghosts_score = 0
 
         #
         #setting unit size to 16 - tilemap/sprites are 16x16 and we're 
@@ -104,9 +109,11 @@ class game:
 
     def load_tilemap(self):
         self.tilemap = tilemap.from_json_file( "map/room.json", "tiles/", coordinates = self.coord_system )
+        self.world_size = [ self.tilemap.layers[0]["width"], self.tilemap.layers[0]["height"] ]
 
     def update(self):
 
+        self.background.update()
         #as time increases, the input to the sin function changes
         self.wobble_index += self.wobble_speed
         self.ghost_scale = 1.25 + ((sin( self.wobble_index))*0.15)
@@ -118,8 +125,9 @@ class game:
         for ghost in self.ghosts:
             ghost.update()
 
+
     def render(self):
-        gfx_context.clear()
+        self.background.render()
 
         #render the tilemap, setting the origin to the inverse of the players position, multiplied by
         #the worlds unit size to map the players 'logical' location to something that makes
@@ -129,7 +137,7 @@ class game:
         #-8,-8, to place the sprite dead center
 
         batch = []
-        batch.append( [self.player_sprite, [ -8.0,-8.0 ] ,1, [0.0,0.0], self.world_magnification ] )
+        batch.append( [self.player_sprite, [ -8.0,-8.0 ] ,1 + self.player.kicking_power, [0.0,0.0], self.world_magnification ] )
         batch.append( [self.ball_sprite, [-8.0,-8.0],self.ball_scale, [ (self.ball.x-self.player.x)* self.unit_size, (self.ball.y-self.player.y)*self.unit_size], self.world_magnification] )
         for ghost in self.ghosts:
             if(ghost.state == SLEEPING):

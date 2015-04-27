@@ -36,3 +36,40 @@ def cast_fire_spell( center_x,center_y ):
         mygame.set_tile_on_fire( center_x +x, center_y +y )
 
 ```
+
+###tesselated_unit_quad
+```python
+from client.math.helpers import tesselated_unit_quad
+
+# equivalent to:
+
+tesselated_unit_quad = [
+                         [-1.0, -1.0],
+                         [1.0, -1.0],
+                         [1.0, 1.0],
+                         
+                         [1.0, 1.0],
+                         [-1.0, 1.0],
+                         [-1.0, 1.0],
+                        ] 
+```
+
+This object is a tesselated unit quad useful for building primitives It is compatible with the TRIS primitive draw mode.
+
+It can be useful to create primitives with this for testing vertex and fragment shaders.
+
+###distance, distance_squared
+```python
+from client.math.helpers import distance, distance_squared
+
+def distance_squared(x1,y1,x2,y2):
+    dx = (x2-x1)
+    dy = (y2-y1)
+    return (dx*dx+dy*dy)
+
+def distance(x1,y1,x2,y2):
+    dx = (x2-x1)
+    dy = (y2-y1)
+    return sqrt(dx*dx+dy*dy)
+```
+

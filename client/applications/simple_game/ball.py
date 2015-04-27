@@ -9,8 +9,8 @@ class ball():
         self.vy = 0
         self.starting_x = x
         self.starting_y = y
-        self.base_speed = 0.8
-        self.decay = 0.98
+        self.base_speed = 0.85
+        self.decay = 0.93
         self.thrown = False
         self.stop_threshold = 0.001
         self.game = game
@@ -40,20 +40,24 @@ class ball():
             if(self.game.player.has_ball is False): 
                 if( abs(self.vx+self.vy) < self.stop_threshold):
                     if self.game.get_tile(self.x,self.y) == EMPTY_SPACE_INDEX:
-                            #we fell through an empty hole!
-                            #restart our position
                             self.x = self.starting_x;
                             self.y = self.starting_y;
 
             self.vx *= self.decay
             self.vy *= self.decay
 
-            for ghost in self.game.ghosts:
-                if ghost.state == SLEEPING:
-                    continue
-                dx = ghost.fx - self.x
-                dy = ghost.fy - self.y
-                md = dx*dx+dy*dy
-                if md < self.collision_circle_squared:
-                    ghost.put_to_sleep()
+
+            if( abs(self.vx+self.vy) > self.stop_threshold):
+                for ghost in self.game.ghosts:
+                    if ghost.state == SLEEPING:
+                        continue
+                    dx = ghost.fx - self.x
+                    dy = ghost.fy - self.y
+                    md = dx*dx+dy*dy
+                    if md < self.collision_circle_squared:
+                        ghost.put_to_sleep()
+                        ghost.player_charge_x = self.vx
+                        ghost.player_charge_y = self.vy
+                        self.vx *= 0.5
+                        self.vy *= 0.5
 

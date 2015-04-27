@@ -4,6 +4,7 @@ import random
 from client.math.helpers import neighbor_coordinates
 from client.math.helpers import distance_squared
 
+
 from .tile_types import *
 
 #ghost states
@@ -26,9 +27,17 @@ class ghost:
         self.target_x = None
         self.target_y = None
         self.speed = 0.1
-        self.movement_mode = 0
-        self.max_sleep_time = 60*3
+        self.movement_mode = random.randint(0,3)
+        self.max_sleep_time = 60*6
         self.sleep_time = 0
+
+        self.player_charge_x = 0.0
+        self.player_charge_y = 0.0
+        self.player_charge_decay = 0.9
+
+        self.starting_x = x
+        self.starting_y = y
+
 
     def update(self):
 
@@ -37,31 +46,47 @@ class ghost:
 
         floor_x = floor(self.x)
         floor_y = floor(self.y)
+
+        # did the player kick us out of the arena?
+        if self.game.get_tile( floor_x, floor_y) is None:
+            self.x = self.starting_x;
+            self.y = self.starting_y;
+
         if self.state == PICKING_TILE:
 
             #this will cycle through 0,1,2 everytime the picking_tile state is hit the behaviour is,
             #the ghost will pick random title 2/3 times, but 1/3 times will pick a tile that moves 
             #the ghost closer to the player
 
-            self.movement_mode = (self.movement_mode+1)%3
+            self.movement_mode = random.randint(0,4)
             
-            if self.movement_mode==0:
-                #if movement_mode == 0, then sort the potential targets by how close they are to the player
+            if self.movement_mode ==0 or self.movement_mode == 3:
+                #if movement_mode == 0 or 1 then sort the potential targets by how close they are to the player
                 #... i'm not exactly sure why the y axis needs to be inverted here! 
                 sorted_neighbors = sorted( 
                         neighbor_coordinates, 
-                        key = lambda n: distance_squared( floor_x+n[0],floor_y-n[1],self.game.player.x,self.game.player.y )
+                        key = lambda n: 0.0 - distance_squared( floor_x+n[0],floor_y+n[1],self.game.player.x,self.game.player.y )
                         )
-            else:
-                #okay, otherwise, just randomly sort our candidate titles
-                sorted_neighbors = random.sample( neighbor_coordinates, len(neighbor_coordinates) )
 
+            elif self.movement_mode==1:
+                #if movement_mode == 1, sort by distance to ball to mess with the player
+                sorted_neighbors = sorted( 
+                        neighbor_coordinates, 
+                        key = lambda n:  -1* distance_squared( floor_x+n[0],floor_y+n[1],self.game.ball.x,self.game.ball.y )
+                        )
+            elif self.movement_mode==2:
+                sorted_neighbors = sorted(neighbor_coordinates, key = lambda x: random.randint(0,8) )
+            else:
+                sorted_neighbors = list(neighbor_coordinates)
+
+            
             for x,y in sorted_neighbors:
                 tile = self.game.get_tile( floor_x+x, floor_y+y)
                 if tile is not WALL_TILE_INDEX:
                     self.target_x = floor_x + x
                     self.target_y = floor_y + y
                     self.state = MOVING_TILES
+
         elif self.state == MOVING_TILES: 
             if floor_x == self.target_x and floor_y == self.target_y:
                 self.state = PICKING_TILE
@@ -76,6 +101,23 @@ class ghost:
                     self.y -= self.speed
 
         elif self.state == SLEEPING:
+            self.x +=self.player_charge_x
+            self.y += self.player_charge_y
+
+            self.player_charge_x *= self.player_charge_decay
+            self.player_charge_y *= self.player_charge_decay
+
+            world_size = self.game.world_size
+            if( self.game.get_tile( self.x, self.y) == EMPTY_SPACE_INDEX or self.x > world_size[0]  or
+                self.x < 0 or self.y > world_size[1]  or self.y < 0):
+                self.x = self.starting_x
+                self.y = self.starting_y
+                self.fx = self.starting_x
+                self.fy = self.starting_y
+                self.state = PICKING_TILE
+                self.player_charge_x = 0
+                self.player_charge_y = 0
+                self.game.player_score += 1
             self.sleep_time = self.sleep_time + 1
             if(self.sleep_time > self.max_sleep_time):
                 self.sleep_time = 0
