@@ -23,10 +23,12 @@ class sprite():
         for animation in self.named_animations:
             self.primitives[animation] = []
             for frame in self.named_animations[animation]:
-                tile = self.sprite_renderer.tileset.get_gid( frame )
+                tile = list( self.sprite_renderer.tileset.get_gid( frame ) )
                 if not tile:
                     continue
                 sz = self.size
+                tile[2]-=0.001;
+                tile[3]-=0.001;
                 self.primitives[animation].append( primitive( draw_mode.TRIS, [ 
                                                                      [ 0.0,    0.0,  ],
                                                                      [ 0.0+sz, 0.0,  ],

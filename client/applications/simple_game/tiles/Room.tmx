@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="16" tileheight="16">
  <tileset firstgid="1" name="smashtiles" tilewidth="16" tileheight="16">
-  <image source="smashtiles.png" width="64" height="80"/>
+  <image source="smashtiles.png" width="64" height="96"/>
  </tileset>
  <layer name="Tile Layer 1" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztlrESgDAIQ6v9/3920nOgIUE469khizU8aBHbW2t96dJerCf8jLyj/uy9Q97NEGKca5bvLsT3vEyNXgwrnspHdb3FjyiTH8ktykeq5DPffzXfUyXfy6Oq/5RzttZHHiam2meIj56j/Ni9HvXhaD4zfOWss/lqX6nzieErvGy+Wm82n5m3Fp+dz7Pz2XuU8v6X+NVafO3fUs2dhf83HeEyB6A=
+   eJztlksOwzAIRO3kCr7/WbtyZSGYGVyjqmoszSYBHgmf5G6t3Y/euor1Cf9E3rv+p98d8u2Opt1wNO95fqsQvwexh8Nfz3DyjmJ4z2P59uzyvRhVfBu7ms/qX8lHOlH/yFeZf9b/jK/OTqRKPssjw87wUZ0jW3ZN5bM+y/DRdZSf0svZ+VT5V9Nm2fKt/Q5/9tU3+R3wrd9p/hT7HlbWP7NzM7a/wFf/ozL2Kt+rYZbP9gbjryeaOSQW4+HHParufMZHe0OZkQqpc/0vegHnwQ/V
   </data>
  </layer>
 </map>

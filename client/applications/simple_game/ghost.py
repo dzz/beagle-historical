@@ -1,27 +1,40 @@
-from client.math.helpers import neighbor_coordinates
-from client.math.helpers import distance_squared
 from math import floor
 import random
 
-#wall tile index
-WALL_TILE_INDEX = 3
+from client.math.helpers import neighbor_coordinates
+from client.math.helpers import distance_squared
+
+from .tile_types import *
 
 #ghost states
 PICKING_TILE = 1
 MOVING_TILES = 2
+SLEEPING = 3
 
 class ghost:
     def __init__(self,game,x,y):
         self.x = x
         self.y = y
+
+        self.fx = x  #we're going to filter the x,y coords as the AI updates them to smooth out the motion and make it more natural
+        self.fy = y
+
+        self.motion_smoothing = 0.9
+
         self.game = game
         self.state = PICKING_TILE
         self.target_x = None
         self.target_y = None
         self.speed = 0.1
         self.movement_mode = 0
+        self.max_sleep_time = 60*3
+        self.sleep_time = 0
 
     def update(self):
+
+        self.fx = self.fx*self.motion_smoothing+self.x*(1-self.motion_smoothing)
+        self.fy = self.fy*self.motion_smoothing+self.y*(1-self.motion_smoothing)
+
         floor_x = floor(self.x)
         floor_y = floor(self.y)
         if self.state == PICKING_TILE:
@@ -62,3 +75,12 @@ class ghost:
                 if( floor_y > self.target_y ):
                     self.y -= self.speed
 
+        elif self.state == SLEEPING:
+            self.sleep_time = self.sleep_time + 1
+            if(self.sleep_time > self.max_sleep_time):
+                self.sleep_time = 0
+                self.state = PICKING_TILE
+
+
+    def put_to_sleep(self):
+        self.state = SLEEPING

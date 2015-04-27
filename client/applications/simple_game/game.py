@@ -6,13 +6,14 @@ from client.system.gamepad       import get_gamepad
 from client.gfx.tileset          import tileset
 from math import sin
 from .player import player
-from .ghost import ghost
+from .ghost import ghost, SLEEPING
 from .ball import ball
 
 class game:
     def __init__(self):
         self.player_sprite = None
         self.ghost_sprite = None
+        self.sleeping_ghost_sprite = None
         self.ball_sprite = None
         self.coord_system = centered_view(1920,1080,Y_Axis_Down)
         self.load_sprites()
@@ -20,7 +21,7 @@ class game:
         self.player = player( self )
         self.ghosts = self.create_ghosts()
         self.ball = ball(self, 16, 14 )
-        self.ball_scale = 1.2
+        self.ball_scale = 1
 
         self.wobble_index = 0.0   #use this to drive an oscilator to wobble the scale of our ghosts
         self.wobble_speed = 0.09
@@ -37,7 +38,7 @@ class game:
 
         self.unit_size = 16.0   
 
-        self.world_magnification = 5
+        self.world_magnification = 4
         gfx_context.set_clear_color(1.0,1.0,1.0,0.0)
 
     def create_ghosts(self):
@@ -55,7 +56,7 @@ class game:
     def load_sprites(self):
         configuration = {
                 "image"         : "smashtiles.png",
-                "imageheight"   : 80,
+                "imageheight"   : 96,
                 "imagewidth"    : 64,
                 "margin"        : 0,
                 "spacing"       : 0,
@@ -86,6 +87,13 @@ class game:
                                                        }, 
                                     current_animation = "wobble",
                                     ticks_per_frame = 13 )
+
+        self.sleeping_ghost_sprite = sprite( 
+                                    sprite_renderer = self.sprite_renderer, 
+                                    named_animations = { 
+                                                            "sleeping"   : [ 17 ], 
+                                                       }, 
+                                    current_animation = "sleeping" )
 
         self.ball_sprite = sprite( 
                                     sprite_renderer = self.sprite_renderer, 
@@ -124,6 +132,11 @@ class game:
         batch.append( [self.player_sprite, [ -8.0,-8.0 ] ,1, [0.0,0.0], self.world_magnification ] )
         batch.append( [self.ball_sprite, [-8.0,-8.0],self.ball_scale, [ (self.ball.x-self.player.x)* self.unit_size, (self.ball.y-self.player.y)*self.unit_size], self.world_magnification] )
         for ghost in self.ghosts:
-            batch.append( [self.ghost_sprite, [ -8.0,-8.0 ],self.ghost_scale, [ (ghost.x-self.player.x) * self.unit_size,(ghost.y-self.player.y)*self.unit_size], self.world_magnification ] )
+            if(ghost.state == SLEEPING):
+                sprite = self.sleeping_ghost_sprite
+            else:
+                sprite = self.ghost_sprite
+
+            batch.append( [sprite, [ -8.0,-8.0 ],self.ghost_scale, [ (ghost.fx-self.player.x) * self.unit_size,(ghost.fy-self.player.y)*self.unit_size], self.world_magnification ] )
         self.sprite_renderer.render(batch)
                         

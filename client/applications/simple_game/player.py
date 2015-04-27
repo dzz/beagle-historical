@@ -1,6 +1,7 @@
 from math                        import atan2, pi, floor
 from client.system.gamepad       import get_gamepad
 from client.math.helpers         import rectangles_intersect, neighbor_coordinates
+from .tile_types                 import *
 
 WALL_TILE_INDEX = 3
 
@@ -38,7 +39,7 @@ class player:
                     sprite.select_animation( self.direction )
 
         def get_collision_rect(self,x,y):
-            if self.game.get_tile( x,y) == WALL_TILE_INDEX:
+            if self.game.get_tile( x,y)  in [ WALL_TILE_INDEX, 0]:
                 return [ x, y, x+1, y+1 ] 
             return None
 
