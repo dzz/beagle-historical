@@ -16,6 +16,9 @@ typedef struct {
     double right_x;
     double right_y;
 
+    double left_trigger;
+    double right_trigger;
+
 } hw_gamepad;
 
 void initGamepad();

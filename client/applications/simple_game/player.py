@@ -17,6 +17,7 @@ class player:
         self.direction = "up"
         self.animation_states = [ "up", "left", "down", "right" ] 
         self.game = game
+        self.has_ball = False
 
 
     def update(self):
@@ -41,6 +42,20 @@ class player:
                 return [ x, y, x+1, y+1 ] 
             return None
 
+        def handle_ball(self, pad):
+            if(self.has_ball):
+                self.game.ball.x = self.x + (pad.right_stick[0]*0.5)
+                self.game.ball.y = self.y + (pad.right_stick[1]*0.5)
+                if( pad.triggers[1] > 0.0):
+                    self.game.ball.throw( pad.right_stick[0], pad.right_stick[1] )
+                    self.has_ball = False
+            else:
+                floor_player_x = floor(self.x)
+                floor_player_y = floor(self.y)
+                floor_ball_x = floor(self.game.ball.x)
+                floor_ball_y = floor(self.game.ball.y)
+                if floor_player_x == floor_ball_x and floor_player_y == floor_ball_y and (pad.triggers[1]<0):
+                    self.has_ball = True
 
         pad         = get_gamepad(0)
         velocity_x  = pad.leftStick[0]*self.player_speed
@@ -59,7 +74,6 @@ class player:
             collision_rect = get_collision_rect( self, int(self.x + x), int(self.y + y) )
             if( collision_rect is not None):
                 collision_rects.append(collision_rect)
-
 
         new_x = self.x + velocity_x 
         new_y = self.y + velocity_y
@@ -86,7 +100,7 @@ class player:
         if not vertical_collision:
             self.y = new_y
 
-        # End of collisions. The following is just turning the angle of motion
-        # into an index between 0..3 to select the animation for our sprite
+        # End of collisions, now update the ball state
+        handle_ball(self,pad)
 
 

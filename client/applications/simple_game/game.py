@@ -7,18 +7,23 @@ from client.gfx.tileset          import tileset
 from math import sin
 from .player import player
 from .ghost import ghost
+from .ball import ball
 
 class game:
     def __init__(self):
         self.player_sprite = None
         self.ghost_sprite = None
+        self.ball_sprite = None
         self.coord_system = centered_view(1920,1080,Y_Axis_Down)
         self.load_sprites()
         self.load_tilemap()
         self.player = player( self )
         self.ghosts = self.create_ghosts()
+        self.ball = ball(self, 16, 14 )
+        self.ball_scale = 1.2
+
         self.wobble_index = 0.0   #use this to drive an oscilator to wobble the scale of our ghosts
-        self.wobble_speed = 0.1
+        self.wobble_speed = 0.09
         self.ghost_scale = 1
 
         #
@@ -32,7 +37,7 @@ class game:
 
         self.unit_size = 16.0   
 
-        self.magnification = 6
+        self.world_magnification = 5
         gfx_context.set_clear_color(1.0,1.0,1.0,0.0)
 
     def create_ghosts(self):
@@ -82,6 +87,13 @@ class game:
                                     current_animation = "wobble",
                                     ticks_per_frame = 13 )
 
+        self.ball_sprite = sprite( 
+                                    sprite_renderer = self.sprite_renderer, 
+                                    named_animations = { 
+                                                            "ball"   : [16], 
+                                                       }, 
+                                    current_animation = "ball")
+
     def load_tilemap(self):
         self.tilemap = tilemap.from_json_file( "map/room.json", "tiles/", coordinates = self.coord_system )
 
@@ -89,11 +101,14 @@ class game:
 
         #as time increases, the input to the sin function changes
         self.wobble_index += self.wobble_speed
-        self.ghost_scale = 1.25 + ((sin( self.wobble_index))*0.25)
+        self.ghost_scale = 1.25 + ((sin( self.wobble_index))*0.15)
 
         self.player_sprite.tick()
         self.ghost_sprite.tick()
         self.player.update()
+        self.ball.update()
+        for ghost in self.ghosts:
+            ghost.update()
 
     def render(self):
         gfx_context.clear()
@@ -101,13 +116,14 @@ class game:
         #render the tilemap, setting the origin to the inverse of the players position, multiplied by
         #the worlds unit size to map the players 'logical' location to something that makes
         #more sense to render
-        self.tilemap.render( -self.player.x*self.unit_size, -self.player.y*self.unit_size, self.magnification ) 
+        self.tilemap.render( -self.player.x*self.unit_size, -self.player.y*self.unit_size, self.world_magnification ) 
 
         #-8,-8, to place the sprite dead center
 
         batch = []
-        batch.append( [self.player_sprite, [ -8.0,-8.0 ],self.magnification, [0.0,0.0], 1.0 ] )
+        batch.append( [self.player_sprite, [ -8.0,-8.0 ] ,1, [0.0,0.0], self.world_magnification ] )
+        batch.append( [self.ball_sprite, [-8.0,-8.0],self.ball_scale, [ (self.ball.x-self.player.x)* self.unit_size, (self.ball.y-self.player.y)*self.unit_size], self.world_magnification] )
         for ghost in self.ghosts:
-            batch.append( [self.ghost_sprite, [ -8.0,-8.0 ],self.ghost_scale, [ (ghost.x-self.player.x) * self.unit_size,(ghost.y-self.player.y)*self.unit_size], self.magnification ] )
+            batch.append( [self.ghost_sprite, [ -8.0,-8.0 ],self.ghost_scale, [ (ghost.x-self.player.x) * self.unit_size,(ghost.y-self.player.y)*self.unit_size], self.world_magnification ] )
         self.sprite_renderer.render(batch)
                         

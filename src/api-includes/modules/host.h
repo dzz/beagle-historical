@@ -42,10 +42,12 @@ DEF_ARGS {
 
      gp = getGamepad(i);
 
-    return Py_BuildValue("ffff",    gp->left_x,
-                                    gp->left_y,
-                                    gp->right_x,
-                                    gp->right_y);
+    return Py_BuildValue("ffffff",    gp->left_x,
+                                      gp->left_y,
+                                      gp->right_x,
+                                      gp->right_y,
+                                      gp->left_trigger,
+                                      gp->right_trigger );
 }
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 

@@ -49,6 +49,12 @@ void GamepadHandleEvent( SDL_Event* event) {
                 case 3:
                     gp->right_y = (double)event->jaxis.value / 32276.0;
                     break;
+                case 4:
+                    gp->left_trigger = (double)event->jaxis.value / 32276.0;
+                    break;
+                case 5:
+                    gp->right_trigger = (double)event->jaxis.value / 32276.0;
+                    break;
             }
 
         //   printf(" gp(%-20f,%-20f,%-20f,%-20f)\n",gp->left_x,gp->left_y, gp->right_x, gp->right_y );
