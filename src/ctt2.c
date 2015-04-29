@@ -297,6 +297,10 @@ int main(int argc, char **argv){
                        // handle_wm_event(event);
                         break;
                     case SDL_KEYDOWN:
+                        if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
+                            dropPython();
+                            initPython();
+                        }
                         finished = dispatch_key(event.key.keysym.sym,1);
                         if( api_dispatch_key(event.key.keysym.sym,1) 
                                 == API_FAILURE ) finished = 1;
