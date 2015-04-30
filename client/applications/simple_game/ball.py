@@ -1,5 +1,5 @@
-from .tile_types    import *
-from .ghost         import SLEEPING
+from .tile_types    import types as tiles
+from .ghost         import ai_state 
 
 class ball():
     def __init__(self,game,x,y):
@@ -26,12 +26,12 @@ class ball():
             new_x = self.x +  self.vx*self.base_speed
             new_y = self.y +  self.vy*self.base_speed
 
-            if self.game.get_tile( new_x, self.y ) == WALL_TILE_INDEX:
+            if self.game.get_tile( new_x, self.y ) == tiles.wall_tile:
                 self.vx*=-1
             else:
                 self.x = new_x
 
-            if self.game.get_tile( self.x, new_y ) == WALL_TILE_INDEX:
+            if self.game.get_tile( self.x, new_y ) == tiles.wall_tile:
                 self.vy*=-1
             else:
                 self.y = new_y
@@ -39,7 +39,7 @@ class ball():
 
             if(self.game.player.has_ball is False): 
                 if( abs(self.vx+self.vy) < self.stop_threshold):
-                    if self.game.get_tile(self.x,self.y) == EMPTY_SPACE_INDEX:
+                    if self.game.get_tile(self.x,self.y) == tiles.empty_space:
                             self.x = self.starting_x;
                             self.y = self.starting_y;
 
@@ -49,7 +49,7 @@ class ball():
 
             if( abs(self.vx+self.vy) > self.stop_threshold):
                 for ghost in self.game.ghosts:
-                    if ghost.state == SLEEPING:
+                    if ghost.state == ai_state.sleeping:
                         continue
                     dx = ghost.fx - self.x
                     dy = ghost.fy - self.y

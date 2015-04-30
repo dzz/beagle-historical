@@ -1,2 +1,6 @@
-WALL_TILE_INDEX  = 3
-EMPTY_SPACE_INDEX = 0
+from enum import IntEnum
+
+class types(IntEnum):
+    wall_tile = 3
+    empty_space = 0
+
