@@ -13,35 +13,59 @@ class ai_state(IntEnum):
     moving_between_tiles = 2
     sleeping = 3
 
+tile_picking_mode_map = { 0: "target_player", 1: "target_player", 2: "target_ball", 3: "target_random" }
+tile_picking_mode_count = 3
 
 class ghost:
     def __init__(self,game,x,y):
-        self.x = x
+        self.x = x                                  # Our base values for position G (x,y)
         self.y = y
-
-        self.fx = x  #we're going to filter the x,y coords as the AI updates them to smooth out the motion and make it more natural
-        self.fy = y
-
-        self.motion_smoothing = 0.9
-
-        self.game = game
-        self.state = ai_state.picking_target_tile;
-        self.target_x = None
-        self.target_y = None
-        self.speed = 0.1
-        self.movement_mode = random.randint(0,3)
-        self.max_sleep_time = 60*6
-        self.sleep_time = 0
-
-        self.player_charge_x = 0.0
-        self.player_charge_y = 0.0
-        self.player_charge_decay = 0.9
 
         self.starting_x = x
         self.starting_y = y
 
+        self.fx = x                                 # Gf(x,y) == filtered ghost position
+        self.fy = y
+
+        self.motion_smoothing = 0.9                 # Coeffecient for the smoothing filter
+
+        self.game = game
+        self.state = ai_state.picking_target_tile;  # Initial state
+
+        self.target_x = None                        # Empty Target
+        self.target_y = None
+
+        self.speed = 0.1                            # Base Speed
+
+
+        # Which priority is used when picking a tile, (e.g. target_player, 
+        # target_ball )
+
+        self.tile_picking_mode = random.randint(0,tile_picking_mode_count)
+        self.max_sleep_time = 60*6
+
+        self.sleep_time = 0                         # How long I've been sleeping
+
+        self.player_charge_x = 0.0                  # Area effect induced by player
+        self.player_charge_y = 0.0
+        self.player_charge_decay = 0.9              # Loose 10% of player area effect
+                                                    # each tick
+
+
 
     def update(self):
+
+        #
+        # this is a simple low pass filter used to smooth out the ghost's
+        # motion ( which otherwise is very angular )
+        #
+        # (per sample)
+        #
+        # filtered_value = old_value * a + new_value * (1 - a)
+        #
+        #
+        # This a type Infinite Impulse Response (IIR) filter
+        #
 
         self.fx = self.fx*self.motion_smoothing+self.x*(1-self.motion_smoothing)
         self.fy = self.fy*self.motion_smoothing+self.y*(1-self.motion_smoothing)
@@ -49,39 +73,41 @@ class ghost:
         floor_x = floor(self.x)
         floor_y = floor(self.y)
 
-        # did the player kick us out of the arena?
+        # Check if we've been knocked out
+
         if self.game.get_tile( floor_x, floor_y) is None:
             self.x = self.starting_x;
             self.y = self.starting_y;
-
+        #
+        # initial state -- we're going to pick a target x,y, to move towards this tick
+        #
         if self.state == ai_state.picking_target_tile:
+            #
+            # pick a random movmenet mode
+            #
+            self.tile_picking_mode = tile_picking_mode_map[ random.randint(0,tile_picking_mode_count) ]
 
-            #this will cycle through 0,1,2 everytime the picking_tile state is hit the behaviour is,
-            #the ghost will pick random title 2/3 times, but 1/3 times will pick a tile that moves 
-            #the ghost closer to the player
-
-            self.movement_mode = random.randint(0,4)
-            
-            if self.movement_mode ==0 or self.movement_mode == 3:
-                #if movement_mode == 0 or 1 then sort the potential targets by how close they are to the player
-                #... i'm not exactly sure why the y axis needs to be inverted here! 
+            #
+            # what follows is each mode mapping to a different sort function, that orders our neighboring
+            # tiles accordint to different metrics.
+            #
+            if self.tile_picking_mode == "target_player":
                 sorted_neighbors = sorted( 
                         neighbor_coordinates, 
-                        key = lambda n: 0.0 - distance_squared( floor_x+n[0],floor_y+n[1],self.game.player.x,self.game.player.y )
+                        key = lambda n: -1*distance_squared( floor_x+n[0],floor_y+n[1],self.game.player.x,self.game.player.y )
                         )
-
-            elif self.movement_mode==1:
-                #if movement_mode == 1, sort by distance to ball to mess with the player
+            elif self.tile_picking_mode== "target_ball":
                 sorted_neighbors = sorted( 
                         neighbor_coordinates, 
-                        key = lambda n:  -1* distance_squared( floor_x+n[0],floor_y+n[1],self.game.ball.x,self.game.ball.y )
+                        key = lambda n:  -1*distance_squared( floor_x+n[0],floor_y+n[1],self.game.ball.x,self.game.ball.y )
                         )
-            elif self.movement_mode==2:
+            elif self.tile_picking_mode== "target_random":
                 sorted_neighbors = sorted(neighbor_coordinates, key = lambda x: random.randint(0,8) )
-            else:
-                sorted_neighbors = list(neighbor_coordinates)
 
-            
+            #
+            # Loop through the tiles sorted by our metric, and check each one for 
+            # validity. On first valid match, set the target
+            #
             for x,y in sorted_neighbors:
                 tile = self.game.get_tile( floor_x+x, floor_y+y)
                 if tile is not tiles.wall_tile:
@@ -89,10 +115,16 @@ class ghost:
                     self.target_y = floor_y + y
                     self.state = ai_state.moving_between_tiles
 
+        #
+        # We're moving between tiles this tick
+        #
         elif self.state == ai_state.moving_between_tiles: 
             if floor_x == self.target_x and floor_y == self.target_y:
                 self.state = ai_state.picking_target_tile
             else:
+                #
+                # Cheap 45/90 degree movements
+                #
                 if( floor_x < self.target_x ):
                     self.x += self.speed
                 if( floor_x > self.target_x ):
