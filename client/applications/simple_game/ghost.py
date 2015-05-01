@@ -57,19 +57,37 @@ class ghost:
 
         #
         # this is a simple low pass filter used to smooth out the ghost's
-        # motion ( which otherwise is very angular )
+        # motion, which otherwise is very angular ( see the moving between
+        # tiles state logic )
         #
         # (per sample)
         #
         # filtered_value = old_value * a + new_value * (1 - a)
         #
         #
-        # This a type Infinite Impulse Response (IIR) filter
+        # This a type Infinite Impulse Response (IIR) low pass filter
+        # 
+        # This has the effect of smoothing out the jaggy motion of 
+        # self.x and self.y into smoothed self.fx self.fy
         #
+        #   (self.x self.y)   (self.fx, self.fy)
+        #
+        #      +---              .--
+        #     /               .*
+        #    /              /
+        #
+        #
+        # In practice we use x,y for some logic, and fx,fy for other
+        # logic, depending on which vector makes sense for the particular
+        # problem domain.
 
         self.fx = self.fx*self.motion_smoothing+self.x*(1-self.motion_smoothing)
         self.fy = self.fy*self.motion_smoothing+self.y*(1-self.motion_smoothing)
 
+        #
+        # the same technique seen elsewhere - we're using the floor function
+        # to quantize our position (e.g. [12.45, 10.52] -> [12,10] 
+        #
         floor_x = floor(self.x)
         floor_y = floor(self.y)
 
@@ -134,16 +152,32 @@ class ghost:
                 if( floor_y > self.target_y ):
                     self.y -= self.speed
 
+        #
+        # We're sleeping
+        #
         elif self.state == ai_state.sleeping:
-            self.x +=self.player_charge_x
+            #
+            # Apply the players 'charge' area effect to 'swoosh' the ghosts
+            # along
+            #
+            self.x += self.player_charge_x
             self.y += self.player_charge_y
 
+            #
+            # decay the player charge 
+            #
             self.player_charge_x *= self.player_charge_decay
             self.player_charge_y *= self.player_charge_decay
 
+            #
+            # ask the game what the world size is
+            #
             world_size = self.game.world_size
             if( self.game.get_tile( self.x, self.y) == tiles.empty_space or self.x > world_size[0]  or
                 self.x < 0 or self.y > world_size[1]  or self.y < 0):
+                #
+                # The player knocked us out! Reset the position
+                #
                 self.x = self.starting_x
                 self.y = self.starting_y
                 self.fx = self.starting_x

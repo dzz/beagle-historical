@@ -201,13 +201,13 @@ class game:
 
 
         batch.append( [ 
-                            self.player_sprite,                     #Use the player sprite
+                            self.player_sprite,                     # Use the player sprite
 
-                            [ -8.0,-8.0 ] ,                         #Default sprite creation makes 1 pixel = 1 unit, with the
-                                                                    #origin of 0,0 in the graphics server VBO. This means our
-                                                                    #gemoetry for this 16x16 sprite extends from 0,0 -> 16,16
-                                                                    #in vector space. We want to draw our sprite centered on
-                                                                    #a coordinate:
+                            [ -8.0,-8.0 ] ,                         # Default sprite creation makes 1 pixel = 1 unit, with the
+                                                                    # origin of 0,0 in the graphics server VBO. This means our
+                                                                    # gemoetry for this 16x16 sprite extends from 0,0 -> 16,16
+                                                                    # in vector space. We want to draw our sprite centered on
+                                                                    # a coordinate:
                                                                     #
                                                                     # This first parameter transforms the VBO, going from:
                                                                     # A to B in terms of our 'virtual' geometry

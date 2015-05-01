@@ -26,7 +26,8 @@ class background():
         self.time += self.speed
 
     def render(self):
-        # bind our internal time property to the shader, 
+        # bind our internal time property to the shader, this also binds
+        # the shader for successive draw operations
         #
         self.shader.bind( [ ("time", [ self.time ] ) ] )
         # and render our unit quad
