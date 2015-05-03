@@ -16,10 +16,17 @@ import client.ctt2.caret        as caret
 import gc
 import os
 
+from client.system.telnet_console import *
+
+
 __clickpos  = [0,0]
 __mpos      = [0,0]
 
+console = None
+
 global app 
+
+
 
 def init():
     def bool(v):
@@ -27,7 +34,7 @@ def init():
             return False
         return v.lower() in ("true","1")
 
-    global app   
+    global app, console
 
     config = configparser.ConfigParser()
 
@@ -38,6 +45,11 @@ def init():
 
     app_name = config["APPLICATION"]["name"]
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
+    telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
+    if telnet_enabled:
+        telnet_port = int( config["APPLICATION"]["telnet_port"] )
+        telnet_host = config["APPLICATION"]["telnet_host"]
+
     app = client.apps.get_app(app_name) 
     app.controller_enabled = controller_enabled
     host_config.set_config("app_name", app_name)
@@ -48,6 +60,9 @@ def init():
     except KeyError:
         print("no configuration found, ignoring..")
 
+
+    if(telnet_enabled):
+        console = telnet_console(app, telnet_host, telnet_port)
     app.init()
     set_status("initialized application:" + app_name)
     if(app.controller_enabled):
@@ -63,6 +78,11 @@ def configure( configuration ):
 
 def tick():
     global app
+    global console
+
+    if console is not None:
+        console.tick()
+
     if(app.controller_enabled):
         gamepad.tick()
     app.tick()
