@@ -1,6 +1,6 @@
 #localgfx
 ```python
-import localgfx
+from localgfx import *
 
 
 img_create( int w, int h )      # returns handle to blank image in system memory
