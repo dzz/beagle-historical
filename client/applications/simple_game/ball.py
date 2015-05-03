@@ -87,7 +87,7 @@ class ball():
 
 
             if(self.game.player.has_ball is False): 
-                if( abs(self.vx+self.vy) < self.stop_threshold):
+                if( abs(self.vx) + abs(self.vy)) < self.stop_threshold:
                     if self.game.get_tile(self.x,self.y) == tiles.empty_space:
                             self.x = self.starting_x;
                             self.y = self.starting_y;
@@ -101,7 +101,7 @@ class ball():
             self.vy *= self.decay
 
 
-            if( abs(self.vx) + abs(self.vy) ) > self.stop_threshold):
+            if( abs(self.vx) + abs(self.vy) ) > self.stop_threshold:
                 #
                 # If the ball is active...
                 #

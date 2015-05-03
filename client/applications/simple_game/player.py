@@ -204,7 +204,7 @@ class player:
                     self.has_ball = False
             elif(self.running_power < self.running_cutoff ):
                 #
-                # Collision Detection: Walking Player vs. Ball on Floor
+                # Collision Detection: Walking Player vs. Ball on Floor (for pickup)
                 #
                 # Technique: Quantize both the ball and player positions (i.e. drop
                 #            the decimal portion 1.x -> 1.0 ) and do a simple comparison.
