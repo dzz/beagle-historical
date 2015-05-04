@@ -20,7 +20,7 @@ telnet_host=127.0.0.1
 telnet_port=8888
 ```
 
-Now you can telnet into your application using a tool such as PuTTY.
+Now you can telnet into your application and run commands using a tool such as PuTTY. The module in which you specified ``init``, ``tick``, ``render`` etc. is inside of the variable ``app``.
 
 ```
 # sample session (using simple_game):
@@ -33,3 +33,5 @@ print(app.Game.player.x)
 app.Game.player.x=99
 
 ```
+
+
