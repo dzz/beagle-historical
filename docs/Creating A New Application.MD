@@ -82,7 +82,7 @@ bin\dopey3.exe [W] [H] [FS FLAG] [VIRTUAL FPS]
 
 e.g.
 
-;launch a 1920x1080, fullscreen, 60fps of the runtime
+;launch a 1920x1080, fullscreen, 60fps instance of the runtime
 
 bin\dopey3.exe 1920 1080 1 60
 ```
