@@ -24,7 +24,7 @@ You will need to create an *``__init__.py``* inside this directory so python rec
 
 ## Step 3 - Create the basic application functions
 
-In the same directory as *``__init__.py``*, you need the following functions in a file named 'main.py':
+In the same directory as *``__init__.py``*, you need the following functions in a file named 'main.py' or ``{app_module}.py`` if loading externally:
 
 ```python
 def init():
