@@ -1,12 +1,26 @@
-# Creating an Application
+# Creating an Application 
 
 ## Step 1 - Create the application directory
 
-Inside the directory client/applications/ create a new directory with the name you want for your application.
+The application can be loaded from the internal client/applications/ directory, or from an external directory.
+
+If you wish to load from an external directory, you must specify in application.ini:
+
+```
+; inside this path must be a package named 'app'
+app_path=c:\my_code\my_game
+;
+; this will load c:\my_code\my_game\app\main.py
+; and requires
+; 
+; c:\my_code\my_game\app\__init__.py   
+app_module=main
+```
 
 ## Step 2 - Create the Python module
 
 You will need to create an *``__init__.py``* inside this directory so python recognizes it as a module. 
+
 
 ## Step 3 - Create the basic application functions
 

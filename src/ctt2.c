@@ -40,7 +40,10 @@
 #include "hwgfx/context.h"
 #include "hwgfx/text.h"
 
-static SDL_Window* opengl_window;
+//not static due to reference in the host api for
+//host_set_title
+SDL_Window* opengl_window; 
+
 static SDL_Surface* ui_surface = NULL;
 static int drawingContextInvalid = 1;
 
@@ -190,6 +193,8 @@ void initPython() {
         dropPython();
         exit(1);
     } 
+
+
 
 }
 

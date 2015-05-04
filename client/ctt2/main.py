@@ -44,16 +44,35 @@ def init():
         config.read("client/application.ini")
 
     app_name = config["APPLICATION"]["name"]
+    host.set_title(app_name)
+    try:
+        app_dir = config["APPLICATION"]["path"]
+        print(app_dir)
+        app_module = config["APPLICATION"]["module"]
+    except:
+        app_dir = None
+        app_module = None
+
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
     if telnet_enabled:
         telnet_port = int( config["APPLICATION"]["telnet_port"] )
         telnet_host = config["APPLICATION"]["telnet_host"]
+    
+    
+    loaded_external = False
+    if (app_dir is not None) and (app_module is not None):
+        app = client.apps.get_app_from_path( app_dir, app_module )
+        loaded_external = True
+    else:
+        app = client.apps.get_app(app_name) 
 
-    app = client.apps.get_app(app_name) 
     app.controller_enabled = controller_enabled
     host_config.set_config("app_name", app_name)
-    host_config.set_config("app_dir", "client/applications/" + app_name +"/")
+    if not loaded_external:
+        host_config.set_config("app_dir", "client/applications/" + app_name +"/")
+    else:
+        host_config.set_config("app_dir", app_dir + "/app/")
     try:
         if config[app_name] is not None:
             app.configure( config[app_name] );

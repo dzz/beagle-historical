@@ -3,6 +3,8 @@
  * =============
  */
 
+extern SDL_Window* opengl_window;
+
 MODULE_FUNC host_abort
 DEF_ARGS {
     exit(1);    
@@ -28,6 +30,15 @@ DEF_ARGS {
     return Py_BuildValue("f",getTimeMs() );
 }
 
+
+MODULE_FUNC host_set_title
+DEF_ARGS {
+    char* title;
+    if(!INPUT_ARGS(args,"s",&title))
+        return NULL;
+    SDL_SetWindowTitle(opengl_window, title);
+    Py_RETURN_NONE;
+}
 
 MODULE_FUNC host_get_gamepad_sticks
 DEF_ARGS {
@@ -59,6 +70,7 @@ static PyMethodDef host_methods[] = {
     {"dequeue_gamepad_dirty",   
                             host_dequeue_gamepad_dirty, METH_VARARGS, NULL},
     {"get_hf_timer",        host_get_hf_timer,          METH_VARARGS, NULL},
+    {"set_title",           host_set_title,             METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };
