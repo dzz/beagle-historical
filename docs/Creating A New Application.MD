@@ -73,7 +73,7 @@ telnet_port=[port e.g. 8888]
 
 If the file generated_application.ini is in the client/ directory, it will ignore the main application.ini. This is useful if you have a seperate launcher app that switches between multiple apps or orchestrates runtime settings.
 
-#Step 5 - Launch the engine
+#Step 5 - Launch the runtime
 
 In the root of the repo, several run scripts are provided, for example launch_windowed_960.bat The current binary name is dopey3.exe, and it is invoked with the following parameters:
 
@@ -82,7 +82,7 @@ bin\dopey3.exe [W] [H] [FS FLAG] [VIRTUAL FPS]
 
 e.g.
 
-;launch a 1920x1080, fullscreen, 60fps of the engine
+;launch a 1920x1080, fullscreen, 60fps of the runtime
 
 bin\dopey3.exe 1920 1080 1 60
 ```
