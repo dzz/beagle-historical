@@ -22,9 +22,9 @@ class player:
         self.acc = pad.triggers[1]+1
         if(self.acc>0):
             self.firing = self.acc
-            self.real_acc = 0.99*self.real_acc+(0.01*self.acc*4)
-            self.vx = pad.left_stick[0]*self.real_acc
-            self.vy = pad.left_stick[1]*self.real_acc
+            self.real_acc = (0.93*self.real_acc)+(0.07*self.acc*1)
+            self.vx += (pad.left_stick[0]*(self.real_acc*self.real_acc))/8;
+            self.vy += (pad.left_stick[1]*(self.real_acc*self.real_acc))/8;
         else:
             self.vx*=self.vdecay
             self.vy*=self.vdecay
@@ -41,4 +41,4 @@ class player:
                                     (self.x-ox)*a + self.vr[0]*b,
                                     (self.y-oy)*a + self.vr[1]*b ]
 
-        self.r = 3.14 - atan2( self.vr[0],self.vr[1] )
+        self.r = 3.14 - atan2( self.vr[0]*0.25+pad.left_stick[0]*0.75,self.vr[1]*0.25+pad.left_stick[1]*0.75 )

@@ -11,11 +11,16 @@ class background():
         self.x = 0
         self.y = 0
 
-    def update(self):
-        self.time += self.speed
+    def update(self, speed = None):
+        if(speed is not None):
+            self.time += speed*self.speed
+        else:
+            self.time += self.speed
+        
 
-    def render(self):
+    def render(self, world_zoom):
         self.shader.bind( [ ("time", [ self.time ] ) ] )
         self.shader.bind( [ ("cam", [ self.x,self.y ] ) ] )
+        self.shader.bind( [ ("scale", [ world_zoom ] ) ] )
         self.primitive.render()
 

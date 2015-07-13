@@ -1,12 +1,12 @@
 from .background import background
 from .vortex import vortex
 from .player import player
-from math import sqrt,atan2
+from math import sqrt,atan2,cos,sin
 from client.system.gamepad       import get_gamepad
 from client.gfx.sprite           import sprite, sprite_renderer
 from client.gfx.tileset          import tileset
 from client.gfx.coordinates      import centered_view, Y_Axis_Down
-from random import choice
+from random import choice, uniform
 
 class pickup:
     def __init__(self, x,y, player, vortex):
@@ -16,12 +16,32 @@ class pickup:
         self.vortex =vortex
         self.level = 1
 
-    def tick(self):
+    def tick(self, particles, sprite_renderer):
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
-        if(d<60):
+        if(d<900):
             self.x = choice([16,32,64,128])*self.level
             self.y = choice([16,32,64,128])*self.level
             self.level*=2
+            if(self.level>64):
+                if(choice([True,False])):
+                    self.level=choice([self.level/2,self.level-32])
+            self.vortex.switch_directions()
+            part_count = 150
+            max_spread = d;
+            for i in range(0,part_count):
+                angle = uniform(-3.14,3.14)
+                x = sin(angle)
+                y = cos(angle)
+                d = uniform(60,float(i)/part_count*max_spread)
+                vx = x * uniform(15,30)
+                vy = y * uniform(15,30)
+                x *= d
+                y *= d
+                part = particle( self.x +x, self.y+y, vx, vy,
+                                 angle, sprite_renderer, [13,14] )
+                part.ttl = 500
+                particles.append(part)
+
 
         [self.x,self.y] = self.vortex.transform([self.x,self.y])
 
@@ -48,7 +68,7 @@ class particle:
         self.vx*=self.vdecay
         self.vy*=self.vdecay
         self.ttl -= 1
-        #[ self.x, self.y ] = vortex.transform( [ self.x, self.y] )
+        [ self.x, self.y ] = vortex.transform( [ self.x, self.y] )
         self.sprite.tick()
 
 
@@ -72,7 +92,7 @@ class game:
 
        configuration = {
                 "image"         : "ship.png",
-                "imageheight"   : 32,
+                "imageheight"   : 48,
                 "imagewidth"    : 112,
                 "margin"        : 0,
                 "spacing"       : 0,
@@ -86,6 +106,14 @@ class game:
        self.sprite_tileset  = tileset( configuration = configuration, img_path = "sprite/" )
 
        self.sprite_renderer = sprite_renderer( tileset = self.sprite_tileset, coordinates = centered_view(1920,1080, Y_Axis_Down))
+       self.priming_sprite = sprite(
+                                        sprite_renderer = self.sprite_renderer,
+                                        named_animations = {
+                                                                "default" : [11,12]
+                                                                },
+                                        current_animation = "default",
+                                        ticks_per_frame = 3
+                                     )
        self.reticle_sprite = sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
@@ -139,11 +167,12 @@ class game:
                     self.sprite_renderer
                ))
 
-       self.pickup.tick()
+       self.pickup.tick(self.particles, self.sprite_renderer )
        self.particles = tick_particles(self.particles,self.vortex)
        pad         = get_gamepad(0)
        #print( pad.left_stick);
-       self.background.update()
+       self.background.update(self.vortex.td_current)
+       self.priming_sprite.tick()
        self.emerald_sprite.tick()
        self.player.tick(pad,self.vortex)
        self.fire_sprite.tick()
@@ -151,7 +180,11 @@ class game:
        self.background.y = self.player.y
 
     def render(self):
-        self.background.render()
+        pad = get_gamepad(0)
+
+        world_zoom = 3 - max(pad.triggers[0]*2, 1)*0.3 
+        world_zoom = 1.5 -(pad.triggers[0]*1.2)
+        self.background.render(world_zoom)
 
         batch  = [];
 
@@ -162,7 +195,7 @@ class game:
                  4,
                  part.r,
                  [part.x-self.player.x,part.y-self.player.y],
-                 2 ])
+                 world_zoom ])
 
         batch.append([   
 
@@ -171,18 +204,29 @@ class game:
             3,
             atan2(self.pickup.x,self.pickup.y),
             [self.pickup.x-self.player.x,self.pickup.y-self.player.y],
-            2 
+            world_zoom 
             ])
 
         if(self.player.firing>0):
-            batch.append([
+            if(self.player.real_acc>0.98):
+                batch.append([
 
-                 self.fire_sprite,
-                 [-8,-2+self.player.acc],
-                 6,
-                 self.player.eng_r,
-                 [0.0,0.0],
-                 2 ])
+                     self.fire_sprite,
+                     [-8,-2+self.player.acc],
+                     4 + self.player.real_acc,
+                     self.player.eng_r,
+                     [0.0,0.0],
+                     world_zoom ])
+            else:
+                batch.append([
+
+                     self.priming_sprite,
+                     [-8,-2+self.player.acc],
+                     6,
+                     self.player.eng_r,
+                     [0.0,0.0],
+                     world_zoom ])
+
             batch.append([
 
                  self.engine_sprite,
@@ -190,7 +234,7 @@ class game:
                  4,
                  self.player.eng_r,
                  [0.0,0.0],
-                 2 ])
+                 world_zoom ])
 
         batch.append([   
 
@@ -199,7 +243,7 @@ class game:
             4,
             self.player.r,
             [0.0,0.0],
-            2 
+            world_zoom 
             ])
 
 
@@ -217,7 +261,7 @@ class game:
                 4,
                 reticle_r,
                 [0,0],
-                2 
+                world_zoom 
                 ])
 
 
