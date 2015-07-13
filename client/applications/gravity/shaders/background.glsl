@@ -24,22 +24,24 @@ void main(void) {
     float a=1.0;
     float b=0.0;
     float line =0.0;
-    circle = (sin ( circle * 6*3.14 + (time*3.14) )+1.0)/2.0;
+    float steps = 8;
+    circle = sin ( circle * 0.2*3.14 )/2.0;
     circle*=circle;
     a = circle;
+    a = floor(a*steps)/steps;
     b = 1-circle;
 
 
     float c = sin((atan(tuv.x,tuv.y))+time);
     
     c = cos(c*circle+time);
+    c = floor(c*steps)/steps;
     float d = 1-c;
 
 
 
     
     
-    float steps = 1+wobble*8;
     //a = floor(a*steps)/steps;
     //b = floor(b*steps)/steps;
     //c = floor(c*steps)/steps;
