@@ -86,5 +86,15 @@ class sprite_renderer():
                 scale_world = sprite_render_operation[4]
                 self.shader.bind([ ("scale_local", [scale]), ("translation_local", translation_local ), ("scale_world",[scale_world] ),("translation_world",translation_world) ])
                 sprite.get_current_primitive().render()
+            elif(len(sprite_render_operation)==6):
+                sprite = sprite_render_operation[0]
+                translation_local = sprite_render_operation[1]
+                scale = sprite_render_operation[2]
+                rotation_local = sprite_render_operation[3]
+                translation_world = sprite_render_operation[4]
+                scale_world = sprite_render_operation[5]
+                self.shader.bind([ ("scale_local", [scale]), ("translation_local", translation_local ), ("scale_world",[scale_world] ),("translation_world",translation_world),
+                                   ("rotation_local", [rotation_local]) ])
+                sprite.get_current_primitive().render()
 
 
