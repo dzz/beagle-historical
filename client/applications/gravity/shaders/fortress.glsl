@@ -46,7 +46,7 @@ void main(void) {
     float a=1.0;
     float b=0.0;
     float line =0.0;
-    circle = (mod( floor(tuv.x*atan_factor),2)+mod( floor(tuv.y*atan_factor),2));
+    circle = (mod( floor(tuv.x*(atan_factor/3)),2)+mod( floor(tuv.y*(atan_factor/3)),2));
     if(circle>1) circle=1;
     a = circle;
     b = 1-circle;

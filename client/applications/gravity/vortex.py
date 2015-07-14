@@ -16,8 +16,12 @@ class vortex:
 
     def switch_directions(self):
         self.td = self.td*-1
-        self.dist_scale *= uniform(0.9,1.15)
+        self.dist_scale *= uniform(0.8,1.2)
         self.time_scale = choice([0.5,1.0,1.5])
+
+        if uniform(0.0,1.0)>0.75:
+            self.time_scale = 1
+
         self.radscale = choice([True,False,False,False])
         self.use_phase = choice([True,False,False])
         self.vortex_phases = choice([True,False])
@@ -29,15 +33,16 @@ class vortex:
         dist=sqrt(dist)
         r = self.base_rotation * self.dist_scale * self.td_current
         if(self.radscale):
-            r += (sin(dist/300.0)*0.001)
+            #r += (sin(dist/300.0)*0.001)
+            pass
         if(self.use_phase):
-            r*=(1+sin(self.time*0.0001))/2.
+            r*=(1+sin(self.time*0.001))/2.
 
         x = point[0] * cos(r) - point[1]*sin(r)
         y = point[0] * sin(r) + point[1]*cos(r)
 
         if self.vortex_phases:
-            phase= (1.0+sin(self.time*0.001))/2.0
+            phase= min((sin(self.time*0.0001)),0.0)
 
             x = x*phase + point[0]*(1-phase)
             y = y*phase + point[1]*(1-phase)
