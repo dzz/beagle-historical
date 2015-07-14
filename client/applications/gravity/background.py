@@ -22,7 +22,15 @@ class background():
 
     def randomize_colors(self):
 
-        base_color = [uniform(0.0,1.0),uniform(0.0,1.0),uniform(0.0,1.0),choice([0.0,1.0])]
+        colors = [ 
+                        [ 1.0, 0.0, 0.0, 1.0 ],
+                        [ 0.0, 1.0, 0.0, 1.0 ],
+                        [ 0.0, 0.0, 1.0, 1.0 ],
+                        [ 0.0, 1.0, 1.0, 1.0 ],
+                        [ 0.0, 0.0, 0.0, 0.0 ],
+                        [ 1.0, 1.0, 1.0, 1.0 ],
+                        [ 0.0, 0.0, 0.0, 1.0 ] ]
+        base_color = choice(colors)
         invert_color = [ 1-base_color[0],
                          1-base_color[0],
                          1-base_color[0],
@@ -34,7 +42,8 @@ class background():
         self.shader.bind([("col2",invert_color)])
         self.shader.bind([("col3",drama_color)])
         self.shader.bind([("circle_factor",[choice([1,2,3,4])])])
-        self.shader.bind([("cosmunge_factor",[choice([1,24,3,99])])])
+        self.shader.bind([("wobble_factor",[choice([1,2,3,4])])])
+        self.shader.bind([("cosmunge_factor",[choice([0.00001, 1,24,3,99])])])
         self.shader.bind([("steps",[ choice([2,4,6,7,9,14,64]) ])])
         self.shader.bind([("atan_factor",[ choice([2,4,6,7,9,14,64]) ])])
 

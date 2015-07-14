@@ -10,6 +10,7 @@ uniform float steps;
 uniform float atan_factor;
 uniform float circle_factor;
 uniform float cosmunge_factor;
+uniform float wobble_factor;
 
 
 in vec2 uv;
@@ -32,7 +33,7 @@ void main(void) {
     tuv=vec2(tuv.x + (cam.x*cam_scale),tuv.y-(cam.y*cam_scale));
 
     float circle = (tuv.x*tuv.x) + (tuv.y*tuv.y);
-    float wobble = (sin(time_t*3.14)+1)/2;
+    float wobble = (sin(time_t*wobble_factor)+1)/2;
 
 
     float a=1.0;
@@ -54,13 +55,14 @@ void main(void) {
 
     
     
-    if(time_t==time){
-    a = floor(a*steps)/steps;
-    c = floor(c*steps)/steps;
-    } else {
-    b = floor(b*steps)/steps;
-    d = floor(d*steps)/steps;
-    }
+    
+    // if(time_t==time){
+    // a = floor(a*steps)/steps;
+    // c = floor(c*steps)/steps;
+    // } else {
+    // b = floor(b*steps)/steps;
+    // d = floor(d*steps)/steps;
+    // }
 
 
     gl_FragColor = 

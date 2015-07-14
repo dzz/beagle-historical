@@ -210,7 +210,6 @@ class game:
         dist = sqrt(target_x*target_x+target_y*target_y)
         reticle_r = 3.14-atan2(target_x,target_y)
 
-        print(distance(0,0,self.player.x,self.player.y))
 
         world_zoom = world_zoom_max -(pad.triggers[0]*(world_zoom_max-world_zoom_min))
         self.background.render(world_zoom)
@@ -226,7 +225,7 @@ class game:
             x2 = self.pickup.x
             y2 = self.pickup.y
 
-            length = max(1,distance(x1,y1,x2,y2)) / 512
+            length = max(1,distance(x1,y1,x2,y2)) / 350
 
             x1/=length
             x2/=length
@@ -333,7 +332,7 @@ class game:
 
             self.player_sprite,
             [-8,-8],
-            2+max(1,(self.player.vx+self.player.vy)),
+            10+(wobble*3)-(self.player.firing*2),
             self.player.r,
             [0.0,0.0],
             world_zoom 
