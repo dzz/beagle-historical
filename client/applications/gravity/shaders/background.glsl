@@ -28,12 +28,12 @@ void main(void) {
     //vec4 col3 = vec4(0,0,1,1);
     
 
-    float cam_scale = 0.001;
+    float wobble = (sin(time_t*wobble_factor)+1)/2;
+    float cam_scale = 0.001*wobble;
     vec2 tuv = uv * vec2(1,0.5625)*(1+scale);
     tuv=vec2(tuv.x + (cam.x*cam_scale),tuv.y-(cam.y*cam_scale));
 
     float circle = (tuv.x*tuv.x) + (tuv.y*tuv.y);
-    float wobble = (sin(time_t*wobble_factor)+1)/2;
 
 
     float a=1.0;
@@ -70,4 +70,6 @@ void main(void) {
                    (((col2*a) + (col1*b) )*c)   ) * wobble +
                    ( (((col2*a) + (col3*b) )*d) +
                    (((col3*a) + (col1*b) )*c)   ) * (1-wobble);
+
+    gl_FragColor *= gl_FragColor;
 }

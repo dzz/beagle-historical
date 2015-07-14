@@ -18,12 +18,17 @@ class pickup:
         self.player = player
         self.vortex =vortex
         self.level = 1
+        self.t = 0
+        self.radars_wobble = False
 
     def tick(self, particles, sprite_renderer, background):
+        self.t +=1
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
-        if(d<900):
+
+
+        if(d<1200):
             background.randomize_colors()
-            part_count = 90
+            part_count = 25
             max_spread = d;
             #explosion 1
             for i in range(0,part_count):
@@ -36,12 +41,13 @@ class pickup:
                 x *= d
                 y *= d
                 part = particle( self.x +x, self.y+y, vx, vy,
-                                 angle, sprite_renderer, [13] )
+                                 angle, sprite_renderer, [14,13] )
                 part.ttl = 300
                 particles.append(part)
             self.x = choice([16,32,64,128])*self.level
             self.y = choice([16,32,64,128])*self.level
-            self.level*=2
+            self.level+=1
+            self.radars_wobble = choice([True,False])
             if(self.level>64):
                 if(choice([True,False])):
                     self.level=choice([self.level/2,self.level-32])
@@ -57,7 +63,7 @@ class pickup:
                 x *= d
                 y *= d
                 part = particle( self.x +x, self.y+y, vx, vy,
-                                 angle, sprite_renderer, [14] )
+                                 angle, sprite_renderer, [13,14] )
                 part.ttl = 300
                 particles.append(part)
 
@@ -176,8 +182,45 @@ class game:
                                         ticks_per_frame = 9
                                      )
 
+       self.radar_sprites = [ 
+                                sprite(
+                                        sprite_renderer = self.sprite_renderer,
+                                        named_animations = {
+                                                                "default" : [16,17,18,19,20]
+                                                                },
+                                        current_animation = "default",
+                                        ticks_per_frame = 9
+                                     ),
+                                sprite(
+                                        sprite_renderer = self.sprite_renderer,
+                                        named_animations = {
+                                                                "default" : [17,16,19,18,20]
+                                                                },
+                                        current_animation = "default",
+                                        ticks_per_frame = 13
+                                     ),
+                                sprite(
+                                        sprite_renderer = self.sprite_renderer,
+                                        named_animations = {
+                                                                "default" : [19,18,20,16,17]
+                                                                },
+                                        current_animation = "default",
+                                        ticks_per_frame = 20
+                                     ),
+                                sprite(
+                                        sprite_renderer = self.sprite_renderer,
+                                        named_animations = {
+                                                                "default" : [20,19,17,17,16]
+                                                                },
+                                        current_animation = "default",
+                                        ticks_per_frame = 17
+                                     ) ]
+
+
     def tick(self):
        self.t +=1
+       for sprite in self.radar_sprites:
+           sprite.tick()
        if(self.t%choice([3,5,9])==0 and self.player.firing>0):
            self.particles.append( particle( 
                     self.player.x - self.player.vx,
@@ -185,6 +228,29 @@ class game:
                     0,0,
                     self.player.r,
                     self.sprite_renderer
+               ))
+
+       if(self.t%choice([5,2,24])==0):
+           # comet tail
+           p_vec_x = self.pickup.x - self.player.x
+           p_vec_y = self.pickup.y - self.player.y
+
+           r = atan2(p_vec_x,p_vec_y)+uniform(-0.1,0.1)
+
+           dist = distance( self.player.x, self.player.y, self.pickup.x,self.pickup.y )
+           d = uniform((dist/30), (dist/120) )
+           vx = -1*sin(r)*d
+           vy = -1*cos(r)*d
+
+
+
+           self.particles.append( particle( 
+                    self.pickup.x,
+                    self.pickup.y,
+                    vx,vy,
+                    self.player.r,
+                    self.sprite_renderer,
+                    [15,16,17,18,19,20],
                ))
 
        self.pickup.tick(self.particles, self.sprite_renderer, self.background )
@@ -233,44 +299,48 @@ class game:
             y2/=length
 
 
+            radar_world_zoom = 1.0
+            
+            if self.pickup.radars_wobble :
+                radar_world_zoom = wobble
             shadow_batch.append([   
 
-                self.player_sprite,
+                self.radar_sprites[0],
                 [0,-8],
                 12+wobble*2,
                 -wobble,
                 [x1,y1],
-                1.0 
+                radar_world_zoom
                 ])
 
             shadow_batch.append([   
 
-                self.emerald_sprite,
+                self.radar_sprites[1],
                 [-8,-8],
                 8+wobble*4,
                 wobble,
                 [x2,y2],
-                1.0 
+                radar_world_zoom
                 ])
 
             shadow_batch.append([   
 
-                self.player_sprite,
+                self.radar_sprites[2],
                 [-8,-8],
                 -9,
-                0+reticle_r,
+                reticle_r,
                 [x1,y1],
-                -1.0 
+                -1*radar_world_zoom
                 ])
 
             shadow_batch.append([   
 
-                self.emerald_sprite,
+                self.radar_sprites[3],
                 [0,-8],
                 -9,
-                0-reticle_r,
+                0-self.player.r,
                 [x2,y2],
-                -1.0 
+                -1*radar_world_zoom
                 ])
 
 
@@ -293,7 +363,7 @@ class game:
 
             self.emerald_sprite,
             [-8,-8],
-            3+(wobble*3),
+            (3+(wobble*3))*2,
             atan2(self.pickup.x,self.pickup.y),
             [self.pickup.x-self.player.x,self.pickup.y-self.player.y],
             world_zoom 
@@ -304,8 +374,8 @@ class game:
                 batch.append([
 
                      self.fire_sprite,
-                     [-8,-2+self.player.acc],
-                     4 + self.player.real_acc,
+                     [-8,-2+self.player.acc*3],
+                     6 + self.player.real_acc,
                      self.player.eng_r,
                      [0.0,0.0],
                      world_zoom ])
@@ -313,8 +383,8 @@ class game:
                 batch.append([
 
                      self.priming_sprite,
-                     [-8,-2+self.player.acc],
-                     6,
+                     [-8,-6+self.player.acc],
+                     16,
                      self.player.eng_r,
                      [0.0,0.0],
                      world_zoom ])
