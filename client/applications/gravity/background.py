@@ -5,13 +5,20 @@ from random import uniform,choice
 
 class background():
     def __init__(self):
-        self.shader = shaders.get_client_program( "no_transform","background")
+        self.shaders = [ 
+                            shaders.get_client_program( "no_transform","circus"),
+                            shaders.get_client_program( "no_transform","castle"),
+                            shaders.get_client_program( "no_transform","fortress"),
+                            shaders.get_client_program( "no_transform","micrube"),
+                            shaders.get_client_program( "no_transform","voodoo")
+                        ]
         self.primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad ) 
         self.time = 0
         self.speed = 0.01
         self.x = 0
         self.y = 0
         self.r = 0
+        self.shader = self.shaders[0]
         self.randomize_colors()
 
     def update(self, speed = None, r = None):
@@ -25,7 +32,7 @@ class background():
         
 
     def randomize_colors(self):
-
+        self.shader = choice( self.shaders )
         colors = [ 
                         [ 0.5, 0.7, 0.0, 1.0 ],
                         [ 0.4, 0.6, 0.3, 1.0 ],
