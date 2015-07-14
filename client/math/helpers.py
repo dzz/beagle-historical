@@ -14,6 +14,8 @@ def distance(x1,y1,x2,y2):
     dy = (y2-y1)
     return sqrt(dx*dx+dy*dy)
 
+
+
 neighbor_coordinates = [ (-1,  0),
                          (-1, -1),
                          ( 0, -1),

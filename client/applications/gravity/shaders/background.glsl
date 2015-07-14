@@ -8,7 +8,7 @@ in vec2 uv;
 
 void main(void) {
 
-    float steps = 4;
+    float steps = 3;
     float time_t = floor(time*steps)/steps;
     
     if(mod(floor(time_t),2)==0) {
@@ -36,7 +36,7 @@ void main(void) {
     b = 1-circle;
 
 
-    float c = sin((atan(tuv.x,tuv.y)*12)+time_t);
+    float c = sin((atan(sin(tuv.x+time),cos(tuv.y+time))*12)+time_t);
     
     c = cos(c*circle+time_t+cos(time*8));
     b = floor(b*steps)/steps;

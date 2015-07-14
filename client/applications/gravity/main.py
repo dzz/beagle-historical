@@ -4,9 +4,12 @@ from .player import player
 from math import sqrt,atan2,cos,sin
 from client.system.gamepad       import get_gamepad
 from client.gfx.sprite           import sprite, sprite_renderer
+import client.gfx.blend as blend
 from client.gfx.tileset          import tileset
 from client.gfx.coordinates      import centered_view, Y_Axis_Down
 from random import choice, uniform
+from client.math.helpers import distance
+import hwgfx
 
 class pickup:
     def __init__(self, x,y, player, vortex):
@@ -19,6 +22,22 @@ class pickup:
     def tick(self, particles, sprite_renderer):
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
         if(d<900):
+            part_count = 90
+            max_spread = d;
+            #explosion 1
+            for i in range(0,part_count):
+                angle = uniform(-3.14,3.14)
+                x = sin(angle)
+                y = cos(angle)
+                d = uniform(60,float(i)/part_count*max_spread)
+                vx = x * uniform(5,12)
+                vy = y * uniform(5,12)
+                x *= d
+                y *= d
+                part = particle( self.x +x, self.y+y, vx, vy,
+                                 angle, sprite_renderer, [13] )
+                part.ttl = 300
+                particles.append(part)
             self.x = choice([16,32,64,128])*self.level
             self.y = choice([16,32,64,128])*self.level
             self.level*=2
@@ -26,20 +45,19 @@ class pickup:
                 if(choice([True,False])):
                     self.level=choice([self.level/2,self.level-32])
             self.vortex.switch_directions()
-            part_count = 150
-            max_spread = d;
+            #explosion 2
             for i in range(0,part_count):
                 angle = uniform(-3.14,3.14)
                 x = sin(angle)
                 y = cos(angle)
                 d = uniform(60,float(i)/part_count*max_spread)
-                vx = x * uniform(15,30)
-                vy = y * uniform(15,30)
+                vx = x * uniform(5,12)
+                vy = y * uniform(5,12)
                 x *= d
                 y *= d
                 part = particle( self.x +x, self.y+y, vx, vy,
-                                 angle, sprite_renderer, [13,14] )
-                part.ttl = 500
+                                 angle, sprite_renderer, [14] )
+                part.ttl = 300
                 particles.append(part)
 
 
@@ -63,6 +81,7 @@ class particle:
                                         ticks_per_frame = 12
                                      )
     def tick(self, vortex):
+        self.r += 0.01
         self.x += self.vx
         self.y += self.vy
         self.vx*=self.vdecay
@@ -181,12 +200,81 @@ class game:
 
     def render(self):
         pad = get_gamepad(0)
+        wobble = (sin (self.t/12)+1)/2.0
 
-        world_zoom = 3 - max(pad.triggers[0]*2, 1)*0.3 
-        world_zoom = 1.5 -(pad.triggers[0]*1.2)
+        world_zoom_min = 0.66
+        world_zoom_max = 1.0
+        target_x = self.pickup.x-self.player.x
+        target_y = self.pickup.y-self.player.y
+        dist = sqrt(target_x*target_x+target_y*target_y)
+        reticle_r = 3.14-atan2(target_x,target_y)
+
+        print(distance(0,0,self.player.x,self.player.y))
+
+        world_zoom = world_zoom_max -(pad.triggers[0]*(world_zoom_max-world_zoom_min))
         self.background.render(world_zoom)
 
         batch  = [];
+        blend_batch = []
+
+        if(dist>10):
+
+            x1 = self.player.x
+            y1 = self.player.y
+            x2 = self.pickup.x
+            y2 = self.pickup.y
+
+            length = max(1,distance(x1,y1,x2,y2)) / 512
+
+            x1/=length
+            x2/=length
+            y1/=length
+            y2/=length
+
+
+            blend_batch.append([   
+
+                self.player_sprite,
+                [0,-8],
+                12+wobble*2,
+                -wobble,
+                [x1,y1],
+                1.0 
+                ])
+
+            blend_batch.append([   
+
+                self.emerald_sprite,
+                [-8,-8],
+                8+wobble*4,
+                wobble,
+                [x2,y2],
+                1.0 
+                ])
+
+            blend_batch.append([   
+
+                self.player_sprite,
+                [-8,-8],
+                -9,
+                0+reticle_r,
+                [x1,y1],
+                -1.0 
+                ])
+
+            blend_batch.append([   
+
+                self.emerald_sprite,
+                [0,-8],
+                -9,
+                0-reticle_r,
+                [x2,y2],
+                -1.0 
+                ])
+
+        hwgfx.manual_blend_enter(600)
+        self.sprite_renderer.render(blend_batch)
+        hwgfx.manual_blend_enter(0)
 
         for part in self.particles:
             batch.append([
@@ -247,11 +335,7 @@ class game:
             ])
 
 
-        target_x = self.pickup.x-self.player.x
-        target_y = self.pickup.y-self.player.y
 
-        dist = sqrt(target_x*target_x+target_y*target_y)
-        reticle_r = 3.14-atan2(target_x,target_y)
 
         if(dist>100):
             batch.append([   
@@ -263,6 +347,7 @@ class game:
                 [0,0],
                 world_zoom 
                 ])
+
 
 
 
