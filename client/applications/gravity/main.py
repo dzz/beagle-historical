@@ -20,6 +20,7 @@ class pickup:
         self.level = 1
         self.t = 0
         self.radars_wobble = False
+        self.level_incr_amt = 0.25
 
     def tick(self, particles, sprite_renderer, background):
         self.t +=1
@@ -44,13 +45,16 @@ class pickup:
                                  angle, sprite_renderer, [14,13] )
                 part.ttl = 300
                 particles.append(part)
-            self.x = choice([16,32,64,128])*self.level
-            self.y = choice([16,32,64,128])*self.level
-            self.level+=1
-            self.radars_wobble = choice([True,False])
+            self.x = choice([16,32,64,72])*self.level
+            self.y = choice([16,32,64,72])*self.level
+            self.level*=1.0+self.level_incr_amt
+            self.level_incr_amt*=0.91
+
+           # self.radars_wobble = choice([True,False,False])
             if(self.level>64):
                 if(choice([True,False])):
                     self.level=choice([self.level/2,self.level-32])
+                    self.level_incr_amt = 0.15
             self.vortex.switch_directions()
             #explosion 2
             for i in range(0,part_count):
@@ -118,7 +122,7 @@ class game:
 
        configuration = {
                 "image"         : "ship.png",
-                "imageheight"   : 48,
+                "imageheight"   : 64,
                 "imagewidth"    : 112,
                 "margin"        : 0,
                 "spacing"       : 0,
@@ -230,7 +234,7 @@ class game:
                     self.sprite_renderer
                ))
 
-       if(self.t%choice([5,2,24])==0):
+       if(self.t%choice([3,5,14,2])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y
@@ -238,7 +242,7 @@ class game:
            r = atan2(p_vec_x,p_vec_y)+uniform(-0.1,0.1)
 
            dist = distance( self.player.x, self.player.y, self.pickup.x,self.pickup.y )
-           d = uniform((dist/30), (dist/120) )
+           d = uniform((dist/12), (dist/120) )
            vx = -1*sin(r)*d
            vy = -1*cos(r)*d
 
@@ -250,14 +254,14 @@ class game:
                     vx,vy,
                     self.player.r,
                     self.sprite_renderer,
-                    [15,16,17,18,19,20],
+                    [21,22,23,24,25,26,27]
                ))
 
        self.pickup.tick(self.particles, self.sprite_renderer, self.background )
        self.particles = tick_particles(self.particles,self.vortex)
        pad         = get_gamepad(0)
        #print( pad.left_stick);
-       self.background.update(self.vortex.td_current)
+       self.background.update(self.vortex.td_current, self.player.r)
        self.priming_sprite.tick()
        self.emerald_sprite.tick()
        self.player.tick(pad,self.vortex)
@@ -327,7 +331,7 @@ class game:
 
                 self.radar_sprites[2],
                 [-8,-8],
-                -9,
+                -2,
                 reticle_r,
                 [x1,y1],
                 -1*radar_world_zoom
@@ -337,7 +341,7 @@ class game:
 
                 self.radar_sprites[3],
                 [0,-8],
-                -9,
+                -3,
                 0-self.player.r,
                 [x2,y2],
                 -1*radar_world_zoom
