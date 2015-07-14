@@ -3,6 +3,14 @@
 uniform float time;
 uniform vec2 cam;
 uniform float scale;
+uniform vec4 col1;
+uniform vec4 col2;
+uniform vec4 col3;
+uniform float steps;
+uniform float atan_factor;
+uniform float circle_factor;
+uniform float cosmunge_factor;
+
 
 in vec2 uv;
 
@@ -14,9 +22,9 @@ void main(void) {
     if(mod(floor(time_t),2)==0) {
         time_t = time;
     }
-    vec4 col1 = vec4(0,0,0.0,1);
-    vec4 col2 = vec4(1,0,0.5,1);
-    vec4 col3 = vec4(0,0,1,1);
+    //vec4 col1 = vec4(0,0,0.0,1);
+    //vec4 col2 = vec4(1,0,0.5,1);
+    //vec4 col3 = vec4(0,0,1,1);
     
 
     float cam_scale = 0.001;
@@ -30,15 +38,15 @@ void main(void) {
     float a=1.0;
     float b=0.0;
     float line =0.0;
-    circle = sin ( circle * 0.2*3.14 )/2.0;
+    circle = sin ( circle * 0.2*circle_factor )/2.0;
     circle*=circle;
     a = circle;
     b = 1-circle;
 
 
-    float c = sin((atan(sin(tuv.x+time),cos(tuv.y+time))*12)+time_t);
+    float c = sin((atan(sin(tuv.x+time),cos(tuv.y+time))*atan_factor)+time_t);
     
-    c = cos(c*circle+time_t+cos(time*8));
+    c = cos(c*circle+time_t+cos(time*cosmunge_factor));
     b = floor(b*steps)/steps;
     float d = 1-c;
 

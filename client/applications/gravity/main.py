@@ -19,9 +19,10 @@ class pickup:
         self.vortex =vortex
         self.level = 1
 
-    def tick(self, particles, sprite_renderer):
+    def tick(self, particles, sprite_renderer, background):
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
         if(d<900):
+            background.randomize_colors()
             part_count = 90
             max_spread = d;
             #explosion 1
@@ -186,7 +187,7 @@ class game:
                     self.sprite_renderer
                ))
 
-       self.pickup.tick(self.particles, self.sprite_renderer )
+       self.pickup.tick(self.particles, self.sprite_renderer, self.background )
        self.particles = tick_particles(self.particles,self.vortex)
        pad         = get_gamepad(0)
        #print( pad.left_stick);
@@ -215,7 +216,8 @@ class game:
         self.background.render(world_zoom)
 
         batch  = [];
-        blend_batch = []
+        shadow_batch = []
+        particle_batch = []
 
         if(dist>10):
 
@@ -232,7 +234,7 @@ class game:
             y2/=length
 
 
-            blend_batch.append([   
+            shadow_batch.append([   
 
                 self.player_sprite,
                 [0,-8],
@@ -242,7 +244,7 @@ class game:
                 1.0 
                 ])
 
-            blend_batch.append([   
+            shadow_batch.append([   
 
                 self.emerald_sprite,
                 [-8,-8],
@@ -252,7 +254,7 @@ class game:
                 1.0 
                 ])
 
-            blend_batch.append([   
+            shadow_batch.append([   
 
                 self.player_sprite,
                 [-8,-8],
@@ -262,7 +264,7 @@ class game:
                 -1.0 
                 ])
 
-            blend_batch.append([   
+            shadow_batch.append([   
 
                 self.emerald_sprite,
                 [0,-8],
@@ -272,24 +274,27 @@ class game:
                 -1.0 
                 ])
 
-        hwgfx.manual_blend_enter(600)
-        self.sprite_renderer.render(blend_batch)
-        hwgfx.manual_blend_enter(0)
 
         for part in self.particles:
-            batch.append([
+            particle_batch.append([
                  part.sprite,
                  [-8,-8],
-                 4,
+                 4+(part.r*2),
                  part.r,
                  [part.x-self.player.x,part.y-self.player.y],
                  world_zoom ])
+
+        hwgfx.manual_blend_enter(600)
+        self.sprite_renderer.render(shadow_batch)
+        hwgfx.manual_blend_enter(5000)
+        self.sprite_renderer.render(particle_batch)
+        hwgfx.manual_blend_enter(0)
 
         batch.append([   
 
             self.emerald_sprite,
             [-8,-8],
-            3,
+            3+(wobble*3),
             atan2(self.pickup.x,self.pickup.y),
             [self.pickup.x-self.player.x,self.pickup.y-self.player.y],
             world_zoom 
@@ -328,7 +333,7 @@ class game:
 
             self.player_sprite,
             [-8,-8],
-            4,
+            2+max(1,(self.player.vx+self.player.vy)),
             self.player.r,
             [0.0,0.0],
             world_zoom 

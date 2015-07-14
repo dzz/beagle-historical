@@ -1,4 +1,5 @@
 from math import sin,cos,sqrt
+from random import uniform
 
 class vortex:
     def __init__(self):
@@ -10,6 +11,7 @@ class vortex:
 
     def switch_directions(self):
         self.td = self.td*-1
+        self.dist_scale *= uniform(0.5,2)
 
     def transform(self, point):
         self.td_current = (self.td_current * 0.999) + (self.td*0.001)
