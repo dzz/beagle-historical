@@ -7,9 +7,14 @@ from client.gfx.sprite           import sprite, sprite_renderer
 import client.gfx.blend as blend
 from client.gfx.tileset          import tileset
 from client.gfx.coordinates      import centered_view, Y_Axis_Down
-from random import choice, uniform
+from random import choice, uniform, sample
 from client.math.helpers import distance
 import hwgfx
+
+def shuffled_range(start,end):
+    r = range(start,end)
+    s = sample(r, len(r))
+    return s
 
 class pickup:
     def __init__(self, x,y, player, vortex):
@@ -21,13 +26,16 @@ class pickup:
         self.t = 0
         self.radars_wobble = False
         self.level_incr_amt = 0.25
+        self.levelled = False
 
     def tick(self, particles, sprite_renderer, background):
+        self.levelled = False
         self.t +=1
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
 
 
         if(d<1200):
+            self.levelled = True
             background.randomize_colors()
             part_count = 25
             max_spread = d;
@@ -122,7 +130,7 @@ class game:
 
        configuration = {
                 "image"         : "ship.png",
-                "imageheight"   : 64,
+                "imageheight"   : 192,
                 "imagewidth"    : 112,
                 "margin"        : 0,
                 "spacing"       : 0,
@@ -160,6 +168,18 @@ class game:
                                         current_animation = "default",
                                         ticks_per_frame = 1
                                      )
+
+       self.alternate_player_sprite = sprite(
+                                        sprite_renderer = self.sprite_renderer,
+                                        named_animations = {
+                                                                "default" : [42,45,46,47]
+                                                                },
+                                        current_animation = "default",
+                                        ticks_per_frame = 4
+                                     )
+
+       self.active_player_sprite = self.player_sprite
+
        self.engine_sprite = sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
@@ -186,11 +206,12 @@ class game:
                                         ticks_per_frame = 9
                                      )
 
+
        self.radar_sprites = [ 
                                 sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
-                                                                "default" : [16,17,18,19,20]
+                                                                "default" : shuffled_range( 16, 20)
                                                                 },
                                         current_animation = "default",
                                         ticks_per_frame = 9
@@ -198,7 +219,7 @@ class game:
                                 sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
-                                                                "default" : [17,16,19,18,20]
+                                                                "default" : shuffled_range(16,20)
                                                                 },
                                         current_animation = "default",
                                         ticks_per_frame = 13
@@ -206,7 +227,7 @@ class game:
                                 sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
-                                                                "default" : [19,18,20,16,17]
+                                                                "default" : range(42,47)
                                                                 },
                                         current_animation = "default",
                                         ticks_per_frame = 20
@@ -214,7 +235,7 @@ class game:
                                 sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
-                                                                "default" : [20,19,17,17,16]
+                                                                "default" : range(42,47)
                                                                 },
                                         current_animation = "default",
                                         ticks_per_frame = 17
@@ -254,10 +275,14 @@ class game:
                     vx,vy,
                     self.player.r,
                     self.sprite_renderer,
-                    [21,22,23,24,25,26,27]
+                    shuffled_range(21,42),
                ))
 
        self.pickup.tick(self.particles, self.sprite_renderer, self.background )
+
+       if(self.pickup.levelled):
+           self.active_player_sprite = choice([self.player_sprite, self.alternate_player_sprite])
+
        self.particles = tick_particles(self.particles,self.vortex)
        pad         = get_gamepad(0)
        #print( pad.left_stick);
@@ -404,7 +429,7 @@ class game:
 
         batch.append([   
 
-            self.player_sprite,
+            self.active_player_sprite,
             [-8,-8],
             10+(wobble*3)-(self.player.firing*2),
             self.player.r,
