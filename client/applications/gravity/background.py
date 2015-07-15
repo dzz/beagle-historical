@@ -45,6 +45,9 @@ class background():
                         [ 0.3, 0.0, 1.0, 1.0 ],
                         
                         ]
+        for i in range(0,7):
+            colors.append( [ uniform(0.0,1.0),uniform(0.0,1.0),uniform(0.0,1.0), 0.95 ] )
+
         base_color = choice(colors)
         invert_color = choice( [ [ 1-base_color[0],
                          1-base_color[1],

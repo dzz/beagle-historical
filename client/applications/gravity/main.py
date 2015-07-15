@@ -12,7 +12,7 @@ from client.math.helpers import distance
 import hwgfx
 
 def shuffled_range(start,end):
-    r = range(start,end)
+    r = range(start+1,end+1)
     s = sample(r, len(r))
     return s
 
@@ -27,6 +27,8 @@ class pickup:
         self.radars_wobble = False
         self.level_incr_amt = 0.25
         self.levelled = False
+        self.max_level = 32
+        self.level_tier_increase = 5
 
     def tick(self, particles, sprite_renderer, background):
         self.levelled = False
@@ -34,7 +36,7 @@ class pickup:
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
 
 
-        if(d<1200):
+        if(d<2500):
             self.levelled = True
             background.randomize_colors()
             part_count = 25
@@ -59,9 +61,10 @@ class pickup:
             self.level_incr_amt*=0.91
 
            # self.radars_wobble = choice([True,False,False])
-            if(self.level>64):
+            if(self.level>self.max_level):
                 if(choice([True,False])):
                     self.level=choice([self.level/2,self.level-32])
+                    self.max_level += self.level_tier_increase
                     self.level_incr_amt = 0.15
             self.vortex.switch_directions()
             #explosion 2
@@ -121,6 +124,8 @@ def tick_particles(particles,vortex):
 
 class game:
     def __init__(self):
+       self.world_zoom_current = 1.0
+       self.jitter_radar_shows = False
        self.t = 0
        self.background = background()
        self.vortex = vortex()
@@ -172,7 +177,7 @@ class game:
        self.alternate_player_sprite = sprite(
                                         sprite_renderer = self.sprite_renderer,
                                         named_animations = {
-                                                                "default" : [42,45,46,47]
+                                                                "default" : [42,43,44,45]
                                                                 },
                                         current_animation = "default",
                                         ticks_per_frame = 4
@@ -242,8 +247,10 @@ class game:
                                      ) ]
 
 
+    #GAME TICK
     def tick(self):
        self.t +=1
+       pad = get_gamepad(0)
        for sprite in self.radar_sprites:
            sprite.tick()
        if(self.t%choice([3,5,9])==0 and self.player.firing>0):
@@ -255,7 +262,7 @@ class game:
                     self.sprite_renderer
                ))
 
-       if(self.t%choice([3,5,14,2])==0):
+       if(self.t%choice([3,5,1,2])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y
@@ -263,7 +270,7 @@ class game:
            r = atan2(p_vec_x,p_vec_y)+uniform(-0.1,0.1)
 
            dist = distance( self.player.x, self.player.y, self.pickup.x,self.pickup.y )
-           d = uniform((dist/12), (dist/120) )
+           d = uniform((dist/12), (dist/220) )
            vx = -1*sin(r)*d
            vy = -1*cos(r)*d
 
@@ -282,9 +289,9 @@ class game:
 
        if(self.pickup.levelled):
            self.active_player_sprite = choice([self.player_sprite, self.alternate_player_sprite])
+           self.jitter_radar_shows = choice([True,False, False])
 
        self.particles = tick_particles(self.particles,self.vortex)
-       pad         = get_gamepad(0)
        #print( pad.left_stick);
        self.background.update(self.vortex.td_current, self.player.r)
        self.priming_sprite.tick()
@@ -293,20 +300,25 @@ class game:
        self.fire_sprite.tick()
        self.background.x = self.player.x
        self.background.y = self.player.y
+       self.alternate_player_sprite.tick()
+
+       a=0.98
+       b=0.02
+       self.world_zoom_current = (self.world_zoom_current*a)+(pad.triggers[0]*b)
 
     def render(self):
         pad = get_gamepad(0)
         wobble = (sin (self.t/12)+1)/2.0
 
-        world_zoom_min = 0.66
-        world_zoom_max = 1.0
+        world_zoom_min = 0.2
+        world_zoom_max = 0.8
         target_x = self.pickup.x-self.player.x
         target_y = self.pickup.y-self.player.y
         dist = sqrt(target_x*target_x+target_y*target_y)
         reticle_r = 3.14-atan2(target_x,target_y)
 
 
-        world_zoom = world_zoom_max -(pad.triggers[0]*(world_zoom_max-world_zoom_min))
+        world_zoom = world_zoom_max -(self.world_zoom_current*(world_zoom_max-world_zoom_min))
         self.background.render(world_zoom)
 
         batch  = [];
@@ -354,23 +366,25 @@ class game:
 
             shadow_batch.append([   
 
-                self.radar_sprites[2],
+                self.alternate_player_sprite,
                 [-8,-8],
-                -2,
+                20,
                 reticle_r,
                 [x1,y1],
                 -1*radar_world_zoom
                 ])
 
-            shadow_batch.append([   
 
-                self.radar_sprites[3],
-                [0,-8],
-                -3,
-                0-self.player.r,
-                [x2,y2],
-                -1*radar_world_zoom
-                ])
+            if( self.jitter_radar_shows):
+                shadow_batch.append([   
+
+                    self.radar_sprites[ choice([0,0,0,0,0,1,1,1,2,2,3])],
+                    [0,-8],
+                    -50,
+                    0-self.player.r,
+                    [x2,y2],
+                    -1*radar_world_zoom
+                    ])
 
 
         for part in self.particles:
