@@ -9,6 +9,7 @@ from client.gfx.tileset          import tileset
 from client.gfx.coordinates      import centered_view, Y_Axis_Down
 from random import choice, uniform, sample
 from client.math.helpers import distance
+from .music_system import music_system
 import hwgfx
 
 def shuffled_range(start,end):
@@ -30,13 +31,13 @@ class pickup:
         self.max_level = 32
         self.level_tier_increase = 5
 
-    def tick(self, particles, sprite_renderer, background):
+    def tick(self, particles, sprite_renderer, background, music_system ):
         self.levelled = False
         self.t +=1
+
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
-
-
         if(d<2500):
+            music_system.trigger_event("level_up")
             self.levelled = True
             background.randomize_colors()
             part_count = 25
@@ -102,6 +103,8 @@ class particle:
                                         current_animation = "default",
                                         ticks_per_frame = 12
                                      )
+
+
     def tick(self, vortex):
         self.r += 0.01
         self.x += self.vx
@@ -124,6 +127,7 @@ def tick_particles(particles,vortex):
 
 class game:
     def __init__(self):
+       self.music_system = music_system("devon.music")
        self.world_zoom_current = 1.0
        self.jitter_radar_shows = False
        self.t = 0
@@ -285,7 +289,7 @@ class game:
                     shuffled_range(21,42),
                ))
 
-       self.pickup.tick(self.particles, self.sprite_renderer, self.background )
+       self.pickup.tick(self.particles, self.sprite_renderer, self.background, self.music_system )
 
        if(self.pickup.levelled):
            self.active_player_sprite = choice([self.player_sprite, self.alternate_player_sprite])

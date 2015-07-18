@@ -18,6 +18,7 @@
 #include "hwgfx/misc.h"
 #include "hwgfx/context.h"
 #include "hardware/gamepad.h"
+#include "hardware/audio.h"
 #include "hardware/hf_timer.h"
 
 //build a structure to hold required host callables inside of client
@@ -74,11 +75,13 @@ int api_drop() {
 #include "api-includes/modules/host.h"
 #include "api-includes/modules/hwgfx.h"
 #include "api-includes/modules/localgfx.h"
+#include "api-includes/modules/audio.h"
 void embed_modules() {
 
     PyImport_AppendInittab("host",      &PyInit_host);
     PyImport_AppendInittab("hwgfx",     &PyInit_hwgfx);
     PyImport_AppendInittab("localgfx",  &PyInit_localgfx);
+    PyImport_AppendInittab("audio",     &PyInit_audio);
     api_checkfailure();
 }
 #undef CLIENT_FUNCTION

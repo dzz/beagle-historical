@@ -60,6 +60,7 @@ DEF_ARGS {
                                       gp->left_trigger,
                                       gp->right_trigger );
 }
+
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 
 static PyMethodDef host_methods[] = {
