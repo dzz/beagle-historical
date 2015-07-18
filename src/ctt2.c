@@ -26,6 +26,7 @@
 #include "hardware/tablet.h"
 #include "hardware/hf_timer.h"
 #include "hardware/gamepad.h"
+#include "hardware/audio.h"
 #include "document/animation.h"
 #include "drawing/shader_brush.h"
 #include "drawing/brush.h"
@@ -124,7 +125,7 @@ void initWindowingSystemMessages() {
 
 
 void initDisplay( int fullscreen) {
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER ) < 0 ) {
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) < 0 ) {
         printf( "%s\n", SDL_GetError() );
         exit(1);
     } 
@@ -237,6 +238,7 @@ int main(int argc, char **argv){
 
 
     initLog();               
+    initAudio();
     initDisplay(fullscreen);
     initWindowingSystemMessages();
     initOpenGL();
@@ -387,6 +389,7 @@ int main(int argc, char **argv){
     dropExtendedVideo();
     dropOpengl();
     dropDisplay();
+    dropAudio();
     dropLog();
     SDL_Quit();
     return 0;
