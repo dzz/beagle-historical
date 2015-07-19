@@ -19,12 +19,12 @@
 #include <SDL_mixer.h>
 
 int cur_channel = 0;
-audio_track* tracks[ AUDIO__MAX_CHANNELS ];
+audio_track* tracks[ 32 ];
 
 void initAudio() {
     Mix_Init(MIX_INIT_OGG);
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
-    Mix_AllocateChannels( AUDIO_CHANNELS );
+    Mix_AllocateChannels( 32 );
 }
 
 void audio_create_clip(audio_clip* clip, char* clip_name) {
@@ -51,12 +51,14 @@ void dropAudio() {
 }
 
 void audio_create_track(audio_track* track) {
-    if(cur_channel != AUDIO__MAX_CHANNELS) {
+    if(cur_channel != 16 ) {
         track->track_num = cur_channel;
         tracks[cur_channel] = track;
         cur_channel++;
+        printf("CURRENT CHANNEL: %i\n",cur_channel);
     } else {
         printf("too many channels.. \n");
+        exit(1);
     }
 }
 
@@ -88,14 +90,15 @@ float fmax(double a, double b) {
 
 void audio_reset_tracks() {
     int i;
-    for(i=0; i<AUDIO__MAX_CHANNELS;++i) {
+    for(i=0; i<32;++i) {
         tracks[i] = 0;
     }
     cur_channel=0;
 }
 
 void audio_set_volume_on_track(audio_track* track, double volume) {
-    Mix_Volume(track->track_num, (int)fmax(0,fmin(floor(volume*128),127)));
+    printf("set vol for %d to %f\n",track->track_num,volume);
+    Mix_Volume(track->track_num, (int)(volume*127.0));
 }
 
 void audio_set_track_panning(audio_track* track, double pan) {

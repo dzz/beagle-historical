@@ -30,13 +30,18 @@ class pickup:
         self.levelled = False
         self.max_level = 32
         self.level_tier_increase = 5
+        self.collection_envelope_follower = 0.0
+        self.collection_envelope_follower_decay = 0.995
 
     def tick(self, particles, sprite_renderer, background, music_system ):
+        self.collection_envelope_follower = self.collection_envelope_follower * self.collection_envelope_follower_decay
+        music_system.track_volume("Bass", self.collection_envelope_follower)
         self.levelled = False
         self.t +=1
 
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
         if(d<2500):
+            self.collection_envelope_follower = 1.0
             music_system.trigger_event("level_up")
             self.levelled = True
             background.randomize_colors()
@@ -300,7 +305,7 @@ class game:
        self.background.update(self.vortex.td_current, self.player.r)
        self.priming_sprite.tick()
        self.emerald_sprite.tick()
-       self.player.tick(pad,self.vortex)
+       self.player.tick(pad,self.vortex,self.music_system)
        self.fire_sprite.tick()
        self.background.x = self.player.x
        self.background.y = self.player.y

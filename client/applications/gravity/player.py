@@ -11,16 +11,19 @@ class player:
         self.r = 0
         self.eng_r = 0
         self.firing = 0
+        self.fuzzy_firing_state = 0
         self.real_acc = 0
 
-    def tick(self, pad,vortex):
+    def tick(self, pad,vortex,music_system):
         ox = self.x
         oy = self.y
 
         self.eng_r = 3.14-atan2(pad.left_stick[0],pad.left_stick[1])
 
         self.acc = pad.triggers[1]+1
+        fuzzy_firing_impulse = 0.0
         if(self.acc>0):
+            fuzzy_firing_impulse = 1.0
             self.firing = self.acc
             self.real_acc = (0.93*self.real_acc)+(0.07*self.acc*1)
             self.vx += (pad.left_stick[0]*(self.real_acc*self.real_acc))/8;
@@ -30,6 +33,8 @@ class player:
             self.vy*=self.vdecay
             self.firing = 0
 
+        self.fuzzy_firing_state = (0.99*self.fuzzy_firing_state)+(0.1*fuzzy_firing_impulse)
+        music_system.track_volume("DrumEffects",self.fuzzy_firing_state)
         self.x += self.vx
         self.y += self.vy
 
