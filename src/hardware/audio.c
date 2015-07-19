@@ -28,7 +28,16 @@ void initAudio() {
 }
 
 void audio_create_clip(audio_clip* clip, char* clip_name) {
+    clip->ChunkData = 0;
     clip->ChunkData=Mix_LoadWAV(clip_name);
+    if(clip->ChunkData == 0) {
+
+       printf(clip_name);
+       printf(Mix_GetError());
+       exit(1);
+    }
+
+    printf("%d -- clip->ChunkData\n",clip->ChunkData);
 }
 
 void audio_drop_clip(audio_clip* clip) {
@@ -52,10 +61,17 @@ void audio_create_track(audio_track* track) {
 }
 
 void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int loop) {
-    if(loop==0) 
-        Mix_PlayChannel(track->track_num, clip->ChunkData,0);
-    else
+    if(loop==0)  {
+        printf("%i\n",clip->ChunkData);
+
+        if( Mix_PlayChannel(track->track_num, clip->ChunkData,0) == -1) {
+           printf(Mix_GetError());
+           exit(1);
+        }
+    }
+    else {
         Mix_PlayChannel(track->track_num, clip->ChunkData,-1);
+    }
 }
 
 #ifndef C99
