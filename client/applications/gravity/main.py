@@ -19,6 +19,8 @@ def shuffled_range(start,end):
 
 class pickup:
     def __init__(self, x,y, player, vortex):
+        self.has_leads = True
+        self.drums_dynamic_volume = True
         self.x = x
         self.y = y
         self.player = player
@@ -31,16 +33,54 @@ class pickup:
         self.max_level = 32
         self.level_tier_increase = 5
         self.collection_envelope_follower = 0.0
-        self.collection_envelope_follower_decay = 0.995
+        self.collection_envelope_follower_decay = 0.998
+        self.collection_envelope_follower_smoothed = 0.0
+        self.adaptive_max_d = 0.01
+        self.d_nrml_smoothed = 0.01
 
     def tick(self, particles, sprite_renderer, background, music_system ):
         self.collection_envelope_follower = self.collection_envelope_follower * self.collection_envelope_follower_decay
+        self.collection_envelope_follower_smoothed = 0.99*self.collection_envelope_follower_smoothed + 0.01 * self.collection_envelope_follower
         music_system.track_volume("Bass", self.collection_envelope_follower)
+        music_system.track_volume("Pads", 1-self.collection_envelope_follower)
+        if(self.drums_dynamic_volume):
+            music_system.track_volume("DrumStatic", 1-(self.collection_envelope_follower_smoothed*self.collection_envelope_follower_smoothed))
+        else:
+            music_system.track_volume("DrumStatic", 1);
+
         self.levelled = False
         self.t +=1
 
         d = (self.x-self.player.x)*(self.x-self.player.x)+ (self.y-self.player.y)*(self.y-self.player.y)
+        real_d = sqrt(d)
+        pickup_sound_x = (self.player.x-self.x)/real_d
+        pickup_sound_y = (((self.y-self.player.y)/real_d)+1)*0.5
+
+        music_system.track_volume("PickupHi", 1-pickup_sound_y)
+        music_system.track_volume("PickupLow",pickup_sound_y)
+        music_system.track_pan("PickupHi", pickup_sound_x)
+        music_system.track_pan("PickupLow",pickup_sound_x)
+
+
+        d_adaptable = d*1.15
+        if(d_adaptable>self.adaptive_max_d):
+            self.adaptive_max_d = d_adaptable
+        else:
+            self.adaptive_max_d*=0.995
+
+        d_nrml = d/self.adaptive_max_d
+        self.d_nrml_smoothed = self.d_nrml_smoothed*0.99+d_nrml*0.01
+
+        #print("Setting pickup audio cue to:{0}".format(1-d_nrml))
+        if(self.has_leads):
+            music_system.track_volume("Lead", 1-(self.d_nrml_smoothed)*(1-self.collection_envelope_follower))
+        else:
+            music_system.track_volume("Lead",0.0);
+
+
         if(d<2500):
+            self.has_leads = choice([True,False,False])
+            self.drums_dynamic_volume = choice([True,False,False])
             self.collection_envelope_follower = 1.0
             music_system.trigger_event("level_up")
             self.levelled = True
@@ -305,6 +345,7 @@ class game:
        self.background.update(self.vortex.td_current, self.player.r)
        self.priming_sprite.tick()
        self.emerald_sprite.tick()
+       self.music_system.tick()
        self.player.tick(pad,self.vortex,self.music_system)
        self.fire_sprite.tick()
        self.background.x = self.player.x

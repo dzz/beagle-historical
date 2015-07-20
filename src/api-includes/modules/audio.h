@@ -11,7 +11,6 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,"s",&filename))
         return NULL;
     audio_create_clip(clip,filename);
-    printf("cptr, chunk_data<--:(%d,%d)\n",clip,clip->ChunkData);
     return Py_BuildValue("I",(unsigned int)clip);
 }
 
@@ -59,14 +58,11 @@ DEF_ARGS {
     audio_clip* clip;
 
     if(!INPUT_ARGS(args,"III",&tptr,&cptr, &loop))  {
-        printf("no args");
-        exit(1);
         return NULL;
     }
 
     track = (audio_track*)tptr;
     clip = (audio_clip*)cptr;
-    printf("tptr, cptr (%d,%d)-->\n",tptr,cptr);
     audio_play_clip_on_track(clip,track,loop);
     Py_RETURN_NONE;
 }

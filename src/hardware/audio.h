@@ -7,6 +7,7 @@
 #define AUDIO_SAMPLERATE 44100
 #define AUDIO_CHANNELS 2
 #define AUDIO_CHUNKSIZE 2048
+#define AUDIO_MAX_TRACKS 64
 
 void initAudio();
 void dropAudio();

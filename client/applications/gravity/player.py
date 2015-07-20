@@ -33,7 +33,7 @@ class player:
             self.vy*=self.vdecay
             self.firing = 0
 
-        self.fuzzy_firing_state = (0.99*self.fuzzy_firing_state)+(0.1*fuzzy_firing_impulse)
+        self.fuzzy_firing_state = (0.7*self.fuzzy_firing_state)+(0.3*fuzzy_firing_impulse)
         music_system.track_volume("DrumEffects",self.fuzzy_firing_state)
         self.x += self.vx
         self.y += self.vy

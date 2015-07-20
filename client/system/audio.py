@@ -6,6 +6,7 @@ clips = {}
 
 class clip:
     def __init__(self,filename):
+        print("audio.clip loading:{0}".format(filename))
         self.audio_clip = audio.clip_create(host_config.get_config("app_dir") + filename)
 
     def __del__(self):
