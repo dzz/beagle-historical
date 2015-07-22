@@ -29,8 +29,12 @@ DEF_ARGS {
 MODULE_FUNC audio_track_create
 DEF_ARGS {
     audio_track* track;
-    track = malloc(sizeof(track));
-    audio_create_track(track);
+    double bpm;
+    unsigned int beatlock;
+    track = malloc(sizeof(audio_track));
+    if(!INPUT_ARGS(args,"fI",&bpm,&beatlock))
+        return NULL;
+    audio_create_track(track, bpm, beatlock);
     return Py_BuildValue("I",(unsigned int)track);
 }
 

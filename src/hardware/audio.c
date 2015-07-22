@@ -26,6 +26,7 @@ void initAudio() {
     Mix_Init(MIX_INIT_OGG);
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
     Mix_AllocateChannels( max_tracks );
+    audio_reset_tracks();
 }
 
 void audio_create_clip(audio_clip* clip, char* clip_name) {
@@ -37,8 +38,6 @@ void audio_create_clip(audio_clip* clip, char* clip_name) {
        printf(Mix_GetError());
        exit(1);
     }
-
-    printf("%d -- clip->ChunkData\n",clip->ChunkData);
 }
 
 void audio_drop_clip(audio_clip* clip) {
@@ -51,10 +50,19 @@ void dropAudio() {
     Mix_Quit();
 }
 
-void audio_create_track(audio_track* track) {
+void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked) {
     if(cur_channel != AUDIO_MAX_TRACKS ) {
-        track->track_num = cur_channel;
-        tracks[cur_channel] = track;
+
+        track->track_num        = cur_channel;
+        track->volume_filtered  = 0.0;
+        track->volume_set       = 0.0;
+        track->bpm              = bpm;
+        track->bps              = bpm/60.0;
+        track->beat             = 0.0;
+        track->next_clip        = 0;
+        track->beat_locked      = beat_locked;
+        tracks[cur_channel]     = track;
+
         cur_channel++;
     } else {
         printf("Tried to allocate > %d tracks",AUDIO_MAX_TRACKS);
@@ -63,11 +71,18 @@ void audio_create_track(audio_track* track) {
 }
 
 void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int loop) {
+
+    if(clip->ChunkData==0)
+        return;
+
+    if(track->beat_locked == BEAT_LOCKED ) {
+        track->next_clip = clip;
+        track->next_clip_loops = loop;
+		return;
+    }
+
     if(loop==0)  {
-        if( Mix_PlayChannel(track->track_num, clip->ChunkData,0) == -1) {
-           printf(Mix_GetError());
-           exit(1);
-        }
+        Mix_PlayChannel(track->track_num, clip->ChunkData,0);
     }
     else {
         Mix_PlayChannel(track->track_num, clip->ChunkData,-1);
@@ -94,8 +109,47 @@ void audio_reset_tracks() {
     cur_channel=0;
 }
 
+void audio_tick_tracks(double delta) {
+    int i;
+    for(i=0; i<cur_channel;++i) {
+
+        tracks[i]->volume_filtered = (  TICK_FILTER_A * tracks[i]->volume_filtered) +
+                                     (1-TICK_FILTER_A * tracks[i]->volume_set     );
+
+		Mix_Volume(tracks[i]->track_num, (int)(tracks[i]->volume_filtered*127.0));
+        
+        {
+            int current_beat = (int)floor(tracks[i]->beat);
+            int next_beat;
+            tracks[i]->beat += tracks[i]->bps;
+            next_beat = (int)floor(tracks[i]->beat);
+            if(tracks[i]->beat_locked == BEAT_LOCKED ) {
+
+                if(tracks[i]->next_clip != 0) {
+                    if(tracks[i]->next_clip_loops == 0) {
+                        Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,0);
+                    } else {
+                        Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,-1);
+                    }
+                    tracks[i]->next_clip = 0;
+                }
+            }
+        }
+    }
+}
+
+
+int audio_realtime_processing = 0;
+void audio_enable_realtime_processing() {
+    audio_realtime_processing = 1;
+}
+
 void audio_set_volume_on_track(audio_track* track, double volume) {
-    Mix_Volume(track->track_num, (int)(volume*127.0));
+    if(audio_realtime_processing==1) {
+        track->volume_set = volume;
+    } else {
+	    Mix_Volume(track->track_num, (int)(volume*127.0));
+    }
 }
 
 void audio_set_track_panning(audio_track* track, double pan) {

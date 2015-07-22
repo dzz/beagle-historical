@@ -13,8 +13,12 @@ class clip:
         audio.clip_drop(self.audio_clip)
 
 class track:
-    def __init__(self):
-        self.audio_track = audio.track_create()
+    def __init__(self, bpm=120.0, beat_locked = False ):
+        if(beat_locked):
+            bl = 1
+        else:
+            bl = 0
+        self.audio_track = audio.track_create(bpm, bl)
 
     def __del__(self):
         audio.track_drop(self.audio_track)
@@ -35,10 +39,10 @@ class track:
         return self
 
 
-def get_track(name):
+def get_track(name, bpm = 128.0, beatlock = False):
     global tracks
     if not name in tracks:
-        tracks[name] = track()
+        tracks[name] = track(bpm, beatlock)
     return tracks[name]
     
 

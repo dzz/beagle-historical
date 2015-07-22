@@ -223,6 +223,7 @@ int main(int argc, char **argv){
     double frame_millis                             = -1;
     double init_millis                              = 0;
     double frame_overflow                           = 0;
+    double spf                                      = 0.0;
     int tick_next                                   = 0;
 
     if(argc==5) {
@@ -230,8 +231,10 @@ int main(int argc, char **argv){
         SCREEN_HEIGHT   = atoi( argv[2] );
         fullscreen      = atoi( argv[3] );
         fps             = atoi( argv[4] );
+        spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
         //printf("frame millis:%f", frame_millis);
+        audio_enable_realtime_processing();
     }
 
 
@@ -263,6 +266,7 @@ int main(int argc, char **argv){
             if(tick_next == 1)  {
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 tick_next = 0;
+                audio_tick_tracks(spf);
             }
 
 
