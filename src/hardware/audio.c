@@ -57,7 +57,7 @@ void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked
         track->volume_filtered  = 0.0;
         track->volume_set       = 0.0;
         track->bpm              = bpm;
-        track->bps              = bpm/60.0;
+        track->bps              = bpm / 60.0;
         track->beat             = 0.0;
         track->next_clip        = 0;
         track->beat_locked      = beat_locked;
@@ -114,25 +114,21 @@ void audio_tick_tracks(double delta) {
     for(i=0; i<cur_channel;++i) {
 
         tracks[i]->volume_filtered = (  TICK_FILTER_A * tracks[i]->volume_filtered) +
-                                     (1-TICK_FILTER_A * tracks[i]->volume_set     );
+            (1-TICK_FILTER_A * tracks[i]->volume_set     );
 
-		Mix_Volume(tracks[i]->track_num, (int)(tracks[i]->volume_filtered*127.0));
-        
-        {
-            int current_beat = (int)floor(tracks[i]->beat);
-            int next_beat;
-            tracks[i]->beat += tracks[i]->bps;
-            next_beat = (int)floor(tracks[i]->beat);
-            if(tracks[i]->beat_locked == BEAT_LOCKED ) {
+        Mix_Volume(tracks[i]->track_num, (int)(tracks[i]->volume_filtered*127.0));
 
-                if(tracks[i]->next_clip != 0) {
-                    if(tracks[i]->next_clip_loops == 0) {
-                        Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,0);
-                    } else {
-                        Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,-1);
-                    }
-                    tracks[i]->next_clip = 0;
+        tracks[i]->beat += tracks[i]->bps*delta;
+        if(tracks[i]->beat_locked == BEAT_LOCKED && (tracks[i]->beat>1.0)) {
+            while(tracks[i]->beat>1.0)
+                tracks[i]->beat-=1.0;
+            if(tracks[i]->next_clip != 0) {
+                if(tracks[i]->next_clip_loops == 0) {
+                    Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,0);
+                } else {
+                    Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,-1);
                 }
+                tracks[i]->next_clip = 0;
             }
         }
     }

@@ -14,6 +14,8 @@ class clip:
 
 class track:
     def __init__(self, bpm=120.0, beat_locked = False ):
+        self.active_clip = None
+        self.loop = False
         if(beat_locked):
             bl = 1
         else:
@@ -23,7 +25,13 @@ class track:
     def __del__(self):
         audio.track_drop(self.audio_track)
 
+    def retrigger(self):
+        if self.active_clip:
+            self.play_clip( self.active_clip, self.loop )
+
     def play_clip(self,clip,loop = False):
+        self.loop = loop
+        self.active_clip = clip
         if(loop):
             audio.track_play_clip( self.audio_track, clip.audio_clip, 1)
         else:

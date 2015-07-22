@@ -29,7 +29,7 @@ DEF_ARGS {
 MODULE_FUNC audio_track_create
 DEF_ARGS {
     audio_track* track;
-    double bpm;
+    float bpm;
     unsigned int beatlock;
     track = malloc(sizeof(audio_track));
     if(!INPUT_ARGS(args,"fI",&bpm,&beatlock))
