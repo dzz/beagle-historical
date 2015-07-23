@@ -19,7 +19,9 @@ typedef struct {
 } audio_clip;
 
 typedef struct {
-    int track_num;
+    int master_track_channel;
+    int slave_track_channel;
+    int active_track_channel;
     unsigned int beat_locked;
     double volume_filtered;
     double volume_set;

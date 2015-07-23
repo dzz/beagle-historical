@@ -19,6 +19,8 @@
 #include <SDL_mixer.h>
 
 int cur_channel = 0;
+int cur_track   = 0;
+
 audio_track* tracks[ AUDIO_MAX_TRACKS ];
 
 void initAudio() {
@@ -51,9 +53,11 @@ void dropAudio() {
 }
 
 void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked) {
-    if(cur_channel != AUDIO_MAX_TRACKS ) {
+    if(cur_track != AUDIO_MAX_TRACKS ) {
 
-        track->track_num        = cur_channel;
+        track->master_track_channel        = cur_channel;
+        track->slave_track_channel         = cur_channel+1;
+        track->active_track_channel        = track->master_track_channel;
         track->volume_filtered  = 0.0;
         track->volume_set       = 0.0;
         track->bpm              = bpm;
@@ -61,11 +65,12 @@ void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked
         track->beat             = 0.0;
         track->next_clip        = 0;
         track->beat_locked      = beat_locked;
-        tracks[cur_channel]     = track;
+        tracks[cur_track]     = track;
 
-        cur_channel++;
+        cur_track+=1;
+        cur_channel+=2;
     } else {
-        printf("Tried to allocate > %d tracks",AUDIO_MAX_TRACKS);
+        printf("Tried to allocate > %d tracks\n",AUDIO_MAX_TRACKS);
         exit(1);
     }
 }
@@ -82,10 +87,10 @@ void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int
     }
 
     if(loop==0)  {
-        Mix_PlayChannel(track->track_num, clip->ChunkData,0);
+        Mix_PlayChannel(track->active_track_channel, clip->ChunkData,0);
     }
     else {
-        Mix_PlayChannel(track->track_num, clip->ChunkData,-1);
+        Mix_PlayChannel(track->master_track_channel, clip->ChunkData,-1);
     }
 }
 
@@ -107,16 +112,24 @@ void audio_reset_tracks() {
         tracks[i] = 0;
     }
     cur_channel=0;
+    cur_track = 0;
+}
+
+void audio_track_swap_channels(audio_track* track) {
+    if(track->active_track_channel == track->master_track_channel)
+        track->active_track_channel = track->slave_track_channel;
+    else
+        track->active_track_channel = track->master_track_channel;
 }
 
 void audio_tick_tracks(double delta) {
     int i;
-    for(i=0; i<cur_channel;++i) {
+    for(i=0; i<cur_track;++i) {
 
         tracks[i]->volume_filtered = (  TICK_FILTER_A * tracks[i]->volume_filtered) +
             (1-TICK_FILTER_A * tracks[i]->volume_set     );
 
-        Mix_Volume(tracks[i]->track_num, (int)(tracks[i]->volume_filtered*127.0));
+        Mix_Volume(tracks[i]->master_track_channel, (int)(tracks[i]->volume_filtered*127.0));
 
         tracks[i]->beat += tracks[i]->bps*delta;
         if(tracks[i]->beat_locked == BEAT_LOCKED && (tracks[i]->beat>1.0)) {
@@ -124,11 +137,12 @@ void audio_tick_tracks(double delta) {
                 tracks[i]->beat-=1.0;
             if(tracks[i]->next_clip != 0) {
                 if(tracks[i]->next_clip_loops == 0) {
-                    Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,0);
+                    Mix_PlayChannel(tracks[i]->active_track_channel, tracks[i]->next_clip->ChunkData,0);
                 } else {
-                    Mix_PlayChannel(tracks[i]->track_num, tracks[i]->next_clip->ChunkData,-1);
+                    Mix_PlayChannel(tracks[i]->active_track_channel, tracks[i]->next_clip->ChunkData,-1);
                 }
                 tracks[i]->next_clip = 0;
+                audio_track_swap_channels(tracks[i]);
             }
         }
     }
@@ -144,7 +158,8 @@ void audio_set_volume_on_track(audio_track* track, double volume) {
     if(audio_realtime_processing==1) {
         track->volume_set = volume;
     } else {
-	    Mix_Volume(track->track_num, (int)(volume*127.0));
+	    Mix_Volume(track->master_track_channel, (int)(volume*127.0));
+	    Mix_Volume(track->slave_track_channel, (int)(volume*127.0));
     }
 }
 
@@ -160,6 +175,7 @@ void audio_set_track_panning(audio_track* track, double pan) {
         unsigned int pan_t = (unsigned int)(pan*127);
         unsigned char left = (unsigned char)pan_t+127;
         unsigned char right = 255-left;
-        Mix_SetPanning(track->track_num, 127+pan_t, 127-pan_t);
+        Mix_SetPanning(track->master_track_channel, 127+pan_t, 127-pan_t);
+        Mix_SetPanning(track->slave_track_channel, 127+pan_t, 127-pan_t);
     }
 }
