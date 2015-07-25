@@ -12,26 +12,73 @@
 #endif
 
 #include "audio.h"
+#include "hf_timer.h"
 
 #include <math.h>
 #include <stdio.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <SDL_thread.h>
 
 int cur_channel = 0;
 int cur_track   = 0;
 
+double chunk_time = 0;
+
+int shutdown = 0;
+int finalize = 0;
 audio_track* tracks[ AUDIO_MAX_TRACKS ];
 
+void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
+    int i;
+    for(i=0; i<cur_track;++i) {
+        tracks[i]->beat += tracks[i]->bpsmp*(double)len;
+    }
+}
+
+SDL_Thread* thread;
+
+int audioThread( void* data) {
+
+    int max_tracks = AUDIO_MAX_TRACKS;
+	finalize = 0;
+    Mix_Init(MIX_INIT_OGG);
+    Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
+    Mix_AllocateChannels( max_tracks );
+    Mix_RegisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat, NULL, tracks);
+
+	{
+		double secs = getTimeMs()/1000.0;
+
+		while(shutdown ==0) {
+			double secs_t = getTimeMs()/1000.0;
+			audio_tick_tracks(secs_t-secs);
+			secs = secs_t;
+		}
+	}
+	Mix_UnregisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat);
+    Mix_CloseAudio();
+    Mix_Quit();
+
+    finalize = 1;
+    return 0;
+}
+
 void initAudio() {
+    /*
     int max_tracks = AUDIO_MAX_TRACKS;
     Mix_Init(MIX_INIT_OGG);
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
     Mix_AllocateChannels( max_tracks );
+    Mix_RegisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat, NULL, tracks);
+    */
+    
+    thread = SDL_CreateThread( audioThread, "audio thread", 0 );
     audio_reset_tracks();
+    chunk_time = (1.0 / (double)AUDIO_SAMPLERATE) * (AUDIO_CHUNKSIZE/2);
 }
 
-void audio_create_clip(audio_clip* clip, char* clip_name) {
+void audio_create_clip(audio_clip* clip, char* clip_name, double clip_beats, double clip_trigger_offset) {
     clip->ChunkData = 0;
     clip->ChunkData=Mix_LoadWAV(clip_name);
     if(clip->ChunkData == 0) {
@@ -40,6 +87,8 @@ void audio_create_clip(audio_clip* clip, char* clip_name) {
        printf(Mix_GetError());
        exit(1);
     }
+    clip->clip_beats = clip_beats;
+    clip->clip_trigger_offset = clip_trigger_offset;
 }
 
 void audio_drop_clip(audio_clip* clip) {
@@ -48,9 +97,11 @@ void audio_drop_clip(audio_clip* clip) {
 }
 
 void dropAudio() {
-    Mix_CloseAudio();
-    Mix_Quit();
+	int thread_result = 0;
+    shutdown = 1;
+	SDL_WaitThread(thread,&thread_result);
 }
+
 
 void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked) {
     if(cur_track != AUDIO_MAX_TRACKS ) {
@@ -61,11 +112,15 @@ void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked
         track->volume_filtered  = 0.0;
         track->volume_set       = 0.0;
         track->bpm              = bpm;
-        track->bps              = bpm / 60.0;
+        track->bpsec            = bpm / 60.0;
+        track->bpsmp            = track->bpsec/(double)AUDIO_SAMPLERATE;
         track->beat             = 0.0;
         track->next_clip        = 0;
         track->beat_locked      = beat_locked;
+        track->active_clip      = 0;
+        track->next_beat_trigger = 1.0;
         tracks[cur_track]     = track;
+
 
         cur_track+=1;
         cur_channel+=2;
@@ -80,11 +135,19 @@ void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int
     if(clip->ChunkData==0)
         return;
 
+    if(track->active_clip!=0) {
+        track->next_beat_trigger = track->active_clip->clip_beats - clip->clip_trigger_offset;
+    } else {
+        track->next_beat_trigger = clip->clip_trigger_offset;
+    }
+
     if(track->beat_locked == BEAT_LOCKED ) {
         track->next_clip = clip;
         track->next_clip_loops = loop;
 		return;
     }
+
+    track->active_clip = clip;
 
     if(loop==0)  {
         Mix_PlayChannel(track->active_track_channel, clip->ChunkData,0);
@@ -122,30 +185,50 @@ void audio_track_swap_channels(audio_track* track) {
         track->active_track_channel = track->master_track_channel;
 }
 
+
+unsigned int is_first_tick = 1;
 void audio_tick_tracks(double delta) {
     int i;
     for(i=0; i<cur_track;++i) {
+        {
+            //iir filter volume --> both channels
 
-        tracks[i]->volume_filtered = (  TICK_FILTER_A * tracks[i]->volume_filtered) +
-            (1-TICK_FILTER_A * tracks[i]->volume_set     );
+            tracks[i]->volume_filtered = (  TICK_FILTER_A * tracks[i]->volume_filtered) +
+                (1-TICK_FILTER_A * tracks[i]->volume_set     );
 
-        Mix_Volume(tracks[i]->master_track_channel, (int)(tracks[i]->volume_filtered*127.0));
+            Mix_Volume(tracks[i]->master_track_channel, (int)(tracks[i]->volume_filtered*127.0));
+            Mix_Volume(tracks[i]->slave_track_channel, (int)(tracks[i]->volume_filtered*127.0));
+        }
 
-        tracks[i]->beat += tracks[i]->bps*delta;
-        if(tracks[i]->beat_locked == BEAT_LOCKED && (tracks[i]->beat>1.0)) {
-            while(tracks[i]->beat>1.0)
-                tracks[i]->beat-=1.0;
-            if(tracks[i]->next_clip != 0) {
-                if(tracks[i]->next_clip_loops == 0) {
+        {
+
+            if(tracks[i]->beat_locked == BEAT_LOCKED && (( (tracks[i]->beat+
+                                (chunk_time * tracks[i]->bpsec)
+                                
+                                ) > tracks[i]->next_beat_trigger) || (is_first_tick==1))) {
+                if(tracks[i]->next_clip != 0) {
                     Mix_PlayChannel(tracks[i]->active_track_channel, tracks[i]->next_clip->ChunkData,0);
-                } else {
-                    Mix_PlayChannel(tracks[i]->active_track_channel, tracks[i]->next_clip->ChunkData,-1);
+                    tracks[i]->active_clip = tracks[i]->next_clip;
+
+                    if(tracks[i]->beat>tracks[i]->next_beat_trigger) {
+                        tracks[i]->beat-=tracks[i]->next_beat_trigger;
+                    }
+
+
+                    if(tracks[i]->next_clip_loops == 0) {
+                        tracks[i]->next_clip = 0;
+                        tracks[i]->next_beat_trigger = tracks[i]->active_clip->clip_beats;
+                    }  else {
+                        tracks[i]->next_beat_trigger = tracks[i]->active_clip->clip_beats+tracks[i]->next_clip->clip_trigger_offset;
+                    }
+
+                    audio_track_swap_channels(tracks[i]);
                 }
-                tracks[i]->next_clip = 0;
-                audio_track_swap_channels(tracks[i]);
             }
+            //tracks[i]->beat += tracks[i]->bpsec*delta;
         }
     }
+    is_first_tick = 0;
 }
 
 

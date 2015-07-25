@@ -5,15 +5,15 @@ tracks = {}
 clips = {}
 
 class clip:
-    def __init__(self,filename):
+    def __init__(self,filename, beats = 4.0, trigger_offset = 0.0):
         print("audio.clip loading:{0}".format(filename))
-        self.audio_clip = audio.clip_create(host_config.get_config("app_dir") + filename)
+        self.audio_clip = audio.clip_create(host_config.get_config("app_dir") + filename, beats, trigger_offset)
 
     def __del__(self):
         audio.clip_drop(self.audio_clip)
 
 class track:
-    def __init__(self, bpm=120.0, beat_locked = False ):
+    def __init__(self, bpm=128.0, beat_locked = False ):
         self.active_clip = None
         self.loop = False
         if(beat_locked):
@@ -54,10 +54,10 @@ def get_track(name, bpm = 128.0, beatlock = False):
     return tracks[name]
     
 
-def get_clip(name):
+def get_clip(name, clip_beats = 4.0, clip_trigger_offset = 0.0 ):
     global clips
     if not name in clips:
-        clips[name] = clip(name)
+        clips[name] = clip(name, clip_beats, clip_trigger_offset)
     return clips[name]
 
 def flush_clips():

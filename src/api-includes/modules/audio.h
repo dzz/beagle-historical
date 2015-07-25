@@ -7,10 +7,12 @@ MODULE_FUNC audio_clip_create
 DEF_ARGS {
     audio_clip* clip;
     char *filename;
-    clip = malloc(sizeof(clip));
-    if(!INPUT_ARGS(args,"s",&filename))
+    float clip_beats;
+    float clip_trigger_offset;
+    clip = malloc(sizeof(audio_clip));
+    if(!INPUT_ARGS(args,"sff",&filename, &clip_beats, &clip_trigger_offset))
         return NULL;
-    audio_create_clip(clip,filename);
+    audio_create_clip(clip,filename, (double)clip_beats, (double)clip_trigger_offset);
     return Py_BuildValue("I",(unsigned int)clip);
 }
 

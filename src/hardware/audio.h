@@ -6,7 +6,7 @@
 
 #define AUDIO_SAMPLERATE 44100
 #define AUDIO_CHANNELS 2
-#define AUDIO_CHUNKSIZE 2048
+#define AUDIO_CHUNKSIZE 512
 #define AUDIO_MAX_TRACKS 64
 #define TICK_FILTER_A 0.75
 #define BEAT_LOCKED 1
@@ -16,6 +16,8 @@ void dropAudio();
 
 typedef struct {
     Mix_Chunk* ChunkData;
+    double clip_beats;
+    double clip_trigger_offset;
 } audio_clip;
 
 typedef struct {
@@ -26,10 +28,13 @@ typedef struct {
     double volume_filtered;
     double volume_set;
     double bpm;
-    double bps;
+    double bpsec;
+    double bpsmp;
     double beat;
     double bpt;
+    double next_beat_trigger;
     audio_clip* next_clip;
+    audio_clip* active_clip;
     unsigned int next_clip_loops;
 } audio_track;
 

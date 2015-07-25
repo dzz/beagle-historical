@@ -224,6 +224,7 @@ int main(int argc, char **argv){
     double init_millis                              = 0;
     double frame_overflow                           = 0;
     double spf                                      = 0.0;
+    double audio_last_time                          = 0.0;
     int tick_next                                   = 0;
 
     if(argc==5) {
@@ -240,9 +241,11 @@ int main(int argc, char **argv){
 
 
 
-    initLog();               
+    initLog();    
+	  
     initAudio();
     initDisplay(fullscreen);
+	
     initWindowingSystemMessages();
     initOpenGL();
     initTextInput();
@@ -256,17 +259,20 @@ int main(int argc, char **argv){
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
     init_millis = getTimeMs(); 
+    audio_last_time = init_millis;
 
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
         double base_millis = getTimeMs();
 
+
+
         while(finished == 0) {
             if(tick_next == 1)  {
+             //   audio_tick_tracks(spf);
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 tick_next = 0;
-                audio_tick_tracks(spf);
             }
 
 
@@ -388,12 +394,12 @@ int main(int argc, char **argv){
     /** FINISHED **/
     dropDrawingSurfaces();
     dropGamepad();
+	dropAudio(); //drop audio before python 
     dropPython();
     dropTextInput();
     dropExtendedVideo();
     dropOpengl();
     dropDisplay();
-    dropAudio();
     dropLog();
     SDL_Quit();
     return 0;
