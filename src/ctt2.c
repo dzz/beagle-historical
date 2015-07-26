@@ -125,7 +125,7 @@ void initWindowingSystemMessages() {
 
 
 void initDisplay( int fullscreen) {
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) < 0 ) {
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER ) < 0 ) {
         printf( "%s\n", SDL_GetError() );
         exit(1);
     } 
@@ -243,13 +243,14 @@ int main(int argc, char **argv){
 
     initLog();    
 	  
-    initAudio();
+
     initDisplay(fullscreen);
-	
+	initAudio();
     initWindowingSystemMessages();
     initOpenGL();
     initTextInput();
     initHfTimer();
+
     initPython();
     initGamepad();
 

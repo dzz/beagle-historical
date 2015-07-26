@@ -11,6 +11,7 @@
 # endif
 #endif
 
+#include <windows.h>
 #include "audio.h"
 #include "hf_timer.h"
 
@@ -20,14 +21,117 @@
 #include <SDL_mixer.h>
 #include <SDL_thread.h>
 
+//tracks
 int cur_channel = 0;
 int cur_track   = 0;
-
 double chunk_time = 0;
-
-int shutdown = 0;
-int finalize = 0;
 audio_track* tracks[ AUDIO_MAX_TRACKS ];
+
+//threading
+int audio_shutdown_flag = 0;
+
+#define THREAD_OP_READ_WAV    0
+#define THREAD_OP_FREE_CHUNK  1
+#define THREAD_OP_SET_VOLUME  2
+#define THREAD_OP_SET_PANNING 3
+#define THREAD_OP_PLAY_CLIP   4
+
+typedef struct {
+    unsigned int code;
+    void*        data;
+} audio_thread_operation;
+
+typedef struct {
+    unsigned int channel;
+    Mix_Chunk* chunk;
+    int loops;
+} op_play_data; 
+
+typedef struct {
+    audio_track* track;
+    int vol;
+} op_set_vol_data;
+
+typedef struct {
+    audio_track* track;
+    unsigned char left;
+    unsigned char right;
+} op_set_pan_data;
+
+audio_thread_operation* cur_thread_op = 0;
+void* audio_operation_result = 0;
+
+SDL_Thread* thread;
+SDL_mutex * op_mutex;
+SDL_cond  * op_result_ready;
+
+
+void* athr_wait_result(audio_thread_operation* op) {
+    SDL_LockMutex(op_mutex);
+	cur_thread_op = op;
+    SDL_CondWait( op_result_ready, op_mutex );
+	SDL_UnlockMutex(op_mutex);
+    return audio_operation_result;
+}
+
+Mix_Chunk* athr_ReadWav(char* filename) {
+    audio_thread_operation op;
+
+    op.code = THREAD_OP_READ_WAV;
+    op.data = filename;
+
+    return (Mix_Chunk*)athr_wait_result(&op);
+}
+
+void athr_FreeChunk(Mix_Chunk* chunk) {
+    audio_thread_operation op;
+    op.code = THREAD_OP_FREE_CHUNK;
+    op.data = chunk;
+
+    athr_wait_result(&op);
+}
+
+void athr_Volume(audio_track* track, int volume) {
+    audio_thread_operation  op;
+    op_set_vol_data         data;
+
+    data.track = track;
+    data.vol = volume;
+
+    op.code = THREAD_OP_SET_VOLUME;
+    op.data = &data;
+
+    athr_wait_result(&op);
+}
+
+void athr_SetPanning(audio_track* track, unsigned char left, unsigned char right) {
+    audio_thread_operation  op;
+    op_set_pan_data         data;
+
+    data.track  = track;
+    data.left   = left;
+    data.right  = right;
+
+    op.code = THREAD_OP_SET_PANNING;
+    op.data = &data;
+
+    athr_wait_result(&op);
+}
+
+void athr_PlayChannel(unsigned int channel, Mix_Chunk* ChunkData, int loops) {
+
+    audio_thread_operation  op;
+    op_play_data            data;
+
+    data.channel  = channel;
+    data.chunk = ChunkData;
+    data.loops = loops;
+
+    op.code = THREAD_OP_PLAY_CLIP;
+    op.data = &data;
+
+    athr_wait_result(&op);
+}
 
 void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
     int i;
@@ -36,12 +140,51 @@ void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
     }
 }
 
-SDL_Thread* thread;
+
+void athr_HandleOp() {    
+    switch(cur_thread_op->code) {
+        case THREAD_OP_READ_WAV:
+            audio_operation_result = (void*)Mix_LoadWAV((char*)cur_thread_op->data);
+            break;
+        case THREAD_OP_FREE_CHUNK:
+            Mix_FreeChunk((Mix_Chunk*)cur_thread_op->data);
+			audio_operation_result = 0;
+			break;
+        case THREAD_OP_SET_VOLUME:
+            {
+                op_set_vol_data* volop = (op_set_vol_data*)cur_thread_op->data;
+                Mix_Volume(volop->track->master_track_channel, volop->vol );
+                Mix_Volume(volop->track->slave_track_channel,  volop->vol );
+                audio_operation_result = 0;
+            }
+            break;
+        case THREAD_OP_SET_PANNING:
+            {
+                op_set_pan_data* panop = (op_set_pan_data*)cur_thread_op->data;
+                Mix_SetPanning(panop->track->master_track_channel, panop->left, panop->right );
+                Mix_SetPanning(panop->track->slave_track_channel,  panop->left, panop->right );
+                audio_operation_result = 0;
+            }
+            break;
+        case THREAD_OP_PLAY_CLIP:
+            {
+                op_play_data* playop = (op_play_data*)cur_thread_op->data;
+                audio_operation_result = (void*)Mix_PlayChannel( playop->channel, playop->chunk, playop->loops );
+            }
+            break;
+            
+    }
+}
 
 int audioThread( void* data) {
 
+#define ATREAD_YIELD_MS 3
+
     int max_tracks = AUDIO_MAX_TRACKS;
-	finalize = 0;
+	
+    audio_reset_tracks();
+    chunk_time = (1.0 / (double)AUDIO_SAMPLERATE) * (AUDIO_CHUNKSIZE/2);
+	SDL_InitSubSystem( SDL_INIT_AUDIO );
     Mix_Init(MIX_INIT_OGG);
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
     Mix_AllocateChannels( max_tracks );
@@ -50,17 +193,32 @@ int audioThread( void* data) {
 	{
 		double secs = getTimeMs()/1000.0;
 
-		while(shutdown ==0) {
+
+
+		while(audio_shutdown_flag ==0) {
+
+	
 			double secs_t = getTimeMs()/1000.0;
+								if(cur_thread_op!=0) {
+			SDL_LockMutex(op_mutex);
+            athr_HandleOp();
+            cur_thread_op = 0;
+            SDL_CondSignal(op_result_ready);
+			SDL_UnlockMutex(op_mutex);
+			}
+
 			audio_tick_tracks(secs_t-secs);
 			secs = secs_t;
+
+            Sleep(ATREAD_YIELD_MS);
+
 		}
 	}
 	Mix_UnregisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat);
     Mix_CloseAudio();
     Mix_Quit();
+	SDL_QuitSubSystem(SDL_INIT_AUDIO);
 
-    finalize = 1;
     return 0;
 }
 
@@ -74,13 +232,14 @@ void initAudio() {
     */
     
     thread = SDL_CreateThread( audioThread, "audio thread", 0 );
-    audio_reset_tracks();
-    chunk_time = (1.0 / (double)AUDIO_SAMPLERATE) * (AUDIO_CHUNKSIZE/2);
+    op_mutex = SDL_CreateMutex();
+	op_result_ready = SDL_CreateCond();
+
 }
 
 void audio_create_clip(audio_clip* clip, char* clip_name, double clip_beats, double clip_trigger_offset) {
     clip->ChunkData = 0;
-    clip->ChunkData=Mix_LoadWAV(clip_name);
+    clip->ChunkData=athr_ReadWav(clip_name);
     if(clip->ChunkData == 0) {
 
        printf(clip_name);
@@ -92,14 +251,16 @@ void audio_create_clip(audio_clip* clip, char* clip_name, double clip_beats, dou
 }
 
 void audio_drop_clip(audio_clip* clip) {
-    Mix_FreeChunk(clip->ChunkData);
+    athr_FreeChunk(clip->ChunkData);
     clip->ChunkData = 0;
 }
 
 void dropAudio() {
 	int thread_result = 0;
-    shutdown = 1;
+    audio_shutdown_flag = 1;
 	SDL_WaitThread(thread,&thread_result);
+    SDL_DestroyMutex(op_mutex);
+    SDL_DestroyCond(op_result_ready);
 }
 
 
@@ -150,10 +311,10 @@ void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int
     track->active_clip = clip;
 
     if(loop==0)  {
-        Mix_PlayChannel(track->active_track_channel, clip->ChunkData,0);
+        athr_PlayChannel(track->active_track_channel, clip->ChunkData,0);
     }
     else {
-        Mix_PlayChannel(track->master_track_channel, clip->ChunkData,-1);
+        athr_PlayChannel(track->master_track_channel, clip->ChunkData,-1);
     }
 }
 
@@ -241,8 +402,7 @@ void audio_set_volume_on_track(audio_track* track, double volume) {
     if(audio_realtime_processing==1) {
         track->volume_set = volume;
     } else {
-	    Mix_Volume(track->master_track_channel, (int)(volume*127.0));
-	    Mix_Volume(track->slave_track_channel, (int)(volume*127.0));
+	    athr_Volume(track, (int)(volume*127.0));
     }
 }
 
@@ -258,7 +418,6 @@ void audio_set_track_panning(audio_track* track, double pan) {
         unsigned int pan_t = (unsigned int)(pan*127);
         unsigned char left = (unsigned char)pan_t+127;
         unsigned char right = 255-left;
-        Mix_SetPanning(track->master_track_channel, 127+pan_t, 127-pan_t);
-        Mix_SetPanning(track->slave_track_channel, 127+pan_t, 127-pan_t);
+        athr_SetPanning(track, 127+pan_t, 127-pan_t);
     }
 }
