@@ -271,7 +271,7 @@ int main(int argc, char **argv){
 
         while(finished == 0) {
             if(tick_next == 1)  {
-             //   audio_tick_tracks(spf);
+                audio_tick_tracks(spf);
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 tick_next = 0;
             }

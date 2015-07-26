@@ -38,7 +38,7 @@ typedef struct {
     unsigned int next_clip_loops;
 } audio_track;
 
-void audio_create_clip(audio_clip* clip, char* clip_name);
+void audio_create_clip(audio_clip* clip, char* clip_name, double clip_beats, double clip_trigger_offset);
 void audio_drop_clip(audio_clip* clip);
 void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked);
 void audio_reset_tracks();
