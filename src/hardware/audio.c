@@ -27,14 +27,16 @@ int cur_track   = 0;
 double chunk_time = 0;
 audio_track* tracks[ AUDIO_MAX_TRACKS ];
 
-
-
+unsigned int is_first_tick = 1;
 
 void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
     int i;
     for(i=0; i<cur_track;++i) {
-        tracks[i]->beat += tracks[i]->bpsmp*(double)len;
+        if(is_first_tick!=1) {
+            tracks[i]->beat += tracks[i]->bpsmp*(double)len;
+        }
     }
+    audio_tick_tracks( (double)len / (double)AUDIO_SAMPLERATE );
 }
 
 
@@ -45,8 +47,6 @@ void initAudio() {
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
     Mix_AllocateChannels( max_tracks*2 );
     Mix_RegisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat, NULL, tracks);
-    
-
 }
 
 void audio_create_clip(audio_clip* clip, char* clip_name, double clip_beats, double clip_trigger_offset) {
@@ -157,7 +157,7 @@ void audio_track_swap_channels(audio_track* track) {
 }
 
 
-unsigned int is_first_tick = 1;
+
 void audio_tick_tracks(double delta) {
     int i;
     for(i=0; i<cur_track;++i) {
@@ -173,8 +173,8 @@ void audio_tick_tracks(double delta) {
 
         {
 
-            if(tracks[i]->beat_locked == BEAT_LOCKED && (( (tracks[i]->beat+
-                                (chunk_time * tracks[i]->bpsec)
+            if(tracks[i]->beat_locked == BEAT_LOCKED && (( (tracks[i]->beat/*+
+                                (chunk_time * tracks[i]->bpsec)*/
                                 
                                 ) > tracks[i]->next_beat_trigger) || (is_first_tick==1))) {
                 if(tracks[i]->next_clip != 0) {
