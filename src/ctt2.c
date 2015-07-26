@@ -224,7 +224,6 @@ int main(int argc, char **argv){
     double init_millis                              = 0;
     double frame_overflow                           = 0;
     double spf                                      = 0.0;
-    double audio_last_time                          = 0.0;
     int tick_next                                   = 0;
 
     if(argc==5) {
@@ -235,7 +234,6 @@ int main(int argc, char **argv){
         spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
         //printf("frame millis:%f", frame_millis);
-        audio_enable_realtime_processing();
     }
 
 
@@ -251,7 +249,6 @@ int main(int argc, char **argv){
     initTextInput();
     initHfTimer();
 
-    initPython();
     initGamepad();
 
     ui_surface = createDrawingSurface(SCREEN_WIDTH,
@@ -260,8 +257,8 @@ int main(int argc, char **argv){
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
     init_millis = getTimeMs(); 
-    audio_last_time = init_millis;
 
+    initPython();
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
@@ -273,9 +270,8 @@ int main(int argc, char **argv){
             if(tick_next == 1)  {
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 tick_next = 0;
+                //audio_garbage_collect_channels();
             }
-
-            //audio_tick_tracks(spf);
 
 
             while(SDL_PollEvent(&event)) {

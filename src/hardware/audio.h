@@ -6,7 +6,7 @@
 
 #define AUDIO_SAMPLERATE 44100
 #define AUDIO_CHANNELS 2
-#define AUDIO_CHUNKSIZE 512
+#define AUDIO_CHUNKSIZE 1024
 #define AUDIO_MAX_TRACKS 64
 #define TICK_FILTER_A 0.75
 #define BEAT_LOCKED 1
@@ -47,5 +47,7 @@ void audio_set_volume_on_track(audio_track* track, double volume);
 void audio_set_track_panning(audio_track* track, double pan);
 void audio_tick_tracks(double delta);
 void audio_enable_realtime_processing();
+void audio_disable_realtime_processing();
+void audio_garbage_collect_channels();
 #endif
 

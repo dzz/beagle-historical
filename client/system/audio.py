@@ -4,6 +4,12 @@ import audio
 tracks = {}
 clips = {}
 
+class beatEngine:
+    def play():
+        audio.enable_beatEngine()
+    def stop():
+        audio.disable_beatEngine()
+
 class clip:
     def __init__(self,filename, beats = 4.0, trigger_offset = 0.0):
         print("audio.clip loading:{0}".format(filename))

@@ -24,11 +24,12 @@
 //tracks
 int cur_channel = 0;
 int cur_track   = 0;
+int max_playing_channels = 0;
 double chunk_time = 0;
 audio_track* tracks[ AUDIO_MAX_TRACKS ];
 
 unsigned int is_first_tick = 1;
-
+unsigned int audio_realtime_processing = 0;
 void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
     int i;
     for(i=0; i<cur_track;++i) {
@@ -40,13 +41,29 @@ void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
 }
 
 
+void audio_garbage_collect_channels() {
+    int max_active_tracks = cur_track + (cur_track/2); //> more than this we start killing slaves
+    int to_cull = Mix_Playing(-1) - max_active_tracks;
+    if(to_cull>0) {
+        int culled = 0;
+		int i;
+        for(i=0; i<cur_track;++i) {
+            if( Mix_Playing(tracks[i]->slave_track_channel) == 1 ) {
+				Mix_FadeOutChannel(tracks[i]->slave_track_channel,64);
+                culled++;
+                if(culled==to_cull)
+                    break;
+            }
+        }
+    }
+}
+
 void initAudio() {
     int max_tracks = AUDIO_MAX_TRACKS;
 	SDL_InitSubSystem( SDL_INIT_AUDIO );
     Mix_Init(MIX_INIT_OGG);
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
     Mix_AllocateChannels( max_tracks*2 );
-    Mix_RegisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat, NULL, tracks);
 }
 
 void audio_create_clip(audio_clip* clip, char* clip_name, double clip_beats, double clip_trigger_offset) {
@@ -68,7 +85,9 @@ void audio_drop_clip(audio_clip* clip) {
 }
 
 void dropAudio() {
-	Mix_UnregisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat);
+    if(audio_realtime_processing == 1) {
+        audio_disable_realtime_processing();
+    }
     Mix_CloseAudio();
     Mix_Quit();
 }
@@ -99,6 +118,8 @@ void audio_create_track(audio_track* track, double bpm, unsigned int beat_locked
         printf("Tried to allocate > %d tracks\n",AUDIO_MAX_TRACKS);
         exit(1);
     }
+
+    
 }
 
 void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int loop) {
@@ -118,13 +139,16 @@ void audio_play_clip_on_track(audio_clip* clip, audio_track* track, unsigned int
 		return;
     }
 
-    track->active_clip = clip;
+    {
+        track->active_clip = clip;
 
-    if(loop==0)  {
-        Mix_PlayChannel(track->active_track_channel, clip->ChunkData,0);
-    }
-    else {
-        Mix_PlayChannel(track->master_track_channel, clip->ChunkData,-1);
+        //in non realtime mode infini looping tracks will go to slave
+        if(loop==0)  {
+            Mix_PlayChannel(track->master_track_channel, clip->ChunkData,0);
+        }
+        else {
+            Mix_PlayChannel(track->slave_track_channel, clip->ChunkData,-1);
+        }
     }
 }
 
@@ -182,7 +206,7 @@ void audio_tick_tracks(double delta) {
                     tracks[i]->active_clip = tracks[i]->next_clip;
 
                     if(tracks[i]->beat>tracks[i]->next_beat_trigger) {
-                        tracks[i]->beat-=tracks[i]->next_beat_trigger;
+                        tracks[i]->beat = 0;
                     }
 
 
@@ -203,9 +227,15 @@ void audio_tick_tracks(double delta) {
 }
 
 
-int audio_realtime_processing = 0;
+
 void audio_enable_realtime_processing() {
     audio_realtime_processing = 1;
+    Mix_RegisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat, NULL, tracks);
+}
+
+void audio_disable_realtime_processing() {
+    audio_realtime_processing = 0;
+	Mix_UnregisterEffect( MIX_CHANNEL_POST, audio_tracks_update_beat);
 }
 
 void audio_set_volume_on_track(audio_track* track, double volume) {

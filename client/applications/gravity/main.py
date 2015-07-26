@@ -262,39 +262,13 @@ class game:
 
 
        self.radar_sprites = [ 
-                                sprite(
-                                        sprite_renderer = self.sprite_renderer,
-                                        named_animations = {
-                                                                "default" : shuffled_range( 16, 20)
-                                                                },
-                                        current_animation = "default",
-                                        ticks_per_frame = 9
-                                     ),
-                                sprite(
-                                        sprite_renderer = self.sprite_renderer,
-                                        named_animations = {
-                                                                "default" : shuffled_range(16,20)
-                                                                },
-                                        current_animation = "default",
-                                        ticks_per_frame = 13
-                                     ),
-                                sprite(
-                                        sprite_renderer = self.sprite_renderer,
-                                        named_animations = {
-                                                                "default" : range(42,47)
-                                                                },
-                                        current_animation = "default",
-                                        ticks_per_frame = 20
-                                     ),
-                                sprite(
-                                        sprite_renderer = self.sprite_renderer,
-                                        named_animations = {
-                                                                "default" : range(42,47)
-                                                                },
-                                        current_animation = "default",
-                                        ticks_per_frame = 17
-                                     ) ]
+                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : shuffled_range( 16, 20) }, current_animation = "default", ticks_per_frame = 9),
+                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : shuffled_range(16,20) }, current_animation = "default", ticks_per_frame = 13),
+                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 20),
+                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 17) ]
 
+       self.music_system.play()
+                    
 
     #GAME TICK
     def tick(self):

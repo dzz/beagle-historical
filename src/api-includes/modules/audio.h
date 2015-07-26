@@ -99,17 +99,29 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC audio_enable_beatEngine
+DEF_ARGS {
+    audio_enable_realtime_processing();
+    Py_RETURN_NONE;
+}
 
+MODULE_FUNC audio_disable_beatEngine
+DEF_ARGS {
+    audio_enable_realtime_processing();
+    Py_RETURN_NONE;
+}
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 static PyMethodDef audio_methods[] = {
-    {"clip_create",         audio_clip_create,      METH_VARARGS, NULL},
-    {"clip_drop",           audio_clip_drop,        METH_VARARGS, NULL},
-    {"track_create",        audio_track_create,     METH_VARARGS, NULL},
-    {"track_drop",          audio_track_drop,     METH_VARARGS, NULL},
-    {"track_reset_all",     audio_track_reset_all,  METH_VARARGS, NULL},
-    {"track_play_clip",     audio_track_play_clip,  METH_VARARGS, NULL},
-    {"track_set_volume",    audio_track_set_volume, METH_VARARGS, NULL},
-    {"track_set_pan",       audio_track_set_pan,    METH_VARARGS, NULL},
+    {"clip_create",                     audio_clip_create,                  METH_VARARGS, NULL},
+    {"clip_drop",                       audio_clip_drop,                    METH_VARARGS, NULL},
+    {"track_create",                    audio_track_create,                 METH_VARARGS, NULL},
+    {"track_drop",                      audio_track_drop,                   METH_VARARGS, NULL},
+    {"track_reset_all",                 audio_track_reset_all,              METH_VARARGS, NULL},
+    {"track_play_clip",                 audio_track_play_clip,              METH_VARARGS, NULL},
+    {"track_set_volume",                audio_track_set_volume,             METH_VARARGS, NULL},
+    {"track_set_pan",                   audio_track_set_pan,                METH_VARARGS, NULL},
+    {"enable_beatEngine",       audio_enable_beatEngine,   METH_VARARGS, NULL},
+    {"disable_beatEngine",      audio_disable_beatEngine,  METH_VARARGS, NULL},
     {NULL,NULL,0,NULL } /*terminator record*/
 };
 
