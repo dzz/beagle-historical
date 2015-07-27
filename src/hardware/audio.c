@@ -30,7 +30,9 @@ audio_track* tracks[ AUDIO_MAX_TRACKS ];
 
 unsigned int is_first_tick = 1;
 unsigned int audio_realtime_processing = 0;
-void audio_tracks_update_beat( int chan, void* stream, int len, void *udata) {
+unsigned int smp = 0;
+void audio_tracks_update_beat( int chan, void *stream, int len, void *udata) {
+
     int i;
     for(i=0; i<cur_track;++i) {
         if(is_first_tick!=1) {

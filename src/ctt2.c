@@ -133,6 +133,7 @@ void initDisplay( int fullscreen) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
     if(fullscreen == 1 ) {
@@ -211,10 +212,8 @@ void dropTextInput() {
 }
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 4;
-    const int CYCLES_BETWEEN_YIELDS                 = 64;
+    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 1;
     int screenbuffer_cycles                         = 20;
-    int yield_cycles                                = 0;
 
     int finished                                    = 0;
     //int resizable                                   = 0;
@@ -243,7 +242,7 @@ int main(int argc, char **argv){
 	  
 
     initDisplay(fullscreen);
-	initAudio();
+    initAudio();
     initWindowingSystemMessages();
     initOpenGL();
     initTextInput();

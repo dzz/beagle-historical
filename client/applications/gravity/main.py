@@ -508,7 +508,8 @@ def tick():
     g.tick()
 
 def render():
-    g.render()
+    if True:
+        g.render()
 
 def finalize():
     pass

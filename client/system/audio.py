@@ -22,16 +22,29 @@ class track:
     def __init__(self, bpm=128.0, beat_locked = False ):
         self.active_clip = None
         self.loop = False
+        self.robin_clips = []
+        self.robin_index = 0
+        self.robin_mode = None
         if(beat_locked):
             bl = 1
         else:
             bl = 0
         self.audio_track = audio.track_create(bpm, bl)
 
+    def set_robin_mode(self,mode):
+        self.robin_mode = mode
+
+    def add_robin_clip(self,clip):
+        self.robin_clips.append(clip)
+
     def __del__(self):
         audio.track_drop(self.audio_track)
 
     def retrigger(self):
+        if self.robin_mode == "sequence":
+            self.robin_index = (self.robin_index +1) % len(self.robin_clips)
+            self.active_clip = self.robin_clips[self.robin_index]
+            
         if self.active_clip:
             self.play_clip( self.active_clip, self.loop )
 
