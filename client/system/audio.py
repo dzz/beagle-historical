@@ -1,4 +1,5 @@
 import client.ctt2.host_config as host_config
+from random import choice
 import audio
 
 tracks = {}
@@ -44,6 +45,8 @@ class track:
         if self.robin_mode == "sequence":
             self.robin_index = (self.robin_index +1) % len(self.robin_clips)
             self.active_clip = self.robin_clips[self.robin_index]
+        if self.robin_mode == "random":
+            self.active_clip = choice(self.robin_clips)
             
         if self.active_clip:
             self.play_clip( self.active_clip, self.loop )

@@ -4,9 +4,9 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-#define AUDIO_SAMPLERATE 44800
+#define AUDIO_SAMPLERATE 32000
 #define AUDIO_CHANNELS 2
-#define AUDIO_CHUNKSIZE 512
+#define AUDIO_CHUNKSIZE 256
 #define AUDIO_MAX_TRACKS 9
 #define TICK_FILTER_A 0.75
 #define BEAT_LOCKED 1

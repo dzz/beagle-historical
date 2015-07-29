@@ -20,6 +20,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_thread.h>
+#include <portaudio.h>
 
 //tracks
 int cur_channel = 0;
@@ -31,6 +32,7 @@ audio_track* tracks[ AUDIO_MAX_TRACKS ];
 unsigned int is_first_tick = 1;
 unsigned int audio_realtime_processing = 0;
 unsigned int smp = 0;
+
 void audio_tracks_update_beat( int chan, void *stream, int len, void *udata) {
 
     int i;
@@ -61,7 +63,13 @@ void audio_garbage_collect_channels() {
 }
 
 void initAudio() {
+	
     int max_tracks = AUDIO_MAX_TRACKS;
+	int err;
+	err = Pa_Initialize();
+	if(err!=paNoError) {
+		exit(1);
+	}
 	SDL_InitSubSystem( SDL_INIT_AUDIO );
     Mix_Init(MIX_INIT_OGG);
     Mix_OpenAudio( AUDIO_SAMPLERATE, MIX_DEFAULT_FORMAT, AUDIO_CHANNELS, AUDIO_CHUNKSIZE );
@@ -87,6 +95,7 @@ void audio_drop_clip(audio_clip* clip) {
 }
 
 void dropAudio() {
+	Pa_Terminate();
     if(audio_realtime_processing == 1) {
         audio_disable_realtime_processing();
     }
