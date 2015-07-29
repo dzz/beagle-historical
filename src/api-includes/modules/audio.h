@@ -110,6 +110,16 @@ DEF_ARGS {
     audio_enable_realtime_processing();
     Py_RETURN_NONE;
 }
+
+MODULE_FUNC audio_ae_set_backdoor
+DEF_ARGS {
+    unsigned int backdoor;
+    float value;
+    if(!INPUT_ARGS(args,"If",&backdoor, &value))
+       return NULL;
+    ae_set_backdoor(backdoor, value);
+    Py_RETURN_NONE;
+}
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 static PyMethodDef audio_methods[] = {
     {"clip_create",                     audio_clip_create,                  METH_VARARGS, NULL},
@@ -122,6 +132,7 @@ static PyMethodDef audio_methods[] = {
     {"track_set_pan",                   audio_track_set_pan,                METH_VARARGS, NULL},
     {"enable_beatEngine",       audio_enable_beatEngine,   METH_VARARGS, NULL},
     {"disable_beatEngine",      audio_disable_beatEngine,  METH_VARARGS, NULL},
+    {"ae_set_backdoor",      audio_ae_set_backdoor,  METH_VARARGS, NULL},
     {NULL,NULL,0,NULL } /*terminator record*/
 };
 

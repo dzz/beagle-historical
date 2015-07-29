@@ -1,4 +1,5 @@
-from math import atan2
+from client.system.audio import beatEngine
+from math import atan2, sqrt, sin, cos
 class player:
     def __init__(self):
         self.vx = 0
@@ -20,6 +21,10 @@ class player:
 
         self.eng_r = 3.14-atan2(pad.left_stick[0],pad.left_stick[1])
 
+        beatEngine.set_backdoor(0, self.r/6.28)
+        beatEngine.set_backdoor(1, self.vx ) 
+        beatEngine.set_backdoor(2, self.acc )
+        
         self.acc = pad.triggers[1]+1
         fuzzy_firing_impulse = 0.0
         if(self.acc>0):

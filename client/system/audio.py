@@ -1,5 +1,6 @@
 import client.ctt2.host_config as host_config
 from random import choice
+from math import sqrt
 import audio
 
 tracks = {}
@@ -10,6 +11,9 @@ class beatEngine:
         audio.enable_beatEngine()
     def stop():
         audio.disable_beatEngine()
+
+    def set_backdoor(idx,value):
+        audio.ae_set_backdoor(idx,value)
 
 class clip:
     def __init__(self,filename, beats = 4.0, trigger_offset = 0.0):

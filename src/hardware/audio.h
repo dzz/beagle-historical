@@ -4,6 +4,10 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
+
+
+#define AE_SAMPLERATE 44100
+
 #define AUDIO_SAMPLERATE 32000
 #define AUDIO_CHANNELS 2
 #define AUDIO_CHUNKSIZE 256
@@ -49,5 +53,6 @@ void audio_tick_tracks(double delta);
 void audio_enable_realtime_processing();
 void audio_disable_realtime_processing();
 void audio_garbage_collect_channels();
+void ae_set_backdoor(unsigned int idx, float value);
 #endif
 
