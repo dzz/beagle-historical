@@ -59,6 +59,9 @@ typedef struct {
 
 ae_data AE_Data;
 
+static float delta = 1.0f / 44100.0f;
+static float time = 0.0f;
+unsigned long smpl;
 static int ae_renderer( const void* inputBuffer, void* outputBuffer,
                         unsigned long framesPerBuffer,
                         const PaStreamCallbackTimeInfo* timeInfo,
@@ -69,14 +72,14 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
             ae_renderer_context* context = (ae_renderer_context*)userData;
 			float* out = (float*)outputBuffer;
             for(i=0; i<framesPerBuffer; ++i ) {
-
-                float wave1 = sin( context->time*(backdoors[0]*22.0) );
-                float wave2 = cos( context->time*(backdoors[1]*(44.0+(wave1*22)) ) );
-                float wave3 = cos( context->time*(backdoors[2]*(88.0+(wave2*77) ) ));
-                context->time+=1.0f/44100.0f;
-
-                *out++ = (wave3+wave1)/2.0f;
-                *out++ = (wave2+wave1)/2.0f;
+			
+				
+				float wave1 = sin(time*440.0f);
+				float wave2 = sin(time*440.0f);
+				smpl++;
+				time=(float)smpl/(float)AE_SAMPLERATE;
+				*out++ = wave1;
+                *out++ = wave2;
             }
             return 0;
 }
@@ -88,12 +91,13 @@ void ae_init(ae_data* self) {
        return;
 	} 
 
+	self->context.time = 0.0f;
     err = Pa_OpenDefaultStream( &self->stream,
                                 0,
                                 2,
                                 paFloat32,
                                 AE_SAMPLERATE,
-                                512,
+								paFramesPerBufferUnspecified,
                                 ae_renderer,
                                 &self->context );
     if(err!=paNoError) {
@@ -117,7 +121,7 @@ int ae_thread_run(void* data) {
     ae_data* self=(ae_data*) data;
     ae_init(self);
     while(!self->shutdown) {
-        Sleep(0);
+        Sleep(25);
     }
     ae_drop(self);
     return self->finalized;

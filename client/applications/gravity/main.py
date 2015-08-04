@@ -11,6 +11,7 @@ from random import choice, uniform, sample
 from client.math.helpers import distance
 from .music_system import music_system
 import hwgfx
+from random import sample
 
 def shuffled_range(start,end):
     r = range(start+1,end+1)
@@ -163,6 +164,9 @@ class particle:
 
 
 def tick_particles(particles,vortex):
+    max_particles = 40 
+    if(len(particles)>max_particles):
+        particles = sample(particles,max_particles)
     new_particles = []
     for part in particles:
         part.tick(vortex)

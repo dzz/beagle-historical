@@ -211,6 +211,13 @@ void dropTextInput() {
     SDL_StopTextInput();
 }
 
+
+#define CTT2_NO_EVT         0
+#define CTT2_EVT_TICK       1
+#define CTT2_EVT_RENDER     2
+#define CTT2_EVT_SYNC_GFX   3
+
+
 int main(int argc, char **argv){ 
     const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 1;
     int screenbuffer_cycles                         = 20;
@@ -221,9 +228,11 @@ int main(int argc, char **argv){
     int fps                                         = -1;
     double frame_millis                             = -1;
     double init_millis                              = 0;
+    double tick_millis                              = 0;
     double frame_overflow                           = 0;
     double spf                                      = 0.0;
     int tick_next                                   = 0;
+    unsigned int ctt2_state                         = CTT2_NO_EVT;
 
     if(argc==5) {
         SCREEN_WIDTH    = atoi( argv[1] );
@@ -258,18 +267,45 @@ int main(int argc, char **argv){
     init_millis = getTimeMs(); 
 
     initPython();
+
+
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
         double base_millis = getTimeMs();
+        tick_millis = getTimeMs();
 
 
-
+		queue:
         while(finished == 0) {
+            /*
             if(tick_next == 1)  {
                 if(api_tick() == API_FAILURE) { finished = 1; }
                 tick_next = 0;
                 //audio_garbage_collect_channels();
+            }*/
+
+            switch(ctt2_state) {
+                    case CTT2_EVT_TICK:
+                        if(api_tick() == API_FAILURE) { 
+                                finished = 1; 
+                            } else {
+                                ctt2_state = CTT2_EVT_RENDER;
+                                tick_millis = getTimeMs();
+                            }
+						 break;
+                    case CTT2_EVT_RENDER:
+                         api_render();
+						 updateViewingSurface();  
+                         ctt2_state = CTT2_NO_EVT;
+						 break;
+                    case CTT2_NO_EVT:
+                         if( (getTimeMs() - tick_millis) > frame_millis ) {
+                            ctt2_state = CTT2_EVT_TICK;
+                         } else {
+							 Sleep(0);
+						 }
+						  break;
             }
 
 
@@ -358,34 +394,7 @@ int main(int argc, char **argv){
 
 
 
-            if(screenbuffer_cycles++ > CYCLES_BETWEEN_SCREENBUFFER_UPDATES ) {
-               // frame* fr           = getActiveFrame();
-                screenbuffer_cycles = 0;
 
-                /*hw_render_layerstack(fr);
-                
-                if( getPanelsEnabled() == PANELS_ENABLED ){
-                    SDL_FillRect(ui_surface, NULL, 
-                            SDL_MapRGBA( ui_surface->format, 0,0,0,0));
-                    renderPanels        (ui_surface);
-                    gfx_surface_render  (ui_surface);
-                }*/
-				
-               
-               api_render();
-               tick_next=1;
-               if(fps!=-1) {
-                double total_millis =  (getTimeMs()-base_millis);
-                double base = (frame_millis-total_millis)+frame_overflow;
-                while(base>0) {
-                    total_millis =  (getTimeMs()-base_millis);
-                    base = (frame_millis-total_millis)+frame_overflow;
-                }
-                frame_overflow = base;
-               }
-
-			   updateViewingSurface();
-            }
         }
     }
     /** FINISHED **/
