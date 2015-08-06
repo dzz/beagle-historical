@@ -40,24 +40,24 @@ class background():
                         [ 0.4, 0.6, 0.3, 1.0 ],
                         [ 0.0, 0.0, 1.0, 1.0 ],
                         [ 1.0, 1.0, 0.0, 1.0 ],
-                        [ 0.0, 0.0, 0.0, 0.0 ],
-                        [ 1.0, 1.0, 1.0, 1.0 ],
+                        [ 0.0, 0.3, 0.1, 0.8 ],
+                       # [ 1.0, 1.0, 1.0, 1.0 ],
                         [ 0.5, 0.0, 1.0, 1.0 ],
                         [ 0.0, 0.5, 1.0, 1.0 ],
                         [ 0.3, 0.0, 1.0, 1.0 ],
                         
                         ]
         for i in range(0,7):
-            colors.append( [ uniform(0.0,1.0),uniform(0.0,1.0),uniform(0.0,1.0), 0.95 ] )
+            colors.append( [ uniform(0.0,1.0),uniform(0.5,1.0),uniform(0.0,1.0), 0.95 ] )
 
         base_color = choice(colors)
         invert_color = choice( [ [ 1-base_color[0],
                          1-base_color[1],
                          1-base_color[2],
                          0.6 ], 
-                            [0.0,0.0,0.0,1.0],
-                            [1.0,1.0,0.0,0.0]])
-        drama = choice([0.0])
+                            [0.0,1.0,0.0,1.0],
+                            [1.0,1.0,0.0,0.5]])
+        drama = choice([0.0,1.0])
         drama_color = [ drama,drama,drama,1.0]
 
         self.shader.bind([("col1",base_color)])

@@ -37,6 +37,7 @@ def shuffled_range(start,end):
 class game:
     def level_up(self):
         self.pick_renderers()
+        self.background2.randomize_colors()
 
     def pick_renderers(self):
         self.sprite_renderer = choice([
@@ -53,11 +54,12 @@ class game:
        self.jitter_radar_shows = False
        self.t = 0
        self.background = background()
+       self.background2 = background()
        self.vortex = vortex()
        self.player = player()
        self.pickup = pickup(16,16,self.player,self.vortex,self)
        self.particles = []
-       self.radar_texture = texture.from_dims(512,512, True)
+       self.radar_texture = texture.from_dims(1024,1024, False)
        self.radar_buffer = framebuffer.from_texture( self.radar_texture )
        self.sprite_tilesets = []
        self.sprite_renderers = []
@@ -70,6 +72,7 @@ class game:
            configuration_template["image"] = img
            loaded_tiles = tileset( configuration = configuration_template, img_path = "sprite/" )
            self.sprite_renderers.append(sprite_renderer( tileset = loaded_tiles, coordinates = centered_view(1920,1080, Y_Axis_Down)))
+           self.sprite_renderers[0]
 
        self.pick_renderers()
 
@@ -139,6 +142,7 @@ class game:
        self.particles = tick_particles(self.particles,self.vortex)
        #print( pad.left_stick);
        self.background.update(self.vortex.td_current, self.player.r)
+       self.background2.update(self.vortex.td_current, self.player.r)
        self.priming_sprite.tick()
        self.emerald_sprite.tick()
        self.music_system.tick()
@@ -146,6 +150,8 @@ class game:
        self.fire_sprite.tick()
        self.background.x = self.player.x
        self.background.y = self.player.y
+       self.background2.x = self.player.x*0.24
+       self.background2.y = self.player.y*0.24
        self.alternate_player_sprite.tick()
 
        a=0.98
@@ -166,9 +172,14 @@ class game:
 
         world_zoom = world_zoom_max -(self.world_zoom_current*(world_zoom_max-world_zoom_min))
         self.radar_texture.bind(0)
+        hwgfx.manual_blend_enter(1)
+        self.background2.render(world_zoom*0.5)
+        hwgfx.manual_blend_enter(6000)
         self.background.render(world_zoom)
         with framebuffer_as_render_target( self.radar_buffer ):
             self.background.render(world_zoom)
+            hwgfx.manual_blend_enter(6000)
+            self.background2.render(world_zoom)
 
         batch  = [];
         shadow_batch = []
@@ -209,7 +220,7 @@ class game:
         with framebuffer_as_render_target( self.radar_buffer ):
             hwgfx.manual_blend_enter(0)
             self.radar_sprite_renderer.render(shadow_batch)
-            hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
+            hwgfx.manual_blend_enter(5000)
             self.part_buffer_sprite_renderer.render(particle_batch)
         hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
         self.part_sprite_renderer.render(particle_batch)
@@ -233,3 +244,6 @@ class game:
             batch.append([   self.reticle_sprite, [-8,-32], 4, reticle_r, [0,0], world_zoom ])
 
         self.sprite_renderer.render(batch)
+        with framebuffer_as_render_target( self.radar_buffer ):
+            hwgfx.manual_blend_enter(600)
+            self.sprite_renderer.render(batch)
