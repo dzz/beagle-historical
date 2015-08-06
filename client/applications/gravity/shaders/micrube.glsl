@@ -1,6 +1,4 @@
-
-#version 330 core
-
+uniform sampler2D buffer;
 uniform float time;
 uniform vec2 cam;
 uniform float scale;
@@ -19,6 +17,8 @@ uniform float r;
 in vec2 uv;
 
 void main(void) {
+
+
 
     float steps = 3;
     float time_t = floor(time*steps)/steps;

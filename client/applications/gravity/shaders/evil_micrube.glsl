@@ -1,4 +1,3 @@
-
 uniform sampler2D buffer;
 uniform float time;
 uniform vec2 cam;
@@ -19,6 +18,11 @@ in vec2 uv;
 
 void main(void) {
 
+    vec3 smpl;
+
+    smpl = texture(buffer,0.1*scale*(uv));
+
+
     float steps = 3;
     float time_t = floor(time*steps)/steps;
     
@@ -32,16 +36,13 @@ void main(void) {
 
     float wobble = (sin(time_t*wobble_factor)+1)/20;
     float cam_scale = 0.01;
-    vec2 tuv = vec2( uv.x * cos(r) - uv.y*sin(r), uv.x * sin(r) + uv.y*cos(r));
-    //vec2 tuv = uv;
+    //vec2 tuv = vec2( uv.x * cos(r) - uv.y*sin(r), uv.x * sin(r) + uv.y*cos(r));
+    vec2 tuv = uv;
 
-    tuv = tuv * vec2(1,0.5625)*(1+scale);
+    tuv = tuv * vec2(1,0.5625)*(1+scale)+ (smpl.x,smpl.y);
 
-    vec3 smpl = texture(buffer,0.1*uv);
 
     tuv=vec2(tuv.x + (cam.x*cam_scale),tuv.y-(cam.y*cam_scale));
-    tuv.x+=smpl.x;
-    tuv.y+=smpl.z;
 
     float circle = (tuv.x*tuv.x) + (tuv.y*tuv.y);
 
@@ -49,7 +50,8 @@ void main(void) {
     float a=1.0;
     float b=0.0;
     float line =0.0;
-    circle = (mod( floor(tuv.x*(atan_factor/3)),2)+mod( floor(tuv.y*(atan_factor/3)),2));
+    float modfac = atan_factor *0.25;
+    circle = (mod( floor(tuv.x*modfac),2)+mod( floor(tuv.y*modfac),2));
     if(circle>1) circle=1;
     a = circle;
     b = 1-circle;
@@ -58,7 +60,7 @@ void main(void) {
 
     float c = 0.0;
     
-    c = sin((atan(uv.x,uv.y)*(atan_factor-crazy))+(crazy/time_t));
+    c = sin(uv.x);
     
     //c = cos(c*circle+time_t+cos(time*cosmunge_factor));
     float d = 1-c;
@@ -75,13 +77,11 @@ void main(void) {
      //d = floor(d*steps)/steps;
      //}
 
-    a*=smpl.x;
-    b*=smpl.y;
 
-    gl_FragColor =(smpl.x,smpl.y,smpl.z,1.0)* ( 
+    gl_FragColor = 
                    ( (((col1*a) + (col2*b) )*d) +
                    (((col2*a) + (col1*b) )*c)   ) +
                    ( (((col1*a) + (col3*b) )*d) +
-                   (((col2*a) + (col3*b) )*c)   ));
+                   (((col2*a) + (col3*b) )*c)   ) - (smpl.x,smpl.y,smpl.z);
 
 }

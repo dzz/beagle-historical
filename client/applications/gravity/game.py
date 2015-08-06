@@ -45,7 +45,7 @@ class game:
        self.player = player()
        self.pickup = pickup(16,16,self.player,self.vortex)
        self.particles = []
-       self.radar_texture = texture.from_dims(500,500, True)
+       self.radar_texture = texture.from_dims(512,512, True)
        self.radar_buffer = framebuffer.from_texture( self.radar_texture )
 
        configuration = {
@@ -98,7 +98,7 @@ class game:
                     self.sprite_renderer
                ))
 
-       if(self.t%choice([3,5,1,2])==0):
+       if(self.t%choice([3,5,7,9])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y
@@ -158,6 +158,8 @@ class game:
         world_zoom = world_zoom_max -(self.world_zoom_current*(world_zoom_max-world_zoom_min))
         self.radar_texture.bind(0)
         self.background.render(world_zoom)
+        with framebuffer_as_render_target( self.radar_buffer ):
+            self.background.render(world_zoom)
 
         batch  = [];
         shadow_batch = []
@@ -196,11 +198,13 @@ class game:
 
 
         with framebuffer_as_render_target( self.radar_buffer ):
-            hwgfx.manual_blend_enter(1)
+            hwgfx.manual_blend_enter(0)
             self.sprite_renderer.render(shadow_batch)
-
-        hwgfx.manual_blend_enter(2)
+            hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
+            self.sprite_renderer.render(particle_batch)
+        hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
         self.sprite_renderer.render(particle_batch)
+
 
         hwgfx.manual_blend_enter(0)
 

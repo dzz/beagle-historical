@@ -21,12 +21,12 @@ in vec2 uv;
 void main(void) {
 
     vec2 scam = cam*0.0001;
-    vec3 smpl = texture(buffer,(uv*scale) - scam);
+    vec3 smpl = texture(buffer,(0.1*uv*scale) - scam);
     vec2 uv_t;
 
     uv_t.x = uv.x+smpl.r;
     uv_t.y = uv.y+smpl.g;
 
-    gl_FragColor = (col1*(texture(buffer,(uv* scale) - scam )) * smpl.b) +
+    gl_FragColor = (col1*(texture(buffer,(uv* scale) - scam )) * (0.5+smpl.b)) +
                    (col2*(1-texture(buffer,(uv))));
 }

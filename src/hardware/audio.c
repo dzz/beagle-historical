@@ -81,6 +81,10 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
 				*out++ = wave1;
                 *out++ = wave2;
             }
+
+            if(smpl>AE_SAMPLERATE)
+                smpl=smpl-AE_SAMPLERATE;
+
             return 0;
 }
 
