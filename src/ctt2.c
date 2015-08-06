@@ -166,7 +166,7 @@ void DIRTY_DISPLAY_ABORT() {
 void initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
     //disable_vsync();
-    vsync(1);
+   // vsync(0);
     initExtendedVideo();
 }
 
@@ -195,9 +195,6 @@ void initPython() {
         dropPython();
         exit(1);
     } 
-
-
-
 }
 
 
@@ -212,10 +209,10 @@ void dropTextInput() {
 }
 
 
-#define CTT2_NO_EVT         0
-#define CTT2_EVT_TICK       1
-#define CTT2_EVT_RENDER     2
-#define CTT2_EVT_SYNC_GFX   3
+#define CTT2_EVT_POLL_EVENTS         0
+#define CTT2_EVT_TICK				 1
+#define CTT2_EVT_RENDER				 2
+#define CTT2_EVT_SYNC_GFX			 3
 
 
 int main(int argc, char **argv){ 
@@ -232,7 +229,7 @@ int main(int argc, char **argv){
     double frame_overflow                           = 0;
     double spf                                      = 0.0;
     int tick_next                                   = 0;
-    unsigned int ctt2_state                         = CTT2_NO_EVT;
+    unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
 
     if(argc==5) {
         SCREEN_WIDTH    = atoi( argv[1] );
@@ -276,40 +273,37 @@ int main(int argc, char **argv){
         tick_millis = getTimeMs();
 
 
-		queue:
         while(finished == 0) {
-            /*
-            if(tick_next == 1)  {
-                if(api_tick() == API_FAILURE) { finished = 1; }
-                tick_next = 0;
-                //audio_garbage_collect_channels();
-            }*/
-
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
                         if(api_tick() == API_FAILURE) { 
                                 finished = 1; 
                             } else {
+                                tick_millis += frame_millis;
+                                if( (getTimeMs() - tick_millis) > frame_millis ) {
+                                    ctt2_state = CTT2_EVT_TICK;
+                                } else {
                                 ctt2_state = CTT2_EVT_RENDER;
-                                tick_millis = getTimeMs();
+                                }
                             }
 						 break;
                     case CTT2_EVT_RENDER:
                          api_render();
-						 updateViewingSurface();  
-                         ctt2_state = CTT2_NO_EVT;
+                         ctt2_state = CTT2_EVT_SYNC_GFX;
 						 break;
-                    case CTT2_NO_EVT:
+					case CTT2_EVT_SYNC_GFX:
+						updateViewingSurface();  
+						ctt2_state = CTT2_EVT_POLL_EVENTS;
+						break;
+                    case CTT2_EVT_POLL_EVENTS:
                          if( (getTimeMs() - tick_millis) > frame_millis ) {
                             ctt2_state = CTT2_EVT_TICK;
-                         } else {
-							 Sleep(0);
-						 }
+                         } 
 						  break;
             }
 
 
-            while(SDL_PollEvent(&event)) {
+            if(SDL_PollEvent(&event)) {
                 switch (event.type) {
                     case SDL_CONTROLLERDEVICEADDED:
                         dropGamepad();
