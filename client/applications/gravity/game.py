@@ -35,6 +35,18 @@ def shuffled_range(start,end):
     return s
 
 class game:
+    def level_up(self):
+        self.pick_renderers()
+
+    def pick_renderers(self):
+        self.sprite_renderer = choice([
+            self.sprite_renderers[0],
+            self.sprite_renderers[1]])
+        self.radar_sprite_renderer = choice(self.sprite_renderers)
+        self.part_buffer_sprite_renderer = choice(self.sprite_renderers)
+        self.part_sprite_renderer = choice(self.sprite_renderers)
+
+
     def __init__(self):
        self.music_system = music_system("devon.music")
        self.world_zoom_current = 1.0
@@ -43,26 +55,23 @@ class game:
        self.background = background()
        self.vortex = vortex()
        self.player = player()
-       self.pickup = pickup(16,16,self.player,self.vortex)
+       self.pickup = pickup(16,16,self.player,self.vortex,self)
        self.particles = []
        self.radar_texture = texture.from_dims(512,512, True)
        self.radar_buffer = framebuffer.from_texture( self.radar_texture )
+       self.sprite_tilesets = []
+       self.sprite_renderers = []
 
-       configuration = {
-                "image"         : "ship.png",
-                "imageheight"   : 192,
-                "imagewidth"    : 112,
-                "margin"        : 0,
-                "spacing"       : 0,
-                "properties"    : {},
-                "firstgid"      : 0,
-                "tileheight"    : 16,
-                "tilewidth"     : 16,
-                "tileproperties" : {} 
-                }
+       configuration_template = { "image": "", "imageheight": 192,"imagewidth": 112, "margin": 0, "spacing": 0, "properties": {}, "firstgid": 0, "tileheight": 16, "tilewidth": 16, "tileproperties" : {} }
 
-       self.sprite_tileset  = tileset( configuration = configuration, img_path = "sprite/" )
-       self.sprite_renderer = sprite_renderer( tileset = self.sprite_tileset, coordinates = centered_view(1920,1080, Y_Axis_Down))
+       tileset_imgs = [ "set_00.png","set_01.png","set_02.png","set_03.png","set_04.png" ]
+
+       for img in tileset_imgs:
+           configuration_template["image"] = img
+           loaded_tiles = tileset( configuration = configuration_template, img_path = "sprite/" )
+           self.sprite_renderers.append(sprite_renderer( tileset = loaded_tiles, coordinates = centered_view(1920,1080, Y_Axis_Down)))
+
+       self.pick_renderers()
 
        self.priming_sprite =            sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [11,12] }, current_animation = "default", ticks_per_frame = 3)
        self.reticle_sprite =            sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [10] }, current_animation = "default", ticks_per_frame = 1)
@@ -199,11 +208,11 @@ class game:
 
         with framebuffer_as_render_target( self.radar_buffer ):
             hwgfx.manual_blend_enter(0)
-            self.sprite_renderer.render(shadow_batch)
+            self.radar_sprite_renderer.render(shadow_batch)
             hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
-            self.sprite_renderer.render(particle_batch)
+            self.part_buffer_sprite_renderer.render(particle_batch)
         hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
-        self.sprite_renderer.render(particle_batch)
+        self.part_sprite_renderer.render(particle_batch)
 
 
         hwgfx.manual_blend_enter(0)

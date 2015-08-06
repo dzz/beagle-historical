@@ -15,8 +15,9 @@ import hwgfx
 from random import sample
 
 class pickup:
-    def __init__(self, x,y, player, vortex ):
+    def __init__(self, x,y, player, vortex, level_observer ):
 
+        self.level_observer = level_observer
         self.particle_blend_mode = 5000
         self.has_leads = True
         self.drums_dynamic_volume = True
@@ -78,6 +79,7 @@ class pickup:
 
 
         if(d<2500):
+            self.level_observer.level_up()
             self.particle_blend_mode = choice([5000,6000])
             self.has_leads = choice([True,False,False])
             self.drums_dynamic_volume = choice([True,False,False])
@@ -85,7 +87,7 @@ class pickup:
             music_system.trigger_event("level_up")
             self.levelled = True
             background.randomize_colors()
-            part_count = 7
+            part_count = 25
             max_spread = d;
             #explosion 1
             for i in range(0,part_count):
