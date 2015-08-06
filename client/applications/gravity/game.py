@@ -12,6 +12,9 @@ from client.gfx.coordinates      import centered_view, Y_Axis_Down
 from random import choice, uniform, sample
 from client.math.helpers import distance
 from .music_system import music_system
+from client.gfx.framebuffer import *
+from client.gfx.texture import texture
+
 import hwgfx
 from random import sample
 
@@ -42,6 +45,8 @@ class game:
        self.player = player()
        self.pickup = pickup(16,16,self.player,self.vortex)
        self.particles = []
+       self.radar_texture = texture.from_dims(500,500, True)
+       self.radar_buffer = framebuffer.from_texture( self.radar_texture )
 
        configuration = {
                 "image"         : "ship.png",
@@ -151,6 +156,7 @@ class game:
 
 
         world_zoom = world_zoom_max -(self.world_zoom_current*(world_zoom_max-world_zoom_min))
+        self.radar_texture.bind(0)
         self.background.render(world_zoom)
 
         batch  = [];
@@ -188,10 +194,12 @@ class game:
         for part in self.particles:
             particle_batch.append([ part.sprite, [-8,-8], 4+(part.r*2), part.r, [part.x-self.player.x,part.y-self.player.y], world_zoom ]) 
 
-        hwgfx.manual_blend_enter(1)
-        self.sprite_renderer.render(shadow_batch)
 
-        hwgfx.manual_blend_enter(5000)
+        with framebuffer_as_render_target( self.radar_buffer ):
+            hwgfx.manual_blend_enter(1)
+            self.sprite_renderer.render(shadow_batch)
+
+        hwgfx.manual_blend_enter(2)
         self.sprite_renderer.render(particle_batch)
 
         hwgfx.manual_blend_enter(0)

@@ -6,11 +6,12 @@ from random import uniform,choice
 class background():
     def __init__(self):
         self.shaders = [ 
-                            shaders.get_client_program( "no_transform","circus"),
-                            shaders.get_client_program( "no_transform","castle"),
-                            shaders.get_client_program( "no_transform","fortress"),
-                            shaders.get_client_program( "no_transform","micrube"),
-                            shaders.get_client_program( "no_transform","voodoo")
+                            #shaders.get_client_program( "no_transform","circus"),
+                            #shaders.get_client_program( "no_transform","castle"),
+                            #shaders.get_client_program( "no_transform","fortress"),
+                            #shaders.get_client_program( "no_transform","micrube"),
+                            #shaders.get_client_program( "no_transform","voodoo")
+                            shaders.get_client_program( "no_transform","screenprint")
                         ]
         self.primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad ) 
         self.time = 0

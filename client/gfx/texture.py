@@ -30,7 +30,7 @@ class texture:
 
     @classmethod
     def from_dims(cls, w,h,filtered=False):
-        tex = hwgfx.texture_generate(w,h)
+        tex = hwgfx.texture_generate(w,h,filtered)
         return cls(tex, w, h)
 
     def upload_local_image(self,local_image):
