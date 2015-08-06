@@ -424,7 +424,7 @@ class game:
                  [part.x-self.player.x,part.y-self.player.y],
                  world_zoom ])
 
-        hwgfx.manual_blend_enter(600)
+        hwgfx.manual_blend_enter(1)
         self.sprite_renderer.render(shadow_batch)
         hwgfx.manual_blend_enter(5000)
         self.sprite_renderer.render(particle_batch)
