@@ -22,20 +22,16 @@ void _shader_err(GLuint shader_id, char* source) {
     free(infoLog);
 }
 
-void shader_load(gfx_shader* shader, const char* v_src_path, 
-        const char* f_src_path ){
-
-    char* vertex_src;
-    char* frag_src;
+void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name) {
     int iv;
-
-    vertex_src = read_file((char*)v_src_path);
-    frag_src = read_file((char*)f_src_path);
 
     OGL_SHADOP(v_src_path,f_src_path);
 
-    shader->frag_name = (char*)f_src_path;
-    shader->vert_name = (char*)v_src_path;
+    shader->vert_name = malloc( sizeof(char)*(strlen(vert_name)+1));
+    shader->frag_name = malloc( sizeof(char)*(strlen(frag_name)+1));
+
+    strcpy(shader->vert_name, vert_name);
+    strcpy(shader->frag_name, frag_name);
 
     shader->vert_shader_id = glCreateShader(GL_VERTEX_SHADER);
     shader->frag_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
@@ -64,8 +60,6 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     if(iv == 0) {
         printf("error linking shader\n");
     }
-    free(vertex_src);
-    free(frag_src);
 
    
     OGL_OBJ("vertshad", shader->vert_shader_id, OGL_RECV);
@@ -73,7 +67,18 @@ void shader_load(gfx_shader* shader, const char* v_src_path,
     OGL_OBJ("compshad", shader->shader_id,      OGL_RECV);
 }
 
-gfx_shader* _bound = 0;
+void shader_load(gfx_shader* shader, const char* v_src_path, const char* f_src_path ){
+    char* vertex_src;
+    char* frag_src;
+    vertex_src = read_file((char*)v_src_path);
+    frag_src = read_file((char*)f_src_path);
+
+    shader_compile(shader, vertex_src, frag_src, v_src_path, f_src_path );
+    free(vertex_src);
+    free(frag_src);
+}
+
+static gfx_shader* _bound = 0;
 
 void shader_bind(gfx_shader* shader){
     /* lazy binding - don't take the driver hit
@@ -123,6 +128,9 @@ void shader_drop(gfx_shader* shader) {
     glDeleteProgram(shader->shader_id);
     glDeleteShader(shader->vert_shader_id);
     glDeleteShader(shader->frag_shader_id);
+
+    free(shader->vert_name);
+    free(shader->frag_name);
 
     OGL_SHADOP(shader->vert_name, shader->frag_name);
     OGL_OBJ("vertshad", shader  ->vert_shader_id, OGL_DROP);
