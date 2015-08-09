@@ -21,6 +21,6 @@ char* read_file(char *file)
     fread(buf, length, 1, fptr); 
     fclose(fptr); 
     buf[length] = 0; 
-    log_message( CTT2_RT_MODULE_CORE, LOG_LEVEL_INFO, "read %x bytes from %s",length, file);
+    log_message( CTT2_RT_MODULE_CORE, LOG_LEVEL_DEBUG, "read %x bytes from %s",length, file);
     return buf; 
 }

@@ -201,6 +201,9 @@ unsigned int initPython() {
     Py_SetProgramName("ctt2_py");
     if( api_init() == API_FAILURE ) {
 		log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_ERROR, "Error booting python environment.");
+        if(PyErr_Occurred()) {
+            PyErr_Print();
+        }
         return MODULE_FAILURE;
     } 
     return MODULE_LOADED;

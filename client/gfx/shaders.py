@@ -29,7 +29,7 @@ class shader(object):
         if path is not None:
             log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
         else:
-            log.write(log.DEBUG,"Compiling CORE shader: {0}{1},{2}".format(path,vert,frag))
+            log.write(log.DEBUG,"Compiling CORE shader: {0},{1}".format(vert,frag))
         if( path is None):
             vpath =  "shaders/" + vert + ".vert.glsl"
             fpath =  "shaders/" + frag + ".frag.glsl"
@@ -39,7 +39,7 @@ class shader(object):
 
         self._shader = hwgfx.shader_load( vpath, fpath )
 
-        log.write(log.DEBUG,"Linked program:{3})".format(path,vert,frag,self._shader))
+        log.write(log.DEBUG,"Linked program:{3}".format(path,vert,frag,self._shader))
 
     def bind(self,uniforms):
         hwgfx.shader_bind(self._shader);
@@ -70,7 +70,7 @@ class shader(object):
                         vector[3])
 
     def __del__(self):
-        log.write("Deleting shader program {0}".format(self._shader))
+        log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))
         hwgfx.shader_drop(self._shader)
 
     @classmethod

@@ -39,14 +39,18 @@ def init():
     global app, console
 
     class output_redirect():
+        def flush(self):
+            pass
         def write(self,txt):
             log.write(log.INFO, txt)
     class error_redirect():
+        def flush(self):
+            pass
         def write(self,txt):
-            host.write(log.ERROR, txt)
+            log.write(log.ERROR, txt)
     
-    #sys.stdout = output_redirect()
-    #sys.stderr = error_redirect()
+    sys.stdout = output_redirect()
+    sys.stderr = error_redirect()
 
     config = configparser.ConfigParser()
 
@@ -59,7 +63,7 @@ def init():
     host.set_title(app_name)
     try:
         app_dir = config["APPLICATION"]["path"]
-        print(app_dir)
+        log.write(log.INFO, "Loading application @:{0}".format(app_dir))
         app_module = config["APPLICATION"]["module"]
     except:
         app_dir = None
@@ -89,7 +93,8 @@ def init():
         if config[app_name] is not None:
             app.configure( config[app_name] );
     except KeyError:
-        print("no configuration found, ignoring..")
+        pass
+        log.write(log.INFO, "No configuration found, ignoring.")
 
 
     if(telnet_enabled):
@@ -97,7 +102,7 @@ def init():
     app.init()
     set_status("initialized application:" + app_name)
     if(app.controller_enabled):
-        print("app requesting controller input")
+        log.write(log.INFO, "{0} requesting controller input".format(app_dir))
         gamepad.init()
 
 def finalize():

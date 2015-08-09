@@ -1,5 +1,5 @@
 import hwgfx
-
+import client.system.log as log
 #TODO:  this should be populated from the hardware's reported  maximum number 
 #       of texture units. 
 
@@ -10,20 +10,19 @@ class texture:
         self._tex   = tex
         self.w      = w
         self.h      = h
-        print("PYTEX: acquired texture ", self._tex)
+        log.write(log.DEBUG, "Acquired texture {0}".format(self._tex))
 
     def __del__(self):
         hwgfx.texture_drop(self._tex)
-        print("PYTEX dropped texture", self._tex)
+        log.write(log.DEBUG, "Dropped texture {0}".format(self._tex))
 
     @classmethod
     def from_local_image(cls, local_image, filtered=False):
-        print ("PYTEX generating texture")
         tex = hwgfx.texture_generate( local_image.w, 
                                 local_image.h, 
                                 filtered)
-        print ("PYTEX uploading texture")
         hwgfx.texture_upload(tex, local_image._img)
+        log.write(log.DEBUG, "Generated texture {0} from local image {1}".format(tex, local_image._img))
         return cls( tex, 
                     local_image.w, 
                     local_image.h )
