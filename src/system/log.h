@@ -4,7 +4,7 @@
 #define LOG_TARGET_STDOUT (1)
 #define LOG_TARGET_FILE (2)
 //log everywhere
-#define LOG_TARGET (LOG_TARGET_STDOUT & LOG_TARGET_FILE )
+#define LOG_TARGET (LOG_TARGET_STDOUT | LOG_TARGET_FILE )
 
 #define LOG_LEVEL_ERROR (1)
 #define LOG_LEVEL_WARNING (2)
@@ -16,10 +16,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include "rt_module_codes.h"
+
 unsigned int initLog();
 void dropLog();
 
 void log_message( unsigned int system, unsigned int level, const char* mesage, ... ); 
+void log_client_message( unsigned int level, const char* mesage ); 
 
 FILE* getLogfile();
 

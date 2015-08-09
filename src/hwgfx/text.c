@@ -14,11 +14,11 @@ static const int CHAR_DIMS = 8;
 static int      charsPerRow;
 static int      charsPerCol;
 
-gfx_texture font_texture;
-gfx_shader  text_shader;
+static gfx_texture font_texture;
+static gfx_shader  text_shader;
 
 #define MAX_CH 256
-gfx_coordinate_uv_primitive char_prims[MAX_CH];
+static gfx_coordinate_uv_primitive char_prims[MAX_CH];
 
 
 static void genPrims() {

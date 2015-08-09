@@ -1,3 +1,4 @@
+import client.system.log as log
 import hwgfx
 
 #TODO:  this should be populated from the hardware's reported  maximum number 
@@ -7,11 +8,11 @@ import hwgfx
 class framebuffer:
     def __init__(self, fb):
         self._fb   = fb
-        print("PY: acquired framebuffer ", self._fb)
+        log.write( log.DEBUG, "Acquired framebuffer:{0}".format(self._fb))
 
     def __del__(self):
         hwgfx.framebuffer_drop(self._fb)
-        print("PY: dropped framebuffer", self._fb)
+        log.write( log.DEBUG, "Dropped framebuffer:{0}".format(self._fb))
         
     @classmethod
     def from_texture(cls,texture):

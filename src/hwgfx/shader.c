@@ -12,20 +12,17 @@
 void _shader_err(GLuint shader_id, char* source) {
     int maxLength;
     char* infoLog;
-    DIRTY_DISPLAY_ABORT();
-    printf("error compiling shader: %s\n", source);
+    log_message(CTT2_INT_HWGFX, LOG_LEVEL_ERROR, "error compiling shader: %s\n", source);
     glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &maxLength);
     infoLog = (char *)malloc(maxLength);
     glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
-    printf(infoLog);
-    printf("\n");
+    log_message(CTT2_INT_HWGFX, LOG_LEVEL_DEBUG, (infoLog));
     free(infoLog);
 }
 
 void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name) {
     int iv;
 
-    OGL_SHADOP(v_src_path,f_src_path);
 
     shader->vert_name = malloc( sizeof(char)*(strlen(vert_name)+1));
     shader->frag_name = malloc( sizeof(char)*(strlen(frag_name)+1));
@@ -58,7 +55,7 @@ void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag
 
     glGetProgramiv(shader->shader_id, GL_LINK_STATUS, (int *)&iv);
     if(iv == 0) {
-        printf("error linking shader\n");
+        log_message(CTT2_INT_HWGFX, LOG_LEVEL_ERROR, "error linking shader");
     }
 
    
@@ -70,6 +67,7 @@ void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag
 void shader_load(gfx_shader* shader, const char* v_src_path, const char* f_src_path ){
     char* vertex_src;
     char* frag_src;
+
     vertex_src = read_file((char*)v_src_path);
     frag_src = read_file((char*)f_src_path);
 
@@ -90,10 +88,6 @@ void shader_bind(gfx_shader* shader){
 }
 
 gfx_shader* shader_get_bound() {
-    if(_bound==0) {
-        printf("\n**catastrophe: bound==0 when getting bound shader.");
-        exit(1);
-    }
     return _bound;
 }
 

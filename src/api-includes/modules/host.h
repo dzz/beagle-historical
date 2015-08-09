@@ -40,6 +40,24 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC host_log_stdout
+DEF_ARGS {
+    char* output;
+    if(!INPUT_ARGS(args,"s",&output))
+        return NULL;
+    log_message( CTT2_CLIENT_APPLICATION, LOG_LEVEL_INFO, output);
+    Py_RETURN_NONE;
+}
+MODULE_FUNC host_log_client_message
+DEF_ARGS {
+    char* output;
+    unsigned int level;
+    if(!INPUT_ARGS(args,"Is",&level, &output))
+        return NULL;
+    log_client_message( level, output);
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC host_get_gamepad_sticks
 DEF_ARGS {
     int i;
@@ -72,6 +90,8 @@ static PyMethodDef host_methods[] = {
                             host_dequeue_gamepad_dirty, METH_VARARGS, NULL},
     {"get_hf_timer",        host_get_hf_timer,          METH_VARARGS, NULL},
     {"set_title",           host_set_title,             METH_VARARGS, NULL},
+    {"log_stdout",          host_log_stdout,            METH_VARARGS, NULL},
+    {"log_client_message",  host_log_client_message,    METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };

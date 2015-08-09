@@ -63,6 +63,12 @@ char * ctt2_module_from_code( unsigned int module) {
             return "RT_CORE";
         case CTT2_CLIENT_APPLICATION:
             return "CLIENT";
+        case CTT2_INT_API_BRIDGE:
+            return "BRIDGE";
+        case CTT2_INT_HWGFX:
+            return "HWGFX";
+        case CTT2_INT_HWGFX_OGLOBJ:
+            return "HWGFX_OBJ";
     }
     return "UNKNOWN";
 }
@@ -403,4 +409,5 @@ int main(int argc, char **argv){
     }
     
     dropRuntimeModules(0);
+	return 0;
 }

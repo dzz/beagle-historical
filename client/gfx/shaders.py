@@ -1,4 +1,5 @@
 import client.ctt2.host_config  as host_config
+import client.system.log as log
 import hwgfx
 
 _shaders = {}
@@ -26,9 +27,9 @@ class shader(object):
     def __init__(self,vert,frag, path = None ):
 
         if path is not None:
-            print("PYSHDR: Compiling shader: {0}{1},{2}".format(path,vert,frag))
+            log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
         else:
-            print("PYSHDR: Compiling core shader: {0}{1}".format(vert,frag))
+            log.write(log.DEBUG,"Compiling CORE shader: {0}{1},{2}".format(path,vert,frag))
         if( path is None):
             vpath =  "shaders/" + vert + ".vert.glsl"
             fpath =  "shaders/" + frag + ".frag.glsl"
@@ -36,12 +37,9 @@ class shader(object):
             vpath =  path + vert + ".glsl"
             fpath =  path + frag + ".glsl"
 
-        print(vpath)
-        print(fpath)
-
         self._shader = hwgfx.shader_load( vpath, fpath )
 
-        print("PYSHDR: Linked program:{3})".format(path,vert,frag,self._shader))
+        log.write(log.DEBUG,"Linked program:{3})".format(path,vert,frag,self._shader))
 
     def bind(self,uniforms):
         hwgfx.shader_bind(self._shader);
@@ -72,7 +70,7 @@ class shader(object):
                         vector[3])
 
     def __del__(self):
-        print("PYSHDR:deleting shader program {0}".format(self._shader))
+        log.write("Deleting shader program {0}".format(self._shader))
         hwgfx.shader_drop(self._shader)
 
     @classmethod

@@ -1,5 +1,6 @@
 import sys
 import socket
+import client.system.log as log
 from io import StringIO
 
 app = None
@@ -17,9 +18,9 @@ class telnet_console:
 
         self.socket = socket.socket( socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setblocking(0)
-        print("PYTEL: Socket created")
+        log.write(log.INFO, "PYTEL: Socket created")
         self.socket.bind( (HOST, PORT) ) 
-        print("PYTEL: Socket bound")
+        log.write(log.INFO, "PYTEL: Socket bound")
         self.socket.listen(10)
 
     def tick(self):
@@ -30,7 +31,7 @@ class telnet_console:
                 conn = None
 
             if conn is not None:
-                print("PYTEL: Connected: [{0}]".format(addr))
+                log.write(log.INFO,"PYTEL: Connected: [{0}]".format(addr))
                 self.connection = conn
                 self.connection.send(bytes("CTT2 - Debug Server 0.1\r\n--------------------\r\n","UTF-8"))
                 self.connected = True

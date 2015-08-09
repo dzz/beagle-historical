@@ -53,7 +53,6 @@ void dropLabels() {
         used_cursor* tmp;
 
         for(;;) {
-            printf("C: LABELS - CLEARING ITERATOR: %x\n",iterator);
             if(iterator == 0)
                 break;
             tmp = iterator;
@@ -120,7 +119,7 @@ int dequeue_cursor_pos() {
         used_cursor* tmp = recycle_stack;
         recycle_stack = tmp->prev;
         free(tmp);
-        printf("FREED STACK:%x",tmp);
+        //printf("FREED STACK:%x",tmp);
         return rval;
     }
 }
@@ -250,7 +249,7 @@ void label_drop(gfx_label* label) {
         recycle_stack->cursor_pos = label->_cursor;
     }
 
-    printf("C: LABELS: ADDED ATLAS TAG TO DEQUEU: %x\n", recycle_stack);
+    //printf("C: LABELS: ADDED ATLAS TAG TO DEQUEU: %x\n", recycle_stack);
 
     texture_drop(label->texture);
     free(label->texture);

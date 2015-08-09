@@ -8,6 +8,8 @@ static FILE* logfile;
 static char* formatting_buffer;
 static unsigned int initialized = 0;
 
+static unsigned int logging_client;
+
 unsigned int initLog() {
 	logfile = fopen("log.txt","w+");
 	if(!logfile)
@@ -17,6 +19,7 @@ unsigned int initLog() {
 		return MODULE_FAILURE;
 
 	initialized = 1;
+    logging_client = 0;
 	return MODULE_LOADED;
 }
 
@@ -30,7 +33,43 @@ void dropLog() {
 	fclose(logfile);
 }
 
+
+
+char* tag_from_level_code(unsigned int level) {
+    switch(level) {
+        case LOG_LEVEL_INFO:
+            return "info";
+        case LOG_LEVEL_WARNING:
+            return "warning";
+        case LOG_LEVEL_ERROR:
+            return "error";
+        case LOG_LEVEL_DEBUG:
+            return "debug";
+    }
+    return "unknown";
+}
+
+void log_client_message( unsigned int level, const char* message ) {
+    if(!initialized) {
+        return;
+    } else {
+        unsigned int system = CTT2_CLIENT_APPLICATION;
+        char* system_prefix = ctt2_module_from_code(system);
+        char* level_tag = tag_from_level_code(level);
+        const char* format = "%s[%x]\t%s\t%s\n";
+
+        if(LOG_TARGET & LOG_TARGET_FILE) {
+            fprintf(logfile, format, system_prefix, system, level_tag, message);
+        }
+        if(LOG_TARGET & LOG_TARGET_STDOUT) {
+            printf(format, system_prefix, system, level_tag, message);
+        }
+    }
+}
+
 void log_message(unsigned int system, unsigned int level, const char* message, ...) {
+
+    const char* format = "%s[%x]\t%s\t%s\n";
 
 	if(!initialized) {
 		va_list args;
@@ -45,20 +84,18 @@ void log_message(unsigned int system, unsigned int level, const char* message, .
         return;
     }
     else {
-        const char* format = "%s(%x):%s\n";
         char* system_prefix = ctt2_module_from_code(system);
+        char* level_tag = tag_from_level_code(level);
         va_list args;
         va_start(args, message);
         vsnprintf(formatting_buffer, LOG_FORMATTING_BUFFER_SIZE, message, args);
         va_end(args);
 
-		printf(format, system_prefix, system, formatting_buffer);
-
         if(LOG_TARGET & LOG_TARGET_FILE) {
-            fprintf(logfile, format, system_prefix, system, formatting_buffer);
+            fprintf(logfile, format, system_prefix, system, level_tag, formatting_buffer);
         }
         if(LOG_TARGET & LOG_TARGET_STDOUT) {
-			printf(format, system_prefix, system, formatting_buffer);
+			printf(format, system_prefix, system, level_tag, formatting_buffer);
         }
     }
 }

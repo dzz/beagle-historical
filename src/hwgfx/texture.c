@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <GLXW/glxw.h>
+#include "../system/log.h"
 #include "texture.h"
 #include "OGL_OBJ.h"
 

@@ -425,7 +425,7 @@ DEF_ARGS {
  * primitive
  */
 
-#define PRIMITIVE_FLOAT_ERROR log_message( CTT2_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
+#define PRIMITIVE_FLOAT_ERROR log_message( CTT2_INT_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 MODULE_FUNC hwgfx_primitive_create_coordinate_primitive
 DEF_ARGS {
     int                             i;
@@ -616,7 +616,6 @@ DEF_ARGS {
  */
 MODULE_FUNC hwgfx_debug_displaykill
 DEF_ARGS {
-    DIRTY_DISPLAY_ABORT();
     Py_RETURN_NONE;
 }
 

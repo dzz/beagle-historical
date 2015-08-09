@@ -1,6 +1,8 @@
+import sys
 import host
 import hwgfx
 import configparser
+import client.system.log as log
 import client.system.gamepad as gamepad
 import client.system.keyboard as keyboard
 
@@ -35,6 +37,16 @@ def init():
         return v.lower() in ("true","1")
 
     global app, console
+
+    class output_redirect():
+        def write(self,txt):
+            log.write(log.INFO, txt)
+    class error_redirect():
+        def write(self,txt):
+            host.write(log.ERROR, txt)
+    
+    #sys.stdout = output_redirect()
+    #sys.stderr = error_redirect()
 
     config = configparser.ConfigParser()
 

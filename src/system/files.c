@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include "files.h"
+#include "log.h"
 
 char* read_file(char *file)
 {
@@ -9,8 +10,10 @@ char* read_file(char *file)
     char *buf;
 
     fptr = fopen(file, "rb"); 
-    if (!fptr) 
+    if (!fptr)  {
+        log_message( CTT2_RT_MODULE_CORE, LOG_LEVEL_ERROR, "could not read :%s",file);
         return NULL;
+    }
     fseek(fptr, 0, SEEK_END); 
     length = ftell(fptr); 
     buf = (char*)malloc(length+1); 
@@ -18,5 +21,6 @@ char* read_file(char *file)
     fread(buf, length, 1, fptr); 
     fclose(fptr); 
     buf[length] = 0; 
+    log_message( CTT2_RT_MODULE_CORE, LOG_LEVEL_INFO, "read %x bytes from %s",length, file);
     return buf; 
 }

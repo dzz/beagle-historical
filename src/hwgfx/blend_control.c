@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <GLXW/glxw.h>
+#include "../system/log.h"
+#include "../system/rt_module_codes.h"
 #include "blend_control.h"
 
 unsigned static int _blending = 0;
@@ -55,8 +57,7 @@ void manual_blend_exit() {
 
 void blend_enter(unsigned int mode) {
     if(_blending == 1) {
-        printf("maximum blend depth exceeded\n");
-        exit(1);
+        log_message(CTT2_INT_HWGFX,LOG_LEVEL_WARNING,"already blending");
     }
     _blending = 1;
     _blend_set_mode(mode);
@@ -66,7 +67,7 @@ void blend_enter(unsigned int mode) {
 
 void blend_exit() {
     if(_blending !=1) {
-        printf("trying to exit blending but no blending set\n");
+        log_message(CTT2_INT_HWGFX,LOG_LEVEL_WARNING,"not blending, can't exit...");
         exit(1);
     }
     glDisable(GL_BLEND);
