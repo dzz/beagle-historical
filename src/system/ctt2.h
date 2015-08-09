@@ -5,6 +5,7 @@
 
 unsigned int host_get_screen_width();
 unsigned int host_get_screen_height();
+void host_signal_exit();
 
 typedef unsigned int CTT2_RT_SIGNAL;
 typedef unsigned int CTT2_RT_FLAG;

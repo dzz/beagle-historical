@@ -1,9 +1,7 @@
 void api_fail_hard() {
     if(PyErr_Occurred())
         PyErr_Print();
-    printf("press a key...\n");
-    _getch();
-    exit(1);
+	host_signal_exit();
 }
 
 int api_checkfailure() {

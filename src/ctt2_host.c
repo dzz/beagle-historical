@@ -72,6 +72,8 @@ int api_drop() {
 #define DEF_ARGS (PyObject *self, PyObject *args )
 #define INPUT_ARGS PyArg_ParseTuple
 
+#include "system/log.h"
+
 #include "api-includes/modules/host.h"
 #include "api-includes/modules/hwgfx.h"
 #include "api-includes/modules/localgfx.h"

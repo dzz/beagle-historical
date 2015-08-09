@@ -90,20 +90,19 @@ unsigned int initGamepad() {
         }
     }
 
-	log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_ERROR, "initialized %i gamepads\n",found);
+	log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "initialized %i gamepads\n",found);
 	return MODULE_LOADED;
 }
 
 void dropGamepad() {
     int i;
 
-    printf("dropping gamepad system\n");
     for(i=0; i<MAX_PADS; ++i) {
 
         hw_gamepad *gp = &Gamepads[i];
 
         if(gp->available) {
-            printf("closing gamepad %i\n", gp->index);
+            log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "closing gamepad %i\n", gp->index);
             SDL_GameControllerClose( gp->controller );
         }
     }

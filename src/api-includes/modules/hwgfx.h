@@ -59,10 +59,10 @@ DEF_ARGS {
         if(t_size!= 8) {
             return NULL;
         }
-		x = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
-        y = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,1));
-        w = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,2));
-        h = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,3));
+		x = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
+        y = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,1));
+        w = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,2));
+        h = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,3));
         u = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,4));
         v = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,5));
         tw = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,6));
@@ -92,7 +92,7 @@ DEF_ARGS {
  */
 MODULE_FUNC hwgfx_label_generate 
 DEF_ARGS {
-    gfx_label* label = malloc(sizeof(gfx_label));
+    gfx_label* label = (gfx_label*)malloc(sizeof(gfx_label));
 
     label_generate(label);
     return Py_BuildValue("I",(unsigned int)label);
@@ -178,7 +178,7 @@ DEF_ARGS{
 MODULE_FUNC hwgfx_framebuffer_create
 DEF_ARGS {
     gfx_framebuffer* framebuffer;
-    framebuffer = malloc(sizeof(framebuffer));
+    framebuffer = (gfx_framebuffer*)malloc(sizeof(framebuffer));
     framebuffer_create_framebuffer(framebuffer);
     return Py_BuildValue("I",(unsigned int)framebuffer);
 }
@@ -241,7 +241,7 @@ DEF_ARGS {
     if(!INPUT_ARGS(args, "iip", &w, &h, &filtered))
         return NULL;
 
-    texture = malloc(sizeof(gfx_texture));
+    texture = (gfx_texture*) malloc(sizeof(gfx_texture));
     if( filtered == 0) 
         texture_generate(texture,w,h);
     else
@@ -314,7 +314,7 @@ DEF_ARGS {
     if(!INPUT_ARGS(args, "ss", &vert, &frag)){
         return NULL;
     }
-    shader = malloc(sizeof(gfx_shader));
+    shader = (gfx_shader*)malloc(sizeof(gfx_shader));
     shader_load(shader, vert, frag);
     return Py_BuildValue("I",(unsigned int)shader);
 }
@@ -425,7 +425,7 @@ DEF_ARGS {
  * primitive
  */
 
-#define PRIMITIVE_FLOAT_ERROR printf("non float passed to primitive constructor"); api_fail_hard();
+#define PRIMITIVE_FLOAT_ERROR log_message( CTT2_API_BRIDGE, LOG_LEVEL_ERROR,"Failed to convert input to floating point");api_fail_hard();
 MODULE_FUNC hwgfx_primitive_create_coordinate_primitive
 DEF_ARGS {
     int                             i;
@@ -444,19 +444,17 @@ DEF_ARGS {
         return NULL;
 
     num_coord_floats       = PyList_Size(coord_float_list);
-    coord_float_buffer    = malloc(sizeof(gfx_float)*num_coord_floats);
+    coord_float_buffer    = (gfx_float*)malloc(sizeof(gfx_float)*num_coord_floats);
     for(i=0; i<num_coord_floats;++i) {
         flObj = PyList_GetItem(coord_float_list,i);
         if(PyFloat_Check(flObj)) {
             parsed=(float)PyFloat_AsDouble(flObj);
         } else {
-            PRIMITIVE_FLOAT_ERROR
+			PRIMITIVE_FLOAT_ERROR;
         }
         coord_float_buffer[i] = parsed;
     }
-    primitive = malloc(sizeof(gfx_coordinate_primitive));
-
-    printf("leaving hwgfx");
+    primitive = (gfx_coordinate_primitive*)malloc(sizeof(gfx_coordinate_primitive));
     primitive_create_coordinate_primitive(  primitive,
                                             coord_float_buffer,
                                             num_coord_floats / vlen ,
@@ -494,8 +492,8 @@ DEF_ARGS {
     num_coord_floats       = PyList_Size(coord_float_list);
     num_uv_floats          = PyList_Size(uv_float_list);
     
-    coord_float_buffer     = malloc(sizeof(gfx_float)*num_coord_floats);
-    uv_float_buffer        = malloc(sizeof(gfx_float)*num_uv_floats);
+    coord_float_buffer     = (gfx_float*)malloc(sizeof(gfx_float)*num_coord_floats);
+    uv_float_buffer        = (gfx_float*)malloc(sizeof(gfx_float)*num_uv_floats);
 
     //coords
     for(i=0; i<num_coord_floats;++i) {
@@ -518,7 +516,7 @@ DEF_ARGS {
         uv_float_buffer[i] = parsed;
     }
 
-    primitive = malloc(sizeof(gfx_coordinate_uv_primitive));
+    primitive = (gfx_coordinate_uv_primitive*)malloc(sizeof(gfx_coordinate_uv_primitive));
 
     primitive_create_coordinate_uv_primitive
             (  primitive,

@@ -12,6 +12,7 @@
 #define CTT2_RT_MODULE_PYTHON         (256)
 #define CTT2_RT_MODULE_CORE           (512)
 #define CTT2_CLIENT_APPLICATION       (1024)
+#define CTT2_API_BRIDGE               (2048)
 
 #define MODULE_LOADED 1
 #define MODULE_FAILURE 0

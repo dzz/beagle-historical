@@ -160,7 +160,6 @@ void dropDisplay() {
 }
 
 
-
 /**************************************/
 
 unsigned initOpenGL() {
@@ -265,11 +264,15 @@ void loadRuntimeModule( module_initializer moduleInitializer, module_destructor 
     }
 }
 
+CTT2_RT_SIGNAL finished                         = 0;
+void host_signal_exit() {
+	dropRuntimeModules(1);
+}
 
 
 int main(int argc, char **argv){ 
     
-    CTT2_RT_SIGNAL finished                         = 0;
+
     int fps                                         = -1;
     double frame_millis                             = -1;
     double init_millis                              = 0;
@@ -278,7 +281,7 @@ int main(int argc, char **argv){
     double spf                                      = 0.0;
     int tick_next                                   = 0;
     unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
-
+		finished = 0;
     initialized_modules = 0;
 
     if(argc==5) {
@@ -288,7 +291,6 @@ int main(int argc, char **argv){
         fps             = atoi( argv[4] );
         spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
-        //printf("frame millis:%f", frame_millis);
     }
 	loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );

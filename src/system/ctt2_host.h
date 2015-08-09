@@ -11,5 +11,9 @@ int api_dispatch_mouseup(int button, int x, int y);
 int api_dispatch_mousedown(int button, int x, int y);
 int api_dispatch_mousemotion(int x, int y);
 int api_dispatch_key(int key, int mode);
+int api_render();
+int api_dispatch_text(char* text);
+int api_set_screensize(int w, int h);
+int api_map_keycode(char* code_definition);
 
 #endif
