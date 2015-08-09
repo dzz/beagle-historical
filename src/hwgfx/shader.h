@@ -12,6 +12,7 @@ typedef struct {
 } gfx_shader;
 
 
+void shader_compile(gfx_shader* shader, const char* vertex_src, const char* frag_src, const char* vert_name, const char* frag_name);
 void shader_load(gfx_shader* shader, const char* v_src_path, const char* f_src_path );
 void shader_bind(gfx_shader* shader);
 void shader_drop(gfx_shader* shader);

@@ -1,4 +1,3 @@
-//#define CTT2_SCREENMODE_DEBUG 
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,26 +17,13 @@
 #include <SDL_keycode.h>
 #include "system/ctt2.h"
 #include "system/ctt2_host.h"
-#include "drawing/node_resource_ids.h"
+#include "drawing/drawingSurfaces.h"
 #include "system/extended_video.h"
 #include "system/wm_handler.h"
 #include "system/log.h"
-#include "system/surfaceCache.h"
-#include "hardware/tablet.h"
 #include "hardware/hf_timer.h"
 #include "hardware/gamepad.h"
 #include "hardware/audio.h"
-#include "document/animation.h"
-#include "drawing/shader_brush.h"
-#include "drawing/brush.h"
-#include "drawing/drawingSurfaces.h"
-#include "compositor/compositor.h"
-#include "document/layers.h"
-#include "user/stylus.h"
-#include "user/panels.h"
-#include "user/dispatch.h"
-#include "user/yank_put.h"
-#include "user/editors/colorPicker.h"
 #include "hwgfx/context.h"
 #include "hwgfx/text.h"
 
@@ -67,11 +53,7 @@ unsigned int getKeyframingMode() {
     return ctt2_keyframe_mode;
 }
 
-void ctt2_insertkeyframe() {
-    animation_insert_keyframe_at_cursor();
-    animation_cursor_move( 0, DO_NOT_COMMIT_DRAWING_CONTEXT );
 
-}
 
 /**************************************/
 
@@ -189,7 +171,6 @@ void dropPython(){
 }
 
 void initPython() {
-    char buffer[1024];
     Py_SetProgramName("ctt2_py");
     if( api_init() == API_FAILURE ) {
         dropPython();
@@ -252,7 +233,7 @@ int main(int argc, char **argv){
     initWindowingSystemMessages();
     initOpenGL();
     initTextInput();
-    initHfTimer();
+	initTimer();
 
     initGamepad();
 
@@ -261,7 +242,7 @@ int main(int argc, char **argv){
 
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
 
-    init_millis = getTimeMs(); 
+	init_millis = timer_get_ms(); 
 
     initPython();
 
@@ -269,8 +250,8 @@ int main(int argc, char **argv){
     /** MAIN DISPATCH LOOP **/
     {
         SDL_Event event;
-        double base_millis = getTimeMs();
-        tick_millis = getTimeMs();
+        double base_millis = timer_get_ms();
+        tick_millis = timer_get_ms();
 
 
         while(finished == 0) {
@@ -280,7 +261,7 @@ int main(int argc, char **argv){
                                 finished = 1; 
                             } else {
                                 tick_millis += frame_millis;
-                                if( (getTimeMs() - tick_millis) > frame_millis ) {
+								if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;
                                 } else {
                                 ctt2_state = CTT2_EVT_RENDER;
@@ -296,7 +277,7 @@ int main(int argc, char **argv){
 						ctt2_state = CTT2_EVT_POLL_EVENTS;
 						break;
                     case CTT2_EVT_POLL_EVENTS:
-                         if( (getTimeMs() - tick_millis) > frame_millis ) {
+						if( (timer_get_ms() - tick_millis) > frame_millis ) {
                             ctt2_state = CTT2_EVT_TICK;
                          } 
 						  break;
@@ -345,19 +326,14 @@ int main(int argc, char **argv){
                             dropPython();
                             initPython();
                         }
-                        finished = dispatch_key(event.key.keysym.sym,1);
                         if( api_dispatch_key(event.key.keysym.sym,1) 
                                 == API_FAILURE ) finished = 1;
                         break;
                     case SDL_KEYUP:
-                        dispatch_key(event.key.keysym.sym,0);
                         if( api_dispatch_key(event.key.keysym.sym,0) 
                                 == API_FAILURE ) finished = 1;
                         break;
                     case SDL_MOUSEBUTTONDOWN:
-                        /*dispatch_mousedown(event.button.button,
-                                event.button.x,
-                                event.button.y );*/
                         if(api_dispatch_mousedown(
                                     event.button.button, 
                                     event.button.x, 
@@ -365,9 +341,6 @@ int main(int argc, char **argv){
                                         finished = 1;
                         break;
                     case SDL_MOUSEBUTTONUP:
-                        /*dispatch_mouseup(event.button.button,
-                                event.button.x,
-                                event.button.y );*/
                         if(api_dispatch_mouseup(
                                     event.button.button, 
                                     event.button.x, 
@@ -375,9 +348,6 @@ int main(int argc, char **argv){
                                         finished = 1;
                         break;
                     case SDL_MOUSEMOTION:
-                        /*dispatch_mousemotion(event.motion.x, 
-                                event.motion.y );*/
-
                         if(api_dispatch_mousemotion(
                                     event.motion.x, 
                                     event.motion.y) == API_FAILURE ) 

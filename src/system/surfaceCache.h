@@ -4,9 +4,6 @@
 #define COMPOSITE_MODE_PREFERENCE_LAYER
 #define SURFACE_CACHE_INITIAL_FRAMESTORAGE 2048
 
-#include "../document/animation.h"
-#include "../compositor/compositor.h"
-#include "../drawing/drawingSurfaces.h"
 #include <SDL.h>
 
 

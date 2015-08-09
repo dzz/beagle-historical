@@ -5,15 +5,15 @@
 LARGE_INTEGER Frequency;
 double pcf;
 
-void initHfTimer()
+void initTimer()
 {
     QueryPerformanceFrequency(&Frequency);
     pcf = (double)Frequency.QuadPart;
     printf("HF_TIMER: frequency     :%i\n", Frequency.QuadPart);
-    printf("HF_TIMER: time          :%f\n", getTimeMs());
+    printf("HF_TIMER: time          :%f\n", timer_get_ms());
 }
 
-double getTimeMs()
+double timer_get_ms()
 {
     LARGE_INTEGER CurrentTime;
     QueryPerformanceCounter(&CurrentTime);

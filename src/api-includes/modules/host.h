@@ -27,7 +27,7 @@ DEF_ARGS {
 
 MODULE_FUNC host_get_hf_timer
 DEF_ARGS {
-    return Py_BuildValue("f",getTimeMs() );
+	return Py_BuildValue("f",timer_get_ms() );
 }
 
 

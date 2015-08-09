@@ -59,14 +59,14 @@ DEF_ARGS {
         if(t_size!= 8) {
             return NULL;
         }
-		x = PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
-        y = PyLong_AS_LONG( PyList_GET_ITEM(rect,1));
-        w = PyLong_AS_LONG( PyList_GET_ITEM(rect,2));
-        h = PyLong_AS_LONG( PyList_GET_ITEM(rect,3));
-        u = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,4));
-        v = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,5));
-        tw = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,6));
-        th = PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,7));
+		x = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
+        y = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,1));
+        w = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,2));
+        h = (float)PyLong_AS_LONG( PyList_GET_ITEM(rect,3));
+        u = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,4));
+        v = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,5));
+        tw = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,6));
+        th = (float)PyFloat_AS_DOUBLE( PyList_GET_ITEM(rect,7));
         rect_draw_tex(x,y,w,h,u,v,tw,th);
 
     }
@@ -189,7 +189,7 @@ DEF_ARGS {
     gfx_framebuffer* framebuffer;
     if(!INPUT_ARGS(args,"I",&ptr)) 
         return NULL;
-    framebuffer = (gfx_texture*)ptr;
+    framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_drop(framebuffer);
     free(framebuffer);
     Py_RETURN_NONE;
@@ -214,7 +214,7 @@ DEF_ARGS {
     gfx_framebuffer* framebuffer;
     if(!INPUT_ARGS(args,"I",&ptr)) 
         return NULL;
-    framebuffer = (gfx_texture*)ptr;
+    framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_render_start(framebuffer);
     Py_RETURN_NONE;
 }
@@ -225,7 +225,7 @@ DEF_ARGS {
     gfx_framebuffer* framebuffer;
     if(!INPUT_ARGS(args,"I",&ptr)) 
         return NULL;
-    framebuffer = (gfx_texture*)ptr;
+    framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_render_end(framebuffer);
     Py_RETURN_NONE;
 }
@@ -306,6 +306,20 @@ DEF_ARGS {
  * shader
  */
 MODULE_FUNC hwgfx_shader_load
+DEF_ARGS {
+    gfx_shader* shader;
+    char*       vert;
+    char*       frag;
+
+    if(!INPUT_ARGS(args, "ss", &vert, &frag)){
+        return NULL;
+    }
+    shader = malloc(sizeof(gfx_shader));
+    shader_load(shader, vert, frag);
+    return Py_BuildValue("I",(unsigned int)shader);
+}
+
+MODULE_FUNC hwgfx_shader_compile
 DEF_ARGS {
     gfx_shader* shader;
     char*       vert;
@@ -434,7 +448,7 @@ DEF_ARGS {
     for(i=0; i<num_coord_floats;++i) {
         flObj = PyList_GetItem(coord_float_list,i);
         if(PyFloat_Check(flObj)) {
-            parsed=PyFloat_AsDouble(flObj);
+            parsed=(float)PyFloat_AsDouble(flObj);
         } else {
             PRIMITIVE_FLOAT_ERROR
         }
@@ -487,7 +501,7 @@ DEF_ARGS {
     for(i=0; i<num_coord_floats;++i) {
         flObj           = PyList_GetItem(coord_float_list,i);
         if(PyFloat_Check(flObj)) {
-            parsed=PyFloat_AsDouble(flObj);
+            parsed=(float)PyFloat_AsDouble(flObj);
         } else {
             PRIMITIVE_FLOAT_ERROR;
         }
@@ -497,7 +511,7 @@ DEF_ARGS {
     for(i=0; i<num_uv_floats;++i) {
         flObj           = PyList_GetItem(uv_float_list,i);
         if(PyFloat_Check(flObj)) {
-            parsed=PyFloat_AsDouble(flObj);
+            parsed=(float)PyFloat_AsDouble(flObj);
         } else {
             PRIMITIVE_FLOAT_ERROR;
         }
