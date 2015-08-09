@@ -1,14 +1,23 @@
 #include "log.h"
 #include <stdarg.h>
 #include <malloc.h>
+#include "rt_module_codes.h"
 
 #define LOG_FORMATTING_BUFFER_SIZE 1024
 static FILE* logfile;
 static char* formatting_buffer;
+static unsigned int initialized = 0;
 
-void initLog() {
+unsigned int initLog() {
 	logfile = fopen("log.txt","w+");
-    formatting_buffer = malloc(sizeof(char)*LOG_FORMATTING_BUFFER_SIZE);
+	if(!logfile)
+		return MODULE_FAILURE;
+    formatting_buffer = (char*)malloc(sizeof(char)*LOG_FORMATTING_BUFFER_SIZE);
+	if(!formatting_buffer)
+		return MODULE_FAILURE;
+
+	initialized = 1;
+	return MODULE_LOADED;
 }
 
 FILE *getLogfile(){
@@ -16,24 +25,40 @@ FILE *getLogfile(){
 }
 
 void dropLog() {
+	initialized = 0;
     free(formatting_buffer);
 	fclose(logfile);
 }
 
 void log_message(unsigned int system, unsigned int level, const char* message, ...) {
 
-    if( (level & LOG_LEVEL) == 0 )
+	if(!initialized) {
+		va_list args;
+        va_start(args, message);
+		printf("(detached):");
+		vprintf(message, args);
+		printf("\n");
+        va_end(args);
+		return;
+	}
+    if( (level & LOG_LEVEL) == 0 ) {
         return;
+    }
     else {
-        const char* format = "(%x):%s";
+        const char* format = "%s(%x):%s\n";
+        char* system_prefix = ctt2_module_from_code(system);
         va_list args;
         va_start(args, message);
         vsnprintf(formatting_buffer, LOG_FORMATTING_BUFFER_SIZE, message, args);
         va_end(args);
 
-        if(LOG_TARGET & LOG_TARGET_FILE)
-            fprintf(logfile, format, formatting_buffer);
-        if(LOG_TARGET & LOG_TARGET_STDOUT)
-			printf(format, formatting_buffer);
+		printf(format, system_prefix, system, formatting_buffer);
+
+        if(LOG_TARGET & LOG_TARGET_FILE) {
+            fprintf(logfile, format, system_prefix, system, formatting_buffer);
+        }
+        if(LOG_TARGET & LOG_TARGET_STDOUT) {
+			printf(format, system_prefix, system, formatting_buffer);
+        }
     }
 }

@@ -1,3 +1,4 @@
+#include "../system/log.h"
 
 #if defined(__STDC__)
 # define C89
@@ -14,11 +15,11 @@
 
 #ifndef C99
 
-float fmin(double a, double b) {
+float fmin(float a, float b) {
     if(a<b) return a; return a;
 }
 
-float fmax(double a, double b) {
+float fmax(float a, float b) {
     if(a>b) return a; return b;
 }
 
@@ -33,6 +34,8 @@ float fmax(double a, double b) {
 #include <SDL.h>
 #include <SDL_thread.h>
 #include <portaudio.h>
+
+#include "../system/rt_module_codes.h"
 
 #define MAX_BACKDOORS 256
 
@@ -105,11 +108,12 @@ void ae_init(ae_data* self) {
                                 ae_renderer,
                                 &self->context );
     if(err!=paNoError) {
-		printf("Error:%s\n", Pa_GetErrorText( err ) );
-      return;
+		log_message(CTT2_RT_MODULE_AUDIO, LOG_LEVEL_ERROR, "Error:%s\n", Pa_GetErrorText( err ) );
+        return;
     }
 
 	Pa_StartStream(self->stream);
+	log_message(CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Initialized audio control thread.");
     self->initialized = 1;
 }
 
@@ -133,13 +137,13 @@ int ae_thread_run(void* data) {
 
 
 
-void initAudio() {
-
-
+unsigned int initAudio() {
     AE_Data.shutdown = 0;
     AE_Data.initialized = 0;
 	AE_Data.stream = 0;
-    SDL_CreateThread( ae_thread_run, "audio", &AE_Data);
+    if(!SDL_CreateThread( ae_thread_run, "audio_control", &AE_Data))
+		return MODULE_FAILURE;
+    return MODULE_LOADED;
 }
 
 void dropAudio() {

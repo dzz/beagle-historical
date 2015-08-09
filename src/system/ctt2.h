@@ -3,31 +3,20 @@
 
 #include <SDL.h>
 
-void updateDrawingContext();
-void updateViewingSurface();
-SDL_Surface *getViewingSurface();
+unsigned int host_get_screen_width();
+unsigned int host_get_screen_height();
 
-#define KEYFRAME_MODE_RECORD 1
-#define KEYFRAME_MODE_INSERT 0
+typedef unsigned int CTT2_RT_SIGNAL;
+typedef unsigned int CTT2_RT_FLAG;
 
-unsigned int getKeyframingMode(void);
-void toggleKeyframingMode(void);
-void ctt2_insertkeyframe(void);
-
-int client_get_screen_mousex();
-int client_get_screen_mousey();
-
-typedef unsigned int SYSTEM_SIGNAL;
-
-char* read_file(char *file);
-
-#define SYSSIG_QUIT_CTT2 1
+#define CTT2_RT_TERMINATED (1)
 
 void DIRTY_DISPLAY_ABORT();
 
 #define HARDFAIL_CONSOLE DIRTY_DISPLAY_ABORT(); printf("\n***\npress any key\n"); getch();exit(1);
 
-extern int SCREEN_WIDTH;
-extern int SCREEN_HEIGHT;
+
+#include "rt_module_codes.h"
+
 
 #endif

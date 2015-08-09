@@ -1,25 +1,22 @@
 #ifndef _LOGFILE__
 #define __LOGFILE__
 
-//log everywhere
-#define LOG_TARGET (4)
-
 #define LOG_TARGET_STDOUT (1)
 #define LOG_TARGET_FILE (2)
-
-//log everything
-#define LOG_LEVEL (8)
+//log everywhere
+#define LOG_TARGET (LOG_TARGET_STDOUT & LOG_TARGET_FILE )
 
 #define LOG_LEVEL_ERROR (1)
-#define LOG_LEVEL_INFO (2)
-#define LOG_LEVEL_WARNING (4)
+#define LOG_LEVEL_WARNING (2)
+#define LOG_LEVEL_INFO (4)
 #define LOG_LEVEL_DEBUG (8)
-
+//log everything
+#define LOG_LEVEL (LOG_LEVEL_ERROR | LOG_LEVEL_WARNING | LOG_LEVEL_INFO | LOG_LEVEL_ERROR )
 
 #include <stdio.h>
 #include <stdarg.h>
 
-void initLog();
+unsigned int initLog();
 void dropLog();
 
 void log_message( unsigned int system, unsigned int level, const char* mesage, ... ); 

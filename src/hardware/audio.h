@@ -15,7 +15,7 @@
 #define TICK_FILTER_A 0.75
 #define BEAT_LOCKED 1
 
-void initAudio();
+unsigned int initAudio();
 void dropAudio();
 
 typedef struct {

@@ -1,6 +1,9 @@
 #include <SDL.H>
 
 #include "gamepad.h"
+#include "../system/rt_module_codes.h"
+#include "../system/log.h"
+
 #include <stdio.h>
 
 hw_gamepad Gamepads[MAX_PADS];
@@ -56,27 +59,26 @@ void GamepadHandleEvent( SDL_Event* event) {
                     gp->right_trigger = (double)event->jaxis.value / 32276.0;
                     break;
             }
-
         //   printf(" gp(%-20f,%-20f,%-20f,%-20f)\n",gp->left_x,gp->left_y, gp->right_x, gp->right_y );
         }
     }
 }
 
 hw_gamepad* getGamepad(int index) {
-
     return( &Gamepads[index] );
 }
 
-void initGamepad() {
+unsigned int initGamepad() {
 
     int found = 0;
 	int i;
 
-    printf("initializing gamepad system\n");
+    if( SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER ) < 0)
+		return MODULE_FAILURE;
+
     resetGamepad();
 
-
-    printf("   I see %i potential controllers..\n",SDL_NumJoysticks());
+	log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "I see %i potential controllers.",SDL_NumJoysticks());
     for(i=0; i<SDL_NumJoysticks(); ++i) {
         if(SDL_IsGameController(i)) {
             hw_gamepad *gp = &Gamepads[found]; 
@@ -88,7 +90,8 @@ void initGamepad() {
         }
     }
 
-    printf("initialized %i gamepads\n",found);
+	log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_ERROR, "initialized %i gamepads\n",found);
+	return MODULE_LOADED;
 }
 
 void dropGamepad() {

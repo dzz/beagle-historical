@@ -21,7 +21,7 @@ typedef struct {
 
 } hw_gamepad;
 
-void initGamepad();
+unsigned int initGamepad();
 void dropGamepad();
 hw_gamepad* getGamepads();
 void GamepadHandleEvent(SDL_Event* event);

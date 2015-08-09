@@ -31,44 +31,55 @@
 //host_set_title
 SDL_Window* opengl_window; 
 
-static SDL_Surface* ui_surface = NULL;
-static int drawingContextInvalid = 1;
-
 static SDL_GLContext gl_context;
 
-//#define CTT2_SCREENMODE_DEBUG
+static CTT2_RT_FLAG fullscreen = 0;
+static unsigned int initialized_modules;
 
 int SCREEN_WIDTH = 1200;
 int SCREEN_HEIGHT = 700;
 
-/**************************************/
-
-static unsigned int ctt2_keyframe_mode = 0;
-
-void toggleKeyframingMode() {
-    ctt2_keyframe_mode = !ctt2_keyframe_mode;
+char * ctt2_module_from_code( unsigned int module) {
+    switch(module) {
+        case CTT2_RT_MODULE_LOG:
+            return  "LOG";
+        case CTT2_RT_MODULE_DISPLAY:
+            return  "DISPLAY";
+        case CTT2_RT_MODULE_OPENGL:
+            return  "OPENGL";
+        case CTT2_RT_MODULE_AUDIO:
+            return  "AUDIO";
+        case CTT2_RT_MODULE_WINDOW_MSGS:
+            return "WINMSG";
+        case CTT2_RT_MODULE_TEXT_INPUT:
+            return "TEXTINPUT";
+        case CTT2_RT_MODULE_TIMER:
+            return "HF_TIMER";
+        case CTT2_RT_MODULE_GAMEPAD:
+            return "GAMEPAD";
+        case CTT2_RT_MODULE_PYTHON:
+            return "PYTHON";
+        case CTT2_RT_MODULE_CORE:
+            return "RT_CORE";
+        case CTT2_CLIENT_APPLICATION:
+            return "CLIENT";
+    }
+    return "UNKNOWN";
 }
 
-unsigned int getKeyframingMode() {
-    return ctt2_keyframe_mode;
-}
-
-
-
 /**************************************/
 
-void updateViewingSurface() {
+static void updateViewingSurface() {
     SDL_GL_SwapWindow( opengl_window );
     //glClear(GL_COLOR_BUFFER_BIT);
 }
 
-SDL_Surface* getViewingSurface(){
-    return ui_surface;
-}
-
 /**************************************/
 
-void vsync(int mode)
+#define VSYNC_DISABLED 0
+#define VSYNC_ENABLED 1
+
+static void requestVsyncMode(unsigned int mode)
 {	
 #ifdef _WIN32
     typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
@@ -78,38 +89,48 @@ void vsync(int mode)
     wglSwapIntervalEXT(mode);
 #endif
 #ifdef __linux__
-    printf("linux unimplemented vsync()");
-#endif
-}
-
-void disable_vsync()
-{	
-#ifdef _WIN32
-    typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
-    PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
-    wglSwapIntervalEXT = 
-        (PFNWGLSWAPINTERVALPROC)SDL_GL_GetProcAddress( "wglSwapIntervalEXT" );
-    wglSwapIntervalEXT(0);
-#endif
-#ifdef __linux__
-    printf("linux unimplemented disable_vsync()");
+    log_message(LOGSYS_RUNTIME_CORE, LOG_LEVEL_WARNING, "linux unimplemented vsync()");
 #endif
 }
 
 
-
-void initWindowingSystemMessages() {
+unsigned int initWinMsgs() {
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
-//SDL_ShowCursor(0);
+    SDL_ShowCursor(0);
+    return 1;
+}
+
+void dropWinMsgs() {
+    SDL_EventState(SDL_SYSWMEVENT, SDL_DISABLE);
+    SDL_ShowCursor(1);
 }
 
 /**************************************/
 
 
-void initDisplay( int fullscreen) {
-    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER ) < 0 ) {
-        printf( "%s\n", SDL_GetError() );
-        exit(1);
+unsigned int initCore() {
+    if( SDL_Init(0) < 0)
+        return MODULE_FAILURE;
+    return MODULE_LOADED;
+}
+
+void dropCore() {
+    SDL_Quit();
+}
+
+unsigned int host_get_screen_width() {
+	return SCREEN_WIDTH;
+}
+
+unsigned int host_get_screen_height() {
+	return SCREEN_HEIGHT;
+}
+
+
+unsigned int initDisplay() {
+    if( SDL_InitSubSystem( SDL_INIT_VIDEO ) < 0 ) {
+        log_message( CTT2_RT_MODULE_DISPLAY, LOG_LEVEL_ERROR, "Could not initialize display: %s", SDL_GetError() );
+        return MODULE_FAILURE;
     } 
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -126,34 +147,34 @@ void initDisplay( int fullscreen) {
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
     }
 
-
-
-
     if( opengl_window == NULL ) {
-        printf( "%s\n", SDL_GetError() );
-        exit(1);
+        log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_ERROR, "No OpenGL Window Created");
+        return MODULE_FAILURE;
     }
+
+    return MODULE_LOADED;
 }
 
 void dropDisplay() {
     SDL_DestroyWindow( opengl_window);
 }
 
-void DIRTY_DISPLAY_ABORT() {
-    dropDisplay();
-}
+
 
 /**************************************/
 
-void initOpenGL() {
+unsigned initOpenGL() {
     gl_context = SDL_GL_CreateContext(opengl_window);	
-    //disable_vsync();
-   // vsync(0);
     initExtendedVideo();
+    requestVsyncMode( VSYNC_ENABLED );
+    if(gl_context) {
+		log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "Initialized OpenGL Context:%x", gl_context );
+        return MODULE_LOADED;
+    }
+    return MODULE_FAILURE;
 }
 
-void dropOpengl() {
-    printf("Dropping ogl\n");
+void dropOpenGL() {
     SDL_GL_DeleteContext(gl_context);
 }
 
@@ -162,27 +183,30 @@ void dropOpengl() {
 void dropPython(){
     if(PyErr_Occurred()) {
         PyErr_Print();
-        printf("press a key...\n");
-        _getch();
+        log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_ERROR, "Python exiting under error condition");
     }
     api_drop();
-    printf("CH:Py_Finalize()\n");
+    log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_INFO, "Dropped application");
     Py_Finalize();
+	log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_INFO, "Dropped Python");
 }
 
-void initPython() {
+unsigned int initPython() {
+    api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
     Py_SetProgramName("ctt2_py");
     if( api_init() == API_FAILURE ) {
-        dropPython();
-        exit(1);
+		log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_ERROR, "Error booting python environment.");
+        return MODULE_FAILURE;
     } 
+    return MODULE_LOADED;
 }
 
 
 /*****************************************************************************/
 
-void initTextInput() {
+unsigned int initTextInput() {
     SDL_StartTextInput();
+    return MODULE_LOADED;
 }
 
 void dropTextInput() {
@@ -195,14 +219,57 @@ void dropTextInput() {
 #define CTT2_EVT_RENDER				 2
 #define CTT2_EVT_SYNC_GFX			 3
 
+#define CTT2_MAX_RT_MODULES         64
+
+#define CTT2_RT_ERROR               1
+
+typedef unsigned int(*module_initializer)();
+typedef void(*module_destructor)();
+
+static unsigned int rt_module_count = 0;
+static module_destructor rt_module_destructors[CTT2_MAX_RT_MODULES];
+static unsigned int rt_module_ids[CTT2_MAX_RT_MODULES];
+
+void dropRuntimeModules(unsigned int error) {
+    while( rt_module_count!= 0 ) {
+		rt_module_count-=1;
+		{
+			module_destructor destructor = rt_module_destructors[rt_module_count];
+			(*destructor)();
+			log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_INFO, "Released runtime module: %s", ctt2_module_from_code(rt_module_ids[rt_module_count]));
+		}
+    }
+    exit(error);
+}
+
+void DIRTY_DISPLAY_ABORT() {
+    dropRuntimeModules(MODULE_FAILURE);
+}
+
+void loadRuntimeModule( module_initializer moduleInitializer, module_destructor moduleDestructor, unsigned int RT_MODULE_ID  ) {
+
+    if(rt_module_count==CTT2_MAX_RT_MODULES) {
+        log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_ERROR, "Exceeded maximum RT module count.");
+        dropRuntimeModules(CTT2_RT_ERROR);
+    }
+
+	if((*moduleInitializer)() == MODULE_FAILURE) {
+        log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_ERROR, "Could not initialize module: %s", ctt2_module_from_code(RT_MODULE_ID));
+        dropRuntimeModules(CTT2_RT_ERROR);
+    } else {
+        log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_INFO, "Loaded runtime module: %s", ctt2_module_from_code(RT_MODULE_ID));
+        initialized_modules = initialized_modules | RT_MODULE_ID;
+        rt_module_destructors[rt_module_count] = moduleDestructor;
+        rt_module_ids[rt_module_count] = RT_MODULE_ID;
+        rt_module_count++;
+    }
+}
+
+
 
 int main(int argc, char **argv){ 
-    const int CYCLES_BETWEEN_SCREENBUFFER_UPDATES   = 1;
-    int screenbuffer_cycles                         = 20;
-
-    int finished                                    = 0;
-    //int resizable                                   = 0;
-    int fullscreen                                  = 0;
+    
+    CTT2_RT_SIGNAL finished                         = 0;
     int fps                                         = -1;
     double frame_millis                             = -1;
     double init_millis                              = 0;
@@ -211,6 +278,8 @@ int main(int argc, char **argv){
     double spf                                      = 0.0;
     int tick_next                                   = 0;
     unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
+
+    initialized_modules = 0;
 
     if(argc==5) {
         SCREEN_WIDTH    = atoi( argv[1] );
@@ -221,31 +290,16 @@ int main(int argc, char **argv){
         frame_millis    = (double)1000/(double)fps;
         //printf("frame millis:%f", frame_millis);
     }
-
-
-
-
-    initLog();    
-	  
-
-    initDisplay(fullscreen);
-    initAudio();
-    initWindowingSystemMessages();
-    initOpenGL();
-    initTextInput();
-	initTimer();
-
-    initGamepad();
-
-    ui_surface = createDrawingSurface(SCREEN_WIDTH,
-                                        SCREEN_HEIGHT);
-
-    api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
-
-	init_millis = timer_get_ms(); 
-
-    initPython();
-
+	loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
+    loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );
+    loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
+    loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
+    loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
+    loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
+    loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
+    loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
+    loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
+    loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
     /** MAIN DISPATCH LOOP **/
     {
@@ -254,7 +308,7 @@ int main(int argc, char **argv){
         tick_millis = timer_get_ms();
 
 
-        while(finished == 0) {
+        while(finished != CTT2_RT_TERMINATED ) {
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
                         if(api_tick() == API_FAILURE) { 
@@ -300,23 +354,8 @@ int main(int argc, char **argv){
                     case SDL_TEXTINPUT:
                         api_dispatch_text( event.text.text );
                         break;
-                    case SDL_WINDOWEVENT:
-                        /*resize window*/
-                        if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-                        {
-                            viewport_dims vd;
-                            vd.x = 0;
-                            vd.y = 0;
-                            vd.w = event.window.data1;
-                            vd.h = event.window.data2;
-                            SCREEN_WIDTH=vd.w;
-                            SCREEN_HEIGHT=vd.h;
-                            gfx_viewport_set_dims(vd);
-                            resizeExtendedVideo();
-                        }
-                        break;
                     case SDL_QUIT:
-                        finished = 1;
+                        finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_SYSWMEVENT:
                        // handle_wm_event(event);
@@ -327,50 +366,39 @@ int main(int argc, char **argv){
                             initPython();
                         }
                         if( api_dispatch_key(event.key.keysym.sym,1) 
-                                == API_FAILURE ) finished = 1;
+                                == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_KEYUP:
                         if( api_dispatch_key(event.key.keysym.sym,0) 
-                                == API_FAILURE ) finished = 1;
+                                == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_MOUSEBUTTONDOWN:
                         if(api_dispatch_mousedown(
                                     event.button.button, 
                                     event.button.x, 
                                     event.button.y) == API_FAILURE ) 
-                                        finished = 1;
+                                        finished = CTT2_RT_TERMINATED
+               ;
                         break;
                     case SDL_MOUSEBUTTONUP:
                         if(api_dispatch_mouseup(
                                     event.button.button, 
                                     event.button.x, 
                                     event.button.y) == API_FAILURE ) 
-                                        finished = 1;
+                                        finished = CTT2_RT_TERMINATED
+               ;
                         break;
                     case SDL_MOUSEMOTION:
                         if(api_dispatch_mousemotion(
                                     event.motion.x, 
                                     event.motion.y) == API_FAILURE ) 
-                                        finished = 1;
+                                        finished = CTT2_RT_TERMINATED
+               ;
                         break;
                 }
             }
-
-
-
-
         }
     }
-    /** FINISHED **/
-    dropDrawingSurfaces();
-    dropGamepad();
-	dropAudio(); //drop audio before python 
-    dropPython();
-    dropTextInput();
-    dropExtendedVideo();
-    dropOpengl();
-    dropDisplay();
-    dropLog();
-    SDL_Quit();
-    return 0;
+    
+    dropRuntimeModules(0);
 }
