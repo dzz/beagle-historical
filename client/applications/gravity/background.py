@@ -51,12 +51,11 @@ class background():
             colors.append( [ uniform(0.0,1.0),uniform(0.5,1.0),uniform(0.0,1.0), 0.95 ] )
 
         base_color = choice(colors)
-        invert_color = choice( [ [ 1-base_color[0],
+        invert_color = [ 1-base_color[0],
                          1-base_color[1],
                          1-base_color[2],
-                         0.6 ], 
-                            [0.0,1.0,0.0,1.0],
-                            [1.0,1.0,0.0,0.5]])
+                         1.0 ]
+
         drama = choice([0.0,1.0])
         drama_alpha = choice([0.0,1.0])
         drama_color = [ drama,drama,drama,drama_alpha]
