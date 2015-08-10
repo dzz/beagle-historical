@@ -24,20 +24,25 @@ def get_unique_client_program( vert, frag ):
 
 
 class shader(object):
-    def __init__(self,vert,frag, path = None ):
+    def __init__(self,vert,frag, path = None, compile = False ):
 
-        if path is not None:
-            log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
-        else:
-            log.write(log.DEBUG,"Compiling CORE shader: {0},{1}".format(vert,frag))
-        if( path is None):
-            vpath =  "shaders/" + vert + ".vert.glsl"
-            fpath =  "shaders/" + frag + ".frag.glsl"
-        else:
-            vpath =  path + vert + ".glsl"
-            fpath =  path + frag + ".glsl"
+        if not compile:
+            #use shader_load to pull from filesystem
+            if path is not None:
+                log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
+            else:
+                log.write(log.DEBUG,"Compiling CORE shader: {0},{1}".format(vert,frag))
+            if( path is None):
+                vpath =  "shaders/" + vert + ".vert.glsl"
+                fpath =  "shaders/" + frag + ".frag.glsl"
+            else:
+                vpath =  path + vert + ".glsl"
+                fpath =  path + frag + ".glsl"
 
-        self._shader = hwgfx.shader_load( vpath, fpath )
+            self._shader = hwgfx.shader_load( vpath, fpath )
+        else:
+            #shader compile the strings
+            self._shader = hwgfx.shader_compile(vert,frag)
 
         log.write(log.DEBUG,"Linked program:{3}".format(path,vert,frag,self._shader))
 
@@ -80,4 +85,5 @@ class shader(object):
     @classmethod
     def from_application_library( cls, vert, frag):
         return cls( vert, frag, host_config.get("app_dir") + "shaders/" )
+
 

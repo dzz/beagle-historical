@@ -646,6 +646,7 @@ static PyMethodDef hwgfx_methods[] = {
 
     /*shader*/
     {"shader_load" ,        hwgfx_shader_load,          METH_VARARGS, NULL},
+    {"shader_compile" ,     hwgfx_shader_compile,          METH_VARARGS, NULL},
     {"shader_drop" ,        hwgfx_shader_drop,          METH_VARARGS, NULL},
     {"shader_bind" ,        hwgfx_shader_bind,          METH_VARARGS, NULL},
     {"shader_bind_float" ,  hwgfx_shader_bind_float,    METH_VARARGS, NULL},

@@ -47,7 +47,7 @@ def init():
         def flush(self):
             pass
         def write(self,txt):
-            log.write(log.ERROR, txt)
+            log.write(log.ERROR, txt.rstrip())
     
     sys.stdout = output_redirect()
     sys.stderr = error_redirect()

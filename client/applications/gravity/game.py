@@ -1,3 +1,4 @@
+import client.system.log as log
 from .background import background
 from .vortex import vortex
 from .player import player
@@ -48,17 +49,19 @@ class game:
         self.part_sprite_renderer = choice(self.sprite_renderers)
 
 
+    def create_particle_classes(self):
+        particle.create_particle_class("pickup_explosion", choice( self.sprite_renderers ) )
+        particle.create_particle_class("comet_tail", choice( self.sprite_renderers ) )
+        particle.create_particle_class("sprinkles", choice( self.sprite_renderers ) )
+
     def __init__(self):
+       log.set_level( log.ERROR | log.WARNING | log.INFO | log.DEBUG | log.GFX_MSG)
        self.music_system = music_system("devon.music")
        self.world_zoom_current = 1.0
        self.jitter_radar_shows = False
        self.t = 0
        self.background = background()
        self.background2 = background()
-       self.vortex = vortex()
-       self.player = player()
-       self.pickup = pickup(16,16,self.player,self.vortex,self)
-       self.particles = []
        self.radar_texture = texture.from_dims(1024,1024, False)
        self.radar_buffer = framebuffer.from_texture( self.radar_texture )
        self.sprite_tilesets = []
@@ -93,10 +96,17 @@ class game:
                                 sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 20),
                                 sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 17) ]
 
+
+       self.create_particle_classes()
        self.music_system.play()
+       self.vortex = vortex()
+       self.player = player()
+       self.pickup = pickup(16,16,self.player,self.vortex,self)
+       self.particles = []
                     
 
     def tick(self):
+       particle.tick_sprites()
        self.t +=1
        pad = get_gamepad(0)
        for sprite in self.radar_sprites:
@@ -107,7 +117,7 @@ class game:
                     self.player.y - self.player.vy,
                     0,0,
                     self.player.r,
-                    self.sprite_renderer
+                    "sprinkles"
                ))
 
        if(self.t%choice([3,5,7,9])==0):
@@ -123,14 +133,12 @@ class game:
            vy = -1*cos(r)*d
 
 
-
            self.particles.append( particle( 
                     self.pickup.x,
                     self.pickup.y,
                     vx,vy,
-                    self.player.r,
-                    self.sprite_renderer,
-                    shuffled_range(21,42),
+                    self.player.r, 
+                    "comet_tail"
                ))
 
        self.pickup.tick(self.particles, self.sprite_renderer, self.background, self.music_system )
@@ -140,7 +148,6 @@ class game:
            self.jitter_radar_shows = choice([True,False, False])
 
        self.particles = tick_particles(self.particles,self.vortex)
-       #print( pad.left_stick);
        self.background.update(self.vortex.td_current, self.player.r)
        self.background2.update(self.vortex.td_current, self.player.r)
        self.priming_sprite.tick()

@@ -1,6 +1,7 @@
 #include "log.h"
 #include <stdarg.h>
 #include <malloc.h>
+#include <string.h>
 #include "rt_module_codes.h"
 
 #define LOG_FORMATTING_BUFFER_SIZE 1024
@@ -9,6 +10,11 @@ static char* formatting_buffer;
 static unsigned int initialized = 0;
 
 static unsigned int logging_client;
+static unsigned int log_level = LOG_LEVEL_ERROR | LOG_LEVEL_WARNING | LOG_LEVEL_INFO | LOG_LEVEL_DEBUG;
+
+void log_set_level(unsigned int level) {
+    log_level = level;
+}
 
 unsigned int initLog() {
 	logfile = fopen("log.txt","w+");
@@ -45,18 +51,23 @@ char* tag_from_level_code(unsigned int level) {
             return "error";
         case LOG_LEVEL_DEBUG:
             return "debug";
+        case LOG_LEVEL_GFXMSG:
+            return "gfxmsg";
     }
     return "unknown";
 }
 
 void log_client_message( unsigned int level, const char* message ) {
+    if( (level & LOG_LEVEL) == 0 ) {
+        return;
+    }
     if(!initialized) {
         return;
     } else {
         unsigned int system = CTT2_CLIENT_APPLICATION;
         char* system_prefix = ctt2_module_from_code(system);
         char* level_tag = tag_from_level_code(level);
-        const char* format = "%s[%x]\t%s\t%s\n";
+        const char* format = "%-8s[%08x]\t%-8s\t%s\n";
 
         if(LOG_TARGET & LOG_TARGET_FILE) {
             fprintf(logfile, format, system_prefix, system, level_tag, message);
@@ -64,12 +75,13 @@ void log_client_message( unsigned int level, const char* message ) {
         if(LOG_TARGET & LOG_TARGET_STDOUT) {
             printf(format, system_prefix, system, level_tag, message);
         }
+
     }
 }
 
 void log_message(unsigned int system, unsigned int level, const char* message, ...) {
 
-    const char* format = "%s[%x]\t%s\t%s\n";
+    const char* format = "%-8s[%08x]\t%-8s\t%s\n";
 
 	if(!initialized) {
 		va_list args;

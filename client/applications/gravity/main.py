@@ -1,4 +1,5 @@
 from .game import game
+import client.system.log as log
 
 global g
 def init():

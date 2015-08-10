@@ -58,6 +58,15 @@ DEF_ARGS {
     Py_RETURN_NONE;
 }
 
+MODULE_FUNC host_log_set_level
+DEF_ARGS {
+    unsigned int level;
+    if(!INPUT_ARGS(args,"I",&level ))
+        return NULL;
+    log_set_level( level );
+    Py_RETURN_NONE;
+}
+
 MODULE_FUNC host_get_gamepad_sticks
 DEF_ARGS {
     int i;
@@ -92,6 +101,7 @@ static PyMethodDef host_methods[] = {
     {"set_title",           host_set_title,             METH_VARARGS, NULL},
     {"log_stdout",          host_log_stdout,            METH_VARARGS, NULL},
     {"log_client_message",  host_log_client_message,    METH_VARARGS, NULL},
+    {"log_set_level",  host_log_set_level,    METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };

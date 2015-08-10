@@ -2,14 +2,15 @@ from client.gfx.primitive import primitive,draw_mode
 import client.gfx.shaders as shaders
 
 
+
 class sprite():
-    def __init__(self, sprite_renderer, named_animations = { "default" : [0] } , current_animation = "default", ticks_per_frame = 2, size = None ):
+    def __init__(self, sprite_renderer, named_animations = { "default" : [0] } , current_animation = "default", ticks_per_frame = 2, size = None, ):
         self.named_animations = named_animations
         self.frame_index = 0
         self.ticks = 0
         self.current_animation = current_animation
         self.ticks_per_frame = ticks_per_frame
-        self.primitives = {}
+        self.primitives = None
         self.sprite_renderer = sprite_renderer
         self.size = size
         self.animating = True
@@ -20,6 +21,7 @@ class sprite():
         self.compile()
 
     def compile(self):
+        self.primitives = {}
         for animation in self.named_animations:
             self.primitives[animation] = []
             for frame in self.named_animations[animation]:

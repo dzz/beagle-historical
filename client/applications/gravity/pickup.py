@@ -99,8 +99,7 @@ class pickup:
                 vy = y * uniform(5,12)
                 x *= d
                 y *= d
-                part = particle( self.x +x, self.y+y, vx, vy,
-                                 angle, sprite_renderer, [14,13] )
+                part = particle( self.x +x, self.y+y, vx, vy, angle, "pickup_explosion")
                 part.ttl = 300
                 particles.append(part)
             self.x = choice([16,32,64,72])*self.level
@@ -125,8 +124,7 @@ class pickup:
                 vy = y * uniform(5,12)
                 x *= d
                 y *= d
-                part = particle( self.x +x, self.y+y, vx, vy,
-                                 angle, sprite_renderer, [13,14] )
+                part = particle( self.x +x, self.y+y, vx, vy, angle, "pickup_explosion")
                 part.ttl = 300
                 particles.append(part)
 
