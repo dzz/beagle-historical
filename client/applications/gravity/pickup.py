@@ -80,7 +80,7 @@ class pickup:
 
         if(d<2500):
             self.level_observer.level_up()
-            self.particle_blend_mode = choice([5000,6000])
+            self.particle_blend_mode = choice([6000,6001,1])
             self.has_leads = choice([True,False,False])
             self.drums_dynamic_volume = choice([True,False,False])
             self.collection_envelope_follower = 1.0

@@ -16,7 +16,7 @@ void _shader_err(GLuint shader_id, char* source) {
     glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &maxLength);
     infoLog = (char *)malloc(maxLength);
     glGetShaderInfoLog(shader_id, maxLength, &maxLength, infoLog);
-    log_message(CTT2_INT_HWGFX, LOG_LEVEL_DEBUG, (infoLog));
+    log_message(CTT2_INT_HWGFX, LOG_LEVEL_ERROR, (infoLog));
     free(infoLog);
 }
 

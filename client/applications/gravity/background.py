@@ -12,7 +12,8 @@ class background():
                             shaders.get_client_program( "no_transform","micrube"),
                             shaders.get_client_program( "no_transform","evil_micrube"),
                             shaders.get_client_program( "no_transform","voodoo"),
-                            shaders.get_client_program( "no_transform","screenprint")
+                            shaders.get_client_program( "no_transform","screenprint"),
+                            shaders.get_client_program( "no_transform","buffer_dupe")
                         ]
         self.primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad ) 
         self.time = 0
@@ -36,28 +37,27 @@ class background():
     def randomize_colors(self):
         self.shader = choice( self.shaders )
         colors = [ 
-                        [ 0.5, 0.7, 0.0, 1.0 ],
+                        [ 0.5, 0.7, 0.0, 0.5 ],
                         [ 0.4, 0.6, 0.3, 1.0 ],
-                        [ 0.0, 0.0, 1.0, 1.0 ],
-                        [ 1.0, 1.0, 0.0, 1.0 ],
+                        [ 0.2, 0.1, 0.2, 0.3 ],
+                        [ 0.0, 0.0, 1.0, 0.5 ],
                         [ 0.0, 0.3, 0.1, 0.8 ],
-                       # [ 1.0, 1.0, 1.0, 1.0 ],
-                        [ 0.5, 0.0, 1.0, 1.0 ],
-                        [ 0.0, 0.5, 1.0, 1.0 ],
-                        [ 0.3, 0.0, 1.0, 1.0 ],
+                        [ 0.5, 0.0, 1.0, 0.7 ],
+                        [ 0.0, 0.5, 1.0, 0.2 ],
+                        [ 0.3, 0.0, 1.0, 0.3 ],
                         
                         ]
         for i in range(0,7):
-            colors.append( [ uniform(0.0,1.0),uniform(0.5,1.0),uniform(0.0,1.0), 0.95 ] )
+            colors.append( [ uniform(0.0,1.0),uniform(0.5,1.0),uniform(0.0,1.0), uniform(0.0,0.1) ] )
 
         base_color = choice(colors)
         invert_color = [ 1-base_color[0],
                          1-base_color[1],
                          1-base_color[2],
-                         1.0 ]
+                         uniform(0.0,0.5) ]
 
         drama = choice([0.0,1.0])
-        drama_alpha = choice([0.0,1.0])
+        drama_alpha = choice([0.0,0.5])
         drama_color = [ drama,drama,drama,drama_alpha]
 
         self.shader.bind([("col1",base_color)])

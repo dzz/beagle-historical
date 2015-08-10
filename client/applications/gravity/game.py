@@ -54,7 +54,7 @@ class game:
         particle.create_particle_class("sprinkles", choice( self.sprite_renderers ) )
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO | log.DEBUG | log.GFX_MSG)
+       log.set_level( log.ERROR | log.WARNING | log.INFO )
        self.music_system = music_system("devon.music")
        self.world_zoom_current = 1.0
        self.jitter_radar_shows = False
@@ -182,10 +182,8 @@ class game:
         self.background2.render(world_zoom*0.5)
         with framebuffer_as_render_target( self.radar_buffer ):
             self.background.render(world_zoom*0.2)
-            hwgfx.manual_blend_enter(6000)
-            self.background2.render(world_zoom)
-        hwgfx.manual_blend_enter(0)
         self.background.render(world_zoom)
+        hwgfx.manual_blend_enter(1)
 
         batch  = [];
         shadow_batch = []
@@ -224,10 +222,8 @@ class game:
 
 
         with framebuffer_as_render_target( self.radar_buffer ):
-            hwgfx.manual_blend_enter(0)
+            hwgfx.manual_blend_enter(1)
             self.radar_sprite_renderer.render(shadow_batch)
-            hwgfx.manual_blend_enter(5000)
-            self.part_buffer_sprite_renderer.render(particle_batch)
         hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
         self.part_sprite_renderer.render(particle_batch)
 
