@@ -20,7 +20,7 @@ import hwgfx
 from random import sample
 
 def tick_particles(particles,vortex):
-    max_particles = 40 
+    max_particles = 200
     if(len(particles)>max_particles):
         particles = sample(particles,max_particles)
     new_particles = []
@@ -120,7 +120,7 @@ class game:
                     "sprinkles"
                ))
 
-       if(self.t%choice([3,5,7,9])==0):
+       if(self.t%choice([1,1,3,5,7,9])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y

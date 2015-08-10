@@ -349,7 +349,7 @@ int main(int argc, char **argv){
             }
 
 
-            if(SDL_PollEvent(&event)) {
+            while(SDL_PollEvent(&event)) {
                 switch (event.type) {
                     case SDL_CONTROLLERDEVICEADDED:
                         dropGamepad();

@@ -87,7 +87,7 @@ class pickup:
             music_system.trigger_event("level_up")
             self.levelled = True
             background.randomize_colors()
-            part_count = 25
+            part_count = 250
             max_spread = d;
             #explosion 1
             for i in range(0,part_count):
