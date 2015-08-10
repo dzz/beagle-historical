@@ -1,4 +1,7 @@
 import client.system.log as log
+import client.gfx.shaders as shaders
+from client.gfx.primitive import primitive, draw_mode
+from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 from .background import background
 from .vortex import vortex
 from .player import player
@@ -61,10 +64,13 @@ class game:
        self.t = 0
        self.background = background()
        self.background2 = background()
-       self.radar_texture = texture.from_dims(1024,1024, False)
+       self.radar_texture = texture.from_dims(1024,1024, True)
        self.radar_buffer = framebuffer.from_texture( self.radar_texture )
        self.sprite_tilesets = []
        self.sprite_renderers = []
+       self.canvas_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
+       self.canvas_texture = texture.from_dims(1920*2,1080*2,True)
+       self.canvas_buffer = framebuffer.from_texture(self.canvas_texture)
 
        configuration_template = { "image": "", "imageheight": 192,"imagewidth": 112, "margin": 0, "spacing": 0, "properties": {}, "firstgid": 0, "tileheight": 16, "tilewidth": 16, "tileproperties" : {} }
 
@@ -177,12 +183,16 @@ class game:
 
 
         world_zoom = world_zoom_max -(self.world_zoom_current*(world_zoom_max-world_zoom_min))
+
         self.radar_texture.bind(0)
+
         hwgfx.manual_blend_enter(1)
-        self.background2.render(world_zoom*0.5)
+        with framebuffer_as_render_target(self.canvas_buffer):
+            self.background2.render(world_zoom*0.5)
         with framebuffer_as_render_target( self.radar_buffer ):
             self.background.render(world_zoom*0.2)
-        self.background.render(world_zoom)
+        with framebuffer_as_render_target(self.canvas_buffer):
+            self.background.render(world_zoom)
         hwgfx.manual_blend_enter(1)
 
         batch  = [];
@@ -224,8 +234,9 @@ class game:
         with framebuffer_as_render_target( self.radar_buffer ):
             hwgfx.manual_blend_enter(1)
             self.radar_sprite_renderer.render(shadow_batch)
-        hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
-        self.part_sprite_renderer.render(particle_batch)
+        with framebuffer_as_render_target(self.canvas_buffer):
+            hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
+            self.part_sprite_renderer.render(particle_batch)
 
 
         hwgfx.manual_blend_enter(0)
@@ -245,7 +256,15 @@ class game:
         if(dist>100):
             batch.append([   self.reticle_sprite, [-8,-32], 4, reticle_r, [0,0], world_zoom ])
 
-        self.sprite_renderer.render(batch)
+        with framebuffer_as_render_target( self.canvas_buffer ):
+            self.sprite_renderer.render(batch)
         with framebuffer_as_render_target( self.radar_buffer ):
             hwgfx.manual_blend_enter(600)
             self.sprite_renderer.render(batch)
+        hwgfx.manual_blend_exit()
+
+        self.canvas_texture.bind(0)
+        self.radar_texture.bind(1)
+
+        shaders.get_client_program("no_transform","canvas").bind() 
+        self.canvas_primitive.render()

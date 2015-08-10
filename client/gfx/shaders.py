@@ -46,7 +46,7 @@ class shader(object):
 
         log.write(log.DEBUG,"Linked program:{3}".format(path,vert,frag,self._shader))
 
-    def bind(self,uniforms):
+    def bind(self,uniforms = []):
         hwgfx.shader_bind(self._shader);
 
 

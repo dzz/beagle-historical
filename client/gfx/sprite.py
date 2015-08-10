@@ -11,6 +11,7 @@ class sprite():
         self.current_animation = current_animation
         self.ticks_per_frame = ticks_per_frame
         self.primitives = None
+
         self.sprite_renderer = sprite_renderer
         self.size = size
         self.animating = True
