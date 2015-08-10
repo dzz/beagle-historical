@@ -58,7 +58,8 @@ class background():
                             [0.0,1.0,0.0,1.0],
                             [1.0,1.0,0.0,0.5]])
         drama = choice([0.0,1.0])
-        drama_color = [ drama,drama,drama,1.0]
+        drama_alpha = choice([0.0,1.0])
+        drama_color = [ drama,drama,drama,drama_alpha]
 
         self.shader.bind([("col1",base_color)])
         self.shader.bind([("col3",invert_color)])

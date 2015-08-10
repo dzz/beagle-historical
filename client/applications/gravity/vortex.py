@@ -12,21 +12,29 @@ class vortex:
         self.vortex_phases = False
         self.time = 0.0 
         self.time_scale = 1.0
+        self.active = False
+        self.switched_count = 0
         pass
 
     def switch_directions(self):
-        self.td = self.td*-1
-        self.dist_scale *= uniform(0.8,1.2)
-        self.time_scale = choice([0.5,1.0,1.5])
+        self.switched_count +=1
+        if self.switched_count>15:
+            self.active=True
+        if self.active:
+            self.td = self.td*-1
+            self.dist_scale *= uniform(0.8,1.2)
+            self.time_scale = choice([0.5,1.0,1.5])
 
-        if uniform(0.0,1.0)>0.75:
-            self.time_scale = 1
+            if uniform(0.0,1.0)>0.75:
+                self.time_scale = 1
 
-        self.radscale = choice([True,False,False,False])
-        self.use_phase = choice([True,False,False])
-        self.vortex_phases = choice([True,False])
+            self.radscale = choice([True,False,False,False])
+            self.use_phase = choice([True,False,False])
+            self.vortex_phases = choice([True,False])
 
     def transform(self, point):
+        if not self.active:
+            return point
         self.time+=self.td_current*self.time_scale
         self.td_current = (self.td_current * 0.999) + (self.td*0.001)
         dist = point[0]*point[0]+point[1]*point[1]

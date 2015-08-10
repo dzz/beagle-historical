@@ -20,7 +20,7 @@ import hwgfx
 from random import sample
 
 def tick_particles(particles,vortex):
-    max_particles = 200
+    max_particles = 500
     if(len(particles)>max_particles):
         particles = sample(particles,max_particles)
     new_particles = []
@@ -47,7 +47,6 @@ class game:
         self.radar_sprite_renderer = choice(self.sprite_renderers)
         self.part_buffer_sprite_renderer = choice(self.sprite_renderers)
         self.part_sprite_renderer = choice(self.sprite_renderers)
-
 
     def create_particle_classes(self):
         particle.create_particle_class("pickup_explosion", choice( self.sprite_renderers ) )
@@ -101,7 +100,7 @@ class game:
        self.music_system.play()
        self.vortex = vortex()
        self.player = player()
-       self.pickup = pickup(16,16,self.player,self.vortex,self)
+       self.pickup = pickup(256,256,self.player,self.vortex,self)
        self.particles = []
                     
 
@@ -181,12 +180,12 @@ class game:
         self.radar_texture.bind(0)
         hwgfx.manual_blend_enter(1)
         self.background2.render(world_zoom*0.5)
-        hwgfx.manual_blend_enter(6000)
-        self.background.render(world_zoom)
         with framebuffer_as_render_target( self.radar_buffer ):
-            self.background.render(world_zoom)
+            self.background.render(world_zoom*0.2)
             hwgfx.manual_blend_enter(6000)
             self.background2.render(world_zoom)
+        hwgfx.manual_blend_enter(0)
+        self.background.render(world_zoom)
 
         batch  = [];
         shadow_batch = []
