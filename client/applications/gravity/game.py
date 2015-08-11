@@ -58,7 +58,7 @@ class game:
         particle.create_particle_class("sprinkles", choice( self.sprite_renderers ) )
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO | log.GFX_MSG )
+       log.set_level( log.ERROR | log.WARNING | log.INFO  )
        self.music_system = music_system("devon.music")
        self.world_zoom_current = 1.0
        self.jitter_radar_shows = False
