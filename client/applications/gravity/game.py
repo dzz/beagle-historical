@@ -24,7 +24,7 @@ import hwgfx
 from random import sample
 
 def tick_particles(particles,vortex):
-    max_particles = 500
+    max_particles = 250
     if(len(particles)>max_particles):
         particles = sample(particles,max_particles)
     new_particles = []
@@ -59,11 +59,21 @@ class game:
         particle.create_particle_class("sprinkles", choice( self.sprite_renderers ) )
 
     def load_postfx_shaders(self):
+        self.postfx_shader_inputs = []
         self.postfx_shaders =  [ 
-                                 #shaders.get_client_program( "no_transform","postfx/noisy_emboss"),
-                                 shaders.get_client_program( "no_transform","postfx/passthru") ]
+                                 shaders.get_client_program( "no_transform","postfx/inversoflux"),
+                                 shaders.get_client_program( "no_transform","postfx/passthru"), 
+                                 shaders.get_client_program( "no_transform","postfx/mind_meld"), 
+                                 shaders.get_client_program( "no_transform","postfx/mult_bufs"),
+                                 shaders.get_client_program( "no_transform","postfx/invert") 
+                                 ]
 
     def pick_post_processing_shader(self):
+        self.postfx_shader_inputs = [ 
+                                        ("factor_a", [ choice([0.01,0.05,0.1 ])] ),
+                                        ("factor_b", [ choice([0.1,0.5 ])] ) 
+                
+                                    ]
         self.postfx_shader = choice( self.postfx_shaders )
 
     def __init__(self):
@@ -76,11 +86,10 @@ class game:
        self.t = 0
        self.background = background()
        self.background2 = background()
-       self.distortion_buffer = framebuffer.from_screen()
        self.sprite_tilesets = []
        self.sprite_renderers = []
-       self.canvas_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
-       self.canvas_texture = texture.from_dims(get_screen_width(),get_screen_height(),True)
+
+       self.distortion_buffer = framebuffer.from_screen()
        self.primary_buffer = framebuffer.from_screen()
 
        configuration_template = { "image": "", "imageheight": 192,"imagewidth": 112, "margin": 0, "spacing": 0, "properties": {}, "firstgid": 0, "tileheight": 16, "tilewidth": 16, "tileproperties" : {} }
@@ -224,10 +233,9 @@ class game:
         # now we actually blast out the pixels...  #
         ############################################
 
-        #bind the distortion buffer as a texture for use in the background shaders
-        self.distortion_buffer.bind_as_texture(texture.units[0])
 
 
+        self.primary_buffer.bind_as_texture(texture.units[0])
         with render_target(self.distortion_buffer):
             with blendstate(blendmode.alpha_over):
                 self.background.render(world_zoom)
@@ -237,6 +245,7 @@ class game:
                 
         with render_target(self.primary_buffer):
             with blendstate(blendmode.alpha_over):
+                self.distortion_buffer.bind_as_texture(texture.units[0])
                 self.background.render(world_zoom)
                 self.background2.render(world_zoom)
 
@@ -249,4 +258,5 @@ class game:
                     with blendstate(blendmode.darken):
                         self.sprite_renderer.render(primary_batch)
 
-        self.primary_buffer.render_processed( self.postfx_shader, additional_buffers = [ self.distortion_buffer ] ) 
+        self.primary_buffer.render_processed( self.postfx_shader, additional_buffers = [ self.distortion_buffer ],
+                shader_inputs = self.postfx_shader_inputs ) 

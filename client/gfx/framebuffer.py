@@ -21,14 +21,14 @@ class framebuffer:
         hwgfx.framebuffer_drop(self._fb)
         log.write( log.DEBUG, "Dropped framebuffer:{0}".format(self._fb))
 
-    def bind_as_texture(self,texture_unit):
+    def bind_as_texture(self,texture_unit = 0 ):
         self._tex.bind(texture_unit)
 
     def render_processed( self, shader_program, additional_buffers = [], shader_inputs = [] ):
         self.bind_as_texture( texture.units[0] )
         idx = 1
         for fb in additional_buffers:
-            fb.bind_as_texture(idx)
+            fb.bind_as_texture(texture.units[idx])
             idx+=1
         shader_program.bind( shader_inputs ) 
         framebuffer.screen_primitive.render()
