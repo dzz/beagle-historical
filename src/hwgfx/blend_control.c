@@ -12,6 +12,7 @@ void _blend_set_mode(unsigned int mode) {
     if(mode == _current_mode)
         return;
     _current_mode = mode;
+    log_message(CTT2_INT_HWGFX, LOG_LEVEL_GFXMSG, "set blendmode:%d",mode);
     switch(mode) {
         case BLENDMODE_OVER:
                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -28,8 +28,6 @@ console = None
 
 global app 
 
-
-
 def init():
     def bool(v):
         if v is False: 
@@ -122,16 +120,10 @@ def tick():
     if(app.controller_enabled):
         gamepad.tick()
     app.tick()
-    #gc.collect()
+    gc.collect()
 
 def render():
-    with blend.state(blend.mode_over):
-        for area in ui_area.order_areas():
-            for renderer in area.renderers:
-                renderer.render(area)
-        app.render()
-        if host_config.get_config("render_status"):
-            render_status()
+    app.render()
     
 def _get_mf_area():
     return mouse_focused_area

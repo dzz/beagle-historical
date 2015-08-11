@@ -1,3 +1,4 @@
+from client.system.video import *
 import client.system.log as log
 import client.gfx.shaders as shaders
 from client.gfx.primitive import primitive, draw_mode
@@ -10,7 +11,7 @@ from .pickup import pickup
 from math import sqrt,atan2,cos,sin
 from client.system.gamepad       import get_gamepad
 from client.gfx.sprite           import sprite, sprite_renderer
-import client.gfx.blend as blend
+from client.gfx.blend            import blendstate,blendmode
 from client.gfx.tileset          import tileset
 from client.gfx.coordinates      import centered_view, Y_Axis_Down
 from random import choice, uniform, sample
@@ -57,19 +58,19 @@ class game:
         particle.create_particle_class("sprinkles", choice( self.sprite_renderers ) )
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO )
+       log.set_level( log.ERROR | log.WARNING | log.INFO | log.GFX_MSG )
        self.music_system = music_system("devon.music")
        self.world_zoom_current = 1.0
        self.jitter_radar_shows = False
        self.t = 0
        self.background = background()
        self.background2 = background()
-       self.radar_texture = texture.from_dims(1024,1024, True)
-       self.radar_buffer = framebuffer.from_texture( self.radar_texture )
+       self.radar_texture = texture.from_dims(get_screen_width(),get_screen_height(), True)
+       self.distortion_buffer = framebuffer.from_texture( self.radar_texture )
        self.sprite_tilesets = []
        self.sprite_renderers = []
        self.canvas_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
-       self.canvas_texture = texture.from_dims(1920*2,1080*2,True)
+       self.canvas_texture = texture.from_dims(get_screen_width(),get_screen_height(),True)
        self.canvas_buffer = framebuffer.from_texture(self.canvas_texture)
 
        configuration_template = { "image": "", "imageheight": 192,"imagewidth": 112, "margin": 0, "spacing": 0, "properties": {}, "firstgid": 0, "tileheight": 16, "tilewidth": 16, "tileproperties" : {} }
@@ -91,15 +92,14 @@ class game:
 
        self.active_player_sprite = self.player_sprite
 
-       self.engine_sprite =             sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [1] }, current_animation = "default", ticks_per_frame = 1)
-       self.fire_sprite =               sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [2,3] }, current_animation = "default", ticks_per_frame = 5)
-       self.emerald_sprite =            sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [7,8,9,8] }, current_animation = "default", ticks_per_frame = 9) 
+       self.engine_sprite =  sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [1] }, current_animation = "default", ticks_per_frame = 1)
+       self.fire_sprite =    sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [2,3] }, current_animation = "default", ticks_per_frame = 5)
+       self.emerald_sprite = sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : [7,8,9,8] }, current_animation = "default", ticks_per_frame = 9) 
 
-       self.radar_sprites = [ 
-                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : shuffled_range( 16, 20) }, current_animation = "default", ticks_per_frame = 9),
-                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : shuffled_range(16,20) }, current_animation = "default", ticks_per_frame = 13),
-                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 20),
-                                sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 17) ]
+       self.radar_sprites = [ sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : shuffled_range( 16, 20) }, current_animation = "default", ticks_per_frame = 9),
+                              sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : shuffled_range(16,20) }, current_animation = "default", ticks_per_frame = 13),
+                              sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 20),
+                              sprite( sprite_renderer = self.sprite_renderer, named_animations = { "default" : range(42,47) }, current_animation = "default", ticks_per_frame = 17) ]
 
 
        self.create_particle_classes()
@@ -116,35 +116,20 @@ class game:
        pad = get_gamepad(0)
        for sprite in self.radar_sprites:
            sprite.tick()
+
        if(self.t%choice([3,5,9])==0 and self.player.firing>0):
-           self.particles.append( particle( 
-                    self.player.x - self.player.vx,
-                    self.player.y - self.player.vy,
-                    0,0,
-                    self.player.r,
-                    "sprinkles"
-               ))
+           self.particles.append( particle( self.player.x - self.player.vx, self.player.y - self.player.vy, 0,0, self.player.r, "sprinkles"))
 
        if(self.t%choice([1,1,3,5,7,9])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y
-
            r = atan2(p_vec_x,p_vec_y)+uniform(-0.1,0.1)
-
            dist = distance( self.player.x, self.player.y, self.pickup.x,self.pickup.y )
            d = uniform((dist/12), (dist/220) )
            vx = -1*sin(r)*d
            vy = -1*cos(r)*d
-
-
-           self.particles.append( particle( 
-                    self.pickup.x,
-                    self.pickup.y,
-                    vx,vy,
-                    self.player.r, 
-                    "comet_tail"
-               ))
+           self.particles.append( particle( self.pickup.x, self.pickup.y, vx,vy, self.player.r, "comet_tail"))
 
        self.pickup.tick(self.particles, self.sprite_renderer, self.background, self.music_system )
 
@@ -181,19 +166,15 @@ class game:
         dist = sqrt(target_x*target_x+target_y*target_y)
         reticle_r = 3.14-atan2(target_x,target_y)
 
-
         world_zoom = world_zoom_max -(self.world_zoom_current*(world_zoom_max-world_zoom_min))
 
-        self.radar_texture.bind(0)
+        self.radar_texture.bind(texture.units[0])
 
-        hwgfx.manual_blend_enter(1)
         with framebuffer_as_render_target(self.canvas_buffer):
             self.background2.render(world_zoom*0.5)
-        with framebuffer_as_render_target( self.radar_buffer ):
-            self.background.render(world_zoom*0.2)
-        with framebuffer_as_render_target(self.canvas_buffer):
+            with framebuffer_as_render_target( self.distortion_buffer ):
+                self.background.render(world_zoom*0.2)
             self.background.render(world_zoom)
-        hwgfx.manual_blend_enter(1)
 
         batch  = [];
         shadow_batch = []
@@ -213,7 +194,6 @@ class game:
             y1/=length
             y2/=length
 
-
             radar_world_zoom = 1.0
             
             if self.pickup.radars_wobble :
@@ -231,40 +211,37 @@ class game:
             particle_batch.append([ part.sprite, [-8,-8], 4+(part.r*2), part.r, [part.x-self.player.x,part.y-self.player.y], world_zoom ]) 
 
 
-        with framebuffer_as_render_target( self.radar_buffer ):
-            hwgfx.manual_blend_enter(1)
-            self.radar_sprite_renderer.render(shadow_batch)
+        with framebuffer_as_render_target( self.distortion_buffer ):
+            with blendstate(blendmode.alpha_over):
+                self.radar_sprite_renderer.render(shadow_batch)
         with framebuffer_as_render_target(self.canvas_buffer):
-            hwgfx.manual_blend_enter(self.pickup.particle_blend_mode)
-            self.part_sprite_renderer.render(particle_batch)
+            with blendstate(self.pickup.particle_blend_mode):
+                self.part_sprite_renderer.render(particle_batch)
 
-
-        hwgfx.manual_blend_enter(0)
-
-        batch.append([   self.emerald_sprite, [-8,-8], (3+(wobble*3))*2, atan2(self.pickup.x,self.pickup.y), [self.pickup.x-self.player.x,self.pickup.y-self.player.y], world_zoom ])
+        batch.append([self.emerald_sprite, [-8,-8], (3+(wobble*3))*2, atan2(self.pickup.x,self.pickup.y), [self.pickup.x-self.player.x,self.pickup.y-self.player.y], world_zoom ])
 
         if(self.player.firing>0):
             if(self.player.real_acc>0.98):
                 batch.append([ self.fire_sprite, [-8,-2+self.player.acc*3], 6 + self.player.real_acc, self.player.eng_r, [0.0,0.0], world_zoom ])
             else:
                 batch.append([ self.priming_sprite, [-8,-6+self.player.acc], 16, self.player.eng_r, [0.0,0.0], world_zoom ])
-
             batch.append([ self.engine_sprite, [-8,-8+self.player.acc], 4, self.player.eng_r, [0.0,0.0], world_zoom ])
-
         batch.append([   self.active_player_sprite, [-8,-8], 10+(wobble*3)-(self.player.firing*2), self.player.r, [0.0,0.0], world_zoom ])
 
         if(dist>100):
             batch.append([   self.reticle_sprite, [-8,-32], 4, reticle_r, [0,0], world_zoom ])
 
         with framebuffer_as_render_target( self.canvas_buffer ):
-            self.sprite_renderer.render(batch)
-        with framebuffer_as_render_target( self.radar_buffer ):
-            hwgfx.manual_blend_enter(600)
-            self.sprite_renderer.render(batch)
-        hwgfx.manual_blend_exit()
+            with blendstate(blendmode.alpha_over):
+                #self.sprite_renderer.render(batch)
+                with framebuffer_as_render_target( self.distortion_buffer ):
+                    with blendstate(blendmode.darken):
+                        self.sprite_renderer.render(batch)
 
-        self.canvas_texture.bind(0)
-        self.radar_texture.bind(1)
+        self.canvas_texture.bind(texture.units[0])
+        self.radar_texture.bind(texture.units[1])
 
         shaders.get_client_program("no_transform","canvas").bind() 
         self.canvas_primitive.render()
+        hwgfx.manual_blend_enter(0)
+        self.sprite_renderer.render(batch)

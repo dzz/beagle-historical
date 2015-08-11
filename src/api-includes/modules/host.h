@@ -30,6 +30,15 @@ DEF_ARGS {
 	return Py_BuildValue("f",timer_get_ms() );
 }
 
+MODULE_FUNC _host_get_screen_width
+DEF_ARGS {
+	return Py_BuildValue("I",host_get_screen_width() );
+}
+MODULE_FUNC _host_get_screen_height
+DEF_ARGS {
+	return Py_BuildValue("I",host_get_screen_height() );
+}
+
 
 MODULE_FUNC host_set_title
 DEF_ARGS {
@@ -102,6 +111,8 @@ static PyMethodDef host_methods[] = {
     {"log_stdout",          host_log_stdout,            METH_VARARGS, NULL},
     {"log_client_message",  host_log_client_message,    METH_VARARGS, NULL},
     {"log_set_level",  host_log_set_level,    METH_VARARGS, NULL},
+    {"get_screen_width",  _host_get_screen_width,    METH_VARARGS, NULL},
+    {"get_screen_height",  _host_get_screen_height,    METH_VARARGS, NULL},
 
     {NULL,NULL,0,NULL } /*terminator record*/
 };

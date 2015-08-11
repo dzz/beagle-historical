@@ -6,6 +6,7 @@ import client.system.log as log
 units = [ 0, 1, 2, 3 ]
 
 class texture:
+    units = [ 0, 1, 2, 3 ]
     def __init__(self, tex, w, h):
         self._tex   = tex
         self.w      = w
