@@ -44,7 +44,8 @@ class vortex:
             #r += (sin(dist/300.0)*0.001)
             pass
         if(self.use_phase):
-            r*=(1+sin(self.time*0.001))/2.
+            #r*=(1+sin(self.time*0.001))/2.
+            pass
 
         x = point[0] * cos(r) - point[1]*sin(r)
         y = point[0] * sin(r) + point[1]*cos(r)

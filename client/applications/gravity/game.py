@@ -65,7 +65,9 @@ class game:
                                  shaders.get_client_program( "no_transform","postfx/passthru"), 
                                  shaders.get_client_program( "no_transform","postfx/mind_meld"), 
                                  shaders.get_client_program( "no_transform","postfx/mult_bufs"),
-                                 shaders.get_client_program( "no_transform","postfx/invert") 
+                                 shaders.get_client_program( "no_transform","postfx/invert"),
+                                 shaders.get_client_program( "no_transform","postfx/sin_map"),
+                                 shaders.get_client_program( "no_transform","postfx/sin_map_rgb") 
                                  ]
 
     def pick_post_processing_shader(self):
