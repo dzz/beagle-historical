@@ -60,20 +60,24 @@ class background():
         drama_alpha = choice([0.0,0.5])
         drama_color = [ drama,drama,drama,drama_alpha]
 
-        self.shader.bind([("col1",base_color)])
-        self.shader.bind([("col3",invert_color)])
-        self.shader.bind([("col2",drama_color)])
-        self.shader.bind([("circle_factor",[choice([1,2,3,4])])])
-        self.shader.bind([("wobble_factor",[choice([1,2,3,4])])])
-        self.shader.bind([("cosmunge_factor",[choice([0.00001, 1,2,3,99])])])
-        self.shader.bind([("steps",[ choice([2,4,8,16,32,64]) ])])
-        self.shader.bind([("atan_factor",[ choice([1,2,4,6,7,9,14]) ])])
-        self.shader.bind([("crazy",[ uniform(0.1,choice([1.0,2.0,7.0,0.2])) ])])
-        self.shader.bind([("r",[self.r ])])
+        self.shader.bind([  ("col1",            base_color),
+                            ("col3",            invert_color),
+                            ("col2",            drama_color),
+                            ("circle_factor",   [choice([1,2,3,4])]),
+                            ("wobble_factor",   [choice([1,2,3,4])]),
+                            ("cosmunge_factor", [choice([0.00001, 1,2,3,99])]),
+                            ("steps",           [choice([2,4,8,16,32,64]) ]),
+                            ("atan_factor",     [choice([1,2,4,6,7,9,14]) ]),
+                            ("crazy",           [uniform(0.1,choice([1.0,2.0,7.0,0.2])) ]),
+                            ("r",[self.r ])
+                            ] )
 
     def render(self, world_zoom):
-        self.shader.bind( [ ("time", [ self.time ] ) ] )
-        self.shader.bind( [ ("cam", [ self.x,self.y ] ) ] )
-        self.shader.bind( [ ("scale", [ world_zoom ] ) ] )
+        self.shader.bind([ 
+                           ("time", [ self.time ]) ,
+                           ("cam", [ self.x,self.y ]) ,
+                           ("scale", [ world_zoom ])  
+                          ])
+
         self.primitive.render()
 
