@@ -23,13 +23,18 @@ from client.gfx.texture import texture
 import hwgfx
 from random import sample
 
-def tick_particles(particles,vortex):
-    max_particles = 250
+def tick_particles(particles,vortex, t):
+    max_particles = 300
+    tickset = t%4
     if(len(particles)>max_particles):
         particles = sample(particles,max_particles)
     new_particles = []
+
+    idx = 0
     for part in particles:
-        part.tick(vortex)
+        idx+=1
+        if(idx%4==tickset):
+            part.tick(vortex)
         if(part.ttl>0):
             new_particles.append(part)
     return new_particles
@@ -43,7 +48,9 @@ class game:
     def level_up(self):
         self.pick_renderers()
         self.pick_post_processing_shader()
-        self.background2.randomize_colors()
+        for bg in self.backgrounds:
+            bg.randomize_colors()
+        self.num_render_backgrounds = choice(range(1,self.max_num_render_backgrounds))
 
     def pick_renderers(self):
         self.sprite_renderer = choice([
@@ -74,7 +81,6 @@ class game:
         self.postfx_shader_inputs = [ 
                                         ("factor_a", [ choice([0.01,0.05,0.1 ])] ),
                                         ("factor_b", [ choice([0.1,0.5 ])] ) 
-                
                                     ]
         self.postfx_shader = choice( self.postfx_shaders )
 
@@ -86,8 +92,9 @@ class game:
        self.world_zoom_current = 1.0
        self.jitter_radar_shows = False
        self.t = 0
-       self.background = background()
-       self.background2 = background()
+       self.backgrounds = [ background(), background(), background()  ]
+       self.num_render_backgrounds = 1
+       self.max_num_render_backgrounds = 3
        self.sprite_tilesets = []
        self.sprite_renderers = []
 
@@ -132,6 +139,7 @@ class game:
                     
 
     def tick(self):
+
        particle.tick_sprites()
        self.t +=1
        pad = get_gamepad(0)
@@ -141,7 +149,7 @@ class game:
        if(self.t%choice([3,5,9])==0 and self.player.firing>0):
            self.particles.append( particle( self.player.x - self.player.vx, self.player.y - self.player.vy, 0,0, self.player.r, "sprinkles"))
 
-       if(self.t%choice([1,1,3,5,7,9])==0):
+       if(self.t%choice([2,3,5,7,9])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y
@@ -152,24 +160,24 @@ class game:
            vy = -1*cos(r)*d
            self.particles.append( particle( self.pickup.x, self.pickup.y, vx,vy, self.player.r, "comet_tail"))
 
-       self.pickup.tick(self.particles, self.sprite_renderer, self.background, self.music_system )
+       self.pickup.tick(self.particles, self.sprite_renderer, self.music_system )
 
        if(self.pickup.levelled):
            self.active_player_sprite = choice([self.player_sprite, self.alternate_player_sprite])
            self.jitter_radar_shows = choice([True,False, False])
 
-       self.particles = tick_particles(self.particles,self.vortex)
-       self.background.update(self.vortex.td_current, self.player.r)
-       self.background2.update(self.vortex.td_current, self.player.r)
+       self.particles = tick_particles(self.particles,self.vortex, self.t)
+       for bg in self.backgrounds:
+           bg.tick(self.vortex.td_current, self.player.r)
+           bg.x = self.player.x
+           bg.y = self.player.y
+
        self.priming_sprite.tick()
        self.emerald_sprite.tick()
        self.music_system.tick()
        self.player.tick(pad,self.vortex,self.music_system)
        self.fire_sprite.tick()
-       self.background.x = self.player.x
-       self.background.y = self.player.y
-       self.background2.x = self.player.x*0.24
-       self.background2.y = self.player.y*0.24
+
        self.alternate_player_sprite.tick()
 
        a=0.98
@@ -240,16 +248,16 @@ class game:
         self.primary_buffer.bind_as_texture(texture.units[0])
         with render_target(self.distortion_buffer):
             with blendstate(blendmode.alpha_over):
-                self.background.render(world_zoom)
+                self.backgrounds[0].render(world_zoom)
                 self.part_sprite_renderer.render(particle_batch)
-                with blendstate(blendmode.add):
-                    self.radar_sprite_renderer.render(distortion_batch)
+            with blendstate(blendmode.add):
+                self.radar_sprite_renderer.render(distortion_batch)
                 
         with render_target(self.primary_buffer):
             with blendstate(blendmode.alpha_over):
                 self.distortion_buffer.bind_as_texture(texture.units[0])
-                self.background.render(world_zoom)
-                self.background2.render(world_zoom)
+                for bg in self.backgrounds:
+                    bg.render(world_zoom)
 
             with blendstate(self.pickup.particle_blend_mode):
                 self.part_sprite_renderer.render(particle_batch)
@@ -261,4 +269,5 @@ class game:
                         self.sprite_renderer.render(primary_batch)
 
         self.primary_buffer.render_processed( self.postfx_shader, additional_buffers = [ self.distortion_buffer ],
-                shader_inputs = self.postfx_shader_inputs ) 
+                shader_inputs = (self.postfx_shader_inputs + [ ("vx", [ self.player.vx ]), ("vy", [self.player.vy]) ]) ) 
+

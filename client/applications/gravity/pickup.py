@@ -1,4 +1,3 @@
-from .background import background
 from .vortex import vortex
 from .player import player
 from .particle import particle
@@ -38,7 +37,7 @@ class pickup:
         self.adaptive_max_d = 0.01
         self.d_nrml_smoothed = 0.01
 
-    def tick(self, particles, sprite_renderer, background, music_system ):
+    def tick(self, particles, sprite_renderer, music_system ):
         self.collection_envelope_follower = self.collection_envelope_follower * self.collection_envelope_follower_decay
         self.collection_envelope_follower_smoothed = 0.99*self.collection_envelope_follower_smoothed + 0.01 * self.collection_envelope_follower
         music_system.track_volume("Bass", self.collection_envelope_follower)
@@ -86,7 +85,6 @@ class pickup:
             self.collection_envelope_follower = 1.0
             music_system.trigger_event("level_up")
             self.levelled = True
-            background.randomize_colors()
             part_count = 250
             max_spread = d;
             #explosion 1

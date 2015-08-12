@@ -3,6 +3,8 @@ uniform sampler2D primary_buf;
 uniform sampler2D distort_buf;
 uniform float factor_a;
 uniform float factor_b;
+uniform float vx;
+uniform float vy;
 in vec2 uv;
 
 void main(void) {
@@ -11,8 +13,8 @@ void main(void) {
     vec4 distort_pixel = texture(distort_buf,uv);
     vec2 uv_t;
 
-    uv_t.x = uv.x+ ((distort_pixel.r*0.01*factor_a));
-    uv_t.y = uv.y+ ((distort_pixel.g*0.01*factor_b));
+    uv_t.x = uv.x+ ((distort_pixel.r*0.01*factor_a)) + (vx*0.001);
+    uv_t.y = uv.y+ ((distort_pixel.g*0.01*factor_b)) - (vy*0.001);
 
     uv_t  = uv_t * (1 + ((distort_pixel.b - 0.5)*factor_a*0.1));
 

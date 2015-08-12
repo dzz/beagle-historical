@@ -24,7 +24,7 @@ class background():
         self.shader = self.shaders[0]
         self.randomize_colors()
 
-    def update(self, speed = None, r = None):
+    def tick(self, speed = None, r = None):
         if(speed is not None):
             self.time += speed*self.speed
         else:
