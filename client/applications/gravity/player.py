@@ -56,4 +56,4 @@ class player:
 
         delta_x = self.x - ox
         delta_y = self.y - oy
-        self.speed = delta_x*delta_x+delta_y*delta_y
+        self.speed = (delta_x*delta_x)+(delta_y*delta_y)

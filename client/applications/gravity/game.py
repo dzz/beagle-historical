@@ -1,5 +1,6 @@
 import hwgfx
 from client.gfx import context
+from math import floor
 from client.system.video import *
 import client.system.log as log
 import client.gfx.shaders as shaders
@@ -88,7 +89,7 @@ class game:
         self.postfx_shader = choice( self.postfx_shaders )
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO  | log.DEBUG )
+       log.set_level( log.ERROR | log.WARNING | log.INFO )
        self.load_postfx_shaders()
        self.pick_post_processing_shader()
        self.music_system = music_system("devon.music")
@@ -101,10 +102,11 @@ class game:
        self.sprite_tilesets = []
        self.sprite_renderers = []
 
-       self.distortion_buffer = framebuffer.from_dims(256,256)
+       self.distortion_buffer = framebuffer.from_dims(64,64, True)
+       self.player_overlay = framebuffer.from_dims(640,480, False)
        self.primary_buffer = framebuffer.from_screen()
 
-       self.hud_buffer = framebuffer.from_dims(512,512)
+       self.hud_buffer = framebuffer.from_dims(24*8,12*8)
 
        configuration_template = { "image": "", "imageheight": 192,"imagewidth": 112, "margin": 0, "spacing": 0, "properties": {}, "firstgid": 0, "tileheight": 16, "tilewidth": 16, "tileproperties" : {} }
 
@@ -154,7 +156,7 @@ class game:
        if(self.t%choice([3,5,9])==0 and self.player.firing>0):
            self.particles.append( particle( self.player.x - self.player.vx, self.player.y - self.player.vy, 0,0, self.player.r, "sprinkles"))
 
-       if(self.t%choice([2,3,5,7,9])==0):
+       if(self.t%choice([3,5,5,7])==0):
            # comet tail
            p_vec_x = self.pickup.x - self.player.x
            p_vec_y = self.pickup.y - self.player.y
@@ -190,6 +192,11 @@ class game:
        self.world_zoom_current = (self.world_zoom_current*a)+(pad.triggers[0]*b)
 
     def render(self):
+
+        hca = (sin (self.t/12.0)+1)/2.0
+        hcb = (sin (self.t/24.0)+1)/2.0
+        hcc = (sin (self.t/9.0)+1)/2.0
+
         wobble = (sin (self.t/12)+1)/2.0
         world_zoom_min = 0.2
         world_zoom_max = 0.8
@@ -257,12 +264,16 @@ class game:
                 self.part_sprite_renderer.render(particle_batch)
             with blendstate(blendmode.add):
                 self.radar_sprite_renderer.render(distortion_batch)
+            with blendstate(blendmode.darken):
+                self.hud_buffer.render_processed ( shaders.get_client_program( "no_transform","postfx/passthru") )
                 
         with render_target(self.primary_buffer):
             with blendstate(blendmode.alpha_over):
                 self.distortion_buffer.bind_as_texture(texture.units[0])
                 for bg in self.backgrounds:
                     bg.render(world_zoom)
+            with blendstate(blendmode.add):
+                self.hud_buffer.render_processed ( shaders.get_client_program( "no_transform","postfx/passthru") )
 
             with blendstate(self.pickup.particle_blend_mode):
                 self.part_sprite_renderer.render(particle_batch)
@@ -279,11 +290,28 @@ class game:
         with render_target(self.hud_buffer):
             with blendstate(blendmode.alpha_over):
                 context.clear()    
-                render_text("{0}".format(self.player.speed),0,0,[1.0,0.0,1.0])
+                render_text("{0}qs".format(floor(self.player.speed)),1,1,[hca,hcb,hcc])
+                render_text("LvL:{:>2}".format(floor(self.pickup.level)),(16*8),1,[hcc,hca,hcb])
 
-        #self.hud_buffer.render_processed( shaders.get_client_program( "no_transform","postfx/passthru") )
 
         #with render_target(self.hud_buffer):
         #    with blendstate(blendmode.alpha_over):
         #        render_text("{0}".format(self.player.speed),0,0,[1.0,1.0,1.0])
-        #self.hud_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
+
+        #with blendstate(blendmode.alpha_over):
+        #    self.hud_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
+        
+
+        with blendstate(blendmode.add):
+            self.player_overlay.render_processed( shaders.get_client_program( "no_transform", "postfx/passthru" ),
+                        [ self.distortion_buffer ] )
+        with blendstate(blendmode.alpha_over):
+            self.hud_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
+
+        if(self.t%4==0):
+            with render_target(self.player_overlay):
+                context.set_clear_color(0.0,0.0,0.0,0.0)
+                context.clear()    
+                with blendstate(blendmode.alpha_over):
+                    #self.sprite_renderer.render(distortion_batch)
+                    self.sprite_renderer.render(primary_batch)

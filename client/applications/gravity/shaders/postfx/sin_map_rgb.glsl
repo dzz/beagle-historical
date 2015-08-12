@@ -15,6 +15,6 @@ void main(void) {
     float l2=cos(l*3.14*uv.y);
     float l3=sin(l*3.14*uv.x);
 
-    gl_FragColor = vec4(l1,l2,(l1+l2+l3)/3.0,1.0);
+    gl_FragColor = ((vec4(l1,l2,(l1+l2+l3)/3.0,1.0))*0.7)+(primary_pixel*0.5);
     
 }

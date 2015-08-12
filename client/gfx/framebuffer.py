@@ -25,12 +25,12 @@ class framebuffer:
         self._tex.bind(texture_unit)
 
     def render_processed( self, shader_program, additional_buffers = [], shader_inputs = [] ):
+        shader_program.bind( shader_inputs ) 
         self.bind_as_texture( texture.units[0] )
         idx = 1
         for fb in additional_buffers:
             fb.bind_as_texture(texture.units[idx])
             idx+=1
-        shader_program.bind( shader_inputs ) 
         framebuffer.screen_primitive.render()
         
     @classmethod
@@ -40,13 +40,13 @@ class framebuffer:
         return cls(fb,texture)
 
     @classmethod
-    def from_screen(cls):
-       tex = texture.texture.from_dims(get_screen_width(),get_screen_height(),True)
+    def from_screen(cls, filtered = False ):
+       tex = texture.texture.from_dims(get_screen_width(),get_screen_height(),filtered)
        return framebuffer.from_texture(tex)
 
     @classmethod
-    def from_dims(cls,x,y):
-        tex = texture.texture.from_dims(x,y)
+    def from_dims(cls,x,y, filtered = False ):
+        tex = texture.texture.from_dims(x,y, filtered)
         return framebuffer.from_texture(tex)
 
 class framebuffer_as_render_target:

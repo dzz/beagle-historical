@@ -17,7 +17,7 @@ void _validate_vp(){
 
 void gfx_viewport_set_dims(viewport_dims dims) {
 
-    log_message( CTT2_INT_HWGFX, LOG_LEVEL_GFXMSG, "VIEWPORT(%d,%d%,d%,d)",dims.x,dims.y,dims.w,dims.h); 
+    log_message( CTT2_INT_HWGFX, LOG_LEVEL_GFXMSG, "VIEWPORT(%d,%d,%d,%d)",dims.x,dims.y,dims.w,dims.h); 
     glViewport( dims.x, 
                 dims.y, 
                 dims.w, 
