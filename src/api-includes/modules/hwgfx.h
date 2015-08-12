@@ -574,11 +574,9 @@ DEF_ARGS {
 MODULE_FUNC hwgfx_viewport_set
 DEF_ARGS {
     viewport_dims dims;
-    root_gfx_size rs = gfx_get_root_gfx_size();
     if(!INPUT_ARGS(args,"iiii", &dims.x, &dims.y, &dims.w, &dims.h))
         return NULL;
 
-    dims.y = rs.h - dims.h - dims.y;
     gfx_viewport_set_dims(dims);
     Py_RETURN_NONE;
 }

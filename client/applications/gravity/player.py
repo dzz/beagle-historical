@@ -14,6 +14,7 @@ class player:
         self.firing = 0
         self.fuzzy_firing_state = 0
         self.real_acc = 0
+        self.speed = 0.0
 
     def tick(self, pad,vortex,music_system):
         ox = self.x
@@ -52,3 +53,7 @@ class player:
                                     (self.y-oy)*a + self.vr[1]*b ]
 
         self.r = 3.14 - atan2( self.vr[0]*0.25+pad.left_stick[0]*0.75,self.vr[1]*0.25+pad.left_stick[1]*0.75 )
+
+        delta_x = self.x - ox
+        delta_y = self.y - oy
+        self.speed = delta_x*delta_x+delta_y*delta_y

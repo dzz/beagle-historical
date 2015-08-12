@@ -41,8 +41,13 @@ class framebuffer:
 
     @classmethod
     def from_screen(cls):
-       tex = texture.texture.from_dims(get_screen_width(),get_screen_height(),False)
+       tex = texture.texture.from_dims(get_screen_width(),get_screen_height(),True)
        return framebuffer.from_texture(tex)
+
+    @classmethod
+    def from_dims(cls,x,y):
+        tex = texture.texture.from_dims(x,y)
+        return framebuffer.from_texture(tex)
 
 class framebuffer_as_render_target:
     def __init__(self,framebuffer):
@@ -51,14 +56,17 @@ class framebuffer_as_render_target:
     def __enter__(self):
         framebuffer.stack.append(self.framebuffer)
         hwgfx.framebuffer_render_start( self.framebuffer._fb )
+        hwgfx.viewport_set(0,0,self.framebuffer._tex.w,self.framebuffer._tex.h)
 
     def __exit__(self, exc_type, exc_value, traceback):
         if(len(framebuffer.stack)>0):
             framebuffer.stack.pop()
             if(len(framebuffer.stack)>0):
                 hwgfx.framebuffer_render_start( framebuffer.stack[-1]._fb )
+                hwgfx.viewport_set(0,0,framebuffer.stack[-1]._tex.w,self.framebuffer._tex.h)
             else:
                 hwgfx.framebuffer_render_end( self.framebuffer._fb )
+                hwgfx.viewport_reset()
 
 class render_target(framebuffer_as_render_target):
     pass

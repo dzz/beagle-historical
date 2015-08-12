@@ -1,3 +1,5 @@
+import hwgfx
+from client.gfx import context
 from client.system.video import *
 import client.system.log as log
 import client.gfx.shaders as shaders
@@ -19,6 +21,7 @@ from client.math.helpers import distance
 from .music_system import music_system
 from client.gfx.framebuffer import *
 from client.gfx.texture import texture
+from client.gfx.text import render_text
 
 import hwgfx
 from random import sample
@@ -85,7 +88,7 @@ class game:
         self.postfx_shader = choice( self.postfx_shaders )
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO  )
+       log.set_level( log.ERROR | log.WARNING | log.INFO  | log.DEBUG )
        self.load_postfx_shaders()
        self.pick_post_processing_shader()
        self.music_system = music_system("devon.music")
@@ -98,8 +101,10 @@ class game:
        self.sprite_tilesets = []
        self.sprite_renderers = []
 
-       self.distortion_buffer = framebuffer.from_screen()
+       self.distortion_buffer = framebuffer.from_dims(256,256)
        self.primary_buffer = framebuffer.from_screen()
+
+       self.hud_buffer = framebuffer.from_dims(512,512)
 
        configuration_template = { "image": "", "imageheight": 192,"imagewidth": 112, "margin": 0, "spacing": 0, "properties": {}, "firstgid": 0, "tileheight": 16, "tilewidth": 16, "tileproperties" : {} }
 
@@ -271,3 +276,14 @@ class game:
         self.primary_buffer.render_processed( self.postfx_shader, additional_buffers = [ self.distortion_buffer ],
                 shader_inputs = (self.postfx_shader_inputs + [ ("vx", [ self.player.vx ]), ("vy", [self.player.vy]) ]) ) 
 
+        with render_target(self.hud_buffer):
+            with blendstate(blendmode.alpha_over):
+                context.clear()    
+                render_text("{0}".format(self.player.speed),0,0,[1.0,0.0,1.0])
+
+        #self.hud_buffer.render_processed( shaders.get_client_program( "no_transform","postfx/passthru") )
+
+        #with render_target(self.hud_buffer):
+        #    with blendstate(blendmode.alpha_over):
+        #        render_text("{0}".format(self.player.speed),0,0,[1.0,1.0,1.0])
+        #self.hud_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
