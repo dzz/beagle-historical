@@ -22,9 +22,9 @@ void main(void) {
     float steps = 3;
     float time_t = floor(time*steps)/steps;
     
-    if(mod(floor(time_t),2)==0) {
-        time_t = time;
-    }
+    #if(mod(floor(time_t),2)==0) {
+    #    time_t = time;
+    #}
     //vec4 col1 = vec4(0,0,0.0,1);
     //vec4 col2 = vec4(1,0,0.5,1);
     //vec4 col3 = vec4(0,0,1,1);

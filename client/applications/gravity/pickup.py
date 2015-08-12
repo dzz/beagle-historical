@@ -1,7 +1,7 @@
 from .vortex import vortex
 from .player import player
 from .particle import particle
-from math import sqrt,atan2,cos,sin
+from math import sqrt,atan2,cos,sin, floor
 from client.system.gamepad       import get_gamepad
 from client.gfx.sprite           import sprite, sprite_renderer
 import client.gfx.blend as blend
@@ -16,6 +16,7 @@ from random import sample
 class pickup:
     def __init__(self, x,y, player, vortex, level_observer ):
 
+        self.display_level= 1
         self.level_observer = level_observer
         self.particle_blend_mode = 5000
         self.has_leads = True
@@ -100,10 +101,14 @@ class pickup:
                 part = particle( self.x +x, self.y+y, vx, vy, angle, "pickup_explosion")
                 part.ttl = 300
                 particles.append(part)
-            self.x = choice([16,32,64,72])*self.level
-            self.y = choice([16,32,64,72])*self.level
+            self.x = choice([16,32,64,72])*self.level*3
+            self.y = choice([16,32,64,72])*self.level*3
+            old_level = self.level
             self.level*=1.0+self.level_incr_amt
-            self.level_incr_amt*=0.91
+            self.level_incr_amt*=0.97
+            if(floor(self.level) > floor(old_level) ):
+                self.display_level += 1
+            
 
            # self.radars_wobble = choice([True,False,False])
             if(self.level>self.max_level):

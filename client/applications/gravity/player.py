@@ -1,5 +1,5 @@
 from client.system.audio import beatEngine
-from math import atan2, sqrt, sin, cos
+from math import atan2, sqrt, sin, cos, floor
 class player:
     def __init__(self):
         self.vx = 0
@@ -15,6 +15,7 @@ class player:
         self.fuzzy_firing_state = 0
         self.real_acc = 0
         self.speed = 0.0
+        self.points = 0
 
     def tick(self, pad,vortex,music_system):
         ox = self.x
@@ -56,4 +57,4 @@ class player:
 
         delta_x = self.x - ox
         delta_y = self.y - oy
-        self.speed = (delta_x*delta_x)+(delta_y*delta_y)
+        self.speed = floor(sqrt((delta_x*delta_x)+(delta_y*delta_y)))*10
