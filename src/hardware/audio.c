@@ -1,4 +1,6 @@
 #include "../system/log.h"
+#include "audio/load_snd.h"
+#include <stdio.h>
 
 #if defined(__STDC__)
 # define C89
@@ -65,12 +67,130 @@ ae_data AE_Data;
 static float delta = 1.0f / 44100.0f;
 static float time = 0.0f;
 unsigned long smpl;
+
+
+seq_sequencer* Sequencer;
+
+void sequencer_track_create( seq_track* track) {
+    track->cur_sample = 0;
+    track->active_event = 0;
+    track->control_message = 0;
+}
+
+void sequencer_create(seq_sequencer* seq) {
+    seq->tracks = (seq_track*)malloc(sizeof(seq_track) * SEQUENCER_TRACKS);
+	seq->n_tracks = SEQUENCER_TRACKS;
+    {
+        unsigned int i; 
+        for(i=0; i< SEQUENCER_TRACKS;++i) {
+            sequencer_track_create( &seq->tracks[i] );
+        }
+    }
+}
+
+void sequencer_drop(seq_sequencer* seq) {
+    free(seq->tracks);
+}
+
+static void sequencer_destroy_active_message(unsigned int tr_id) {
+	seq_track* track = &(Sequencer->tracks[tr_id]);
+    if( track->control_message!=0) {
+        seq_track_msg* control_message = track->control_message; 
+        track->control_message = 0;
+        if(control_message->data!=0) {
+            free(control_message->data);
+        }
+        free(control_message);
+    }
+}
+
+void sequencer_issue_message( unsigned int track, seq_track_msg* message) {
+    sequencer_destroy_active_message(track);
+    Sequencer->tracks[track].control_message = message;
+}
+
+void sequencer_set_track_event( seq_track* track, seq_track_event* event) {
+    if(track->active_event) {
+        void* hndl = (void*)track->active_event;
+        track->active_event = 0;
+        free(hndl);
+    }
+    track->active_event = event;
+}
+
+void sequencer_handle_messages() {
+    unsigned int trk_id;
+    for(trk_id=0; trk_id<Sequencer->n_tracks;++trk_id) {
+        seq_track* track = &Sequencer->tracks[trk_id];
+        if(track->control_message) {
+                seq_track_msg* msg = track->control_message;
+                switch(msg->code) {
+                    case msg_set_event:
+                        msg->data = 0; 
+						sequencer_set_track_event( track, (seq_track_event*)msg->data );
+						break;
+                    default:
+						break;
+                }
+        }
+    }
+}
+
+void sequencer_queue_wav( unsigned int track, hw_audio_wav_data* wav) {
+    seq_track_event* event = (seq_track_event*)malloc(sizeof(seq_track_event));
+    seq_track_msg* control_message = (seq_track_msg*)malloc(sizeof(seq_track_msg));
+    event->evt_type = evt_loop;
+    event->wav = wav;
+    event->loop_smpls = 128;
+    control_message->data = event;
+    sequencer_destroy_active_message( track );    
+    sequencer_issue_message( track, control_message );
+}
+
+
+static void InitSequencer() {
+    Sequencer = (seq_sequencer*)malloc(sizeof(seq_sequencer));
+    sequencer_create( Sequencer );
+}
+
+static void DropSequencer() {
+	sequencer_drop(Sequencer);
+    free(Sequencer);
+}
+
 static int ae_renderer( const void* inputBuffer, void* outputBuffer,
                         unsigned long framesPerBuffer,
                         const PaStreamCallbackTimeInfo* timeInfo,
                         PaStreamCallbackFlags statusFlags,
                         void* userData ) {
 
+
+  
+    float* out = (float*)outputBuffer;
+    unsigned int tr_idx;
+	unsigned int i;
+    for(i=0; i<framesPerBuffer; ++i ) {
+
+        float left = 0.0f;
+        float right = 0.0f;
+        for(tr_idx=0; tr_idx<Sequencer->n_tracks;++tr_idx) {
+                seq_track* track = &Sequencer->tracks[tr_idx];
+                track->cur_sample++;
+                
+                log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "trackptr%x, track:%x sample:%x", track, tr_idx, track->cur_sample );
+                if(track->active_event != 0 ) {
+                    seq_track_event* evt = track->active_event;
+					unsigned int idx_head = track->cur_sample % evt->wav->smpl_cnt;
+                    left  += (float)evt->wav->left[idx_head];
+                    right += (float)evt->wav->right[idx_head];
+                }
+                track->cur_sample++;
+            }
+        *out++ = left;
+        *out++ = right;
+    }
+
+    /*
             unsigned int i;
             ae_renderer_context* context = (ae_renderer_context*)userData;
 			float* out = (float*)outputBuffer;
@@ -87,12 +207,13 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
 
             if(smpl>AE_SAMPLERATE)
                 smpl=smpl-AE_SAMPLERATE;
-
+*/
             return 0;
 }
 
 void ae_init(ae_data* self) {
 	int err;
+	InitSequencer();
 	err = Pa_Initialize();
 	if(err!=paNoError) {
        return;
@@ -122,20 +243,20 @@ void ae_drop(ae_data* self) {
 	if(self->stream!=0)
 		Pa_StopStream(self->stream);
 	Pa_Terminate();
+	DropSequencer();
     self->finalized = 1;
 }
 
 int ae_thread_run(void* data) {
     ae_data* self=(ae_data*) data;
     ae_init(self);
+
     while(!self->shutdown) {
         Sleep(25);
     }
     ae_drop(self);
     return self->finalized;
 }
-
-
 
 unsigned int initAudio() {
     AE_Data.shutdown = 0;

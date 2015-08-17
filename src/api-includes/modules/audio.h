@@ -5,6 +5,7 @@
 
 MODULE_FUNC audio_clip_create
 DEF_ARGS {
+    /*
     audio_clip* clip;
     char *filename;
     float clip_beats;
@@ -14,17 +15,26 @@ DEF_ARGS {
         return NULL;
     audio_create_clip(clip,filename, (double)clip_beats, (double)clip_trigger_offset);
     return Py_BuildValue("I",(unsigned int)clip);
+    */
+
+    hw_audio_wav_data* wav;
+    char *filename;
+	wav = (hw_audio_wav_data*) malloc(sizeof(hw_audio_wav_data));
+    if(!INPUT_ARGS(args,"s",&filename))
+        return NULL;
+    audio_load_wav(wav, filename);
+    return Py_BuildValue("I",(unsigned int)wav);
 }
 
 MODULE_FUNC audio_clip_drop
 DEF_ARGS {
     unsigned int ptr;
-    audio_clip* clip;
-    if(!INPUT_ARGS(args,"I",&ptr))
+    hw_audio_wav_data* wav;
+    if(!INPUT_ARGS(args,"I",&wav))
         return NULL;
-    clip = (audio_clip*)ptr;
-    audio_drop_clip(clip);
-    free(clip);
+    wav = (hw_audio_wav_data*)ptr;
+    audio_drop_wav(wav);
+    free(wav);
     Py_RETURN_NONE;
 }
 

@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include "audio/load_snd.h"
 
 
 
@@ -15,8 +16,50 @@
 #define TICK_FILTER_A 0.75
 #define BEAT_LOCKED 1
 
+
+#define SEQUENCER_TRACKS (1)
+#define SEQUENCER_CONTROL_STACK_SIZE (64)
+
+typedef enum {
+    evt_none = 0,
+    evt_loop = 1
+} seq_track_event_code;
+
+typedef enum {
+    msg_none = 0,
+    msg_set_event = 1
+} seq_track_msg_code;
+
+    
+
+typedef struct seq_track_event {
+    seq_track_event_code    evt_type;
+    hw_audio_wav_data*      wav;
+    unsigned int            loop_smpls;
+} seq_track_event;
+
+typedef struct {
+    seq_track_msg_code           code;
+    void*                   data;
+    unsigned int            gcmode;  
+} seq_track_msg;
+
+typedef struct {
+    seq_track_event*        active_event;
+    seq_track_msg*          control_message;
+    unsigned int            cur_sample;
+} seq_track;
+
+typedef struct {
+    seq_track*              tracks;
+    unsigned int            n_tracks;
+} seq_sequencer;
+
+
 unsigned int initAudio();
 void dropAudio();
+
+void sequencer_issue_message( unsigned int track, seq_track_msg* message );
 
 typedef struct {
     Mix_Chunk* ChunkData;

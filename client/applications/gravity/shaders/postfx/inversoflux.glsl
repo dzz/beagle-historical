@@ -12,8 +12,8 @@ void main(void) {
     vec4 primary_pixel = texture(primary_buf,uv);
     vec2 uv_t;
 
-    uv_t.x = uv.x+ (factor_a*factor_b) + (vx*0.001);
-    uv_t.y = uv.y+ (factor_a*factor_b) + (vy*0.001);
+    uv_t.x = uv.x+ (factor_a*factor_b) + (vx*0.00001);
+    uv_t.y = uv.y+ (factor_a*factor_b) + (vy*0.00001);
 
     vec4 distorted_pixel = texture(primary_buf,uv_t);
 

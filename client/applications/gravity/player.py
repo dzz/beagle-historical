@@ -15,7 +15,7 @@ class player:
         self.fuzzy_firing_state = 0
         self.real_acc = 0
         self.speed = 0.0
-        self.points = 0
+        self.points = 10000
 
     def tick(self, pad,vortex,music_system):
         ox = self.x
@@ -57,4 +57,4 @@ class player:
 
         delta_x = self.x - ox
         delta_y = self.y - oy
-        self.speed = floor(sqrt((delta_x*delta_x)+(delta_y*delta_y)))*10
+        self.speed = floor(sqrt((delta_x*delta_x)+(delta_y*delta_y))*10)*5

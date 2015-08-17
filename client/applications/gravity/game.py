@@ -50,7 +50,7 @@ def shuffled_range(start,end):
 
 class game:
     def level_up(self):
-        self.player.points += self.pickup.display_level * self.player.speed
+        self.player.points += self.pickup.display_level * self.player.speed * self.pickup.level
         self.pick_renderers()
         self.pick_post_processing_shader()
         for bg in self.backgrounds:
@@ -147,7 +147,7 @@ class game:
                     
 
     def tick(self):
-       self.player.points *= 0.9988
+       self.player.points *= 0.9994
        particle.tick_sprites()
        self.t +=1
        pad = get_gamepad(0)
@@ -293,7 +293,7 @@ class game:
                 context.clear()    
                 render_text("{0}Pph".format(floor(self.player.speed)),1,1,[hca,hcb,hcc])
                 render_text("L:{:>2}".format(floor(self.pickup.display_level)),(16*8),1,[hcc,hca,hcb])
-                render_text("{0}pts".format(floor(self.player.points)),(6*8),80+wobble,[hcb,hca,hcc])
+                render_text("score:{0}".format(floor(self.player.points)),wobble,85+wobble,[hcb,hca,hcc])
 
 
         #with render_target(self.hud_buffer):

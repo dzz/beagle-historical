@@ -11,8 +11,8 @@ unsigned int initTimer()
 {
     QueryPerformanceFrequency(&Frequency);
     pcf = (double)Frequency.QuadPart;
-    log_message(CTT2_RT_MODULE_TIMER, LOG_LEVEL_INFO, "freq:\t%i", Frequency.QuadPart);
-    log_message(CTT2_RT_MODULE_TIMER, LOG_LEVEL_INFO, "time:\t%i", timer_get_ms());
+    log_message(CTT2_RT_MODULE_TIMER, LOG_LEVEL_INFO, "freq:\t%x", Frequency.QuadPart);
+    log_message(CTT2_RT_MODULE_TIMER, LOG_LEVEL_INFO, "time:\t%x", timer_get_ms());
     return MODULE_LOADED;
 }
 

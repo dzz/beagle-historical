@@ -78,7 +78,7 @@ class pickup:
             music_system.track_volume("Lead",0.0);
 
 
-        if(d<2500):
+        if(d<2900):
             self.level_observer.level_up()
             self.particle_blend_mode = choice([6000,5000])
             self.has_leads = choice([True,False,False])
@@ -105,7 +105,7 @@ class pickup:
             self.y = choice([16,32,64,72])*self.level*3
             old_level = self.level
             self.level*=1.0+self.level_incr_amt
-            self.level_incr_amt*=0.97
+            self.level_incr_amt*=0.965
             if(floor(self.level) > floor(old_level) ):
                 self.display_level += 1
             

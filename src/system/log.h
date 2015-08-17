@@ -11,6 +11,7 @@
 #define LOG_LEVEL_INFO (4)
 #define LOG_LEVEL_DEBUG (8)
 #define LOG_LEVEL_GFXMSG (16)
+#define LOG_LEVEL_AUDMSG (32)
 
 #define LOG_LEVEL log_level
 

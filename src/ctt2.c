@@ -305,7 +305,7 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
     loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
-    //loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
+    loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
