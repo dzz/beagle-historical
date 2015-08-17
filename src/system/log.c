@@ -10,14 +10,14 @@ static char* formatting_buffer;
 static unsigned int initialized = 0;
 
 static unsigned int logging_client;
-static unsigned int log_level = LOG_LEVEL_ERROR | LOG_LEVEL_WARNING | LOG_LEVEL_INFO | LOG_LEVEL_DEBUG;
+static unsigned int log_level = LOG_LEVEL_ERROR | LOG_LEVEL_WARNING | LOG_LEVEL_INFO | LOG_LEVEL_DEBUG | LOG_LEVEL_GFXMSG | LOG_LEVEL_AUDMSG;
 
 void log_set_level(unsigned int level) {
     log_level = level;
 }
 
 unsigned int initLog() {
-	logfile = fopen("log.txt","w+");
+	logfile = fopen("log.txt","wb");
 	if(!logfile)
 		return MODULE_FAILURE;
     formatting_buffer = (char*)malloc(sizeof(char)*LOG_FORMATTING_BUFFER_SIZE);
@@ -53,6 +53,8 @@ char* tag_from_level_code(unsigned int level) {
             return "debug";
         case LOG_LEVEL_GFXMSG:
             return "gfxmsg";
+        case LOG_LEVEL_AUDMSG:
+            return "audmsg";
     }
     return "unknown";
 }

@@ -69,17 +69,14 @@ DEF_ARGS {
 
 MODULE_FUNC audio_track_play_clip
 DEF_ARGS {
-    unsigned int tptr,cptr,loop;
-    audio_track* track;
-    audio_clip* clip;
+    unsigned int track_id;
+    hw_audio_wav_data* wav;
 
-    if(!INPUT_ARGS(args,"III",&tptr,&cptr, &loop))  {
+    if(!INPUT_ARGS(args,"II",&track_id,&wav))  {
         return NULL;
     }
 
-    track = (audio_track*)tptr;
-    clip = (audio_clip*)cptr;
-    audio_play_clip_on_track(clip,track,loop);
+    sequencer_queue_wav( track_id, wav);
     Py_RETURN_NONE;
 }
 

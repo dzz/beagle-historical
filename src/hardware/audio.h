@@ -16,6 +16,9 @@
 #define TICK_FILTER_A 0.75
 #define BEAT_LOCKED 1
 
+//check, approx, every X ms for control messages
+#define AUDIO_CONTROL_MS 150
+
 
 #define SEQUENCER_TRACKS (1)
 #define SEQUENCER_CONTROL_STACK_SIZE (64)
@@ -39,7 +42,7 @@ typedef struct seq_track_event {
 } seq_track_event;
 
 typedef struct {
-    seq_track_msg_code           code;
+    seq_track_msg_code      code;
     void*                   data;
     unsigned int            gcmode;  
 } seq_track_msg;
@@ -97,5 +100,6 @@ void audio_enable_realtime_processing();
 void audio_disable_realtime_processing();
 void audio_garbage_collect_channels();
 void ae_set_backdoor(unsigned int idx, float value);
+void sequencer_queue_wav( unsigned int track, hw_audio_wav_data* wav);
 #endif
 

@@ -5,6 +5,7 @@ WARNING = 2
 INFO = 4
 DEBUG = 8
 GFX_MSG = 16
+AUD_MSG = 32
 
 def set_level(level):
     host.log_set_level(level)

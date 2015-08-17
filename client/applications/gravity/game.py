@@ -90,7 +90,7 @@ class game:
         self.postfx_shader = choice( self.postfx_shaders )
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO )
+       log.set_level( log.ERROR | log.WARNING | log.INFO | log.AUD_MSG )
        self.load_postfx_shaders()
        self.pick_post_processing_shader()
        self.music_system = music_system("devon.music")

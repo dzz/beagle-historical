@@ -88,10 +88,6 @@ void sequencer_create(seq_sequencer* seq) {
     }
 }
 
-void sequencer_drop(seq_sequencer* seq) {
-    free(seq->tracks);
-}
-
 static void sequencer_destroy_active_message(unsigned int tr_id) {
 	seq_track* track = &(Sequencer->tracks[tr_id]);
     if( track->control_message!=0) {
@@ -103,6 +99,23 @@ static void sequencer_destroy_active_message(unsigned int tr_id) {
         free(control_message);
     }
 }
+static void sequencer_destroy_active_event(seq_track* track) {
+    if(track->active_event != 0 ) {
+        void* hndl = (void*)track->active_event;
+        track->active_event = 0;
+        free(hndl);
+    }
+}
+
+void sequencer_drop(seq_sequencer* seq) {
+    unsigned int i;
+    for(i=0; i< SEQUENCER_TRACKS; ++i) {
+       sequencer_destroy_active_message(i);
+       sequencer_destroy_active_event(&seq->tracks[i]);
+    }
+    free(seq->tracks);
+}
+
 
 void sequencer_issue_message( unsigned int track, seq_track_msg* message) {
     sequencer_destroy_active_message(track);
@@ -110,28 +123,27 @@ void sequencer_issue_message( unsigned int track, seq_track_msg* message) {
 }
 
 void sequencer_set_track_event( seq_track* track, seq_track_event* event) {
-    if(track->active_event) {
-        void* hndl = (void*)track->active_event;
-        track->active_event = 0;
-        free(hndl);
-    }
+    sequencer_destroy_active_event(track);
     track->active_event = event;
 }
 
 void sequencer_handle_messages() {
     unsigned int trk_id;
+    log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "Sequencer control thread checking messages");
     for(trk_id=0; trk_id<Sequencer->n_tracks;++trk_id) {
         seq_track* track = &Sequencer->tracks[trk_id];
-        if(track->control_message) {
+        if(track->control_message!=0) {
                 seq_track_msg* msg = track->control_message;
+                log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Sequencer Received Message %x", track->control_message );
                 switch(msg->code) {
                     case msg_set_event:
-                        msg->data = 0; 
 						sequencer_set_track_event( track, (seq_track_event*)msg->data );
+                        msg->data = 0; 
 						break;
                     default:
 						break;
                 }
+                sequencer_destroy_active_message(trk_id);
         }
     }
 }
@@ -142,18 +154,20 @@ void sequencer_queue_wav( unsigned int track, hw_audio_wav_data* wav) {
     event->evt_type = evt_loop;
     event->wav = wav;
     event->loop_smpls = 128;
+    control_message->code = msg_set_event;
     control_message->data = event;
-    sequencer_destroy_active_message( track );    
     sequencer_issue_message( track, control_message );
 }
 
 
 static void InitSequencer() {
+    log_message(CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Sequencer bootup...");
     Sequencer = (seq_sequencer*)malloc(sizeof(seq_sequencer));
     sequencer_create( Sequencer );
 }
 
 static void DropSequencer() {
+    log_message(CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Sequencer shutdown...");
 	sequencer_drop(Sequencer);
     free(Sequencer);
 }
@@ -177,12 +191,12 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
                 seq_track* track = &Sequencer->tracks[tr_idx];
                 track->cur_sample++;
                 
-                log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "trackptr%x, track:%x sample:%x", track, tr_idx, track->cur_sample );
+                //log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "trackptr%x, track:%x sample:%x", track, tr_idx, track->cur_sample );
                 if(track->active_event != 0 ) {
                     seq_track_event* evt = track->active_event;
 					unsigned int idx_head = track->cur_sample % evt->wav->smpl_cnt;
-                    left  += (float)evt->wav->left[idx_head];
-                    right += (float)evt->wav->right[idx_head];
+                    left  += (float)(evt->wav->left[idx_head]) / 32767.0f;
+                    right += (float)(evt->wav->right[idx_head]) / 32767.0f;
                 }
                 track->cur_sample++;
             }
@@ -213,7 +227,6 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
 
 void ae_init(ae_data* self) {
 	int err;
-	InitSequencer();
 	err = Pa_Initialize();
 	if(err!=paNoError) {
        return;
@@ -243,7 +256,6 @@ void ae_drop(ae_data* self) {
 	if(self->stream!=0)
 		Pa_StopStream(self->stream);
 	Pa_Terminate();
-	DropSequencer();
     self->finalized = 1;
 }
 
@@ -252,8 +264,10 @@ int ae_thread_run(void* data) {
     ae_init(self);
 
     while(!self->shutdown) {
-        Sleep(25);
+        Sleep(AUDIO_CONTROL_MS);
+        sequencer_handle_messages();
     }
+    DropSequencer();
     ae_drop(self);
     return self->finalized;
 }
@@ -262,6 +276,7 @@ unsigned int initAudio() {
     AE_Data.shutdown = 0;
     AE_Data.initialized = 0;
 	AE_Data.stream = 0;
+	InitSequencer();
     if(!SDL_CreateThread( ae_thread_run, "audio_control", &AE_Data))
 		return MODULE_FAILURE;
     return MODULE_LOADED;
