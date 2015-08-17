@@ -195,8 +195,8 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
                 if(track->active_event != 0 ) {
                     seq_track_event* evt = track->active_event;
 					unsigned int idx_head = track->cur_sample % evt->wav->smpl_cnt;
-                    left  += (float)(evt->wav->left[idx_head]) / 32767.0f;
-                    right += (float)(evt->wav->right[idx_head]) / 32767.0f;
+                    left  += (float)(evt->wav->data[idx_head]) / 32767.0f;
+                    right += (float)(evt->wav->data[idx_head]) / 32767.0f;
                 }
                 track->cur_sample++;
             }

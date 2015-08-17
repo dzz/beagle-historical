@@ -28,17 +28,17 @@ void audio_load_wav(hw_audio_wav_data* wav, const char* filename)  {
     log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "[ogg]pntr:%x", wav->data);
     log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "[ogg]leng:%x", wav->len);
     if(wav->channels!=2) {
-        log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_ERROR, "!=2 channels in ogg %s.", filename );
+        log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_ERROR, "[ogg][err] only support stereo oggs", filename );
         return;
     }
 
-    wav->smpl_cnt = wav->len/wav->channels;
-    wav->left = (short*)malloc((sizeof(short)*wav->smpl_cnt));
-    wav->right = (short*)malloc((sizeof(short)*wav->smpl_cnt));
+    wav->smpl_cnt = wav->len;
+    wav->left = (short*)malloc((sizeof(short)*wav->len));
+    wav->right = (short*)malloc((sizeof(short)*wav->len));
    
     {
         unsigned int ptr = 0;
-        for( i=0; i< wav->smpl_cnt; ++i) {
+        for( i=0; i< wav->len; ++i) {
 
             wav->left[i] = wav->data[ptr];
             ptr++;
