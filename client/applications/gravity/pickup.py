@@ -21,11 +21,14 @@ class pickup:
                 audio.clip_create(host_config.get("app_dir") + "audio/bd00.ogg"),
                 audio.clip_create(host_config.get("app_dir") + "audio/bd01.ogg"),
                 audio.clip_create(host_config.get("app_dir") + "audio/bd02.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/bd03.ogg")
+                audio.clip_create(host_config.get("app_dir") + "audio/bd03.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/bd04.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/bd05.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/bd06.ogg")
                 ]
 
         self.clip_idx = 0;
-        audio.track_play_clip(0, self.dummy_clips[0] )
+        #audio.track_play_clip(0, self.dummy_clips[0] )
 
         self.display_level= 1
         self.level_observer = level_observer

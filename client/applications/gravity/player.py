@@ -14,7 +14,16 @@ class player:
                 audio.clip_create(host_config.get("app_dir") + "audio/stb04.ogg")
                 ]
 
-        audio.track_play_clip(1, self.dummy_clips[0] )
+        self.fire_clips = [
+                audio.clip_create(host_config.get("app_dir") + "audio/hh00.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/hh01.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/hh02.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/hh03.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/hh04.ogg")
+                ]
+
+        #audio.track_play_clip(1, self.dummy_clips[0] )
+        #audio.track_play_clip(2, self.fire_clips[0] )
         self.vx = 0
         self.vy = 0
         self.x = 0
@@ -35,6 +44,7 @@ class player:
         oy = self.y
         ovx = self.vx
         ovy = self.vy
+        ofiring = self.firing
 
         self.eng_r = 3.14-atan2(pad.left_stick[0],pad.left_stick[1])
 
@@ -54,6 +64,11 @@ class player:
             self.vx*=self.vdecay
             self.vy*=self.vdecay
             self.firing = 0
+
+        if( ((self.firing==0) and (ofiring!=0)) or
+            ((self.firing!=0) and (ofiring==0))):
+                audio.track_play_clip(2, choice(self.fire_clips) )
+
 
         self.fuzzy_firing_state = (0.7*self.fuzzy_firing_state)+(0.3*fuzzy_firing_impulse)
         music_system.track_volume("DrumEffects",self.fuzzy_firing_state)
