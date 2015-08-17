@@ -74,18 +74,56 @@ seq_sequencer* Sequencer;
 void sequencer_track_create( seq_track* track) {
     track->cur_sample = 0;
     track->active_event = 0;
+    track->next_event = 0;
     track->control_message = 0;
+	track->old_event = 0;
+    track->beat_lock = beat_quarter;
 }
+void sequencer_track_set_bpm( seq_track* track, unsigned int bpm) {
+
+    double d_bps = ((double)bpm)/60.0;
+    double d_spb = (double)AE_SAMPLERATE / d_bps;
+    double d_spbl = 0.0;
+    switch(track->beat_lock) {
+        case beat_eigth:
+            d_spbl = d_spb*0.5;
+            break;
+        case beat_quarter:
+            d_spbl = d_spb;
+        case beat_half:
+            d_spbl = d_spb*2.0;
+        case beat_whole:
+            d_spbl = d_spb*4.0;
+        default:
+            break;
+    }
+    track->beat_lock_mod = (unsigned int)d_spbl;
+    log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Set Track %x beat lock mod to %x", track, track->beat_lock_mod);
+}
+
+void sequencer_set_bpm(seq_sequencer* seq, unsigned int bpm) {
+    seq->bpm = bpm;
+    {
+        unsigned int i; 
+        for(i=0; i< seq->n_tracks;++i) {
+            sequencer_track_set_bpm( &seq->tracks[i], bpm );
+        }
+    }
+}
+
 
 void sequencer_create(seq_sequencer* seq) {
     seq->tracks = (seq_track*)malloc(sizeof(seq_track) * SEQUENCER_TRACKS);
 	seq->n_tracks = SEQUENCER_TRACKS;
+    seq->halt = 1;
     {
         unsigned int i; 
         for(i=0; i< SEQUENCER_TRACKS;++i) {
             sequencer_track_create( &seq->tracks[i] );
         }
     }
+    sequencer_set_bpm( seq, 128 );
+    seq->halt = 0;
 }
 
 static void sequencer_destroy_active_message(unsigned int tr_id) {
@@ -99,10 +137,25 @@ static void sequencer_destroy_active_message(unsigned int tr_id) {
         free(control_message);
     }
 }
+static void sequencer_destroy_old_event(seq_track* track) {
+    if(track->old_event != 0 ) {
+        void* hndl = (void*)track->old_event;
+        track->old_event = 0;
+        free(hndl);
+    }
+}
+
 static void sequencer_destroy_active_event(seq_track* track) {
     if(track->active_event != 0 ) {
         void* hndl = (void*)track->active_event;
         track->active_event = 0;
+        free(hndl);
+    }
+}
+static void sequencer_destroy_next_event(seq_track* track) {
+    if(track->next_event != 0 ) {
+        void* hndl = (void*)track->next_event;
+        track->next_event = 0;
         free(hndl);
     }
 }
@@ -112,32 +165,40 @@ void sequencer_drop(seq_sequencer* seq) {
     for(i=0; i< SEQUENCER_TRACKS; ++i) {
        sequencer_destroy_active_message(i);
        sequencer_destroy_active_event(&seq->tracks[i]);
+       sequencer_destroy_next_event(&seq->tracks[i]);
+       sequencer_destroy_old_event(&seq->tracks[i]);
     }
     free(seq->tracks);
 }
 
+
+void sequencer_halt() {
+    Sequencer->halt = 1;
+}
 
 void sequencer_issue_message( unsigned int track, seq_track_msg* message) {
     sequencer_destroy_active_message(track);
     Sequencer->tracks[track].control_message = message;
 }
 
-void sequencer_set_track_event( seq_track* track, seq_track_event* event) {
-    sequencer_destroy_active_event(track);
-    track->active_event = event;
+void sequencer_set_next_track_event( seq_track* track, seq_track_event* event) {
+    sequencer_destroy_next_event(track);
+    track->next_event = event;
+    log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Sequencer track %x next event set to %x", track->next_event );
 }
 
 void sequencer_handle_messages() {
     unsigned int trk_id;
-    log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "Sequencer control thread checking messages");
+    log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_DEBUG, "Sequencer control thread checking messages");
     for(trk_id=0; trk_id<Sequencer->n_tracks;++trk_id) {
         seq_track* track = &Sequencer->tracks[trk_id];
+        sequencer_destroy_old_event(track);
         if(track->control_message!=0) {
                 seq_track_msg* msg = track->control_message;
-                log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_INFO, "Sequencer Received Message %x", track->control_message );
+                log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_DEBUG, "Sequencer Received Message %x", track->control_message );
                 switch(msg->code) {
                     case msg_set_event:
-						sequencer_set_track_event( track, (seq_track_event*)msg->data );
+						sequencer_set_next_track_event( track, (seq_track_event*)msg->data );
                         msg->data = 0; 
 						break;
                     default:
@@ -147,6 +208,7 @@ void sequencer_handle_messages() {
         }
     }
 }
+
 
 void sequencer_queue_wav( unsigned int track, hw_audio_wav_data* wav) {
     seq_track_event* event = (seq_track_event*)malloc(sizeof(seq_track_event));
@@ -187,16 +249,28 @@ static int ae_renderer( const void* inputBuffer, void* outputBuffer,
 
         float left = 0.0f;
         float right = 0.0f;
+        if(Sequencer->halt==0)
         for(tr_idx=0; tr_idx<Sequencer->n_tracks;++tr_idx) {
                 seq_track* track = &Sequencer->tracks[tr_idx];
-                track->cur_sample++;
                 
+                //if there's a pending event, and the GC has room, 
+                if( (track->next_event!=0) && (track->old_event==0) ) {
+                    //and if we're on a beatlocked sample
+                    if( (track->cur_sample % track->beat_lock_mod) ==0) {
+                        //swap the tapes
+                        log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "[rdr] swapping tapes");
+                        track->old_event = track->active_event;
+                        track->active_event = track->next_event;
+                        track->next_event = 0;
+                        track->cur_sample = 0;
+                    }
+                }
                 //log_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_AUDMSG, "trackptr%x, track:%x sample:%x", track, tr_idx, track->cur_sample );
                 if(track->active_event != 0 ) {
                     seq_track_event* evt = track->active_event;
 					unsigned int idx_head = track->cur_sample % evt->wav->smpl_cnt;
-                    left  += (float)(evt->wav->data[idx_head]) / 32767.0f;
-                    right += (float)(evt->wav->data[idx_head]) / 32767.0f;
+                    left  += (float)(evt->wav->left[idx_head]) / 32767.0f;
+                    right += (float)(evt->wav->right[idx_head]) / 32767.0f;
                 }
                 track->cur_sample++;
             }
@@ -238,7 +312,7 @@ void ae_init(ae_data* self) {
                                 2,
                                 paFloat32,
                                 AE_SAMPLERATE,
-								paFramesPerBufferUnspecified,
+								1024,
                                 ae_renderer,
                                 &self->context );
     if(err!=paNoError) {

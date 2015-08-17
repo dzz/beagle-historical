@@ -7,7 +7,7 @@
 
 
 
-#define AE_SAMPLERATE 48000
+#define AE_SAMPLERATE (44100)
 
 #define AUDIO_SAMPLERATE 32000
 #define AUDIO_CHANNELS 2
@@ -17,10 +17,10 @@
 #define BEAT_LOCKED 1
 
 //check, approx, every X ms for control messages
-#define AUDIO_CONTROL_MS 150
+#define AUDIO_CONTROL_MS 5
 
 
-#define SEQUENCER_TRACKS (1)
+#define SEQUENCER_TRACKS (8)
 #define SEQUENCER_CONTROL_STACK_SIZE (64)
 
 typedef enum {
@@ -32,6 +32,14 @@ typedef enum {
     msg_none = 0,
     msg_set_event = 1
 } seq_track_msg_code;
+
+typedef enum {
+    beat_none       = 0,
+    beat_eigth      = 1,
+    beat_quarter    = 2,
+    beat_half       = 3,
+    beat_whole      = 4
+} seq_track_beat_lock;
 
     
 
@@ -49,13 +57,19 @@ typedef struct {
 
 typedef struct {
     seq_track_event*        active_event;
+    seq_track_event*        next_event;
+    seq_track_event*        old_event;
     seq_track_msg*          control_message;
     unsigned int            cur_sample;
+    seq_track_beat_lock     beat_lock;
+    unsigned int            beat_lock_mod;
 } seq_track;
 
 typedef struct {
     seq_track*              tracks;
     unsigned int            n_tracks;
+    unsigned int            bpm;
+    unsigned int            halt;
 } seq_sequencer;
 
 
@@ -101,5 +115,6 @@ void audio_disable_realtime_processing();
 void audio_garbage_collect_channels();
 void ae_set_backdoor(unsigned int idx, float value);
 void sequencer_queue_wav( unsigned int track, hw_audio_wav_data* wav);
+void sequencer_halt();
 #endif
 

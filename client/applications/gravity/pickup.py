@@ -12,9 +12,20 @@ from client.math.helpers import distance
 from .music_system import music_system
 import hwgfx
 from random import sample
+import client.ctt2.host_config  as host_config
+import audio
 
 class pickup:
     def __init__(self, x,y, player, vortex, level_observer ):
+        self.dummy_clips = [
+                audio.clip_create(host_config.get("app_dir") + "audio/bd00.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/bd01.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/bd02.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/bd03.ogg")
+                ]
+
+        self.clip_idx = 0;
+        audio.track_play_clip(0, self.dummy_clips[0] )
 
         self.display_level= 1
         self.level_observer = level_observer
@@ -80,6 +91,8 @@ class pickup:
 
         if(d<2900):
             self.level_observer.level_up()
+            self.clip_idx = (self.clip_idx+1) % len(self.dummy_clips)
+            audio.track_play_clip(0, self.dummy_clips[self.clip_idx])
             self.particle_blend_mode = choice([6000,5000])
             self.has_leads = choice([True,False,False])
             self.drums_dynamic_volume = choice([True,False,False])

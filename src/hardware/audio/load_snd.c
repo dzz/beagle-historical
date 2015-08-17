@@ -32,13 +32,13 @@ void audio_load_wav(hw_audio_wav_data* wav, const char* filename)  {
         return;
     }
 
-    wav->smpl_cnt = wav->len;
-    wav->left = (short*)malloc((sizeof(short)*wav->len));
-    wav->right = (short*)malloc((sizeof(short)*wav->len));
+    wav->smpl_cnt = wav->len / wav->channels;
+    wav->left = (short*)malloc((sizeof(short)*wav->smpl_cnt));
+    wav->right = (short*)malloc((sizeof(short)*wav->smpl_cnt));
    
     {
         unsigned int ptr = 0;
-        for( i=0; i< wav->len; ++i) {
+        for( i=0; i< wav->smpl_cnt; ++i) {
 
             wav->left[i] = wav->data[ptr];
             ptr++;

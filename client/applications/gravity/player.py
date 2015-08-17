@@ -1,7 +1,20 @@
 from client.system.audio import beatEngine
 from math import atan2, sqrt, sin, cos, floor
+from random import choice
+import client.ctt2.host_config  as host_config
+import audio
+
 class player:
     def __init__(self):
+        self.dummy_clips = [
+                audio.clip_create(host_config.get("app_dir") + "audio/stb00.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/stb01.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/stb02.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/stb03.ogg"),
+                audio.clip_create(host_config.get("app_dir") + "audio/stb04.ogg")
+                ]
+
+        audio.track_play_clip(1, self.dummy_clips[0] )
         self.vx = 0
         self.vy = 0
         self.x = 0
@@ -20,6 +33,8 @@ class player:
     def tick(self, pad,vortex,music_system):
         ox = self.x
         oy = self.y
+        ovx = self.vx
+        ovy = self.vy
 
         self.eng_r = 3.14-atan2(pad.left_stick[0],pad.left_stick[1])
 
@@ -58,3 +73,9 @@ class player:
         delta_x = self.x - ox
         delta_y = self.y - oy
         self.speed = floor(sqrt((delta_x*delta_x)+(delta_y*delta_y))*10)*5
+
+        if ( ( (self.vx>0) and (ovx<0) ) or
+           ( (self.vy>0) and (ovy<0) ) or
+           ( (self.vx<0) and (ovx>0) ) or
+           ( (self.vy<0) and (ovy>0) ) ):
+               audio.track_play_clip(1,choice(self.dummy_clips))
