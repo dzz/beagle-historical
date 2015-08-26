@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,108 +11,65 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\api-includes\api_py_util.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\api-includes\client-handler-inventory.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\api-includes\client-handlers.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\api-includes\modules\host.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\api-includes\modules\hwgfx.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\api-includes\modules\localgfx.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\colors\colors.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\compositor\compositor.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\document\animation.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\document\layers.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\brush.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\drawingSurfaces.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_internals.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_recalc.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\util_curve.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\util_gradient.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_resource_ids.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\drawing\shader_brush.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hardware\hw_run_vars.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hardware\tablet.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hardware\vendor\wintab_utils.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\blend_control.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\context.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\framebuffer.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\label.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\misc.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\OGL_OBJ.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\primitive.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\rect.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\shader.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\text.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\texture.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\ctt2.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\ctt2_host.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\dirty.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\extended_video.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\files.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\log.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\surfaceCache.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\system\wm_handler.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\canvas.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\dispatch.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\brushEditor.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\colorPicker.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\nodeMapEditor.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\node_interaction\node_interaction.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\toolbar.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\panels.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\stylus.h" />
-    <ClInclude Include="..\..\..\ctt2_breezy\whimsey\src\user\yank_put.h" />
+    <ClCompile Include="..\..\..\clibs\glxw\src\glxw.c" />
+    <ClCompile Include="..\src\ctt2.c" />
+    <ClCompile Include="..\src\ctt2_host.c" />
+    <ClCompile Include="..\src\drawing\drawingSurfaces.c" />
+    <ClCompile Include="..\src\hardware\audio.c" />
+    <ClCompile Include="..\src\hardware\audio\load_snd.c" />
+    <ClCompile Include="..\src\hardware\gamepad.c" />
+    <ClCompile Include="..\src\hardware\hf_timer.c" />
+    <ClCompile Include="..\src\hardware\hw_run_vars.c" />
+    <ClCompile Include="..\src\hwgfx\blend_control.c" />
+    <ClCompile Include="..\src\hwgfx\context.c" />
+    <ClCompile Include="..\src\hwgfx\framebuffer.c" />
+    <ClCompile Include="..\src\hwgfx\label.c" />
+    <ClCompile Include="..\src\hwgfx\misc.c" />
+    <ClCompile Include="..\src\hwgfx\primitive.c" />
+    <ClCompile Include="..\src\hwgfx\rect.c" />
+    <ClCompile Include="..\src\hwgfx\shader.c" />
+    <ClCompile Include="..\src\hwgfx\text.c" />
+    <ClCompile Include="..\src\hwgfx\texture.c" />
+    <ClCompile Include="..\src\system\dirty.c" />
+    <ClCompile Include="..\src\system\extended_video.c" />
+    <ClCompile Include="..\src\system\files.c" />
+    <ClCompile Include="..\src\system\log.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\clibs\glxw\src\glxw.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\colors\colors.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\compositor\compositor.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\ctt2.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\ctt2_host.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\document\animation.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\document\layers.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\brush.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\drawingSurfaces.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_brush_interface.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_new.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_recalc.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_templates.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\node_update.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\util_curve.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\node_mapper\util_gradient.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\drawing\shader_brush.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hardware\hw_run_vars.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hardware\tablet.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hardware\vendor\wintab_utils.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\blend_control.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\context.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\framebuffer.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\label.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\misc.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\primitive.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\rect.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\shader.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\text.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\hwgfx\texture.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\system\dirty.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\system\extended_video.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\system\files.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\system\log.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\system\surfaceCache.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\canvas.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\dispatch.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\brushEditor.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\colorPicker.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\nodeMapEditor.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\node_interaction\node_interaction.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\node_interaction\node_interface_COLOR.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\node_interaction\node_interface_GRADIENT.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\node_interaction\node_interface_MAPPER.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\editors\toolbar.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\panels.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\stylus.c" />
-    <ClCompile Include="..\..\..\ctt2_breezy\whimsey\src\user\yank_put.c" />
+    <ClInclude Include="..\src\api-includes\api_py_util.h" />
+    <ClInclude Include="..\src\api-includes\client-handler-inventory.h" />
+    <ClInclude Include="..\src\api-includes\client-handlers.h" />
+    <ClInclude Include="..\src\api-includes\modules\audio.h" />
+    <ClInclude Include="..\src\api-includes\modules\host.h" />
+    <ClInclude Include="..\src\api-includes\modules\hwgfx.h" />
+    <ClInclude Include="..\src\api-includes\modules\localgfx.h" />
+    <ClInclude Include="..\src\drawing\drawingSurfaces.h" />
+    <ClInclude Include="..\src\hardware\audio.h" />
+    <ClInclude Include="..\src\hardware\audio\load_snd.h" />
+    <ClInclude Include="..\src\hardware\audio\ogg.h" />
+    <ClInclude Include="..\src\hardware\gamepad.h" />
+    <ClInclude Include="..\src\hardware\hf_timer.h" />
+    <ClInclude Include="..\src\hardware\hw_run_vars.h" />
+    <ClInclude Include="..\src\hwgfx\blend_control.h" />
+    <ClInclude Include="..\src\hwgfx\context.h" />
+    <ClInclude Include="..\src\hwgfx\framebuffer.h" />
+    <ClInclude Include="..\src\hwgfx\label.h" />
+    <ClInclude Include="..\src\hwgfx\misc.h" />
+    <ClInclude Include="..\src\hwgfx\OGL_OBJ.h" />
+    <ClInclude Include="..\src\hwgfx\primitive.h" />
+    <ClInclude Include="..\src\hwgfx\rect.h" />
+    <ClInclude Include="..\src\hwgfx\shader.h" />
+    <ClInclude Include="..\src\hwgfx\text.h" />
+    <ClInclude Include="..\src\hwgfx\texture.h" />
+    <ClInclude Include="..\src\system\client_key_map.h" />
+    <ClInclude Include="..\src\system\ctt2.h" />
+    <ClInclude Include="..\src\system\ctt2_host.h" />
+    <ClInclude Include="..\src\system\dirty.h" />
+    <ClInclude Include="..\src\system\extended_video.h" />
+    <ClInclude Include="..\src\system\files.h" />
+    <ClInclude Include="..\src\system\log.h" />
+    <ClInclude Include="..\src\system\rt_module_codes.h" />
+    <ClInclude Include="..\src\system\wm_handler.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D71546C1-9409-4271-A4F7-6E2CEAAC303B}</ProjectGuid>
@@ -122,14 +79,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -144,7 +101,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\clibs\SDL2_image-2.0.0\include;C:\clibs\SDL2-2.0.1\include;C:\clibs\wintab\includes;C:\clibs\include;C:\Python34\include;C:\clibs\glxw\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\clibs\SDL2_image-2.0.0\include;C:\clibs\SDL2-2.0.1\include;C:\clibs\wintab\includes;C:\clibs\include;D:\Python34\include;C:\clibs\glxw\include;C:\clibs;C:\clibs\SDL2_mixer-2.0.0\include;C:\clibs\portaudio-r1891-build\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\clibs\SDL2_image-2.0.0\lib\x86;C:\clibs\SDL2-2.0.1\lib\x86;C:\clibs\glew-1.10.0\lib\Release\Win32;C:\Python34\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -160,9 +117,10 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>C:\clibs\SDL2-2.0.1\lib\x86\SDL2.lib;C:\clibs\SDL2-2.0.1\lib\x86\SDL2main.lib;C:\clibs\SDL2_image-2.0.0\lib\x86\SDL2_image.lib;opengl32.lib;glew32.lib;python34.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\clibs\SDL2-2.0.1\lib\x86\SDL2.lib;C:\clibs\SDL2-2.0.1\lib\x86\SDL2main.lib;C:\clibs\SDL2_image-2.0.0\lib\x86\SDL2_image.lib;opengl32.lib;glew32.lib;python34.lib;C:\clibs\portaudio-r1891-build\lib\Win32\ReleaseMinDependency\portaudio_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -15,17 +15,6 @@
 # endif
 #endif
 
-#ifndef C99
-
-float fmin(float a, float b) {
-    if(a<b) return a; return a;
-}
-
-float fmax(float a, float b) {
-    if(a>b) return a; return b;
-}
-
-#endif
 
 #include <windows.h>
 #include "audio.h"
@@ -77,7 +66,7 @@ void sequencer_track_create( seq_track* track) {
     track->next_event = 0;
     track->control_message = 0;
 	track->old_event = 0;
-    track->beat_lock = beat_quarter;
+    track->beat_lock = beat_half;
 }
 void sequencer_track_set_bpm( seq_track* track, unsigned int bpm) {
 

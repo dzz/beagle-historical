@@ -23,6 +23,7 @@ class vortex:
         self.time_scale = 1.0
         self.active = False
         self.switched_count = 0
+        self.ortho = False
         pass
 
     def switch_directions(self):
@@ -38,6 +39,12 @@ class vortex:
             if uniform(0.0,1.0)>0.75:
                 audio.track_play_clip(3, choice(self.dummy_clips))
                 self.time_scale = 1
+
+            if uniform(0.0,1.0)>0.6:
+                audio.track_play_clip(3, choice(self.dummy_clips))
+                self.ortho = True
+            else:
+                self.ortho = False
 
             self.radscale = choice([True,False,False,False])
             self.use_phase = choice([True,False,False])
@@ -69,6 +76,13 @@ class vortex:
 
             x = x*phase + point[0]*(1-phase)
             y = y*phase + point[1]*(1-phase)
-        return [x,y]
+        if not self.ortho:
+            return [x,y]
+        else:
+            if(abs(x-point[0])>abs(y-point[1])):
+                return [x,point[1]]
+            else:
+                return [point[0],y]
+
 
 

@@ -95,7 +95,7 @@ class pickup:
         if(d<2900):
             self.level_observer.level_up()
             self.clip_idx = (self.clip_idx+1) % len(self.dummy_clips)
-            audio.track_play_clip(0, self.dummy_clips[self.clip_idx])
+            audio.track_play_clip(0, choice(self.dummy_clips))
             self.particle_blend_mode = choice([6000,5000])
             self.has_leads = choice([True,False,False])
             self.drums_dynamic_volume = choice([True,False,False])

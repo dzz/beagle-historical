@@ -39,6 +39,12 @@ static unsigned int initialized_modules;
 int SCREEN_WIDTH = 1200;
 int SCREEN_HEIGHT = 700;
 
+FILE* __iob_func() {
+	FILE streams[] = { *stdin,*stdout,*stderr };
+	return streams;
+
+}
+
 char * ctt2_module_from_code( unsigned int module) {
     switch(module) {
         case CTT2_RT_MODULE_LOG:

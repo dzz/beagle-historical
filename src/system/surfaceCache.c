@@ -1,7 +1,5 @@
 #include "../system/ctt2.h"
 #include "surfaceCache.h"
-#include "../document/animation.h"
-#include "../compositor/compositor.h"
 #include "../document/layers.h"
 #include <stdio.h>
 #include <malloc.h>

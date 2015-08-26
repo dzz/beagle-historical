@@ -30,7 +30,7 @@ MODULE_FUNC audio_clip_drop
 DEF_ARGS {
     unsigned int ptr;
     hw_audio_wav_data* wav;
-    if(!INPUT_ARGS(args,"I",&wav))
+    if(!INPUT_ARGS(args,"I",&ptr))
         return NULL;
     wav = (hw_audio_wav_data*)ptr;
     audio_drop_wav(wav);
