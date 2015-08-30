@@ -71,7 +71,6 @@ void initText() {
 }
 
 void renderChar(float x, float y, int v ) {
-    viewport_dims dims = gfx_viewport_get_dims();
     shader_bind_vec2(&text_shader, "char_pos", x,y );
     primitive_render( &char_prims[v] );
 }

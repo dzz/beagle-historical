@@ -1,4 +1,5 @@
-#define MAP_CLIENT_KEY(X,Y) sprintf( buffer, X ":%u", Y); api_map_keycode( &buffer);
+
+#define MAP_CLIENT_KEY(X,Y) sprintf( buffer, X ":%u", Y); api_map_keycode( buffer);
 MAP_CLIENT_KEY("unknown",    SDLK_UNKNOWN)
 MAP_CLIENT_KEY("return",    SDLK_RETURN)
 MAP_CLIENT_KEY("escape",    SDLK_ESCAPE)
@@ -237,3 +238,4 @@ MAP_CLIENT_KEY("eject",    SDLK_EJECT)
 MAP_CLIENT_KEY("sleep",    SDLK_SLEEP)
 
 #undef MAP_CLIENT_KEY
+

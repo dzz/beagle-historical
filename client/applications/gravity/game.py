@@ -91,6 +91,8 @@ class game:
 
     def __init__(self):
        log.set_level( log.ERROR | log.WARNING | log.INFO | log.AUD_MSG )
+       self.current_ticker = self.vortex_tick
+       self.current_renderer = self.vortex_render
        self.load_postfx_shaders()
        self.pick_post_processing_shader()
        self.music_system = music_system("devon.music")
@@ -146,7 +148,14 @@ class game:
        self.particles = []
                     
 
+
     def tick(self):
+        self.vortex_tick()
+
+    def render(self):
+        self.vortex_render()
+
+    def vortex_tick(self):
        self.player.points *= 0.9994
        particle.tick_sprites()
        self.t +=1
@@ -192,7 +201,7 @@ class game:
        b=0.02
        self.world_zoom_current = (self.world_zoom_current*a)+(pad.triggers[0]*b)
 
-    def render(self):
+    def vortex_render(self):
 
         hca = (sin (self.t/12.0)+1)/2.0
         hcb = (sin (self.t/24.0)+1)/2.0

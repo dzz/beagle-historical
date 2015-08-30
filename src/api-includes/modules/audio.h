@@ -148,6 +148,6 @@ static PyModuleDef audio_module = {
     NULL,NULL,NULL,NULL
 };
 
-static PyObject* PyInit_audio() {
+static PyObject* PyInit_audio(void) {
     return PyModule_Create(&audio_module);
 }

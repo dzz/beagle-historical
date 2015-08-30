@@ -39,10 +39,16 @@ static unsigned int initialized_modules;
 int SCREEN_WIDTH = 1200;
 int SCREEN_HEIGHT = 700;
 
+static FILE streams[3];
+unsigned int streams_init = 0;
 FILE* __iob_func() {
-	FILE streams[] = { *stdin,*stdout,*stderr };
+	if (streams_init == 0) {
+		streams[0] = *stdin;
+		streams[1] = *stdout;
+		streams[2] = *stderr;
+		streams_init = 1;
+	}
 	return streams;
-
 }
 
 char * ctt2_module_from_code( unsigned int module) {
@@ -204,7 +210,7 @@ void dropPython(){
 
 unsigned int initPython() {
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
-    Py_SetProgramName("ctt2_py");
+    //Py_SetProgramName("ctt2_py");
     if( api_init() == API_FAILURE ) {
 		log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_ERROR, "Error booting python environment.");
         if(PyErr_Occurred()) {

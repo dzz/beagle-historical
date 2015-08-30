@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerWorkingDirectory>..\..\..\ctt2_breezy\whimsey</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>c:\ctt2_breezy\whimsey\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>640 480 0</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>960 540 0 120</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommand>C:\ctt2_breezy\whimsey\bin\dopey3.exe</LocalDebuggerCommand>
   </PropertyGroup>
 </Project>

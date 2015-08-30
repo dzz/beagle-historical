@@ -59,6 +59,6 @@ static PyModuleDef localgfx_module = {
     NULL,NULL,NULL,NULL
 };
 
-static PyObject* PyInit_localgfx() {
+static PyObject* PyInit_localgfx(void) {
     return PyModule_Create(&localgfx_module);
 }

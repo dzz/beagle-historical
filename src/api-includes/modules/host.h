@@ -122,7 +122,7 @@ static PyModuleDef host_module = {
     NULL,NULL,NULL,NULL
 };
 
-static PyObject* PyInit_host() {
+static PyObject* PyInit_host(void) {
     return PyModule_Create(&host_module);
 }
 

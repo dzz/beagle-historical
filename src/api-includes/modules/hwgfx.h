@@ -700,6 +700,6 @@ static PyModuleDef hwgfx_module = {
     NULL,NULL,NULL,NULL
 };
 
-static PyObject* PyInit_hwgfx() {
+static PyObject* PyInit_hwgfx(void) {
     return PyModule_Create(&hwgfx_module);
 }
