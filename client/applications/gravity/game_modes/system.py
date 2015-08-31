@@ -4,7 +4,7 @@ from client.gfx.framebuffer import *
 from client.gfx.coordinates import centered_view,Y_Axis_Down
 import client.gfx.context as gfxcontext
 from random import choice,uniform
-from math import sin,cos
+from math import sin,cos,atan2
 from client.system.gamepad       import get_gamepad
 
 # YOU ARE A RASTER
@@ -21,7 +21,7 @@ class starfield:
                 self.sprd = 30
                 for i in range(0,self.num_stars):
                         self.stars.append([rand_unit()*self.sprd,rand_unit()*self.sprd,uniform(0.0,1.0)])
-                self.image = framebuffer.from_dims(8,8,False)
+                self.image = framebuffer.from_dims(8,8,True)
                 with render_target(self.image):
                         gfxcontext.set_clear_color(0.0,0.0,0.0,0.2)
                         gfxcontext.clear()
@@ -46,7 +46,7 @@ class starfield:
                     x = (star[0]/z_pf)*16
                     y = (star[1]/z_pf)*9
                     z = star[2]
-                    s_p = 1.0
+                    s_p = 10.0
                     scl = 0.001+(s_p-(z*s_p))
                     with blendstate(blendmode.alpha_over):
                         self.image.render_processed( star_shader, [], [ 
@@ -72,12 +72,13 @@ class vsystem:
         sys_names = [ "RYPNO","hartWad","modulo","encrt","#fx4111","xfrm","_xhdr","t_frntlode","___|","pipe","stream","indice","itagr","__ito","__itx","__itr" ]
 
         def __init__(self):
+                self.color = choice([ [0.0,1.0,1.0],[1.0,0.0,0.0],[1.0,1.0,0.0] ])
                 self.ox = rand_unit()
                 self.oy = rand_unit()
                 self.x = self.ox
                 self.y = self.oy
                 self.r = 0.0
-                self.size = 2.0+rand_unit()
+                self.size = uniform(1.0,3.0)
                 self.name = make_name(vsystem.sys_names)
 
         def tick(self):
@@ -116,6 +117,9 @@ class sg_player:
                 self.x+=self.vx*0.01
                 self.y+=self.vy*0.01
 
+                self.x*=0.99
+                self.y*=0.99
+                
                 self.vx*=0.95
                 self.vy*=0.95
 
@@ -123,13 +127,14 @@ class sg_player:
                 coordsys = centered_view(16.0,9.0, Y_Axis_Down )
                 player_shader = shaders.get_client_program("2d_transform","postfx/passthru_filter")
                 with blendstate(blendmode.alpha_over):
+                    r = atan2(self.vx,self.vy)
                     self.image.render_processed( player_shader, [], [ 
                                                                             ("translation_local",[0,0]),
                                                                             ("scale_local", [0.1,0.1] ) ,
                                                                             ("translation_world",[self.x,self.y]),
                                                                             ("scale_world", [4.0,4.0] ),
                                                                             ("view", coordsys ),
-                                                                            ("rotation_local", [3.14/2] ),
+                                                                            ("rotation_local", [r] ),
                                                                             ("filter_color" , [1.0,1.0,1.0,1.0] )
                                                                             ] )
 
@@ -159,7 +164,7 @@ class system_game:
                 self.player = sg_player()
                 self.starfield = starfield()
                 self.label_buffer = framebuffer.from_dims(512,256,False)
-                self.sys_buffer = framebuffer.from_dims(256,256,False) 
+                self.sys_buffer = framebuffer.from_dims(256,256,True) 
                 self.comp_buffer = framebuffer.from_dims(512,512,True)
                 self.generate_worldname()
                 self.vsystems = [ vsystem(),vsystem(),vsystem() ]
@@ -181,7 +186,7 @@ class system_game:
             
             coordsys = centered_view(16.0,9.0, Y_Axis_Down )
             worldname_shader = shaders.get_client_program("no_transform","postfx/passthru")
-            comp_shader = shaders.get_client_program("no_transform","postfx/passthru_filter")
+            comp_shader = shaders.get_client_program("no_transform","postfx/invert")
             vsysname_shader = shaders.get_client_program("2d_transform","postfx/passthru_filter")
 
             with render_target(self.comp_buffer):
@@ -189,6 +194,7 @@ class system_game:
                  gfxcontext.clear()
                  with blendstate(blendmode.alpha_over):
                     self.starfield.render()
+                    self.player.render()
                 
 
             with render_target(self.label_buffer):
@@ -200,13 +206,13 @@ class system_game:
 
             for vsystem in self.vsystems:
                 with render_target(self.sys_buffer):
-                        render_text("();".format(vsystem.name),128-8,124,[1.0,1.0,1.0])
-                        render_text("{0}".format(vsystem.name),128-32,140,[0.0,1.0,1.0])
+                        render_text("();".format(vsystem.name),128-8,124,vsystem.color)
+                        render_text("{0}".format(vsystem.name),128-32,140,vsystem.color)
                 with render_target(self.comp_buffer):
                     with blendstate(blendmode.alpha_over):
                             self.sys_buffer.render_processed( vsysname_shader, [], [ 
                                                                                     ("translation_local",[0.0,0.0]),
-                                                                                    ("scale_local", [0.4*(0.5+vsystem.size),0.4*(1.0+vsystem.size)] ) ,
+                                                                                    ("scale_local", [vsystem.size,vsystem.size])  ,
                                                                                     ("translation_world",[vsystem.x,vsystem.y]),
                                                                                     ("scale_world", [4.0,4.0] ),
                                                                                     ("view", coordsys ),
@@ -218,12 +224,12 @@ class system_game:
 
             for vsystem in self.vsystems:
                 with render_target(self.sys_buffer):
-                        render_text("();".format(vsystem.name),128-8,124,[1.0,1.0,1.0])
-                        render_text("{0}".format(vsystem.name),128-32,140,[0.0,1.0,1.0])
+                        render_text("();".format(vsystem.name),128-8,124,vsystem.color)
+                        render_text("{0}".format(vsystem.name),128-32,140,vsystem.color)
                 with blendstate(blendmode.alpha_over):
                         self.sys_buffer.render_processed( vsysname_shader, [], [ 
                                                                                 ("translation_local",[0.0,0.0]),
-                                                                                ("scale_local", [0.4*(0.5+vsystem.size),0.4*(1.0+vsystem.size)] ) ,
+                                                                                ("scale_local", [vsystem.size,vsystem.size])  ,
                                                                                 ("translation_world",[vsystem.x,vsystem.y]),
                                                                                 ("scale_world", [4.0,4.0] ),
                                                                                 ("view", coordsys ),
