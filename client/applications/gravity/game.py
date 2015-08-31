@@ -80,7 +80,7 @@ class game:
             self.current_mode = self.modes[mode]
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING | log.INFO | log.AUD_MSG )
+       log.set_level( log.ERROR | log.WARNING )
 
        self.modes = { "system" : system_game(),
                       "vortex" : vortex_game() }

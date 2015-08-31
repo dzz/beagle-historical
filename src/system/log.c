@@ -10,7 +10,7 @@ static char* formatting_buffer;
 static unsigned int initialized = 0;
 
 static unsigned int logging_client;
-static unsigned int log_level = LOG_LEVEL_ERROR | LOG_LEVEL_WARNING | LOG_LEVEL_INFO | LOG_LEVEL_DEBUG | LOG_LEVEL_GFXMSG | LOG_LEVEL_AUDMSG;
+static unsigned int log_level = LOG_LEVEL_ERROR | LOG_LEVEL_WARNING | LOG_LEVEL_INFO | LOG_LEVEL_DEBUG | LOG_LEVEL_AUDMSG;
 
 void log_set_level(unsigned int level) {
     log_level = level;
