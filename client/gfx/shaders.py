@@ -4,6 +4,11 @@ import hwgfx
 
 _shaders = {}
 
+def build_params(dict):
+    params = []
+    for key in dict:
+            params.append( (key, dict[key]) )
+
 def get_unique(vert,frag, path=None):
     return shader(vert,frag,path)
 

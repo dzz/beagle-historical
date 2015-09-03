@@ -2,6 +2,7 @@ from client.gfx.text import render_text
 from client.gfx.blend            import blendstate,blendmode
 from client.gfx.framebuffer import *
 from client.gfx.coordinates import centered_view,Y_Axis_Down
+from client.math.helpers import distance
 import client.gfx.context as gfxcontext
 from random import choice,uniform
 from math import sin,cos,atan2
@@ -25,7 +26,7 @@ class starfield:
                 with render_target(self.image):
                         gfxcontext.set_clear_color(0.0,0.0,0.0,0.2)
                         gfxcontext.clear()
-                        render_text(".",0,0,[1.0,1.0,1.0])
+                        render_text("$",0,0,[1.0,1.0,1.0])
 
         def tick(self):
                 for star in self.stars:
@@ -95,11 +96,11 @@ class sg_player:
                 self.y = 0.0
                 self.vx = 0.0
                 self.vy = 0.0
-                self.image = framebuffer.from_dims(8,8,False)
+                self.image = framebuffer.from_dims(24,8,True)
                 with render_target(self.image):
                         gfxcontext.set_clear_color(0.0,0.0,0.0,0.2)
                         gfxcontext.clear()
-                        render_text("P",0,0,[1.0,1.0,1.0])
+                        render_text("0x0",0,0,[1.0,1.0,1.0])
 
 
         def tick(self):
@@ -111,17 +112,17 @@ class sg_player:
                 self.x = ( point[0] * cos(r)) - (point[1]*sin(r))
                 self.y = (point[0] * sin(r)) + (point[1]*cos(r))
 
-                self.vx+=((pad.triggers[1]+1.0)*pad.left_stick[0])*0.1
-                self.vy+=((pad.triggers[1]+1.0)*pad.left_stick[1])*0.1
+                self.vx+=((pad.triggers[1]+1.0)*pad.left_stick[0])*0.02
+                self.vy+=((pad.triggers[1]+1.0)*pad.left_stick[1])*0.02
 
                 self.x+=self.vx*0.01
                 self.y+=self.vy*0.01
 
-                self.x*=0.99
-                self.y*=0.99
+                self.x*=0.999
+                self.y*=0.999
                 
-                self.vx*=0.95
-                self.vy*=0.95
+                self.vx*=0.96
+                self.vy*=0.96
 
         def render(self):
                 coordsys = centered_view(16.0,9.0, Y_Axis_Down )
@@ -130,7 +131,7 @@ class sg_player:
                     r = atan2(self.vx,self.vy)
                     self.image.render_processed( player_shader, [], [ 
                                                                             ("translation_local",[0,0]),
-                                                                            ("scale_local", [0.1,0.1] ) ,
+                                                                            ("scale_local", [0.3,0.1] ) ,
                                                                             ("translation_world",[self.x,self.y]),
                                                                             ("scale_world", [4.0,4.0] ),
                                                                             ("view", coordsys ),
@@ -186,12 +187,12 @@ class system_game:
             
             coordsys = centered_view(16.0,9.0, Y_Axis_Down )
             worldname_shader = shaders.get_client_program("no_transform","postfx/passthru")
-            comp_shader = shaders.get_client_program("no_transform","postfx/invert")
+            comp_shader = shaders.get_client_program("no_transform","postfx/overworld_warp")
             vsysname_shader = shaders.get_client_program("2d_transform","postfx/passthru_filter")
 
             with render_target(self.comp_buffer):
                  gfxcontext.set_clear_color(0.0,0.0,0.0,0.0)
-                 gfxcontext.clear()
+                 #gfxcontext.clear()
                  with blendstate(blendmode.alpha_over):
                     self.starfield.render()
                     self.player.render()
@@ -209,6 +210,7 @@ class system_game:
                         render_text("();".format(vsystem.name),128-8,124,vsystem.color)
                         render_text("{0}".format(vsystem.name),128-32,140,vsystem.color)
                 with render_target(self.comp_buffer):
+                    self.player.render()
                     with blendstate(blendmode.alpha_over):
                             self.sys_buffer.render_processed( vsysname_shader, [], [ 
                                                                                     ("translation_local",[0.0,0.0]),
@@ -220,20 +222,34 @@ class system_game:
                                                                                     ("filter_color",[vsystem.x,vsystem.y,1.0,1.0])
                                                                                     ] )
 
-            self.comp_buffer.render_processed( comp_shader, [], [ ("filter_color",[0.6,0.8,1.0,1.0])] )
-
+            dists = []
             for vsystem in self.vsystems:
-                with render_target(self.sys_buffer):
-                        render_text("();".format(vsystem.name),128-8,124,vsystem.color)
-                        render_text("{0}".format(vsystem.name),128-32,140,vsystem.color)
-                with blendstate(blendmode.alpha_over):
-                        self.sys_buffer.render_processed( vsysname_shader, [], [ 
-                                                                                ("translation_local",[0.0,0.0]),
-                                                                                ("scale_local", [vsystem.size,vsystem.size])  ,
-                                                                                ("translation_world",[vsystem.x,vsystem.y]),
-                                                                                ("scale_world", [4.0,4.0] ),
-                                                                                ("view", coordsys ),
-                                                                                ("rotation_local", [vsystem.x*0.3]),
-                                                                                ("filter_color",[1.0,1.0,1.0,1.0])
-                                                                                ] )
-            self.player.render()
+                    dists.append( [vsystem.color, distance(vsystem.x,vsystem.y, self.player.x, self.player.y)])
+
+            sum_d = 0.0
+            for calc in dists:
+                    sum_d+=calc[1]
+            for calc in dists:
+                    calc[1]/=sum_d+0.00000000001
+            bg_color = [0.0,0.0,0.0,1.0]
+            for calc in dists:
+                    bg_color[0]+=calc[0][0]*calc[1]
+                    bg_color[1]+=calc[0][1]*calc[1]
+                    bg_color[2]+=calc[0][2]*calc[1]
+
+            self.comp_buffer.render_processed( comp_shader, [], [ ("frequency",[12.0]), ("color",bg_color)] )
+
+            #for vsystem in self.vsystems:
+            #    with render_target(self.sys_buffer):
+            #            render_text("();".format(vsystem.name),128-8,124,vsystem.color)
+            #            render_text("{0}".format(vsystem.name),128-32,140,vsystem.color)
+            #    with blendstate(blendmode.alpha_over):
+            #            self.sys_buffer.render_processed( vsysname_shader, [], [ 
+            #                                                                    ("translation_local",[0.0,0.0]),
+            #                                                                    ("scale_local", [vsystem.size,vsystem.size])  ,
+            #                                                                    ("translation_world",[vsystem.x,vsystem.y]),
+            #                                                                    ("scale_world", [4.0,4.0] ),
+            #                                                                    ("view", coordsys ),
+            #                                                                    ("rotation_local", [vsystem.x*0.3]),
+            #                                                                    ("filter_color",[1.0,1.0,1.0,1.0])
+            #                                                                    ] )
