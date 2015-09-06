@@ -15,6 +15,7 @@ import client.apps
 import client.ui.areas          as ui_area
 import client.gfx.blend         as blend
 import client.ctt2.caret        as caret
+from   client.ctt2.assets       import asset_manager
 import gc
 import os
 
@@ -66,6 +67,11 @@ def init():
     except:
         app_dir = None
         app_module = None
+    try:
+        resource_json = config["APPLICATION"]["assets"]
+    except:
+        resource_json = None
+
 
     controller_enabled = bool( config["APPLICATION"]["controller_enabled"] );
     telnet_enabled = bool( config["APPLICATION"]["telnet_enabled"] );
@@ -95,6 +101,9 @@ def init():
         log.write(log.INFO, "No configuration found, ignoring.")
 
 
+    
+    if resource_json:
+            asset_manager.compile(resource_json)
     if(telnet_enabled):
         console = telnet_console(app, telnet_host, telnet_port)
     app.init()

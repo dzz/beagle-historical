@@ -22,6 +22,7 @@ from client.math.helpers import distance
 from .music_system import music_system
 from .game_modes.vortex import vortex_game
 from .game_modes.system import system_game
+from .game_modes.intro import intro_game
 from client.gfx.framebuffer import *
 from client.gfx.texture import texture
 from client.gfx.text import render_text
@@ -80,12 +81,14 @@ class game:
             self.current_mode = self.modes[mode]
 
     def __init__(self):
-       log.set_level( log.ERROR | log.WARNING )
+       log.set_level( log.ERROR | log.WARNING | log.INFO )
 
-       self.modes = { "system" : system_game(),
+       self.modes = {
+                      "intro"  : intro_game(),
+                      "system" : system_game(),
                       "vortex" : vortex_game() }
 
-       self.current_mode = self.modes["system"]
+       self.current_mode = self.modes["intro"]
 
        self.load_postfx_shaders()
        self.pick_post_processing_shader()

@@ -7,10 +7,10 @@ class vortex:
     def __init__(self):
         self.dummy_clips = [
                 audio.clip_create(host_config.get("app_dir") + "audio/vt00.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/vt01.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/vt02.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/vt03.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/vt04.ogg")
+                #audio.clip_create(host_config.get("app_dir") + "audio/vt01.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/vt02.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/vt03.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/vt04.ogg")
                 ]
         self.base_rotation = 0.5
         self.dist_scale = 0.02

@@ -8,18 +8,18 @@ class player:
     def __init__(self):
         self.dummy_clips = [
                 audio.clip_create(host_config.get("app_dir") + "audio/stb00.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/stb01.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/stb02.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/stb03.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/stb04.ogg")
+                #audio.clip_create(host_config.get("app_dir") + "audio/stb01.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/stb02.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/stb03.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/stb04.ogg")
                 ]
 
         self.fire_clips = [
                 audio.clip_create(host_config.get("app_dir") + "audio/hh00.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/hh01.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/hh02.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/hh03.ogg"),
-                audio.clip_create(host_config.get("app_dir") + "audio/hh04.ogg")
+                #audio.clip_create(host_config.get("app_dir") + "audio/hh01.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/hh02.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/hh03.ogg"),
+                #audio.clip_create(host_config.get("app_dir") + "audio/hh04.ogg")
                 ]
 
         #audio.track_play_clip(1, self.dummy_clips[0] )

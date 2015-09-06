@@ -16,7 +16,7 @@ def rand_unit():
 
 class starfield:
         def __init__(self):
-                self.num_stars = 500
+                self.num_stars = 200
                 self.stars = []
                 self.speed = 0.001
                 self.sprd = 30
@@ -26,7 +26,7 @@ class starfield:
                 with render_target(self.image):
                         gfxcontext.set_clear_color(0.0,0.0,0.0,0.2)
                         gfxcontext.clear()
-                        render_text("$",0,0,[1.0,1.0,1.0])
+                        render_text("`",0,0,[1.0,1.0,1.0])
 
         def tick(self):
                 for star in self.stars:
@@ -129,6 +129,7 @@ class sg_player:
                 player_shader = shaders.get_client_program("2d_transform","postfx/passthru_filter")
                 with blendstate(blendmode.alpha_over):
                     r = atan2(self.vx,self.vy)
+                    r = 0.0
                     self.image.render_processed( player_shader, [], [ 
                                                                             ("translation_local",[0,0]),
                                                                             ("scale_local", [0.3,0.1] ) ,

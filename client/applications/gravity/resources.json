@@ -1,0 +1,14 @@
+{
+        "packages" : {
+                "intro" : {
+                        "resources" : [ 
+                                        {   
+                                            "name" : "planet_background",
+                                            "type" : "texture",
+                                            "filename" : "background/png/overworld_planet.png",
+                                            "filtered" : "false"
+                                        }
+                                       ]
+                }
+        }
+}

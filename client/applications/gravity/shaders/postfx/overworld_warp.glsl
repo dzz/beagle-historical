@@ -15,6 +15,7 @@ void main(void) {
     l=sin(l*3.14*frequency);
 
     
-    gl_FragColor = (l*color) + ((1-l)*primary_pixel);
+    vec4 secondary_pixel = texture(primary_buf,uv*length(primary_pixel*color));
+    gl_FragColor =( (l*color) + ((1-l)*primary_pixel) * secondary_pixel);
     
 }
