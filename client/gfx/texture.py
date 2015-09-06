@@ -1,5 +1,7 @@
 import hwgfx
 import client.system.log as log
+from client.gfx.primitive import primitive, draw_mode
+from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 #TODO:  this should be populated from the hardware's reported  maximum number 
 #       of texture units. 
 
@@ -7,6 +9,7 @@ units = [ 0, 1, 2, 3 ]
 
 class texture:
     units = [ 0, 1, 2, 3 ]
+    screen_primitive = primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )
     def __init__(self, tex, w, h):
         self._tex   = tex
         self.w      = w
@@ -32,6 +35,15 @@ class texture:
     def from_dims(cls, w,h,filtered=False):
         tex = hwgfx.texture_generate(w,h,filtered)
         return cls(tex, w, h)
+
+    def render_processed( self, shader_program, additional_textures = [], shader_inputs = [] ):
+        shader_program.bind( shader_inputs ) 
+        self.bind( texture.units[0] )
+        idx = 1
+        for tex in additional_textures:
+            tex.bind(texture.units[idx])
+            idx+=1
+        texture.screen_primitive.render()
 
     def upload_local_image(self,local_image):
         hwgfx.texture_upload(self._tex, local_image._img)

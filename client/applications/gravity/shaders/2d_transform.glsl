@@ -27,8 +27,6 @@ void main(void) {
     gl_Position.z = 0;
 
     uv=uv_position;
-    if(view.y<0)
-        uv.y*=-1;
         
 
 }

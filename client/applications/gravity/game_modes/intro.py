@@ -1,20 +1,19 @@
-from client.gfx.text import render_text
-from client.gfx.blend            import blendstate,blendmode
-from client.gfx.framebuffer import *
-from client.gfx.coordinates import centered_view,Y_Axis_Down
-from client.math.helpers import distance
-import client.gfx.context as gfxcontext
-from random import choice,uniform
-from math import sin,cos,atan2
-from client.system.gamepad       import get_gamepad
 from client.ctt2.assets import assets
 
 class intro_game:
         def __init__(self):
-            self.texture = assets.get("intro/planet_background")
+            self.texture = assets.get("intro/texture/planet_background")
+            self.shader  = assets.get("common/shader/default_2d")
+            self.view    = assets.get("common/coordsys/unit_square")
 
         def tick(self, context):
             pass
 
         def render(self, context):
-            pass
+            self.texture.render_processed( self.shader, [], {
+                                                            "translation_local" : [0,0],
+                                                            "scale_local" : [1,1],
+                                                            "translation_world": [0,0],
+                                                            "scale_world" : [ 1,1],
+                                                            "view"        : self.view,
+                                                            "filter_color" : [1,1,1,1] } )

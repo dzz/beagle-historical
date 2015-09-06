@@ -1,10 +1,44 @@
 {
         "packages" : {
+                "common" : {
+                        "resources" : [
+                                        {
+                                            "type"              : "shader",
+                                            "name"              : "default_2d",
+                                            "vertex_program"    : "2d_transform",
+                                            "pixel_program"     : "postfx/passthru_filter"
+                                        },
+                                        {
+                                            "type"              : "coordsys",
+                                            "name"              : "16:9",
+                                            "mode"              : "centered_view",
+                                            "width"             : 16.0,
+                                            "height"            : 9.0,
+                                            "y_axis"            : "down"
+                                        },
+                                        {
+                                            "type"              : "coordsys",
+                                            "name"              : "unit_square",
+                                            "mode"              : "centered_view",
+                                            "width"             : 2.0,
+                                            "height"            : 2.0,
+                                            "y_axis"            : "down"
+                                        },
+                                        {
+                                            "type"              : "coordsys",
+                                            "name"              : "1920:1080",
+                                            "mode"              : "centered_view",
+                                            "width"             : 1920,
+                                            "height"            : 1080,
+                                            "y_axis"            : "down"
+                                        }
+                                ]
+                },
                 "intro" : {
                         "resources" : [ 
                                         {   
-                                            "name" : "planet_background",
                                             "type" : "texture",
+                                            "name" : "planet_background",
                                             "filename" : "background/png/overworld_planet.png",
                                             "filtered" : "false"
                                         }

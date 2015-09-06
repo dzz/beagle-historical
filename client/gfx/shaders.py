@@ -51,9 +51,17 @@ class shader(object):
 
         log.write(log.DEBUG,"Linked program:{3}".format(path,vert,frag,self._shader))
 
+    def transform_uniforms(u):
+        uniforms = []
+        for key in u:
+            uniforms.append( (key, u[key]) )
+        return uniforms
+
     def bind(self,uniforms = []):
         hwgfx.shader_bind(self._shader);
 
+        if type(uniforms) is dict:
+            uniforms = shader.transform_uniforms(uniforms)
 
         for u in uniforms:
             name    = u[0]
