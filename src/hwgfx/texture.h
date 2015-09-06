@@ -5,6 +5,7 @@
 
 typedef struct {
     GLuint texture_id;
+    int bound_unit;
 } gfx_texture;
 
 

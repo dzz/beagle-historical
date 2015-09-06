@@ -405,6 +405,20 @@ DEF_ARGS {
     shader_bind_vec4(shader,param,x,y,z,w);
     Py_RETURN_NONE;
 }
+
+
+MODULE_FUNC hwgfx_shader_bind_texture
+DEF_ARGS {
+    unsigned int ptr;
+    unsigned int tex_ptr;
+    char* param;
+    gfx_shader* shader;
+    if(!INPUT_ARGS(args,"IsI",&ptr,&param,&tex_ptr))
+        return NULL;
+    shader = (gfx_shader*)ptr;
+    shader_bind_texture(shader,param,(gfx_texture*)tex_ptr);
+    Py_RETURN_NONE;
+}
 /**
  * drawmode_map
  */
@@ -651,6 +665,7 @@ static PyMethodDef hwgfx_methods[] = {
     {"shader_bind_vec2" ,   hwgfx_shader_bind_vec2,     METH_VARARGS, NULL},
     {"shader_bind_vec3" ,   hwgfx_shader_bind_vec3,     METH_VARARGS, NULL},
     {"shader_bind_vec4" ,   hwgfx_shader_bind_vec4,     METH_VARARGS, NULL},
+    {"shader_bind_texture" ,   hwgfx_shader_bind_texture,     METH_VARARGS, NULL},
 
     /*texture*/
     {"texture_generate",    hwgfx_texture_generate,     METH_VARARGS, NULL},

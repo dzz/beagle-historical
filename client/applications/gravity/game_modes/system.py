@@ -50,7 +50,7 @@ class starfield:
                     s_p = 10.0
                     scl = 0.001+(s_p-(z*s_p))
                     with blendstate(blendmode.alpha_over):
-                        self.image.render_processed( star_shader, [], [ 
+                        self.image.render_processed( star_shader, [ 
                                                                                 ("translation_local",[0,0]),
                                                                                 ("scale_local", [scl,scl] ) ,
                                                                                 ("translation_world",[x,y]),
@@ -213,7 +213,7 @@ class system_game:
                 with render_target(self.comp_buffer):
                     self.player.render()
                     with blendstate(blendmode.alpha_over):
-                            self.sys_buffer.render_processed( vsysname_shader, [], [ 
+                            self.sys_buffer.render_processed( vsysname_shader, [ 
                                                                                     ("translation_local",[0.0,0.0]),
                                                                                     ("scale_local", [vsystem.size,vsystem.size])  ,
                                                                                     ("translation_world",[vsystem.x,vsystem.y]),

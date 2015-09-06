@@ -1,6 +1,7 @@
 import client.ctt2.host_config  as host_config
 import client.system.log as log
 import hwgfx
+from client.gfx.texture import *
 
 _shaders = {}
 
@@ -57,16 +58,21 @@ class shader(object):
             uniforms.append( (key, u[key]) )
         return uniforms
 
-    def bind(self,uniforms = []):
+    def bind(self,uniforms = [], bind_textures = True, reserved_units = 0 ):
         hwgfx.shader_bind(self._shader);
 
         if type(uniforms) is dict:
             uniforms = shader.transform_uniforms(uniforms)
 
+        tex_unit = reserved_units
+
         for u in uniforms:
             name    = u[0]
             vector  = u[1]
-            vlen    = len(vector)
+
+            vlen = 0
+            if type(vector) is list:
+                vlen    = len(vector)
 
             if vlen == 1:
                 hwgfx.shader_bind_float (self._shader, name, 
@@ -86,6 +92,14 @@ class shader(object):
                         vector[1],
                         vector[2],
                         vector[3])
+            elif isinstance(vector,texture):
+                if bind_textures:
+                    vector.bind(tex_unit)
+                    tex_unit += 1
+                hwgfx.shader_bind_texture( self._shader, name, vector._tex )
+            elif type(vector) is float:
+                hwgfx.shader_bind_float (self._shader, name, 
+                        vector)
 
     def __del__(self):
         log.write(log.DEBUG, "Deleting shader program {0}".format(self._shader))

@@ -122,6 +122,7 @@ void texture_drop(gfx_texture* texture) {
 void texture_bind(gfx_texture* texture, int texture_unit) {
     glActiveTexture(GL_TEXTURE0 + texture_unit);
     glBindTexture(GL_TEXTURE_2D, texture->texture_id );
+    texture->bound_unit = texture_unit;
 }
 
 void texture_download(gfx_texture* texture, SDL_Surface* target) {

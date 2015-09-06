@@ -1,6 +1,7 @@
 import client.system.log as log
 import itertools
 import hwgfx
+from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 from enum import IntEnum
 
 
@@ -72,3 +73,8 @@ class primitive:
     def render(self):
         hwgfx.primitive_render(self._prim)
 
+    def render_shaded( self, shader_program, shader_inputs = [], bind_textures = True, reserved_units = 0 ):
+        shader_program.bind( shader_inputs, bind_textures, reserved_units )
+        self.render()
+    def get_unit_uv_primitive():
+        return primitive( draw_mode.TRIS, tesselated_unit_quad, tesselated_unit_quad_uv )

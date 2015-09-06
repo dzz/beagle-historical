@@ -19,6 +19,9 @@ class curve:
 
         if left:
             return left["vec"]
+
+        if right:
+            return right["vec"]
             
         return self.points[0]["vec"]
 

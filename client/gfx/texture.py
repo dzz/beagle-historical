@@ -36,13 +36,9 @@ class texture:
         tex = hwgfx.texture_generate(w,h,filtered)
         return cls(tex, w, h)
 
-    def render_processed( self, shader_program, additional_textures = [], shader_inputs = [] ):
+    def render_processed( self, shader_program, shader_inputs = [] ):
         shader_program.bind( shader_inputs ) 
-        self.bind( texture.units[0] )
-        idx = 1
-        for tex in additional_textures:
-            tex.bind(texture.units[idx])
-            idx+=1
+        self.bind( 0 )
         texture.screen_primitive.render()
 
     def upload_local_image(self,local_image):

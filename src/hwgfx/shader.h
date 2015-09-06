@@ -2,6 +2,7 @@
 #define __GFX_SHADER__
 
 #include <GLXW/glxw.h>
+#include "texture.h"
 
 typedef struct {
     GLuint shader_id;
@@ -20,6 +21,7 @@ void shader_bind_vec4 (gfx_shader* shader, const char* param, float x, float y, 
 void shader_bind_vec3 (gfx_shader* shader, const char* param, float x, float y, float z);
 void shader_bind_vec2 (gfx_shader* shader, const char* param, float x, float y);
 void shader_bind_float (gfx_shader* shader, const char* param, float x);
+void shader_bind_texture (gfx_shader* shader, const char* param, gfx_texture* texture );
 
 gfx_shader* shader_get_bound();
 
