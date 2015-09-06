@@ -1,0 +1,24 @@
+from client.math.helpers import lerp_vec
+class curve:
+    def __init__(self,points):
+        self.points = points
+
+    def value_at(self,t):
+        left = None
+        right = None
+        for point in self.points:
+            if point["t"] <t:
+                left = point
+            if point["t"] >t:
+                right = point
+                break
+
+        if left and right:
+            nt = (t - left["t"]) / (right["t"]-left["t"])
+            return lerp_vec(left["vec"],right["vec"],nt)
+
+        if left:
+            return left["vec"]
+            
+        return self.points[0]["vec"]
+

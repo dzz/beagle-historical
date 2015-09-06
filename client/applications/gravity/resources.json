@@ -40,7 +40,35 @@
                                             "type" : "texture",
                                             "name" : "planet_background",
                                             "filename" : "background/png/overworld_planet.png",
-                                            "filtered" : "false"
+                                            "filtered" : false
+                                        },
+                                        {   
+                                            "type" : "texture",
+                                            "name" : "fire_gradient",
+                                            "filename" : "background/png/overworld_grad.png",
+                                            "filtered" : false
+                                        },
+                                        {
+                                                "type" : "dict",
+                                                "name" : "sunrise_config",
+                                                "dict" : {
+                                                            "timescale"     : 0.3,
+                                                            "color_changes" : {
+                                                            "bg" : { "a" : [1.0,0.0,9.0,1.0], "b": [0.1,0.2,0.1,0.1] },
+                                                            "fg" : { "a" : [0.0,0.0,0.0,0.0], "b": [1.0,1.0,1.0,1.0] }
+                                                            },
+
+                                                            "curves" : {
+                                                                "background_fade" : [ { "t" : 0.0, "vec" : [1.0,0.0,9.0,1.0] },
+                                                                                      { "t" : 1.0, "vec" : [0.1,0.2,0.1,0.0] }
+                                                                                    ],
+                                                                "foreground_fade" : [ { "t" : 0.0, "vec" : [1.0,0.0,9.0,1.0] },
+                                                                                      { "t" : 1.0, "vec" : [0.1,0.2,0.1,0.0] }
+                                                                                    ]
+                                                                
+
+                                                            }
+                                                         }
                                         }
                                        ]
                 }

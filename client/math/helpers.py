@@ -44,3 +44,12 @@ tesselated_unit_quad_uv = [
                          [0.0, 1.0],
                          [0.0, 0.0],
                         ] 
+
+def lerp_vec( a, b, x ):
+    r = []
+    for i in range(0,len(a)):
+        r.append(a[i]*(1.0-x))
+    for i in range(0,len(r)):
+        r[i] = r[i] + (b[i]*x)
+    return r
+
