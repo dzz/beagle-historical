@@ -16,13 +16,15 @@ class intro_game:
             self.bg_texture = assets.get("intro/texture/fire_gradient")
             self.fg_shader  = assets.get("common/shader/default_2d")
             self.bg_shader  = assets.get("intro/shader/sundistort")
+            self.nrg_shader = assets.get("intro/shader/energy")
+            self.nrg_texture = assets.get("intro/texture/green_energy")
             self.view       = assets.get("common/coordsys/unit_square")
             self.config     = assets.get("intro/dict/sunrise_config")
             self.primitive  = primitive.get_unit_uv_primitive()
              
 
             self.comp_buffer = framebuffer.from_dims(960,540,False)
-            self.star_buffer = framebuffer.from_dims(96,54,False)
+            self.star_buffer = framebuffer.from_dims(960,540,True)
             self.curves = {}
 
             for key in self.config["curves"]:
@@ -48,7 +50,8 @@ class intro_game:
                      "scale_world"          : [1,1],
                      "view"                 : self.view,
                      "rotation_local"       : 0.0 ,
-                     "filter_color" : self.get_lerped("background_fade") 
+                     "filter_color"         : self.get_lerped("background_fade") ,
+                     "uv_translate"         : self.get_lerped("bg_uv_translate") 
                      } 
 
         def get_fg_shader_params(self):
@@ -63,6 +66,19 @@ class intro_game:
                    "filter_color"       : self.get_lerped("foreground_fade") 
                    } 
 
+        def get_energy_shader_params(self):
+            return { 
+                    "texBuffer"         : self.nrg_texture,
+                    "translation_local" : [0.0,0.0],
+                   "scale_local"        : self.get_lerped("energy_scale"),#[0.01,1.0],
+                   "translation_world"  : [-0.283,0],
+                   "scale_world"        : [ 1,1],
+                   "view"               : self.view,
+                   "rotation_local"     : [0.0],
+                   "filter_color"       : self.get_lerped("energy_color"),
+                   "freq"       : self.get_lerped("energy_freq")
+                   } 
+
         def render(self, context):
 
             if(self.t > self.config["ending"]):
@@ -75,13 +91,19 @@ class intro_game:
 
             with render_target(self.comp_buffer):
                 self.primitive.render_shaded( self.bg_shader, self.get_bg_shader_params() )
+                with blendstate(blendmode.add):
+                    self.primitive.render_shaded( self.nrg_shader, self.get_energy_shader_params() )
 
                 with blendstate(blendmode.alpha_over):
                     self.primitive.render_shaded( self.fg_shader, self.get_fg_shader_params() )
 
 
+
             
             #test_shdr = shaders.get_client_program("no_transform","postfx/intro/sundistort")
             #self.primitive.render_shaded( test_shdr, { "buffer" : self.star_buffer.get_texture(), "dist" : self.comp_buffer.get_texture() } );
-            self.comp_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
+            self.comp_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru_filter"),
+                        {
+                            "filter_color" : self.get_lerped("composite_tint") 
+                        })
 

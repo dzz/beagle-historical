@@ -19,7 +19,7 @@ class starfield:
                 self.num_stars = 25
                 self.stars = []
                 self.speed = 0.001
-                self.sprd = 30
+                self.sprd = 2
                 for i in range(0,self.num_stars):
                         self.stars.append([rand_unit()*self.sprd,rand_unit()*self.sprd,uniform(0.0,1.0)])
                 self.image = framebuffer.from_dims(8,8,False)

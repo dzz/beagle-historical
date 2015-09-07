@@ -1,4 +1,5 @@
 from client.math.helpers import lerp_vec
+from math import tanh
 class curve:
     def __init__(self,points):
         self.points = points
@@ -15,6 +16,11 @@ class curve:
 
         if left and right:
             nt = (t - left["t"]) / (right["t"]-left["t"])
+            if("smooth" in right) and right["smooth"]:
+                if right["smooth"] == "tanh":
+                    nt = tanh(nt*3.14)
+                if right["smooth"] == "sqr":
+                    nt = nt*nt
             return lerp_vec(left["vec"],right["vec"],nt)
 
         if left:
