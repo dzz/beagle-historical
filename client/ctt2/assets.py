@@ -44,7 +44,7 @@ class resource_manager:
             for key in flush_keys:
                 self.resource_map[key] = None
                 rm_keys.append(key)
-                log.write( log.INFO, "Flushed resource {0} from package {1}".format(key,pkgname))
+                log.write( log.INFO, "Flushed asset {0} from package {1}".format(key,pkgname))
             for key in rm_keys:
                 del self.resource_map[key]
             log.write( log.INFO, "Flushed package {0}".format(pkgname) )
@@ -54,7 +54,7 @@ class resource_manager:
                 key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
                 self.package_keys[pkgname].append(key)
                 self.resource_map[key] = self.adapters[resdef["type"]].load(resdef)
-                log.write( log.INFO, "Loaded resource {0}".format(key))
+                log.write( log.INFO, "Loaded asset {0}".format(key))
 
         def get_resource(self, path):
             try:
@@ -68,7 +68,7 @@ class resource_manager:
             for key in self.resource_map:
                 self.resource_map[key] = None
                 rm_keys.append(key)
-                log.write(log.INFO, "Flushed resource {0}".format(key))
+                log.write(log.INFO, "Flushed asset {0}".format(key))
             for key in rm_keys:
                 del self.resource_map[key]
 

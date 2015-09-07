@@ -39,6 +39,7 @@ def init():
 
     class output_redirect():
         def flush(self):
+            log.write(log.INFO,"\n")
             pass
         def write(self,txt):
             log.write(log.INFO, txt)
@@ -46,7 +47,9 @@ def init():
         def flush(self):
             pass
         def write(self,txt):
-            log.write(log.ERROR, txt.rstrip())
+            lines = txt.split("\n")
+            for line in lines:
+                log.write(log.ERROR, line)
     
     sys.stdout = output_redirect()
     sys.stderr = error_redirect()

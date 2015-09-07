@@ -38,7 +38,7 @@ class intro_game:
                     self.curves[sceneKey][curveKey] = curve(self.config["curves"][sceneKey][curveKey])
 
             self.t                   = 0.0
-            self.total_t             = 0.0
+            self.total_t             = self.config["start"]
             self.delta_t             = 1.0/60.0 * self.config["timescale"]
             self.scene_renderers     = {
                                             "city_launch" : self.render_city_launch,
@@ -102,7 +102,7 @@ class intro_game:
                    "scale_world"        : [ 1,1],
                    "view"               : self.view,
                    "rotation_local"     : [0.0],
-                   "filter_color"       : self.get_lerped("foreground_fade") 
+                   "filter_color"       : self.get_lerped("ship_color") 
                    } 
 
         def get_energy_shader_params(self):
@@ -143,10 +143,11 @@ class intro_game:
                         })
 
         def render(self, context):
-            if(self.t > self.config["ending"]):
+            if(self.t > self.config["end"]):
                 gfx_context.clear([0.0,0.0,0.0,1.0])
                 return
             else:
-                self.current_scene_renderer()
+                if(self.current_scene_renderer):
+                    self.current_scene_renderer()
 
 

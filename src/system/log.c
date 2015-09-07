@@ -69,13 +69,13 @@ void log_client_message( unsigned int level, const char* message ) {
         unsigned int system = CTT2_CLIENT_APPLICATION;
         char* system_prefix = ctt2_module_from_code(system);
         char* level_tag = tag_from_level_code(level);
-        const char* format = "%-8s[%08x]\t%-8s\t%s\n";
+        const char* format = "py:%s\r\n";
 
         if(LOG_TARGET & LOG_TARGET_FILE) {
-            fprintf(logfile, format, system_prefix, system, level_tag, message);
+            fprintf(logfile, format, message );
         }
         if(LOG_TARGET & LOG_TARGET_STDOUT) {
-            printf(format, system_prefix, system, level_tag, message);
+            printf(format, message );
         }
 
     }
