@@ -26,7 +26,7 @@ class intro_game:
              
 
             self.comp_buffer = framebuffer.from_dims(960,540,False)
-            self.star_buffer = framebuffer.from_dims(960,540,True)
+            self.star_buffer = framebuffer.from_dims(64,64,False)
             self.curves = {}
 
             for key in self.config["curves"]:
@@ -60,9 +60,9 @@ class intro_game:
             return { 
                     "texBuffer"         : self.fg_texture,
                     "translation_local" : self.get_lerped("planet_ease"),
-                   "scale_local"        : [1,1],
+                   "scale_local"        : self.get_lerped("planet_scale"),
                    "translation_world"  : [0,0],
-                   "scale_world"        : [ 1,1],
+                   "scale_world"        : [ 1.3,1.3],
                    "view"               : self.view,
                    "rotation_local"     : [0.0],
                    "filter_color"       : self.get_lerped("foreground_fade") 
@@ -85,7 +85,7 @@ class intro_game:
                     "texBuffer"         : self.nrg_texture,
                     "translation_local" : [0.0,0.0],
                    "scale_local"        : self.get_lerped("energy_scale"),#[0.01,1.0],
-                   "translation_world"  : [-0.283,0],
+                   "translation_world"  : [-0.483,0],
                    "scale_world"        : [ 1,1],
                    "view"               : self.view,
                    "rotation_local"     : [0.0],
