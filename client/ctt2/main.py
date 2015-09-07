@@ -38,18 +38,29 @@ def init():
     global app, console
 
     class output_redirect():
+        def cvted(txt):
+            lines = txt.split("\n")
+            cvt_lines = []
+            for line in lines:
+                cvt_lines.append(line.rstrip())
+            return cvt_lines
+
         def flush(self):
-            log.write(log.INFO,"\n")
-            pass
+            return
+
+        def _wr(txt, mode):
+            for line in output_redirect.cvted(txt):
+                log.write(mode, line )
+
         def write(self,txt):
-            log.write(log.INFO, txt)
+            output_redirect._wr(txt,log.INFO)
+
     class error_redirect():
         def flush(self):
-            pass
+            return
+
         def write(self,txt):
-            lines = txt.split("\n")
-            for line in lines:
-                log.write(log.ERROR, line)
+            output_redirect._wr(txt,log.ERROR)
     
     sys.stdout = output_redirect()
     sys.stderr = error_redirect()

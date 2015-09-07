@@ -43,158 +43,177 @@
         },
         "intro" : {
             "preload" : false,
-            "resources" : [ 
-            {
-                "type"              : "shader",
-                "name"              : "sundistort",
-                "vertex_program"    : "2d_transform",
-                "pixel_program"     : "postfx/intro/sundistort"
-            },
-            {
-                "type"              : "shader",
-                "name"              : "energy",
-                "vertex_program"    : "2d_transform",
-                "pixel_program"     : "postfx/intro/energy"
-            },
-            {   
-                "type" : "texture",
-                "name" : "planet_background",
-                "filename" : "background/png/overworld_planet.png",
-                "filtered" : false
-            },
-            {   
-                "type" : "texture",
-                "name" : "fire_gradient",
-                "filename" : "background/png/overworld_grad.png",
-                "filtered" : true
-            },
-            {   
-                "type" : "texture",
-                "name" : "green_energy",
-                "filename" : "background/png/green_energy.png",
-                "filtered" : true
-            },
-            {   
-                "type" : "texture",
-                "name" : "ascend_ship",
-                "filename" : "background/png/ascend_ship.png",
-                "filtered" : false
-            },
-            {
-                "type" : "dict",
-                "name" : "sunrise_config",
-                "dict" : {
-                    "timescale"     : 11.0,
-                    "start"         : 85.0,
-                    "end"           : 185.0,
-                    "scenes" : {
-                        "city_launch" : { "start" : 0.0, "end" : 85.0 },
-                        "ship_dock"   : { "start" : 85.0, "end" : 185.0 }
+            "resources" : { 
+                "shader" : [
+                {
+                    "name"              : "sundistort",
+                    "vertex_program"    : "2d_transform",
+                    "pixel_program"     : "postfx/intro/sundistort"
+                },
+                {
+                    "name"              : "energy",
+                    "vertex_program"    : "2d_transform",
+                    "pixel_program"     : "postfx/intro/energy"
+                },
+                {
+                    "name"              : "atmo",
+                    "vertex_program"    : "no_transform",
+                    "pixel_program"     : "postfx/intro/atmo"
+                }
+                ],
+                    "texture" : [
+                    {   
+                        "name" : "planet_background",
+                        "filename" : "background/png/overworld_planet.png",
+                        "filtered" : false
                     },
-                    "curves" : {
-                        "ship_dock" : {
-                                "ship_path" : [ { "t": 0.0, "vec" :  [0.0,0.0] } ],
-                                "ship_color" : [ { "t": 0.0, "vec" :  [1.0,1.0,1.0,1.0] } ],
-                                "ship_scale" : [ { "t": 0.0, "vec" :  [0.024,0.07] } ]
-                        },
-                        "city_launch" : {
-                            "background_fade" : [ 
-                            { "t" : 0.0, "vec" : [1.0,0.0,0.0,0.0] },
-                            { "t" : 1.5, "vec" : [1.0,0.0,0.0,1.0] },
-                            { "t" : 3.5, "vec" : [1.0,1.0,0.0,1.0] },
-                            { "t" : 30.5, "vec" : [1.0,1.0,1.0,1.0] },
-                            { "t" : 60.5, "vec" : [0.0,0.0,0.0,0.0] },
-                            { "t" : 70.5, "vec" : [1.0,1.0,1.0,1.0] },
-                            { "t" : 95.0, "vec" : [0.1,0.0,0.0,1.0] }
-                            ],
-                                "foreground_fade" : [ 
-                                { "t" : 0.0, "vec" : [0.1,0.0,0.4,1.0] },
-                                { "t" : 2.0, "vec" : [1.0,0.2,0.1,1.0] },
-                                { "t" : 5.0, "vec" : [1.0,0.0,0.0,1.0] },
-                                { "t" : 13.0, "vec" : [1.0,0.4,0.4,1.0] },
-                                { "t" : 20.0, "vec" : [1.0,0.4,0.4,1.0] },
-                                { "t" : 60.0, "vec" : [0.0,1.0,0.0,1.0] },
-                                { "t" : 80.0, "vec" : [1.0,0.4,0.4,1.0] }
-                            ],
-                                "ship_color" : [ 
-                                { "t" : 0.0, "vec" : [0.1,0.0,0.4,1.0] },
-                                { "t" : 2.0, "vec" : [1.0,0.2,0.1,1.0] },
-                                { "t" : 5.0, "vec" : [1.0,0.0,0.0,1.0] },
-                                { "t" : 13.0, "vec" : [1.0,0.4,0.4,1.0] },
-                                { "t" : 20.0, "vec" : [1.0,0.4,0.4,1.0] },
-                                { "t" : 60.0, "vec" : [0.0,1.0,0.0,1.0] },
-                                { "t" : 80.0, "vec" : [1.0,0.4,0.4,1.0] }
-                            ],
-                                "planet_ease"     : [ 
-                                { "t": 0.0, "vec" : [0.3,0.15] },
-                                { "t": 40.0, "vec" : [0.0,-0.06], "smooth" : "tanh" }, 
-                                { "t": 95.0, "vec" : [-1.7,1.55], "smooth" : "sqr" }
-                            ],
-                                "planet_scale" : [
-                                { "t" : 0.0, "vec" : [1.25,1.25] },
-                                { "t" : 30.0, "vec" : [1.0,1.0] },
-                                { "t" : 70.0, "vec" : [0.9,0.9] },
-                                { "t" : 90.0, "vec" : [0.7,0.7] },
-                                { "t" : 95.0, "vec" : [0.6,0.6] }
+                    {   
+                        "name" : "fire_gradient",
+                        "filename" : "background/png/overworld_grad.png",
+                        "filtered" : true
+                    },
+                    {   
+                        "name" : "green_energy",
+                        "filename" : "background/png/green_energy.png",
+                        "filtered" : false
+                    },
+                    {   
+                        "name" : "ascend_ship",
+                        "filename" : "background/png/ascend_ship.png",
+                        "filtered" : false
+                    }
+                ],
+                    "dict" : [
+                    {
+                        "name" : "sunrise_config",
+                        "dict" : {
+                            "timescale"     : 11.0,
+                            "start"         : 0.0,
+                            "end"           : 185.0,
+                            "scenes" : {
+                                "city_launch" : { "start" : 0.0, "end" : 80.0 },
+                                "ship_atmo"   : { "start" : 80.0, "end" : 300.0 }
+                            },
+                            "curves" : {
+                                "ship_atmo" : {
+                                    "atmo_col_top" : [
+                                    { "t" : 0.0, "vec" : [1.0,0.0,0.0,0.2] },
+                                        { "t" : 70.0, "vec" : [0.0,0.0,0.0,0.2] }
+                                    ],
+                                        "atmo_col_bot" : [
+                                        { "t" : 0.0, "vec" : [0.5,0.5,1.0,1.0] },
+                                        { "t" : 30.0, "vec" : [1.0,1.0,1.0,0.2], "smooth" : "sqr" }
+                                    ],
+                                        "ship_path" : [ 
+                                        { "t": 0.0, "vec" :  [0.0,1.2] } ,
+                                        { "t": 130.0, "vec" :  [0.0,-3.0], "smooth" : "sqr" } 
+                                    ],
+                                        "ship_color" : [ { "t": 0.0, "vec" :  [1.0,1.0,1.0,1.0] } ],
+                                        "ship_scale" : [ 
+                                        { "t": 0.0, "vec" :  [0.24,0.7] } ,
+                                        { "t": 30.0, "vec" :  [0.048,0.14], "smooth" : "tanh" } ,
+                                        { "t": 60.0, "vec" :  [0.014,0.035], "smoth" : "sqr" } 
+                                    ]
+                                },
+                                "city_launch" : {
+                                    "background_fade" : [ 
+                                    { "t" : 0.0, "vec" : [1.0,0.0,0.0,0.0] },
+                                    { "t" : 1.5, "vec" : [1.0,0.0,0.0,1.0] },
+                                    { "t" : 3.5, "vec" : [1.0,1.0,0.0,1.0] },
+                                    { "t" : 30.5, "vec" : [1.0,1.0,1.0,1.0] },
+                                    { "t" : 60.5, "vec" : [0.0,0.0,0.0,0.0] },
+                                    { "t" : 70.5, "vec" : [1.0,1.0,1.0,1.0] },
+                                    { "t" : 95.0, "vec" : [0.1,0.0,0.0,1.0] }
+                                    ],
+                                        "foreground_fade" : [ 
+                                        { "t" : 0.0, "vec" : [0.1,0.0,0.4,1.0] },
+                                        { "t" : 2.0, "vec" : [1.0,0.2,0.1,1.0] },
+                                        { "t" : 5.0, "vec" : [1.0,0.0,0.0,1.0] },
+                                        { "t" : 13.0, "vec" : [1.0,0.4,0.4,1.0] },
+                                        { "t" : 20.0, "vec" : [1.0,0.4,0.4,1.0] },
+                                        { "t" : 60.0, "vec" : [0.0,1.0,0.0,1.0] },
+                                        { "t" : 80.0, "vec" : [1.0,0.4,0.4,1.0] }
+                                    ],
+                                        "ship_color" : [ 
+                                        { "t" : 0.0, "vec" : [0.1,0.0,0.4,1.0] },
+                                        { "t" : 2.0, "vec" : [1.0,0.2,0.1,1.0] },
+                                        { "t" : 5.0, "vec" : [1.0,0.0,0.0,1.0] },
+                                        { "t" : 13.0, "vec" : [1.0,0.4,0.4,1.0] },
+                                        { "t" : 20.0, "vec" : [1.0,0.4,0.4,1.0] },
+                                        { "t" : 60.0, "vec" : [0.0,1.0,0.0,1.0] },
+                                        { "t" : 80.0, "vec" : [1.0,0.4,0.4,1.0] }
+                                    ],
+                                        "planet_ease"     : [ 
+                                        { "t": 0.0, "vec" : [0.3,0.15] },
+                                        { "t": 40.0, "vec" : [0.0,-0.06], "smooth" : "tanh" }, 
+                                        { "t": 95.0, "vec" : [-1.7,1.55], "smooth" : "sqr" }
+                                    ],
+                                        "planet_scale" : [
+                                        { "t" : 0.0, "vec" : [1.25,1.25] },
+                                        { "t" : 30.0, "vec" : [1.0,1.0] },
+                                        { "t" : 70.0, "vec" : [0.9,0.9] },
+                                        { "t" : 90.0, "vec" : [0.7,0.7] },
+                                        { "t" : 95.0, "vec" : [0.6,0.6] }
 
-                            ],
-                                "bg_ease"     : [ 
-                                { "t": 0.0, "vec" : [0.0,0] }
-                            ],
-                                "bg_uv_translate" : [
-                                { "t": 0.0, "vec" : [0.0,0.0] },
-                                { "t": 150.0, "vec" : [5.0,0.0], "smooth" : "sqr" }
+                                    ],
+                                        "bg_ease"     : [ 
+                                        { "t": 0.0, "vec" : [0.0,0] }
+                                    ],
+                                        "bg_uv_translate" : [
+                                        { "t": 0.0, "vec" : [0.0,0.0] },
+                                        { "t": 150.0, "vec" : [5.0,0.0], "smooth" : "sqr" }
 
-                            ],
-                                "bg_scale"     : [ 
-                                { "t": 0.0, "vec" : [9.0,9.0] },
-                                { "t": 0.0, "vec" : [2.0,2.0],"smooth" : "sqr" },
-                                { "t": 90.0, "vec" : [1.5,1.5],"smooth" : "tanh" }
-                            ],
-                                "energy_scale" : [ 
-                                { "t": 0.0, "vec" : [0.00,1.0] },
-                                { "t": 17.0, "vec" : [0.00,1.0] },
-                                { "t": 18.0, "vec" : [0.02,1.0] },
-                                { "t": 19.0, "vec" : [0.015,1.0], "smooth" : "sqr"  },
-                                { "t": 75.0, "vec" : [1.5,1.0], "smooth" : "sqr" }
-                            ],
-                                "energy_color" : [ 
-                                { "t": 0.0, "vec" : [1.0,0.0,0.0,0.0] },
-                                { "t": 18.0, "vec" : [1.0,0.0,0.0,1.0] },
-                                { "t": 50.0, "vec" : [1.0,1.0,1.0,0.0], "smooth" : "sqr"  },
-                                { "t": 75.0, "vec" : [0.0,0.0,1.0,0.0], "smooth" : "sqr" }
-                            ],
-                                "energy_freq" : [ 
-                                { "t": 0.0, "vec" : [0.0]   },
-                                { "t": 90.0, "vec" : [35.0]   },
-                                { "t": 95.0, "vec" : [600.0], "smooth" : "sqr" }
-                            ],
-                                "composite_tint" : [ 
-                                { "t": 0.0, "vec" :  [1.0,1.0,1.0,1.0] },
-                                { "t": 50.0, "vec" : [1.0,1.0,1.0,1.0] },
-                                { "t": 55.0, "vec" : [0.2,1.0,3.0,1.0] },
-                                { "t": 60.0, "vec" : [1.0,1.0,1.0,1.0] },
-                                { "t": 70.0, "vec" : [1.0,1.0,1.0,1.0] },
-                                { "t": 92.0, "vec" : [1.0,1.0,1.0,1.0] },
-                                { "t": 95.0, "vec" : [0.0,0.0,0.0,1.0] }
-                            ],
-                                "ship_path" : [ 
-                                { "t": 0.0, "vec" :  [-0.57,1.0] },
-                                { "t": 40.0, "vec" :  [-0.47,0.5], "smooth" : "tanh" },
-                                { "t": 55.0, "vec" : [0.37,0.2], "smooth" : "sqr" },
-                                { "t": 85.0, "vec" : [5.2,-2.3] }
-                            ],
-                                "ship_scale" : [
-                                { "t": 0.0, "vec" :  [0.0024,0.007] },
-                                { "t": 60.0, "vec" : [0.24,0.7], "smooth" : "sqr" },
-                                { "t": 85.0, "vec" : [2.34,6.17], "smooth" : "sqr" }
+                                    ],
+                                        "bg_scale"     : [ 
+                                        { "t": 0.0, "vec" : [9.0,9.0] },
+                                        { "t": 0.0, "vec" : [2.0,2.0],"smooth" : "sqr" },
+                                        { "t": 90.0, "vec" : [1.5,1.5],"smooth" : "tanh" }
+                                    ],
+                                        "energy_scale" : [ 
+                                        { "t": 0.0, "vec" : [0.00,1.0] },
+                                        { "t": 17.0, "vec" : [0.00,1.0] },
+                                        { "t": 18.0, "vec" : [0.02,1.0] },
+                                        { "t": 19.0, "vec" : [0.015,1.0], "smooth" : "sqr"  },
+                                        { "t": 75.0, "vec" : [1.5,1.0], "smooth" : "sqr" }
+                                    ],
+                                        "energy_color" : [ 
+                                        { "t": 0.0, "vec" : [1.0,0.0,0.0,0.0] },
+                                        { "t": 18.0, "vec" : [1.0,0.0,0.0,1.0] },
+                                        { "t": 50.0, "vec" : [1.0,1.0,1.0,0.0], "smooth" : "sqr"  },
+                                        { "t": 75.0, "vec" : [0.0,0.0,1.0,0.0], "smooth" : "sqr" }
+                                    ],
+                                        "energy_freq" : [ 
+                                        { "t": 0.0, "vec" : [0.0]   },
+                                        { "t": 90.0, "vec" : [35.0]   },
+                                        { "t": 95.0, "vec" : [600.0], "smooth" : "sqr" }
+                                    ],
+                                        "composite_tint" : [ 
+                                        { "t": 0.0, "vec" :  [1.0,1.0,1.0,1.0] },
+                                        { "t": 50.0, "vec" : [1.0,1.0,1.0,1.0] },
+                                        { "t": 55.0, "vec" : [0.2,1.0,3.0,1.0] },
+                                        { "t": 60.0, "vec" : [1.0,1.0,1.0,1.0] },
+                                        { "t": 70.0, "vec" : [1.0,1.0,1.0,1.0] },
+                                        { "t": 92.0, "vec" : [1.0,1.0,1.0,1.0] },
+                                        { "t": 95.0, "vec" : [0.0,0.0,0.0,1.0] }
+                                    ],
+                                        "ship_path" : [ 
+                                        { "t": 0.0, "vec" :  [-0.57,1.0] },
+                                        { "t": 40.0, "vec" :  [-0.47,0.5], "smooth" : "tanh" },
+                                        { "t": 55.0, "vec" : [0.37,0.2], "smooth" : "sqr" },
+                                        { "t": 85.0, "vec" : [5.2,-2.3] }
+                                    ],
+                                        "ship_scale" : [
+                                        { "t": 0.0, "vec" :  [0.0024,0.007] },
+                                        { "t": 60.0, "vec" : [0.24,0.7], "smooth" : "sqr" },
+                                        { "t": 85.0, "vec" : [2.34,6.17], "smooth" : "sqr" }
 
-                            ]
+                                    ]
+                                }
+                            }
                         }
                     }
-                }
+                ]
             }
-            ]
         }
     }
 }

@@ -34,8 +34,16 @@ class resource_manager:
 
         def load_package(self,pkgname):
             pkg_def = self.package_data[pkgname]
-            for resource_definition in pkg_def["resources"]:
-                self.load_resource(pkgname, resource_definition)
+
+            if type(pkg_def["resources"]) is list:
+                for resource_definition in pkg_def["resources"]:
+                    self.load_resource(pkgname, resource_definition)
+            if type(pkg_def["resources"]) is dict:
+                for typekey in pkg_def["resources"]:
+                    for resource_definition in pkg_def["resources"][typekey]:
+                        resource_definition["type"] = typekey
+                        self.load_resource(pkgname, resource_definition)
+
             log.write( log.INFO, "Loaded asset package:{0}".format(pkgname))
 
         def flush_package(self,pkgname):

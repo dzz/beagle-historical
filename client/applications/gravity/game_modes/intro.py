@@ -10,13 +10,15 @@ from client.gfx.context import gfx_context
 
 
 class intro_game:
+        def __del__(self):
+            assets.flush_package("intro")
+
         def __init__(self):
-
-
             assets.load_package("intro")
             self.starfield = starfield()
             self.fg_texture = assets.get("intro/texture/planet_background")
             self.bg_texture = assets.get("intro/texture/fire_gradient")
+            self.atmo_shader = assets.get("intro/shader/atmo")
             self.fg_shader  = assets.get("common/shader/default_2d")
             self.ship_shader = assets.get("common/shader/default_2d")
             self.bg_shader  = assets.get("intro/shader/sundistort")
@@ -42,7 +44,7 @@ class intro_game:
             self.delta_t             = 1.0/60.0 * self.config["timescale"]
             self.scene_renderers     = {
                                             "city_launch" : self.render_city_launch,
-                                            "ship_dock"   : self.render_ship_dock }
+                                            "ship_atmo"   : self.render_ship_atmo }
             self.current_scene_renderer = None
             self.current_scene_key      = None
 
@@ -119,8 +121,24 @@ class intro_game:
                    } 
 
 
-        def render_ship_dock(self):
-            gfx_context.clear([1.0,1.0,1.0,1.0])
+        def get_atmo_shader_params(self):
+            return {
+                        "texBuffer" : self.star_buffer.get_texture(),
+                        "modBuffer" : self.bg_texture,
+                        "color_top"   : self.get_lerped("atmo_col_top"),
+                        "color_bot"   : self.get_lerped("atmo_col_bot"),
+                        "t" : self.t
+                    }
+
+        def render_ship_atmo(self):
+            #gfx_context.clear([1.0,1.0,1.0,1.0])
+            with render_target(self.star_buffer):
+                self.starfield.render()
+
+            
+            with blendstate(blendmode.alpha_over):
+                self.primitive.render_shaded( self.atmo_shader, self.get_atmo_shader_params() )
+                self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
 
         def render_city_launch(self):
             with render_target(self.star_buffer):
@@ -137,7 +155,7 @@ class intro_game:
                 with blendstate(blendmode.alpha_over):
                     self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
             
-            self.comp_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru_filter"),
+            self.comp_buffer.render_shaded( shaders.get_client_program("no_transform","postfx/passthru_filter"),
                         {
                             "filter_color" : self.get_lerped("composite_tint") 
                         })

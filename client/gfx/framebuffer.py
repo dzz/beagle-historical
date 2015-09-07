@@ -27,6 +27,9 @@ class framebuffer:
     def bind_as_texture(self,texture_unit = 0 ):
         self._tex.bind(texture_unit)
 
+    def render_shaded( self, shader_program, shader_inputs = {} ):
+        return self.render_processed( shader_program, shader_inputs )
+
     def render_processed( self, shader_program, shader_inputs = [] ):
         shader_program.bind( shader_inputs, False, 1 ) 
         self.bind_as_texture( texture.units[0] )

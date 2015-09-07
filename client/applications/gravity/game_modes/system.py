@@ -56,7 +56,7 @@ class starfield:
                                                                                 ("translation_world",[x,y]),
                                                                                 ("scale_world", [1.0,1.0] ),
                                                                                 ("view", coordsys ),
-                                                                                ("rotation_local", [0.0] ),
+                                                                                ("rotation_local", z ),
                                                                                 ("filter_color" , [1.0*z,1.0*z,1.0*z,1.0*z] )
                                                                                 ] )
 

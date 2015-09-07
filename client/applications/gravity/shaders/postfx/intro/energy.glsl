@@ -5,7 +5,9 @@ uniform float freq;
 in vec2 uv;
 
 void main(void) {
-    vec4 smpl_base = texture(texBuffer,uv);
+    vec2 uv_t = uv;
+    uv_t.x+=(sin(uv.y*freq)*0.001);
+    vec4 smpl_base = texture(texBuffer,uv_t);
 
 
     float l = (1.0 + sin( (length(smpl_base)/3.0) * freq))/2.0;
