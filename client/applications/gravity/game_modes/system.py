@@ -16,17 +16,17 @@ def rand_unit():
 
 class starfield:
         def __init__(self):
-                self.num_stars = 200
+                self.num_stars = 25
                 self.stars = []
                 self.speed = 0.001
                 self.sprd = 30
                 for i in range(0,self.num_stars):
                         self.stars.append([rand_unit()*self.sprd,rand_unit()*self.sprd,uniform(0.0,1.0)])
-                self.image = framebuffer.from_dims(8,8,True)
+                self.image = framebuffer.from_dims(8,8,False)
                 with render_target(self.image):
                         gfxcontext.set_clear_color(0.0,0.0,0.0,0.2)
                         gfxcontext.clear()
-                        render_text("`",0,0,[1.0,1.0,1.0])
+                        render_text(".",0,0,[1.0,1.0,1.0])
 
         def tick(self):
                 for star in self.stars:

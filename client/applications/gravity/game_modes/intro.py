@@ -6,6 +6,7 @@ from client.math.curve import curve
 from .system import starfield
 from client.gfx.framebuffer import *
 from client.gfx.primitive import primitive
+from client.gfx.context import gfx_context
 
 
 class intro_game:
@@ -21,7 +22,7 @@ class intro_game:
              
 
             self.comp_buffer = framebuffer.from_dims(960,540,False)
-            self.star_buffer = framebuffer.from_dims(256,256,False)
+            self.star_buffer = framebuffer.from_dims(96,54,False)
             self.curves = {}
 
             for key in self.config["curves"]:
@@ -30,7 +31,7 @@ class intro_game:
             self.t          = 0.0
 
         def tick(self, context):
-            self.t += 1.0/60.0
+            self.t += 1.0/60.0 * self.config["timescale"]
             self.starfield.tick()
 
         def get_lerped(self,key):
@@ -41,16 +42,32 @@ class intro_game:
             return { 
                      "texBuffer"            : self.bg_texture,
                      "texDist"              : self.star_buffer.get_texture(),
-                     "translation_local"    : self.get_lerped("planet_ease"),
-                     "scale_local"          : [1,1],
-                     "translation_world"    : self.get_lerped("planet_ease"),
+                     "translation_local"    : self.get_lerped("bg_ease"),
+                     "scale_local"          : self.get_lerped("bg_scale"),
+                     "translation_world"    : [0.0,0.0],
                      "scale_world"          : [1,1],
                      "view"                 : self.view,
                      "rotation_local"       : 0.0 ,
                      "filter_color" : self.get_lerped("background_fade") 
                      } 
 
+        def get_fg_shader_params(self):
+            return { 
+                    "texBuffer"         : self.fg_texture,
+                    "translation_local" : self.get_lerped("planet_ease"),
+                   "scale_local"        : [1,1],
+                   "translation_world"  : [0,0],
+                   "scale_world"        : [ 1,1],
+                   "view"               : self.view,
+                   "rotation_local"     : [0.0],
+                   "filter_color"       : self.get_lerped("foreground_fade") 
+                   } 
+
         def render(self, context):
+
+            if(self.t > self.config["ending"]):
+                gfx_context.clear([0.0,0.0,0.0,1.0])
+                return
 
             with render_target(self.star_buffer):
                 with blendstate(blendmode.alpha_over):
@@ -60,14 +77,7 @@ class intro_game:
                 self.primitive.render_shaded( self.bg_shader, self.get_bg_shader_params() )
 
                 with blendstate(blendmode.alpha_over):
-                    self.fg_texture.render_processed( self.fg_shader, {
-                                                                    "translation_local" : self.get_lerped("planet_ease"),
-                                                                    "scale_local" : [1,1],
-                                                                    "translation_world": [0,0],
-                                                                    "scale_world" : [ 1,1],
-                                                                    "view"        : self.view,
-                                                                    "rotation_local" : [0.0],
-                                                                    "filter_color" : self.get_lerped("foreground_fade") } )
+                    self.primitive.render_shaded( self.fg_shader, self.get_fg_shader_params() )
 
 
             
