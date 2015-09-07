@@ -11,6 +11,9 @@ from client.gfx.context import gfx_context
 
 class intro_game:
         def __init__(self):
+
+
+            assets.load_package("intro")
             self.starfield = starfield()
             self.fg_texture = assets.get("intro/texture/planet_background")
             self.bg_texture = assets.get("intro/texture/fire_gradient")
@@ -25,22 +28,44 @@ class intro_game:
             self.primitive  = primitive.get_unit_uv_primitive()
              
 
-            self.comp_buffer = framebuffer.from_dims(960,540,False)
-            self.star_buffer = framebuffer.from_dims(64,64,False)
+            self.comp_buffer = framebuffer.from_screen()
+            self.star_buffer = framebuffer.from_dims(512,512,True)
             self.curves = {}
 
-            for key in self.config["curves"]:
-                self.curves[key] = curve(self.config["curves"][key])
+            for sceneKey in self.config["curves"]:
+                self.curves[sceneKey] = {}
+                for curveKey in self.config["curves"][sceneKey]:
+                    self.curves[sceneKey][curveKey] = curve(self.config["curves"][sceneKey][curveKey])
 
-            self.t          = 0.0
+            self.t                   = 0.0
+            self.total_t             = 0.0
+            self.delta_t             = 1.0/60.0 * self.config["timescale"]
+            self.scene_renderers     = {
+                                            "city_launch" : self.render_city_launch,
+                                            "ship_dock"   : self.render_ship_dock }
+            self.current_scene_renderer = None
+            self.current_scene_key      = None
 
         def tick(self, context):
-            self.t += 1.0/60.0 * self.config["timescale"]
+            self.total_t += self.delta_t
+
+            next_scene_renderer = None
+            for sceneKey in self.config["scenes"]:
+                sceneDef = self.config["scenes"][sceneKey]
+                if self.total_t > sceneDef["start"] and self.total_t < sceneDef["end"]:
+                    self.t = self.total_t - sceneDef["start"]
+                    next_scene_renderer = self.scene_renderers[sceneKey]
+                    self.current_scene_key = sceneKey
+                    break
+
+            self.current_scene_renderer = next_scene_renderer
+
             self.starfield.tick()
 
         def get_lerped(self,key):
-            r = self.curves[key].value_at(self.t)
-            return r
+            if(self.current_scene_key):
+                r = self.curves[self.current_scene_key][key].value_at(self.t)
+                return r
 
         def get_bg_shader_params(self):
             return { 
@@ -93,12 +118,11 @@ class intro_game:
                    "freq"       : self.get_lerped("energy_freq")
                    } 
 
-        def render(self, context):
 
-            if(self.t > self.config["ending"]):
-                gfx_context.clear([0.0,0.0,0.0,1.0])
-                return
+        def render_ship_dock(self):
+            gfx_context.clear([1.0,1.0,1.0,1.0])
 
+        def render_city_launch(self):
             with render_target(self.star_buffer):
                 with blendstate(blendmode.alpha_over):
                     self.starfield.render()
@@ -112,14 +136,17 @@ class intro_game:
                     self.primitive.render_shaded( self.fg_shader, self.get_fg_shader_params() )
                 with blendstate(blendmode.alpha_over):
                     self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
-
-
-
             
-            #test_shdr = shaders.get_client_program("no_transform","postfx/intro/sundistort")
-            #self.primitive.render_shaded( test_shdr, { "buffer" : self.star_buffer.get_texture(), "dist" : self.comp_buffer.get_texture() } );
             self.comp_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru_filter"),
                         {
                             "filter_color" : self.get_lerped("composite_tint") 
                         })
+
+        def render(self, context):
+            if(self.t > self.config["ending"]):
+                gfx_context.clear([0.0,0.0,0.0,1.0])
+                return
+            else:
+                self.current_scene_renderer()
+
 

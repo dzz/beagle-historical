@@ -82,7 +82,6 @@ class game:
 
     def __init__(self):
        log.set_level( log.ERROR | log.WARNING | log.INFO )
-
        self.modes = {
                       "intro"  : intro_game(),
                       "system" : system_game(),

@@ -1,4 +1,5 @@
 import json
+import client.system.log as log
 from client.gfx.texture import texture
 import client.ctt2.host_config  as host_config
 from client.gfx.local_image import local_image
@@ -15,7 +16,9 @@ def cvt_path(relpath):
 
 class resource_manager:
         def __init__(self, config):
+            self.package_keys = {}
             self.resource_map = {}
+            self.package_data = config["packages"]
             self.adapters = { "texture"     : tex_adapter,
                               "tileset"     : tileset_adapter,
                               "audio_clip"  : audioclip_adapter,
@@ -23,18 +26,52 @@ class resource_manager:
                               "coordsys"    : coordsys_adapter,
                               "dict"        : dict_adapter }
 
-            for pkg in config["packages"]:
-                pkg_def = config["packages"][pkg]
-                for resource_definition in pkg_def["resources"]:
-                    self.load_resource(pkg, resource_definition)
+            for pkg in self.package_data:
+                pkg_def = self.package_data[pkg]
+                self.package_keys[pkg] = []
+                if(pkg_def["preload"]):
+                    self.load_package(pkg)
+
+        def load_package(self,pkgname):
+            pkg_def = self.package_data[pkgname]
+            for resource_definition in pkg_def["resources"]:
+                self.load_resource(pkgname, resource_definition)
+            log.write( log.INFO, "Loaded asset package:{0}".format(pkgname))
+
+        def flush_package(self,pkgname):
+            flush_keys = self.package_keys[pkgname]
+            rm_keys = []
+            for key in flush_keys:
+                self.resource_map[key] = None
+                rm_keys.append(key)
+                log.write( log.INFO, "Flushed resource {0} from package {1}".format(key,pkgname))
+            for key in rm_keys:
+                del self.resource_map[key]
+            log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
         def load_resource(self, pkgname, resdef):
             if resdef["type"] in self.adapters:
                 key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
+                self.package_keys[pkgname].append(key)
                 self.resource_map[key] = self.adapters[resdef["type"]].load(resdef)
+                log.write( log.INFO, "Loaded resource {0}".format(key))
 
         def get_resource(self, path):
-            return self.resource_map[path]
+            try:
+                return self.resource_map[path]
+            except KeyError:
+                log.write( log.ERROR, "Could not load asset {0}".format(path))
+                return None
+
+        def __del__(self):
+            rm_keys = []
+            for key in self.resource_map:
+                self.resource_map[key] = None
+                rm_keys.append(key)
+                log.write(log.INFO, "Flushed resource {0}".format(key))
+            for key in rm_keys:
+                del self.resource_map[key]
+
 
 class tex_adapter:
     def load(tex_def):
@@ -73,12 +110,20 @@ class assets:
         def get(path):
             global instance
             return instance.get_resource(path)
+        def load_package(pkgname):
+            global instance
+            return instance.load_package(pkgname)
+
+        def flush_package(pkgname):
+            global instance
+            return instance.flush_package(pkgname)
 
 class asset_manager:
         def get(path):
             global instance
             return instance.get_resource(path)
     
+
         def compile(json_file):
             path = cvt_path(json_file)
             with open(path, "r") as resources_file:

@@ -165,7 +165,7 @@ class vortex_game:
                     with blendstate(blendmode.darken):
                         self.sprite_renderer.render(primary_batch)
 
-        self.primary_buffer.render_processed( self.postfx_shader, additional_buffers = [ self.distortion_buffer ],
+        self.primary_buffer.render_processed( self.postfx_shader,
                 shader_inputs = (self.postfx_shader_inputs + [ ("vx", [ self.player.vx ]), ("vy", [self.player.vy]) ]) ) 
 
         with render_target(self.hud_buffer):

@@ -16,7 +16,7 @@ def rand_unit():
 
 class starfield:
         def __init__(self):
-                self.num_stars = 20
+                self.num_stars = 220
                 self.stars = []
                 self.speed = 0.0007
                 self.sprd = 50
