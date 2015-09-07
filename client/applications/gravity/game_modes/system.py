@@ -16,10 +16,10 @@ def rand_unit():
 
 class starfield:
         def __init__(self):
-                self.num_stars = 25
+                self.num_stars = 250
                 self.stars = []
                 self.speed = 0.001
-                self.sprd = 2
+                self.sprd = 15
                 for i in range(0,self.num_stars):
                         self.stars.append([rand_unit()*self.sprd,rand_unit()*self.sprd,uniform(0.0,1.0)])
                 self.image = framebuffer.from_dims(8,8,False)
@@ -56,7 +56,7 @@ class starfield:
                                                                                 ("translation_world",[x,y]),
                                                                                 ("scale_world", [1.0,1.0] ),
                                                                                 ("view", coordsys ),
-                                                                                ("rotation_local", [z*3.14+x] ),
+                                                                                ("rotation_local", [0.0] ),
                                                                                 ("filter_color" , [1.0*z,1.0*z,1.0*z,1.0*z] )
                                                                                 ] )
 
@@ -166,8 +166,8 @@ class system_game:
                 self.player = sg_player()
                 self.starfield = starfield()
                 self.label_buffer = framebuffer.from_dims(512,256,False)
-                self.sys_buffer = framebuffer.from_dims(256,256,True) 
-                self.comp_buffer = framebuffer.from_dims(512,512,True)
+                self.sys_buffer = framebuffer.from_dims(64,64,False) 
+                self.comp_buffer = framebuffer.from_screen();
                 self.generate_worldname()
                 self.vsystems = [ vsystem(),vsystem(),vsystem() ]
 

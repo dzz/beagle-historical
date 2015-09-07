@@ -15,9 +15,11 @@ class intro_game:
             self.fg_texture = assets.get("intro/texture/planet_background")
             self.bg_texture = assets.get("intro/texture/fire_gradient")
             self.fg_shader  = assets.get("common/shader/default_2d")
+            self.ship_shader = assets.get("common/shader/default_2d")
             self.bg_shader  = assets.get("intro/shader/sundistort")
             self.nrg_shader = assets.get("intro/shader/energy")
             self.nrg_texture = assets.get("intro/texture/green_energy")
+            self.ship_texture = assets.get("intro/texture/ascend_ship")
             self.view       = assets.get("common/coordsys/unit_square")
             self.config     = assets.get("intro/dict/sunrise_config")
             self.primitive  = primitive.get_unit_uv_primitive()
@@ -66,6 +68,18 @@ class intro_game:
                    "filter_color"       : self.get_lerped("foreground_fade") 
                    } 
 
+        def get_ship_shader_params(self):
+            return { 
+                    "texBuffer"         : self.ship_texture,
+                    "translation_local" : [-0.5,-0.5],
+                   "scale_local"        : self.get_lerped("ship_scale"), #[0.024,0.07],
+                   "translation_world"  : self.get_lerped("ship_path"),
+                   "scale_world"        : [ 1,1],
+                   "view"               : self.view,
+                   "rotation_local"     : [0.0],
+                   "filter_color"       : self.get_lerped("foreground_fade") 
+                   } 
+
         def get_energy_shader_params(self):
             return { 
                     "texBuffer"         : self.nrg_texture,
@@ -96,6 +110,8 @@ class intro_game:
 
                 with blendstate(blendmode.alpha_over):
                     self.primitive.render_shaded( self.fg_shader, self.get_fg_shader_params() )
+                with blendstate(blendmode.alpha_over):
+                    self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
 
 
 
