@@ -24,7 +24,9 @@ class resource_manager:
                               "audio_clip"  : audioclip_adapter,
                               "shader"      : shader_adapter,
                               "coordsys"    : coordsys_adapter,
-                              "dict"        : dict_adapter }
+                              "dict"        : dict_adapter,
+                              "curve_sequence"       : scene_adapter 
+                              }
 
             for pkg in self.package_data:
                 pkg_def = self.package_data[pkg]
@@ -108,6 +110,10 @@ class coordsys_adapter:
 class dict_adapter:
     def load(dict_def):
             return dict_def["dict"]
+
+class scene_adapter:
+    def load(dict_def):
+            return dict_def["sequence"]
 
 class shader_adapter:
     def load(shd_def):
