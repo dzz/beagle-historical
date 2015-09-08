@@ -131,9 +131,16 @@ class assets:
         def get(path):
             global instance
             return instance.get_resource(path)
+        def load_packages(pkgname):
+            assets.load_package(pkgname)
+
         def load_package(pkgname):
             global instance
-            return instance.load_package(pkgname)
+            if type(pkgname) is list:
+                for i_pkgname in pkgname:
+                    instance.load_package(i_pkgname)
+            else:
+                instance.load_package(pkgname)
 
         def flush_package(pkgname):
             global instance
