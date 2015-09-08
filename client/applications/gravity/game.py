@@ -21,6 +21,7 @@ from random import choice, uniform, sample
 from client.math.helpers import distance
 from .music_system import music_system
 from .game_modes.vortex import vortex_game
+from .game_modes.ship import ship_game
 from .game_modes.system import system_game
 from .game_modes.intro import intro_game
 from client.gfx.framebuffer import *
@@ -78,16 +79,19 @@ class game:
         self.postfx_shader = choice( self.postfx_shaders )
 
     def trigger_mode_switch(self,mode):
+            if type(self.modes[mode]) is type:
+                self.modes[mode] = self.modes[mode]()
             self.current_mode = self.modes[mode]
 
     def __init__(self):
        log.set_level( log.ERROR | log.WARNING | log.INFO )
        self.modes = {
-                      "intro"  : intro_game(),
-                      "system" : system_game(),
-                      "vortex" : vortex_game() }
+                      "intro"  : intro_game,
+                      "system" : system_game,
+                      "vortex" : vortex_game,
+                      "ship"   : ship_game }
 
-       self.current_mode = self.modes["intro"]
+       self.trigger_mode_switch("intro")
 
        self.load_postfx_shaders()
        self.pick_post_processing_shader()

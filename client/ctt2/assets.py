@@ -18,6 +18,7 @@ class resource_manager:
         def __init__(self, config):
             self.package_keys = {}
             self.resource_map = {}
+            self.loaded_packages = []
             self.package_data = config["packages"]
             self.adapters = { "texture"     : tex_adapter,
                               "tileset"     : tileset_adapter,
@@ -35,6 +36,8 @@ class resource_manager:
                     self.load_package(pkg)
 
         def load_package(self,pkgname):
+            if pkgname in self.loaded_packages:
+                return
             pkg_def = self.package_data[pkgname]
 
             if type(pkg_def["resources"]) is list:
@@ -46,9 +49,12 @@ class resource_manager:
                         resource_definition["type"] = typekey
                         self.load_resource(pkgname, resource_definition)
 
+            self.loaded_packages.append(pkgname)
             log.write( log.INFO, "Loaded asset package:{0}".format(pkgname))
 
         def flush_package(self,pkgname):
+            if pkgname not in self.loaded_packages:
+                raise ValueError("tried to flush {0} package which was not loaded".format(pkgname))
             flush_keys = self.package_keys[pkgname]
             rm_keys = []
             for key in flush_keys:
@@ -57,6 +63,7 @@ class resource_manager:
                 log.write( log.INFO, "Flushed asset {0} from package {1}".format(key,pkgname))
             for key in rm_keys:
                 del self.resource_map[key]
+            self.loaded_packages.remove(pkgname)
             log.write( log.INFO, "Flushed package {0}".format(pkgname) )
 
         def load_resource(self, pkgname, resdef):

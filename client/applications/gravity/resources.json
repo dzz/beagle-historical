@@ -108,8 +108,8 @@
                     {
                         "name" : "intro",
                         "sequence" : {
-                            "loop"          : true,
-                            "timescale"     : 16.0,
+                            "loop"          : false,
+                            "timescale"     : 24.0,
                             "start"         : 0.0,
                             "end"           : 120.0,
                             "scenes" : {
@@ -272,11 +272,10 @@
                                         ],
                                         "ship_path" : [ 
                                         { "t": 0.0, "vec" :  [-0.57,2.0] },
-                                        { "t": 20.0, "vec" :  [-0.57,2.0] },
-                                        { "t": 35.0, "vec" :  [-0.47,0.1], "smooth" : "tanh" },
-                                        { "t": 42.0, "vec" :  [-0.2,0.2], "smooth" : "sqr" },
-                                        { "t": 53.0, "vec" : [0.1,0.3], "smooth" : "sqr" },
-                                        { "t": 85.0, "vec" : [15.2,-6.3], "smooth" : "tanh" }
+                                        { "t": 20.0, "vec" :  [-0.57,1.0] },
+                                        { "t": 35.0, "vec" :  [-0.50,0.3] },
+                                        { "t": 55.0, "vec" :  [-0.47,0.2], "smooth" : "tanh" },
+                                        { "t": 80.0, "vec" : [15.2,-6.3], "smooth" : "sqr" }
                                     ],
                                         "ship_scale" : [
                                         { "t": 0.0, "vec" :  [0.0,0.0] },

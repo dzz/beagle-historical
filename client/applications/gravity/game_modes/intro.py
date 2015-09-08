@@ -41,8 +41,9 @@ class intro_game:
 
         def tick(self, context):
             self.sequencer.tick()
+            if self.sequencer.is_finished():
+                context.trigger_mode_switch("ship")
             self.starfield.tick()
-
 
         def get_bg_shader_params(self):
             return { 
@@ -116,7 +117,7 @@ class intro_game:
                         "modBuffer" : self.bg_texture,
                         "color_top"   : self.sequencer.animated_value("atmo_col_top"),
                         "color_bot"   : self.sequencer.animated_value("atmo_col_bot"),
-                        "t" : self.sequencer.animated_value("sequencer.time")
+                        "t" : self.sequencer.animated_value("sequence.time")
                     }
 
         def render_ship_atmo(self):
