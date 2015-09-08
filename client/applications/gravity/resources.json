@@ -109,7 +109,7 @@
                         "name" : "intro",
                         "sequence" : {
                             "loop"          : false,
-                            "timescale"     : 24.0,
+                            "timescale"     : 128.0,
                             "start"         : 0.0,
                             "end"           : 120.0,
                             "scenes" : {

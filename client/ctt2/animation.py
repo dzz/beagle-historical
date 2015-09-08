@@ -50,11 +50,12 @@ class curve_sequencer:
         self.started = True
         self.total_t += self.delta_t
         if(self.total_t > self.config["end"]):
-            if "loop" in self.config:
-                if(self.config["loop"]):
-                        self.total_t = 0.0
+            if "loop" in self.config and self.config["loop"]:
+                self.total_t = 0.0
             else:
                 self.finished = True
+                next_scene_renderer = None
+                return
 
 
         next_scene_renderer = None

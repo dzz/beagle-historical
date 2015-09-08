@@ -8,12 +8,10 @@ from .system import starfield
 from client.gfx.framebuffer import *
 from client.gfx.primitive import primitive
 from client.gfx.context import gfx_context
+import client.system.log as log
 
 
 class intro_game:
-        def __del__(self):
-            assets.flush_package("intro")
-
         def __init__(self):
             assets.load_package("intro")
             self.starfield = starfield()
@@ -40,10 +38,11 @@ class intro_game:
                                                                              "ship_atmo"   : self.render_ship_atmo })
 
         def tick(self, context):
-            self.sequencer.tick()
-            if self.sequencer.is_finished():
-                context.trigger_mode_switch("ship")
             self.starfield.tick()
+            self.sequencer.tick()
+            if self.sequencer.finished:
+                context.trigger_mode_switch("ship")
+                return
 
         def get_bg_shader_params(self):
             return { 
