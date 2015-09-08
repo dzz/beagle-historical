@@ -8,8 +8,8 @@ in vec2 uv;
 
 void main(void) {
     
-    float T = t*uv.x;
-    vec4 basecol = vec4(0,0.1,0.2,0)*sin(uv.x);
+    float T = sin( t+uv.x *3.14 );
+    vec4 basecol = vec4(0,0.1,0.2,0)*(0.25+sin(uv.x));
     vec2 uv_t = (uv*uv_scale)+uv_translate;
     if(uv.y>0.15)
         uv_t.y+=sin(T+uv.x)*0.1;
@@ -19,7 +19,7 @@ void main(void) {
     }
 
     
-    vec4 smpl_mod = texture(texBuffer,uv_t) * vec4(sin(uv_t.x*7+T),cos(uv_t.x*9+T),1.0,1.0);
+    vec4 smpl_mod = texture(texBuffer,uv_t) * vec4(sin((uv.x*7)+T)*0.2,cos((uv.x*9)+T)*0.4,1.0,1.0);
     vec4 smpl_base = texture(texBuffer,uv_t);
 
     float mod_a = (sin(T)+1.0)/2.0;
