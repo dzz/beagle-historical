@@ -43,6 +43,8 @@ class curve:
                         nt = tanh(nt*pi)
                     if right["smooth"] == "sqr":
                         nt = nt*nt
+                    if right["smooth"] == "invsqr":
+                        nt = 1- ((1-nt*nt)*(1-nt*nt))
                     if right["smooth"] == "sin":
                         nt = (1.0+(cos(nt * pi)+pi))/2.0
                 return lerp_vec(left["vec"],right["vec"],nt)

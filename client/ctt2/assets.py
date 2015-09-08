@@ -156,6 +156,13 @@ class asset_manager:
             path = cvt_path(json_file)
             with open(path, "r") as resources_file:
                     data = json.load(resources_file)
+                    for pkg_key in data["packages"]:
+                        pkg_val = data["packages"][pkg_key]
+                        if type(pkg_val) is str:
+                            with open( cvt_path(pkg_val),"r") as package_file:
+                                print(pkg_val)
+                                pkg_data = json.load(package_file)
+                                data["packages"][pkg_key] = pkg_data
                     global instance
                     instance = resource_manager(data) 
 
