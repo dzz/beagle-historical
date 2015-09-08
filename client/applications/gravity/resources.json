@@ -47,10 +47,60 @@
             }
             ]
         },
-        "Ship" : {
+
+        "station" : {
             "preload" : false,
-            "resources" : {} 
+            "resources" : {
+                "shader" : [
+                {
+                    "name"              : "star_scroll",
+                    "vertex_program"    : "no_transform",
+                    "pixel_program"     : "postfx/station/starscroll"
+                }
+                ],
+                    "texture" : [
+                    {   
+                        "name" : "stars_0",
+                        "filename" : "background/png/station/stars_0.png",
+                        "filtered" : false
+                    },
+                    {   
+                        "name" : "stars_1",
+                        "filename" : "background/png/station/stars_1.png",
+                        "filtered" : false
+                    },
+                    {   
+                        "name" : "stars_2",
+                        "filename" : "background/png/station/stars_2.png",
+                        "filtered" : false
+                    }
+                ],
+                    "curve_sequence" : [
+                    {
+                        "name" : "station",
+                        "sequence" : {
+                            "loop" : false,
+                            "timescale"     : 1.0,
+                            "start"         : 1.0,
+                            "end"           : 3.0,
+                            "scenes" : {
+                                "fadein" : { "start" : 0.0, "end" : 3.0 }
+                            },
+                            "curves" : {
+                                "fadein" : {
+                                        "star_fadein" : [
+                                            { "t" : 0.0, "vec" : [0.0,0.0,0.0,1.0] },
+                                            { "t" : 3.0, "vec" : [1.0,1.0,1.0,1.0], "smooth" : "sqr" }
+                                         ]
+                                }
+                            }
+                        }
+                    }
+
+                ]
+            } 
         },
+
         "intro" : {
             "preload" : false,
             "resources" : { 
@@ -123,22 +173,22 @@
                             "curves" : {
                                 "ship_atmo" : {
                                     "ship_texture_asset" : [
-                                            { "t" : 0.0, "string" : "intro/texture/ascend_ship_angry" }
-                                        ],
-                                    "bg_uv_translate" : [
+                                    { "t" : 0.0, "string" : "intro/texture/ascend_ship_angry" }
+                                    ],
+                                        "bg_uv_translate" : [
                                         { "t" : -10.0, "vec" : [0.0,0.0] },
                                         { "t" : 70.0, "vec" : [0.0,1.5 ], "smooth" : "sin" }
                                     ],
-                                    "bg_uv_scale" : [
+                                        "bg_uv_scale" : [
                                         { "t" : 0.0, "vec" : [1.0,0.5] },
                                         { "t" : 70.0, "vec" : [1.0,1.0 ], "smooth" : "sin" }
                                     ],
-                                    "starbg_color" : [
+                                        "starbg_color" : [
                                         { "t" : 0.0, "vec" : [0.0,0.0,1.0,1.0] },
                                         { "t" : 15.0, "vec" : [1.0,1.0,1.0,0.0] },
                                         { "t" : 60.0, "vec" : [1.0,1.0,1.0,1.0] }
                                     ],
-                                    "atmo_col_top" : [
+                                        "atmo_col_top" : [
                                         { "t" : 0.0, "vec" : [0.0,1.0,0.0,0.2] },
                                         { "t" : 15.0, "vec" : [0.7,1.0,0.0,0.2] },
                                         { "t" : 30.0, "vec" : [0.0,0.0,1.0,0.0] }
@@ -153,10 +203,10 @@
                                         { "t": 90.0, "vec" :  [0.0,-8.0], "smooth" : "sqr" } 
                                     ],
                                         "ship_color" : [ 
-                                            { "t": 0.0, "vec" :  [1.0,0.0,0.0,0.0] },
-                                            { "t": 20.0, "vec" : [1.0,1.0,1.0,1.0] , "smooth" : "sqr" },
-                                            { "t": 60.0, "vec" : [0.0,0.0,0.0,1.0] , "smooth" : "sqr" }
-                                        ],
+                                        { "t": 0.0, "vec" :  [1.0,0.0,0.0,0.0] },
+                                        { "t": 20.0, "vec" : [1.0,1.0,1.0,1.0] , "smooth" : "sqr" },
+                                        { "t": 60.0, "vec" : [0.0,0.0,0.0,1.0] , "smooth" : "sqr" }
+                                    ],
                                         "ship_scale" : [ 
                                         { "t": 0.0, "vec" :  [0.48,0.14] } ,
                                         { "t": 30.0, "vec" :  [0.048,0.14], "smooth" : "tanh" } ,
@@ -180,9 +230,9 @@
                                         { "t": 90.0, "vec" : [35.0]   },
                                         { "t": 95.0, "vec" : [600.0], "smooth" : "sqr" }
                                     ],
-                                       "energy_location" : [
+                                        "energy_location" : [
                                         { "t" : 0.0, "vec" : [0,0] }
-                                     ]
+                                    ]
                                 },
                                 "city_launch" : {
                                     "background_fade" : [ 
@@ -238,12 +288,12 @@
                                         { "t": 0.0, "vec" : [2.0,2.0],"smooth" : "sqr" },
                                         { "t": 90.0, "vec" : [1.5,1.5],"smooth" : "tanh" }
                                     ],
-                                       "energy_location" : [
+                                        "energy_location" : [
                                         { "t" : 0.0, "vec" : [-0.51,0] },
                                         { "t" : 40.0, "vec" : [-0.51,0] },
                                         { "t" : 100.0, "vec" : [5.5,0], "smooth" : "sqr" }
 
-                                     ],
+                                    ],
                                         "energy_scale" : [ 
                                         { "t": 0.0, "vec" : [0.00,1.0] },
                                         { "t": 17.0, "vec" : [0.00,1.0] },
@@ -270,10 +320,10 @@
                                         { "t": 60.0, "vec" : [1.0,1.0,1.0,1.0] },
                                         { "t": 65.0, "vec" : [0.0,0.0,0.0,1.0] }
                                     ],
-                                    "ship_texture_asset" : [
-                                            { "t" : 0.0, "string" : "intro/texture/ascend_ship" },
-                                            { "t" : 53.0, "string" : "intro/texture/ascend_ship_angry" }
-                                        ],
+                                        "ship_texture_asset" : [
+                                        { "t" : 0.0, "string" : "intro/texture/ascend_ship" },
+                                        { "t" : 53.0, "string" : "intro/texture/ascend_ship_angry" }
+                                    ],
                                         "ship_path" : [ 
                                         { "t": 0.0, "vec" :  [-0.57,2.0] },
                                         { "t": 20.0, "vec" :  [-0.57,1.0] },

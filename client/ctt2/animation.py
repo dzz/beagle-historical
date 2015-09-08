@@ -63,7 +63,8 @@ class curve_sequencer:
             sceneDef = self.config["scenes"][sceneKey]
             if self.total_t > sceneDef["start"] and self.total_t < sceneDef["end"]:
                 self.t = self.total_t - sceneDef["start"]
-                next_scene_renderer = self.scene_renderers[sceneKey]
+                if sceneKey in self.scene_renderers:
+                    next_scene_renderer = self.scene_renderers[sceneKey]
                 self.current_scene_key = sceneKey
                 break
 
