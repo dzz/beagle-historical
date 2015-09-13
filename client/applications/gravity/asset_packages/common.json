@@ -2,6 +2,11 @@
     "preload"   : true,
     "resources" : [
     {
+        "type"              : "dict",
+        "name"              : "config",
+        "dict"              : { "starting_mode" : "ship" }
+    },
+    {
         "type"              : "shader",
         "name"              : "default_2d",
         "vertex_program"    : "2d_transform",

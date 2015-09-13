@@ -1,5 +1,6 @@
 import hwgfx
 from client.gfx import context
+from client.ctt2.assets import assets
 from math import floor
 from client.system.video import *
 import client.system.log as log
@@ -91,7 +92,7 @@ class game:
                       "vortex" : vortex_game,
                       "ship"   : ship_game }
 
-       self.trigger_mode_switch("intro")
+       self.trigger_mode_switch(assets.get("common/dict/config")["starting_mode"])
 
        self.load_postfx_shaders()
        self.pick_post_processing_shader()

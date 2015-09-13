@@ -6,6 +6,7 @@ class curve_sequencer:
     def __init__(self,config, scene_renderers = {} ):
         self.config = config
         self.curves = {}
+        self.slaves = []
         for sceneKey in self.config["curves"]:
             self.curves[sceneKey] = {}
             for curveKey in self.config["curves"][sceneKey]:
@@ -19,6 +20,13 @@ class curve_sequencer:
         self.runtime_vars   = { "scene.time": 0.0, "sequence.time" : 0.0 }
         self.started = False
         self.finished = False
+
+    def register_slave(self,slave):
+        self.slaves.append(slave)
+
+    def register_slaves(self,slaves):
+        for slave in slaves:
+            self.register_slave(slave)
 
     def is_started(self):
         return self.started
@@ -47,6 +55,9 @@ class curve_sequencer:
         return self.delta_t
 
     def tick(self):
+        for slave in self.slaves:
+            slave.tick()
+
         self.started = True
         self.total_t += self.delta_t
         if(self.total_t > self.config["end"]):

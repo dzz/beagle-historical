@@ -1,0 +1,45 @@
+{
+    "preload" : true,
+    "resources" : {
+        "texture" : [
+        {   
+            "name" : "pwalk_0",
+            "filename" : "sprite/png/pwalk_0.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "pwalk_1",
+            "filename" : "sprite/png/pwalk_1.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "pwalk_2",
+            "filename" : "sprite/png/pwalk_2.png",
+            "filtered" : false
+        }
+        ],
+        "curve_sequence" : [
+        {
+            "name" : "walk_left",
+            "sequence" : {
+                "loop" : true,
+                "timescale" : 4.0,
+                "start"     : 0.0,
+                "end"       : 4.0,
+                "scenes" : {
+                    "left" : { "start" : 0.0, "end" : 4.0 }
+                },
+                "curves" : {
+                    "left" : {
+                        "texture_asset" : [
+                                { "t" : 0.0, "string" : "overworld_player/texture/pwalk_0" },
+                                { "t" : 1.0, "string" : "overworld_player/texture/pwalk_1" },
+                                { "t" : 2.0, "string" : "overworld_player/texture/pwalk_2" },
+                                { "t" : 3.0, "string" : "overworld_player/texture/pwalk_1" }
+                            ]
+                    }
+                }
+            }
+        } ]
+    }
+}

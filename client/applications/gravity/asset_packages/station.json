@@ -18,7 +18,17 @@
             {   
                 "name" : "floor",
                 "filename" : "background/png/station/floor.png",
-                "filtered" : true
+                "filtered" : false
+            },
+            {   
+                "name" : "chamber_base",
+                "filename" : "sprite/png/chamber_base.png",
+                "filtered" : false
+            },
+            {   
+                "name" : "chamber_door",
+                "filename" : "sprite/png/chamber_door.png",
+                "filtered" : false
             },
             {   
                 "name" : "stars_0",
@@ -42,7 +52,7 @@
                 "sequence" : {
                     "loop" : false,
                     "timescale"     : 2.2,
-                    "start"         : 1.0,
+                    "start"         : 0.0,
                     "end"           : 125.0,
                     "scenes" : {
                         "fadein" : { "start" : 0.0, "end" : 125.0 }
@@ -50,34 +60,46 @@
                     "curves" : {
                         "fadein" : {
                             "ship_path" : [
-                            {"t" : 1.0, "vec" : [ 5.0, 4.0 ] },
-                            {"t" : 4.0, "vec" : [ 0.0, 5.0 ], "smooth" : "sqr" },
-                            {"t" : 8.0, "vec" : [ -5.0, 1.78 ], "smooth" : "invsqr" }
+                            {"t" : -10.0, "vec" : [ -5.0, 14.0 ] },
+                            {"t" : 8.0, "vec" : [ 0.0, 1.82 ], "smooth" : "invsqr" }
+                            ],
+                                "chamber_color" : [
+                                        {"t" : 2.0, "vec" : [ 1.0,1.0,1.0,0.0] },
+                                        {"t" : 6.0, "vec" : [ 1.0,1.0,1.0,1.0] },
+                                        {"t" : 9.0, "vec" : [ 1.0,1.0,1.0,1.0] },
+                                        {"t" : 11.0, "vec" : [ 1.0,1.0,1.0,0.0] }
+                                    ],
+                                "door_color" : [
+                                {"t" : 2.0, "vec" : [ 1.0,1.0,1.0,0.0] },
+                                {"t" : 4.0, "vec" : [ 1.0,1.0,1.0,1.0] },
+                                {"t" : 9.0, "vec" : [ 1.0,1.0,1.0,1.0] },
+                                {"t" : 10.0, "vec" : [ 0.0,0.0,0.0,0.0] }
                             ],
                                 "ship_color" : [
                                 {"t" : 0.0, "vec" : [ 1.0,1.0,1.0,0.0] },
                                 {"t" : 5.0, "vec" : [ 1.0,1.0,1.0,1.0] },
-                                {"t" : 15.0, "vec" : [ 1.0,1.0,1.0,1.0] },
-                                {"t" : 18.0, "vec" : [ 0.0,0.0,1.0,0.0] }
+                                {"t" : 12.0, "vec" : [ 1.0,1.0,1.0,1.0] },
+                                {"t" : 14.0, "vec" : [ 0.0,0.0,1.0,0.0] }
                             ],
                                 "ship_scale" : [
                                 {"t" : 1.0, "vec" : [ 9.0,9.0 ] },
-                                {"t" : 8.0, "vec" : [ 1.0, 1.0 ], "smooth" : "invsqr" }
+                                {"t" : 1.0, "vec" : [ 1.0, 1.0 ], "smooth" : "invsqr" }
                             ],
                                 "ship_texture_asset" : [
                                 { "t" : 0.0, "string" : "intro/texture/ascend_ship_angry" }
                             ],
                                 "star_fadein" : [
-                                { "t" : 0.0, "vec" : [3.0,0.0,0.0,0.0] },
-                                { "t" : 9.0, "vec" : [1.0,1.0,1.0,1.0], "smooth" : "sqr" }
+                                { "t" : 0.0, "vec" : [0.0,0.0,0.0,1.0] },
+                                { "t" : 12.0, "vec" : [3.0,0.0,0.0,1.0] },
+                                { "t" : 15.0, "vec" : [1.0,1.0,1.0,1.0], "smooth" : "sqr" }
                             ],
                                 "floor_dims" : [
-                                { "t" : 1.0, "vec" : [0.0,0.0] },
-                                { "t" : 8.0, "vec" : [8.0,0.35], "smooth" : "invsqr" }
+                                { "t" : 8.0, "vec" : [0.0,0.35] },
+                                { "t" : 9.0, "vec" : [8.0,0.35], "smooth" : "invsqr" }
                             ],
                                 "floor_path" : [
-                                { "t" : 1.0, "vec" : [25.0,3.0] },
-                                { "t" : 2.0, "vec" : [0.0,3.0], "smooth" :  "invsqr" }
+                                { "t" : 1.0, "vec" : [25.0,3.15] },
+                                { "t" : 2.0, "vec" : [0.0,3.15], "smooth" :  "invsqr" }
                             ]
                         }
                     }

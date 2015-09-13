@@ -2,6 +2,7 @@
     "packages" : {
         "common" : "asset_packages/common.json",
         "station" : "asset_packages/station.json",
-        "intro" : "asset_packages/intro.json"
+        "intro" : "asset_packages/intro.json",
+        "overworld_player" :  "asset_packages/overworld_player.json"
     }
 }
