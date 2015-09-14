@@ -1,0 +1,60 @@
+{
+    "preload" : false,
+    "resources" : {
+        "dict" : [
+                {
+                    "name" : "landing_enviro_config",
+                    "dict" : {
+                        "room_range" : { "left" : -25.0, "right" : 25.0 } 
+                    }
+                }
+            ],
+        "shader" : [
+        {
+            "name"              : "terminal",
+            "vertex_program"    : "2d_transform",
+            "pixel_program"     : "postfx/station/terminal"
+        } ],
+        "texture" : [
+        {   
+            "name" : "sylab_phase_0_head",
+            "filename" : "sprite/png/sylabhead.png",
+            "filtered" : false
+        }
+        ],
+            "curve_sequence" : [
+            {
+                "name" : "disp_warp",
+                "sequence" : {
+                    "loop" : false,
+                    "timescale" : 0.7,
+                    "start"     : 0.0,
+                    "end"       : 10.0,
+                    "scenes" : {
+                        "disp_warp" : { "start" : 0.0, "end" : 10.0 }
+                    },
+                    "curves" : {
+                        "disp_warp" : {
+                            "terminal_scale" : [
+                                    { "t" : 2.0, "vec" : [ 20.0,20.0] },
+                                    { "t" : 6.0, "vec" : [ 5.25,5.25 ], "smooth" : "invsqr" }  
+                                ],
+                            "warp" : [
+                            { "t" : 2.0, "vec" : [ 1.0 ] },
+                            { "t" : 4.9, "vec" : [ 0.0 ], "smooth" : "sqr" }
+                            ],
+                                "filter_color" : [
+                                { "t" : 4.0, "vec" : [ 0.0,0.0,0.0,0.0 ] },
+                                { "t" : 4.2, "vec" : [ 0.0,0.0,1.0,0.5 ] },
+                                { "t" : 4.8, "vec" : [ 0.0,1.0,1.0,0.6 ] },
+                                { "t" : 4.9, "vec" : [ 1.0,0.0,0.0,0.2 ] },
+                                { "t" : 5.3, "vec" : [ 0.9,1.0,1.0,0.3 ] },
+                                { "t" : 6.0, "vec" : [ 1.0,1.0,1.0,1.0] , "smooth" : "sqr" },
+                                { "t" : 9.0, "vec" : [ 0.7,0.9,1.0,1.0] , "smooth" : "invsqr" }
+                            ]
+                        }
+                    }
+                }
+            }]
+    }
+}

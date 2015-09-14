@@ -20,6 +20,25 @@
         ],
         "curve_sequence" : [
         {
+            "name" : "intro_float",
+            "sequence" : {
+                "loop" : false,
+                "timescale" : 1.0,
+                "start"     : 0.0,
+                "end"       : 7.0,
+                "scenes" : {
+                    "float_down" : { "start" : 0.0, "end" : 7.0 }
+                },
+                "curves" : {
+                    "float_down" : {
+                        "float_down" : [
+                                { "t" : 5.7, "vec" : [ 0.0,1.7 ] },
+                                { "t" : 7.0, "vec" : [ 0.0,2.2 ], "smooth" : "sqr" }
+                            ]
+                    }
+                }
+            }
+        },{
             "name" : "walk_left",
             "sequence" : {
                 "loop" : true,

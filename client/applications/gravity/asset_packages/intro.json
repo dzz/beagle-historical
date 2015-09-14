@@ -3,6 +3,12 @@
     "resources" : { 
         "shader" : [
         {
+            "type"              : "shader",
+            "name"              : "terminal",
+            "vertex_program"    : "2d_transform",
+            "pixel_program"     : "postfx/station/terminal"
+        },
+        {
             "name"              : "sundistort",
             "vertex_program"    : "2d_transform",
             "pixel_program"     : "postfx/intro/sundistort"
