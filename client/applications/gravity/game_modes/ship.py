@@ -5,6 +5,8 @@ from client.gfx.blend            import blendstate,blendmode
 from client.ctt2.animation import curve_sequencer
 from client.gfx.framebuffer import *
 from client.system.gamepad       import get_gamepad
+from client.gfx.text import render_text
+from .terminals.saver import eaos_saver
 
 
 class ow_terminal:
@@ -19,17 +21,25 @@ class ow_terminal:
         self.shader = assets.get("sylab/shader/terminal")
         self.sequencer = curve_sequencer( assets.get("sylab/curve_sequence/disp_warp") )
         self.parallax = 0.2
+        self.application = eaos_saver()
         self.t = 0.0
-        self.x = -0.65
+        self.x = 0.0
+        self.terminal_buffer = framebuffer.from_dims(256+128,256)
+
+    def render_termapp(self):
+        self.application.render()
+
+    def get_terminal_buffer(self):
+        return self.terminal_buffer
 
     def get_head_shader_param(self):
         return {
-            "texBuffer"            : self.textures["sylab_head"],
+            "texBuffer"            : self.terminal_buffer.get_texture(),
             "modBuffer"            : self.modBuffer,
-            "translation_local"    : [self.x-(self.ow_player.x*self.parallax),-0.100],
+            "translation_local"    : [self.x-(self.ow_player.x*self.parallax),0.000],
             "scale_local"          : self.sequencer.animated_value("terminal_scale"),
-            "translation_world"    : [0.0,0.0],
-            "scale_world"          : [1.0,1.0],
+            "translation_world"    : [0.0,0.6],
+            "scale_world"          : [1.5*0.85,-1.0*0.85],
             "view"                 : self.view,
             "rotation_local"       : 0.0 ,
             "warp"                 : self.sequencer.animated_value("warp")[0],
@@ -43,6 +53,7 @@ class ow_terminal:
 
     def tick(self):
         self.t += 0.1
+        self.application.tick()
         self.sequencer.tick()
 
 class ow_enviro:
@@ -69,6 +80,7 @@ class ow_player:
         self.intro_sequencer = curve_sequencer( assets.get("overworld_player/curve_sequence/intro_float") )
         self.x = 0
         self.y = 0
+        self.uw_x = 0
         self.primitive = primitive.get_unit_uv_primitive()
         self.view = view
         self.shader = assets.get("common/shader/default_2d")
@@ -92,12 +104,16 @@ class ow_player:
 
     def handle_input(self):
         gp = get_gamepad(0)
+
+        amt = 0.1*gp.leftStick[0]
         if(gp.leftStick[0]>0.25):
-            self.x += 0.1*gp.leftStick[0]
+            self.x += amt
+            self.uw_x += amt
             self._is_walking = True
             self.mirror_walk = True
         elif(gp.leftStick[0]<-0.25):
-            self.x += 0.1*gp.leftStick[0]
+            self.x += amt
+            self.uw_x += amt
             self._is_walking = True
             self.mirror_walk = False
         else:
@@ -220,25 +236,32 @@ class ship_game:
         with blendstate(blendmode.add):
             self.primitive.render_shaded( self.star_shader, 
                         { "texBuffer"    : self.star_textures[0],
-                          "uv_translate" : [self.t*0.01+self.ow_player.x*0.01,0.0],
+                          "uv_translate" : [self.t*0.01+self.ow_player.uw_x*0.01,0.0],
                           "uv_scale"     : [1,1],
                           "t"            : self.t,
                           "filterColor"  : [0.97,0.97,1.0,1.0]} )
             self.primitive.render_shaded( self.star_shader, 
                         { "texBuffer"    : self.star_textures[1],
-                          "uv_translate" : [self.t*0.05+self.ow_player.x*0.02,0.0],
+                          "uv_translate" : [self.t*0.05+self.ow_player.uw_x*0.02,0.0],
                           "uv_scale"     : [0.5,0.5],
                           "t"            : self.t,
                           "filterColor"  : [0.7,0.65,0.65,0.65]} )
             self.primitive.render_shaded( self.star_shader, 
                         { "texBuffer"    : self.star_textures[2],
-                          "uv_translate" : [self.t*0.5+self.ow_player.x*0.03,0.0],
+                          "uv_translate" : [self.t*0.5+self.ow_player.uw_x*0.03,0.0],
                           "uv_scale"     : [0.2,0.2],
                           "t"            : self.t,
                           "filterColor"  : [0.28,0.35,0.25,0.25]} )
 
 
     def render(self,context):
+        with render_target(self.ow_terminal.get_terminal_buffer()):
+            with blendstate(blendmode.alpha_over):
+                gfx_context.clear([0.0,0.0,0.0,1.0])
+                self.render_starscroll()
+                self.ow_terminal.render_termapp()
+
+
         with render_target(self.comp_buffer):
             self.render_starscroll()
             with blendstate(blendmode.add):

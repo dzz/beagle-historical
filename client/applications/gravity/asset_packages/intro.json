@@ -110,7 +110,7 @@
                                 { "t": 0.0, "vec" :  [1.0,1.0,1.0,1.0] }
                             ],
                                 "ship_scale" : [ 
-                                { "t": 0.0, "vec" :  [0.05,0.12] } 
+                                { "t": 0.0, "vec" :  [0.05,0.16] } 
                             ],
                                 "ship_texture_asset" : [
                                 { "t" : 0.0, "string" : "intro/texture/ascend_ship" }
