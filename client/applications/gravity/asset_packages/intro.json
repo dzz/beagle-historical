@@ -36,6 +36,11 @@
                 "filtered" : false
             },
             {   
+                "name" : "pyrm",
+                "filename" : "background/png/pyrm.png",
+                "filtered" : false
+            },
+            {   
                 "name" : "threat_planet",
                 "filename" : "sprite/png/homeworld_128.png",
                 "filtered" : false
@@ -88,13 +93,34 @@
                     "loop"          : false,
                     "timescale"     : 12.0,
                     "start"         : 0.0,
-                    "end"           : 240.0,
+                    "end"           : 360.0,
                     "scenes" : {
-                        "threat" : { "start" : 0.0, "end" : 125.0 },
-                        "city_launch" : { "start" : 125.0, "end" : 190.0 },
-                        "ship_atmo"   : { "start" : 190.0, "end" : 290.0 }
+                        "threat" : { "start" : 0.0, "end" : 140.0 },
+                        "pyrm" : { "start" : 140.0, "end" : 240.0 },
+                        "city_launch" : { "start" : 240.0, "end" : 305.0 },
+                        "ship_atmo"   : { "start" : 305.0, "end" : 360.0 }
                     },
                     "curves" : {
+                        "pyrm" : {
+                                "planet_sprite_path" : [
+                                                        { "t" : 0.0, "vec" : [0.0,0.0] }
+                                                ],
+                                "bg_uv_translate" : [
+                                { "t": 0.0, "vec" : [0.0,0.0] },
+                                { "t": 98.0, "vec" : [1.0,0.0], "smooth" : "invsqr" }
+
+                            ],
+                                "bg_uv_scale" : [
+                                { "t" : 0.0, "vec" : [0.1,0.1] },
+                                { "t" : 94.0, "vec" : [1.0,1.0 ], "smooth" : "invsqr" }
+                            ],
+                                "bg_grad_scale" : [ 
+                                                        { "t" : 1.0, "vec" : [2.0,2.0] },
+                                                        { "t" : 20.0, "vec" : [3.0,4.0], "smooth" : "sqr" },
+                                                        { "t" : 40.0, "vec" : [1.5,1.5], "smooth" : "sqr" }
+
+                                        ]
+                        },
                         "threat" : {
                                 "planet_texture_asset" : [
                                                 { "t" : 0.0, "string" : "intro/texture/threat_planet" },
@@ -112,7 +138,7 @@
                             ],
                                 "bg_uv_scale" : [
                                 { "t" : 0.0, "vec" : [0.1,0.1] },
-                                { "t" : 125.0, "vec" : [1.0,1.0 ], "smooth" : "invsqr" }
+                                { "t" : 94.0, "vec" : [1.0,1.0 ], "smooth" : "invsqr" }
                             ],
                                 "bg_grad_scale" : [ 
                                                         { "t" : 0.0, "vec" : [2.0,2.0] },

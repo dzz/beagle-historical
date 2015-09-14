@@ -1,4 +1,5 @@
 from math import sin,cos
+from client.gfx.text import render_text
 from client.ctt2.assets import assets
 from client.ctt2.animation import curve_sequencer
 from client.gfx.blend            import blendstate,blendmode
@@ -8,8 +9,30 @@ from .system import starfield
 from client.gfx.framebuffer import *
 from client.gfx.primitive import primitive
 from client.gfx.context import gfx_context
+from random import uniform, choice
+from math import floor
 import client.system.log as log
 
+
+class coredump_effect:
+    def __init__(self):
+        self.row = 0
+        self.max_row = 16
+        self.row_height = 8
+        pass
+
+    def create_cd_text(self):
+        codes = [ "FLR", "CRT", "BRK", "STP", "HLT" ]
+        return "{0}:{1:4x}--{2}".format( choice(codes),floor(uniform(0.0,65535.0)), self )
+
+    def tick(self):
+        self.row = (self.row + 1) % self.max_row
+        self.text = self.create_cd_text()
+        pass
+
+    def render(self):
+        render_text(self.text,0,self.row * self.row_height ,[0.0,uniform(0.0,1.0),0.0])
+        pass
 
 class intro_game:
         def __init__(self):
@@ -21,6 +44,7 @@ class intro_game:
             self.star_texture = assets.get("intro/texture/star_background")
             self.star_shader = assets.get("intro/shader/starbg_shader")
             self.comp_shader = assets.get("common/shader/passthru_filtered")
+
             self.fg_shader  = assets.get("common/shader/default_2d")
             self.ship_shader = assets.get("common/shader/default_2d")
             self.bg_shader  = assets.get("intro/shader/sundistort")
@@ -31,12 +55,16 @@ class intro_game:
             self.primitive  = primitive.get_unit_uv_primitive()
              
 
+            self.coredump_effect = coredump_effect()
             self.comp_buffer = framebuffer.from_screen()
+            self.dump_buffer = framebuffer.from_dims(64,128,False)
             self.star_buffer = framebuffer.from_dims(512,512,True)
 
             self.sequencer = curve_sequencer(assets.get("intro/curve_sequence/intro"), { "city_launch" : self.render_city_launch, 
                                                                              "ship_atmo"   : self.render_ship_atmo,
-                                                                             "threat" : self.render_threat})
+                                                                             "threat" : self.render_threat,
+                                                                             "pyrm" : self.render_pyrm })
+            self.sequencer.register_slave( self.coredump_effect )
 
         def tick(self, context):
             self.starfield.tick()
@@ -67,7 +95,7 @@ class intro_game:
                      "translation_world"    : [0.0,0.0],
                      "scale_world"          : [1,1],
                      "view"                 : assets.get("common/coordsys/unit_square"),
-                     "rotation_local"       : self.sequencer.animated_value("sequence.time")*0.001,
+                     "rotation_local"       : self.sequencer.animated_value("scene.time")*0.01,
                      "filter_color"         : [1.0,1.0,1.0,1.0],
                      "uv_translate"         : [0.0,0.0]
                      } 
@@ -81,6 +109,19 @@ class intro_game:
                      "scale_world"          : [1,1],
                      "view"                 : assets.get("common/coordsys/16:9"),
                      "rotation_local"       : 0.0 ,
+                     "filter_color"         : [1.0,1.0,1.0,1.0],
+                     "uv_translate"         : [0.0,0.0]
+                     } 
+
+        def get_dump_params(self):
+            return { 
+                     "texBuffer"            : self.dump_buffer.get_texture(),
+                     "translation_local"    : [-0.18,0.8],
+                     "scale_local"          : [2.0,4.0],
+                     "translation_world"    : self.sequencer.animated_value("planet_sprite_path"),
+                     "scale_world"          : [1,1],
+                     "view"                 : assets.get("common/coordsys/16:9"),
+                     "rotation_local"       : uniform(0.0,0.001),
                      "filter_color"         : [1.0,1.0,1.0,1.0],
                      "uv_translate"         : [0.0,0.0]
                      } 
@@ -173,13 +214,41 @@ class intro_game:
                         self.primitive.render_shaded( self.nrg_shader, self.get_energy_shader_params() )
                 self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
 
+        def render_coredumps(self):
+            with render_target(self.dump_buffer):
+                with blendstate(blendmode.alpha_over):
+                    self.coredump_effect.render()
+            with blendstate(blendmode.alpha_over):
+                self.primitive.render_shaded( self.fg_shader, self.get_dump_params() )
+                self.dump_buffer.render_shaded(self.comp_shader,{ "filter_color" : [ 1.0,1.0,1.0,1.0 ] })
+
         def render_threat(self):
+
             self.primitive.render_shaded( self.fg_shader, self.get_threat_bg_params() )
+            if(self.sequencer.animated_value("scene.time")>110.0):
+                with blendstate(blendmode.darken2):
+                    self.render_coredumps()
             with blendstate(blendmode.alpha_over):
                 with blendstate(blendmode.add):
                     self.primitive.render_shaded( self.star_shader, self.get_star_shader_params() )
                 self.primitive.render_shaded( self.fg_shader, self.get_threat_planet_params() )
                 self.primitive.render_shaded( self.fg_shader, self.get_cdrom_params() )
+
+        def render_pyrm(self):
+            self.primitive.render_shaded( self.fg_shader, self.get_threat_bg_params() )
+            with blendstate(blendmode.alpha_over):
+                self.primitive.render_shaded( self.fg_shader, { 
+                    "texBuffer" : assets.get("intro/texture/pyrm"), 
+                    "translation_local" : [0.0,0.0],
+                   "scale_local"        : [1.0,1.0],
+                   "translation_world"  : [0.0,0.0],
+                   "scale_world"        : [ 1,1],
+                   "view"               : self.view,
+                   "rotation_local"     : [0.0],
+                   "filter_color"       : [1.0,1.0,1.0,1.0],
+                   "uv_translate"       : [0.0,0.0],
+                   "uv_scale"           : [1.0,1.0],
+                    } )
 
         def render_city_launch(self):
             with render_target(self.star_buffer):
