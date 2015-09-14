@@ -241,7 +241,7 @@ class ship_game:
     def render(self,context):
         with render_target(self.comp_buffer):
             self.render_starscroll()
-            with blendstate(blendmode.alpha_over):
+            with blendstate(blendmode.add):
                 self.ow_terminal.render()
         self.comp_buffer.render_shaded( self.comp_shader, { "filter_color" : self.sequencer.animated_value("star_fadein") } )
         self.render_floor()

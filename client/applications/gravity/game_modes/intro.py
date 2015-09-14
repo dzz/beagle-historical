@@ -220,7 +220,6 @@ class intro_game:
                     self.coredump_effect.render()
             with blendstate(blendmode.alpha_over):
                 self.primitive.render_shaded( self.fg_shader, self.get_dump_params() )
-                self.dump_buffer.render_shaded(self.comp_shader,{ "filter_color" : [ 1.0,1.0,1.0,1.0 ] })
 
         def render_threat(self):
 
@@ -237,6 +236,7 @@ class intro_game:
         def render_pyrm(self):
             self.primitive.render_shaded( self.fg_shader, self.get_threat_bg_params() )
             with blendstate(blendmode.alpha_over):
+                self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
                 self.primitive.render_shaded( self.fg_shader, { 
                     "texBuffer" : assets.get("intro/texture/pyrm"), 
                     "translation_local" : [0.0,0.0],

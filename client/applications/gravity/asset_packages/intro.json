@@ -91,20 +91,33 @@
                 "name" : "intro",
                 "sequence" : {
                     "loop"          : false,
-                    "timescale"     : 12.0,
+                    "timescale"     : 16.0,
                     "start"         : 0.0,
-                    "end"           : 360.0,
+                    "end"           : 340,
                     "scenes" : {
                         "threat" : { "start" : 0.0, "end" : 140.0 },
-                        "pyrm" : { "start" : 140.0, "end" : 240.0 },
-                        "city_launch" : { "start" : 240.0, "end" : 305.0 },
-                        "ship_atmo"   : { "start" : 305.0, "end" : 360.0 }
+                        "pyrm" : { "start" : 140.0, "end" : 220.0 },
+                        "city_launch" : { "start" : 220.0, "end" : 285.0 },
+                        "ship_atmo"   : { "start" : 285.0, "end" : 340.0 }
                     },
                     "curves" : {
                         "pyrm" : {
+                            "ship_path" : [ 
+                                { "t": 0.0, "vec" :  [0.0,-0.36] } ,
+                                { "t": 120.0, "vec" :  [0.0,-12.0], "smooth" : "sqr" } 
+                            ],
+                                "ship_color" : [ 
+                                { "t": 0.0, "vec" :  [1.0,1.0,1.0,1.0] }
+                            ],
+                                "ship_scale" : [ 
+                                { "t": 0.0, "vec" :  [0.05,0.12] } 
+                            ],
+                                "ship_texture_asset" : [
+                                { "t" : 0.0, "string" : "intro/texture/ascend_ship" }
+                            ],
                                 "planet_sprite_path" : [
-                                                        { "t" : 0.0, "vec" : [0.0,0.0] }
-                                                ],
+                                { "t" : 0.0, "vec" : [0.0,0.0] }
+                            ],
                                 "bg_uv_translate" : [
                                 { "t": 0.0, "vec" : [0.0,0.0] },
                                 { "t": 98.0, "vec" : [1.0,0.0], "smooth" : "invsqr" }
@@ -115,11 +128,10 @@
                                 { "t" : 94.0, "vec" : [1.0,1.0 ], "smooth" : "invsqr" }
                             ],
                                 "bg_grad_scale" : [ 
-                                                        { "t" : 1.0, "vec" : [2.0,2.0] },
-                                                        { "t" : 20.0, "vec" : [3.0,4.0], "smooth" : "sqr" },
-                                                        { "t" : 40.0, "vec" : [1.5,1.5], "smooth" : "sqr" }
+                                { "t" : 1.0, "vec" : [2.0,2.0] },
+                                { "t" : 120.0, "vec" : [1.5,1.5], "smooth" : "sqr" }
 
-                                        ]
+                            ]
                         },
                         "threat" : {
                                 "planet_texture_asset" : [
@@ -153,11 +165,7 @@
                                     ],
                                 "planet_sprite_path" : [
                                                         { "t" : 0.0, "vec" : [-2.5,12.0] },
-                                                        { "t" : 10.0, "vec" : [-1.5,8.0], "smooth" : "sqr" },
-                                                        { "t" : 70.0, "vec" : [0.0,0.0], "smooth" : "invsqr" },
-                                                        { "t" : 79.0, "vec" : [0.0,0.0], "smooth" : "sqr" },
-                                                        { "t" : 79.5, "vec" : [-0.1,0.0], "smooth" : "invsqr" },
-                                                        { "t" : 80.2, "vec" : [0.0,0.0], "smooth" : "sqr" }
+                                                        { "t" : 80.2, "vec" : [0.0,0.0], "smooth" : "invsqr" }
                                                 ]
 
                         },
