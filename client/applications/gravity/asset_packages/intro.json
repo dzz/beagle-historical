@@ -36,6 +36,26 @@
                 "filtered" : false
             },
             {   
+                "name" : "threat_planet",
+                "filename" : "sprite/png/homeworld_128.png",
+                "filtered" : false
+            },
+            {   
+                "name" : "cdrom",
+                "filename" : "sprite/png/cdrom_crack.png",
+                "filtered" : false
+            },
+            {   
+                "name" : "threat_planet_bitrot",
+                "filename" : "sprite/png/homeworld_128_bitrot.png",
+                "filtered" : false
+            },
+            {   
+                "name" : "threat_bg",
+                "filename" : "background/png/bg_planet_grad.png",
+                "filtered" : false
+            },
+            {   
                 "name" : "star_background",
                 "filename" : "background/png/star_background.png",
                 "filtered" : false
@@ -66,15 +86,64 @@
                 "name" : "intro",
                 "sequence" : {
                     "loop"          : false,
-                    "timescale"     : 24.0,
+                    "timescale"     : 12.0,
                     "start"         : 0.0,
-                    "end"           : 120.0,
+                    "end"           : 240.0,
                     "scenes" : {
-                        "city_launch" : { "start" : 0.0, "end" : 65.0 },
-                        "ship_atmo"   : { "start" : 65.0, "end" : 165.0 }
+                        "threat" : { "start" : 0.0, "end" : 125.0 },
+                        "city_launch" : { "start" : 125.0, "end" : 190.0 },
+                        "ship_atmo"   : { "start" : 190.0, "end" : 290.0 }
                     },
                     "curves" : {
+                        "threat" : {
+                                "planet_texture_asset" : [
+                                                { "t" : 0.0, "string" : "intro/texture/threat_planet" },
+                                                { "t" : 110.0, "string" : "intro/texture/threat_planet_bitrot" }
+                                    ],
+                                "starbg_color" : [
+                                { "t" : 0.0, "vec" : [1.0,0.0,0.0,0.0] },
+                                { "t" : 10.0, "vec" : [1.0,1.0,1.0,0.0] },
+                                { "t" : 95.0, "vec" : [1.0,1.0,1.0,0.5] }
+                            ],
+                                "bg_uv_translate" : [
+                                { "t": 0.0, "vec" : [0.0,0.0] },
+                                { "t": 98.0, "vec" : [1.0,0.0], "smooth" : "invsqr" }
+
+                            ],
+                                "bg_uv_scale" : [
+                                { "t" : 0.0, "vec" : [0.1,0.1] },
+                                { "t" : 125.0, "vec" : [1.0,1.0 ], "smooth" : "invsqr" }
+                            ],
+                                "bg_grad_scale" : [ 
+                                                        { "t" : 0.0, "vec" : [2.0,2.0] },
+                                                        { "t" : 125.0, "vec" : [1.0,1.0], "smooth" : "sqr" }
+
+                                        ],
+                                "cdrom_path" : [
+                                                            { "t" : 0.0, "vec" : [7.2,-3.7] },
+                                                            { "t" : 90.0, "vec" : [7.2,-3.7] },
+                                                            { "t" : 95.0, "vec" : [7.2,9.7], "smooth" : "sqr" }
+
+                                    ],
+                                "planet_sprite_path" : [
+                                                        { "t" : 0.0, "vec" : [-2.5,12.0] },
+                                                        { "t" : 10.0, "vec" : [-1.5,8.0], "smooth" : "sqr" },
+                                                        { "t" : 70.0, "vec" : [0.0,0.0], "smooth" : "invsqr" },
+                                                        { "t" : 79.0, "vec" : [0.0,0.0], "smooth" : "sqr" },
+                                                        { "t" : 79.5, "vec" : [-0.1,0.0], "smooth" : "invsqr" },
+                                                        { "t" : 80.2, "vec" : [0.0,0.0], "smooth" : "sqr" }
+                                                ]
+
+                        },
                         "ship_atmo" : {
+                                "planet_texture_asset" : [
+                                                { "t" : 0.0, "string" : "intro/texture/threat_planet_bitrot" }
+                                    ],
+                                "planet_sprite_path" : [
+                                                        { "t" : 0.0, "vec" : [2.5,8.0] },
+                                                        { "t" : 30.0, "vec" : [0.0,4.0], "smooth" : "invsqr" },
+                                                        { "t" : 60.2, "vec" : [-2.5,12.0], "smooth" : "sqr" }
+                                                ],
                             "ship_texture_asset" : [
                             { "t" : 0.0, "string" : "intro/texture/ascend_ship_angry" }
                             ],

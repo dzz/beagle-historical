@@ -37,7 +37,7 @@
                         "disp_warp" : {
                             "terminal_scale" : [
                                     { "t" : 2.0, "vec" : [ 20.0,20.0] },
-                                    { "t" : 6.0, "vec" : [ 5.25,5.25 ], "smooth" : "invsqr" }  
+                                    { "t" : 6.0, "vec" : [ 4.0,4.0 ], "smooth" : "invsqr" }  
                                 ],
                             "warp" : [
                             { "t" : 2.0, "vec" : [ 1.0 ] },

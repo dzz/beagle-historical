@@ -35,7 +35,8 @@ class intro_game:
             self.star_buffer = framebuffer.from_dims(512,512,True)
 
             self.sequencer = curve_sequencer(assets.get("intro/curve_sequence/intro"), { "city_launch" : self.render_city_launch, 
-                                                                             "ship_atmo"   : self.render_ship_atmo })
+                                                                             "ship_atmo"   : self.render_ship_atmo,
+                                                                             "threat" : self.render_threat})
 
         def tick(self, context):
             self.starfield.tick()
@@ -56,6 +57,45 @@ class intro_game:
                      "rotation_local"       : 0.0 ,
                      "filter_color"         : self.sequencer.animated_value("background_fade") ,
                      "uv_translate"         : self.sequencer.animated_value("bg_uv_translate") 
+                     } 
+
+        def get_threat_bg_params(self):
+            return { 
+                     "texBuffer"            : assets.get("intro/texture/threat_bg"),
+                     "translation_local"    : [0.0,0.0],
+                     "scale_local"          : self.sequencer.animated_value("bg_grad_scale"),
+                     "translation_world"    : [0.0,0.0],
+                     "scale_world"          : [1,1],
+                     "view"                 : assets.get("common/coordsys/unit_square"),
+                     "rotation_local"       : self.sequencer.animated_value("sequence.time")*0.001,
+                     "filter_color"         : [1.0,1.0,1.0,1.0],
+                     "uv_translate"         : [0.0,0.0]
+                     } 
+
+        def get_threat_planet_params(self):
+            return { 
+                     "texBuffer"            : assets.get( self.sequencer.animated_value("planet_texture_asset") ),
+                     "translation_local"    : [0.0,0.0],
+                     "scale_local"          : [4.0,4.0],
+                     "translation_world"    : self.sequencer.animated_value("planet_sprite_path"),
+                     "scale_world"          : [1,1],
+                     "view"                 : assets.get("common/coordsys/16:9"),
+                     "rotation_local"       : 0.0 ,
+                     "filter_color"         : [1.0,1.0,1.0,1.0],
+                     "uv_translate"         : [0.0,0.0]
+                     } 
+
+        def get_cdrom_params(self):
+            return { 
+                     "texBuffer"            : assets.get( "intro/texture/cdrom" ),
+                     "translation_local"    : [0.0,0.0],
+                     "scale_local"          : [0.5,0.5],
+                     "rotation_local"       : self.sequencer.animated_value("sequence.time")*0.1,
+                     "translation_world"    : self.sequencer.animated_value("cdrom_path"),
+                     "scale_world"          : [1,1],
+                     "view"                 : assets.get("common/coordsys/16:9"),
+                     "filter_color"         : [1.0,1.0,1.0,1.0],
+                     "uv_translate"         : [0.0,0.0]
                      } 
 
         def get_fg_shader_params(self):
@@ -126,11 +166,20 @@ class intro_game:
 
             
             with blendstate(blendmode.alpha_over):
+                self.primitive.render_shaded( self.fg_shader, self.get_threat_planet_params() )
                 self.primitive.render_shaded( self.star_shader, self.get_star_shader_params() )
                 self.primitive.render_shaded( self.atmo_shader, self.get_atmo_shader_params() )
                 with blendstate(blendmode.add):
                         self.primitive.render_shaded( self.nrg_shader, self.get_energy_shader_params() )
                 self.primitive.render_shaded( self.ship_shader, self.get_ship_shader_params() )
+
+        def render_threat(self):
+            self.primitive.render_shaded( self.fg_shader, self.get_threat_bg_params() )
+            with blendstate(blendmode.alpha_over):
+                with blendstate(blendmode.add):
+                    self.primitive.render_shaded( self.star_shader, self.get_star_shader_params() )
+                self.primitive.render_shaded( self.fg_shader, self.get_threat_planet_params() )
+                self.primitive.render_shaded( self.fg_shader, self.get_cdrom_params() )
 
         def render_city_launch(self):
             with render_target(self.star_buffer):

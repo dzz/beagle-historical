@@ -20,13 +20,13 @@ class ow_terminal:
         self.sequencer = curve_sequencer( assets.get("sylab/curve_sequence/disp_warp") )
         self.parallax = 0.2
         self.t = 0.0
-        self.x = -0.45
+        self.x = -0.65
 
     def get_head_shader_param(self):
         return {
             "texBuffer"            : self.textures["sylab_head"],
             "modBuffer"            : self.modBuffer,
-            "translation_local"    : [self.x-(self.ow_player.x*self.parallax),-0.2],
+            "translation_local"    : [self.x-(self.ow_player.x*self.parallax),-0.145],
             "scale_local"          : self.sequencer.animated_value("terminal_scale"),
             "translation_world"    : [0.0,0.0],
             "scale_world"          : [1.0,1.0],
