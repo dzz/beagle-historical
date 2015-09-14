@@ -26,7 +26,7 @@ class ow_terminal:
         return {
             "texBuffer"            : self.textures["sylab_head"],
             "modBuffer"            : self.modBuffer,
-            "translation_local"    : [self.x-(self.ow_player.x*self.parallax),-0.145],
+            "translation_local"    : [self.x-(self.ow_player.x*self.parallax),-0.100],
             "scale_local"          : self.sequencer.animated_value("terminal_scale"),
             "translation_world"    : [0.0,0.0],
             "scale_world"          : [1.0,1.0],
