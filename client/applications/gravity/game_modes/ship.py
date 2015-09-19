@@ -195,7 +195,8 @@ class ship_game:
 
         self.ow_enviro.register_child( self.ow_player )
         self.sequencer.register_slaves([ self.ow_player, self.ow_terminal, self.ow_enviro])
-        self.sequencer.tick()
+        self.sequencer.seek_forward(20)
+
 
     def tick(self,context):
         self.t+=self.t_delta

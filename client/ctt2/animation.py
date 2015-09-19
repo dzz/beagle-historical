@@ -20,6 +20,10 @@ class curve_sequencer:
         self.runtime_vars   = { "scene.time": 0.0, "sequence.time" : 0.0 }
         self.started = False
         self.finished = False
+        self.target_t = -1
+
+    def seek_forward(self, t):
+        self.target_t = t
 
     def register_slave(self,slave):
         self.slaves.append(slave)
@@ -54,7 +58,7 @@ class curve_sequencer:
     def get_delta_t(self):
         return self.delta_t
 
-    def tick(self):
+    def single_tick(self):
         for slave in self.slaves:
             slave.tick()
 
@@ -83,6 +87,15 @@ class curve_sequencer:
 
         self.runtime_vars["scene.time"] = self.t
         self.runtime_vars["sequence.time"] = self.total_t
+
+    def tick(self):
+        if(self.target_t == -1):
+            self.single_tick()
+            return
+        while(self.total_t < self.target_t):
+            self.single_tick()
+       
+
 
     def render(self):
         if(self.total_t > self.config["end"]):
