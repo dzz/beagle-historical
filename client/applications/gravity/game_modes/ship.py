@@ -1,3 +1,4 @@
+from random import uniform
 from client.ctt2.assets import assets
 from client.gfx.context import gfx_context
 from client.gfx.primitive import primitive
@@ -48,9 +49,15 @@ class ship_game:
 
         self.posters = [ 
                             poster( self.view, "unity", self.ow_player, [17.0,0.0] ) ,
-                            poster( self.view, "binary", self.ow_player, [-17.0,0.0] ) 
+                            poster( self.view, "unity", self.ow_player, [13.0,0.0] ) ,
+                            poster( self.view, "unity", self.ow_player, [9.0,0.0] ) ,
+                            poster( self.view, "binary", self.ow_player, [-17.0,0.0] ) ,
+                            poster( self.view, "binary", self.ow_player, [-13.0,0.0] ) ,
+                            poster( self.view, "binary", self.ow_player, [-9.0,0.0] ) 
                             
                             ]
+
+        self.sequencer.register_slaves( self.posters )
 
 
     def tick(self,context):
@@ -112,8 +119,13 @@ class ship_game:
 
     def render(self,context):
         with render_target(self.ow_terminal.get_terminal_buffer()):
-            with blendstate(blendmode.alpha_over):
-                gfx_context.clear([0.0,0.0,0.0,1.0])
+
+            blkidx = uniform(0.0,1.0)
+            blkmode = blendmode.alpha_over
+            if(blkidx>0.98):
+                blkmode = blendmode.add
+            with blendstate(blkmode):
+                #gfx_context.clear([0.0,0.0,0.0,1.0])
                 self.render_starscroll()
                 self.ow_terminal.render_termapp()
 

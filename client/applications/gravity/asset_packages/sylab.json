@@ -5,13 +5,23 @@
                 { 
                     "name" : "debug_vars",
                     "dict" : {
-                                "fw_seek" : 14.0
+                                "fw_seek" : 20.0
                     }
                 },
                 {
                     "name" : "landing_enviro_config",
                     "dict" : {
                         "room_range" : { "left" : -29.0, "right" : 29.0 } 
+                    }
+                },
+                {
+                    "name" : "player_config",
+                    "dict" : {
+                        "walk" : {
+                            "speed" : 0.31,
+                            "smoothing" : 0.01,
+                            "decay" : 0.89
+                        }
                     }
                 }
             ],

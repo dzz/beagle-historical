@@ -2,11 +2,15 @@ from client.ctt2.assets import assets
 
 class ow_player:
     def __init__(self, view ):
+        self.config = assets.get("sylab/dict/player_config")
         self.walk_sequencer = assets.get("overworld_player/curve_sequence/walk_left")
         self.intro_sequencer = assets.get("overworld_player/curve_sequence/intro_float") 
         self.x = 0
         self.y = 0
         self.uw_x = 0
+        self.walk_cfg = self.config["walk"]
+        self.vx = 0.0
+
         self.primitive = assets.get("core/primitive/unit_uv_square")
         self.view = view
         self.shader = assets.get("common/shader/default_2d")
@@ -34,19 +38,25 @@ class ow_player:
     def handle_input(self):
         gp = assets.get("core/queries/gamepad/find_primary()")()
 
-        amt = 0.05*gp.leftStick[0]
-        if(gp.leftStick[0]>0.25):
-            self.x += amt
-            self.uw_x += amt
+
+        self.vx += gp.leftStick[0] * self.walk_cfg["smoothing"]
+        self.vx = max( -1* self.walk_cfg["speed"], min( self.walk_cfg["speed"], self.vx) )
+
+        self.vx*= self.walk_cfg["decay"]
+
+        self.x += self.vx
+        if(abs(self.vx)>0.05):
             self._is_walking = True
-            self.mirror_walk = True
-        elif(gp.leftStick[0]<-0.25):
-            self.x += amt
-            self.uw_x += amt
-            self._is_walking = True
-            self.mirror_walk = False
         else:
             self._is_walking = False
+
+        
+        if(gp.leftStick[0]>0.25):
+            self.mirror_walk = True
+        elif(gp.leftStick[0]<-0.25):
+            self.mirror_walk = False
+        #else:
+        #    self._is_walking = False
     
     def is_walking(self):
         return self._is_walking
