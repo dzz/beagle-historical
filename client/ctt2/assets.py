@@ -1,11 +1,15 @@
 import json
+from client.system.gamepad       import get_gamepad
 import client.system.log as log
+from client.ctt2.animation import curve_sequencer
 from client.gfx.texture import texture
 import client.ctt2.host_config  as host_config
 from client.gfx.local_image import local_image
 from client.gfx.tileset import tileset
 import client.gfx.shaders as shaders
+from client.gfx.framebuffer import framebuffer as fb_class
 from client.gfx.coordinates import centered_view,Y_Axis_Down, Y_Axis_Up
+from client.gfx.primitive import primitive
 import os
 import audio
 
@@ -29,11 +33,23 @@ class resource_manager:
                               "curve_sequence"       : scene_adapter 
                               }
 
+
+            
+            self.load_specials()
+
             for pkg in self.package_data:
                 pkg_def = self.package_data[pkg]
                 self.package_keys[pkg] = []
                 if(pkg_def["preload"]):
                     self.load_package(pkg)
+
+
+        def load_specials(self):
+            self.resource_map["core/primitive/unit_uv_square"] = primitive.get_unit_uv_primitive()
+            self.resource_map["core/factory/framebuffer/from_dimensions(w,h)"] = fb_class.from_dims
+            self.resource_map["core/gamepads/queries/find"] = get_gamepad
+            return
+        
 
         def load_package(self,pkgname):
             if pkgname in self.loaded_packages:
@@ -75,6 +91,8 @@ class resource_manager:
 
         def get_resource(self, path):
             try:
+                print(path)
+                print(self.resource_map)
                 return self.resource_map[path]
             except KeyError:
                 log.write( log.ERROR, "Could not load asset {0}".format(path))
@@ -120,7 +138,7 @@ class dict_adapter:
 
 class scene_adapter:
     def load(dict_def):
-            return dict_def["sequence"]
+            return curve_sequencer( dict_def["sequence"] )
 
 class shader_adapter:
     def load(shd_def):

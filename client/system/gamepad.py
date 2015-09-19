@@ -18,8 +18,10 @@ class gamepad:
 
 gamepads = [];
 
-def get_gamepad(i):
-    return gamepads[i]
+def get_gamepad(i = 0):
+    if i < len(gamepads):
+        return gamepads[i]
+    return gamepad()
 
 def init():
     max_pads = 8

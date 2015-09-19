@@ -3,7 +3,19 @@ from client.gfx.context import gfx_context
 import client.system.log as log
 
 class curve_sequencer:
-    def __init__(self,config, scene_renderers = {} ):
+    def __init__(self,config_template, scene_renderers = {} ):
+
+        # backwards compat support, new asset loader circumvents
+        # need for animation curve sequencer imports, but also
+        # lets you template a sequencer off of another instance
+
+        if( type(config_template) == type(self) ):
+            config = config_template.config
+        else:
+            config = config_template
+
+
+
         self.config = config
         self.curves = {}
         self.slaves = []
@@ -94,8 +106,8 @@ class curve_sequencer:
             return
         while(self.total_t < self.target_t):
             self.single_tick()
-       
-
+        self.target_t = -1
+        return self.total_t
 
     def render(self):
         if(self.total_t > self.config["end"]):
