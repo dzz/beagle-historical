@@ -14,8 +14,6 @@ class curve_sequencer:
         else:
             config = config_template
 
-
-
         self.config = config
         self.curves = {}
         self.slaves = []

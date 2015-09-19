@@ -2,10 +2,16 @@
     "preload" : false,
     "resources" : {
         "dict" : [
+                { 
+                    "name" : "debug_vars",
+                    "dict" : {
+                                "fw_seek" : 14.0
+                    }
+                },
                 {
                     "name" : "landing_enviro_config",
                     "dict" : {
-                        "room_range" : { "left" : -25.0, "right" : 25.0 } 
+                        "room_range" : { "left" : -29.0, "right" : 29.0 } 
                     }
                 }
             ],
@@ -19,6 +25,16 @@
         {   
             "name" : "sylab_phase_0_head",
             "filename" : "sprite/png/sylabhead.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "posters/binary",
+            "filename" : "sprite/png/poster_binary.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "posters/unity",
+            "filename" : "sprite/png/poster_unity.png",
             "filtered" : false
         }
         ],

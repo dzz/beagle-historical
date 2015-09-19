@@ -45,9 +45,14 @@ class resource_manager:
 
 
         def load_specials(self):
+            def find_primary_gamepad():
+                return get_gamepad(0)
+
             self.resource_map["core/primitive/unit_uv_square"] = primitive.get_unit_uv_primitive()
             self.resource_map["core/factory/framebuffer/from_dimensions(w,h)"] = fb_class.from_dims
-            self.resource_map["core/gamepads/queries/find"] = get_gamepad
+            self.resource_map["core/factory/framebuffer/from_screen()"] = fb_class.from_screen
+            self.resource_map["core/queries/gamepad/find_by_id(id)"] = get_gamepad
+            self.resource_map["core/queries/gamepad/find_primary()"] = find_primary_gamepad
             return
         
 
@@ -91,8 +96,6 @@ class resource_manager:
 
         def get_resource(self, path):
             try:
-                print(path)
-                print(self.resource_map)
                 return self.resource_map[path]
             except KeyError:
                 log.write( log.ERROR, "Could not load asset {0}".format(path))

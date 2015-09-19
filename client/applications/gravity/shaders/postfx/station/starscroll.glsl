@@ -11,7 +11,7 @@ void main(void) {
     float T = sin( t+uv.x *3.14 );
     vec4 basecol = vec4(0,0.1,0.2,0)*(0.25+sin(uv.x));
     vec2 uv_t = (uv*uv_scale)+uv_translate;
-    if(uv.y>0.15)
+    if(uv.y>0.0)
         uv_t.y+=sin(T+uv.x)*0.1;
     else {
         basecol = vec4(0,0,0,0);

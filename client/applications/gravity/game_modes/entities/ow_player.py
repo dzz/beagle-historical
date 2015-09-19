@@ -28,10 +28,13 @@ class ow_player:
             if self.is_walking():
                 self.walk_sequencer.tick()
 
-    def handle_input(self):
-        gp = assets.get("core/gamepads/queries/find")(0)
+    def relative_point( self, point, parallax = 1.0 ):
+        return [  point[0] - self.x, point[1] ]
 
-        amt = 0.1*gp.leftStick[0]
+    def handle_input(self):
+        gp = assets.get("core/queries/gamepad/find_primary()")()
+
+        amt = 0.05*gp.leftStick[0]
         if(gp.leftStick[0]>0.25):
             self.x += amt
             self.uw_x += amt

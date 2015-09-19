@@ -10,6 +10,7 @@ from .entities.chamber import chamber
 from .entities.ow_enviro import ow_enviro
 from .entities.ow_player import ow_player
 from .entities.ow_terminal import ow_terminal
+from .entities.poster import poster
 
 class ship_game:
     def __init__(self):
@@ -28,20 +29,28 @@ class ship_game:
         self.comp_shader = assets.get("common/shader/passthru_filtered")
         self.floor_shader = assets.get("station/shader/floor")
         self.ship_texture = assets.get("intro/texture/ascend_ship")
-        self.primitive = primitive.get_unit_uv_primitive()
+        self.primitive = assets.get("core/primitive/unit_uv_square")
+
         self.t_delta = 1.0/240.0;
 
-        self.comp_buffer = framebuffer.from_screen()
+        self.comp_buffer = assets.get("core/factory/framebuffer/from_screen()")()
+
         self.ow_terminal = ow_terminal(self.view, self.ow_player, self.comp_buffer.get_texture() )
 
         self.t = 0
-        self.sequence   = assets.get("station/curve_sequence/station")
-        self.sequencer = curve_sequencer( self.sequence )
-        self.chamber = chamber(self.primitive,self.view)
+        self.sequencer   = assets.get("station/curve_sequence/station")
 
+        self.chamber = chamber(self.primitive,self.view)
         self.ow_enviro.register_child( self.ow_player )
         self.sequencer.register_slaves([ self.ow_player, self.ow_terminal, self.ow_enviro])
-        self.sequencer.seek_forward(20)
+        self.sequencer.tick()
+        self.sequencer.seek_forward(assets.get("sylab/dict/debug_vars")["fw_seek"])
+
+        self.posters = [ 
+                            poster( self.view, "unity", self.ow_player, [17.0,0.0] ) ,
+                            poster( self.view, "binary", self.ow_player, [-17.0,0.0] ) 
+                            
+                            ]
 
 
     def tick(self,context):
@@ -113,6 +122,9 @@ class ship_game:
             self.render_starscroll()
             with blendstate(blendmode.add):
                 self.ow_terminal.render()
+                for poster in self.posters:
+                    poster.render()
+
         self.comp_buffer.render_shaded( self.comp_shader, { "filter_color" : self.sequencer.animated_value("star_fadein") } )
         self.render_floor()
         with blendstate(blendmode.alpha_over):

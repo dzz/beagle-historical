@@ -13,14 +13,14 @@ void main(void) {
     vec2 uv_t = uv;
 
 
-    //if(mod(time*3,10)>=4 && (mod(time*7,90)>60)) {
+    if(mod(time*3,10)>=4 && (mod(time*7,90)>60)) {
 
         uv_t.x+=((sin(warp*((1-uv.y)*(65*warp))*3.14))*(0.01+warp))*0.02;
         uv_t.y+=sin( ((nrm_x*nrm_x)*3.14*20)+(time*2.0f))/1024.0;
 
         uv_t.y*=(0.98)+(0.02-((0.01*(1.0-(nrm_x*nrm_x)))));
 
-//    }
+    }
 
 
     float y_idx = uv.y*3.14*20*(1.0+warp);
@@ -43,6 +43,6 @@ void main(void) {
     float mod_color_e = 0.9 + ((sin( uv.x*nrm_x+uv.y*23 ) + cos(a_warp*time)) / 120.0);
     
     float mod_color = (0.75*mod_color_e)+ (0.25*(1.0-(nrm_x*nrm_x)));
-    gl_FragColor = col * mod_color + (smpl_base*filter_color);
+    gl_FragColor = col * mod_color + (smpl_base*filter_color) + (0.2*(texture(modBuffer,uv)*sin(y_idx*64)));
 
 }
