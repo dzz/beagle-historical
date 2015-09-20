@@ -15,6 +15,10 @@ void main(void) {
     else 
         mod_x = 0;
 
-    float x = uv.y+(mod((((0.5-mod_x)*(((1.0-uv.y)+0.4)*0.9))*24)+(-1*px),3)/10.0)*0.2;
-    gl_FragColor = vec4(x,0,0,1.0);
+    float x = (1.0-uv.y)+(mod((((0.5-mod_x)*(((1.0-uv.y)+0.4)*0.9))*24)+(-1*px),3)/10.0)*0.2;
+    x=x*x;
+    float s_x=(1.0+sin(x*(0.5-uv.x)*(mod_x+1)*22))/2.0;
+
+    
+    gl_FragColor = vec4(uv.y*s_x,0.0,uv.y*s_x*x,1.0);
 }

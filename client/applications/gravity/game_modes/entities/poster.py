@@ -1,6 +1,6 @@
 from client.ctt2.assets import assets
 from random import uniform, choice
-from math import sin
+from math import sin,floor
 
 class poster:
     def __init__(self, view, postername, player, pos = [0.0,0.0], trigger_thresh = 8, active = True):
@@ -23,8 +23,8 @@ class poster:
 
         return {
                  "texBuffer" : texture,
-                 "translation_local"    : [0,0,0],
-                 "scale_local"          : [1.0*scale,2.0*scale],
+                 "translation_local"    : [0,0],
+                 "scale_local"          : [1.0*scale*(1.0-self.charge),2.0*scale],
                  "translation_world"    : self.player.relative_point( self.pos, prlx ),
                  "scale_world"          : [1.0,1.0],
                  "view"                 : self.view,
@@ -47,7 +47,7 @@ class poster:
         else:
             t = 1.0 - self.charge + (0.02*sin(self.t/40.0))
 
-        self.viz_idktr = t
+        self.viz_idktr = max(0.0,min(floor(t*12) / 10.0,1.0))
 
         color = [t,t*t*t,t*t,t] 
 
@@ -58,6 +58,8 @@ class poster:
 
         if self.active:
             self.primitive.render_shaded( self.shader, self.get_shader_params( texture, [0.1*t*0.2,0.3*t*0.2,0.1*t*0.4,0.1*t], 2.5, 0.2 ))
+        else:
+            color = [ 0.0,t*0.25,t,1.0]
 
         self.primitive.render_shaded( self.shader, self.get_shader_params( texture, color, 1 ))
 

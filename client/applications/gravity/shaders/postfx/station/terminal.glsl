@@ -43,6 +43,6 @@ void main(void) {
     float mod_color_e = 0.9 + ((sin( uv.x*nrm_x+uv.y*23 ) + cos(a_warp*time)) / 120.0);
     
     float mod_color = (0.75*mod_color_e)+ (0.25*(1.0-(nrm_x*nrm_x)));
-    gl_FragColor = col * mod_color + (smpl_base*filter_color) + (0.1*(texture(modBuffer,uv)*(0.5)+(0.5*sin(time+y_idx*64))));
+    gl_FragColor = col * mod_color + (smpl_base*filter_color) + (0.1*(texture(modBuffer,uv)*(0.5)+(0.2*sin((time*0.3)+y_idx*64))));
 
 }

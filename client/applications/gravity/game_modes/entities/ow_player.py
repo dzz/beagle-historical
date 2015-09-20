@@ -36,7 +36,7 @@ class ow_player:
         return [  point[0] - self.x, point[1] ]
 
     def handle_input(self):
-        gp = assets.get("core/queries/gamepad/find_primary()")()
+        gp = assets.exec("core/queries/gamepad/find_primary")
 
 
         if(abs(gp.leftStick[0])>0.4):

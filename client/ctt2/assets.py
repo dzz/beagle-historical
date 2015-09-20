@@ -10,6 +10,7 @@ import client.gfx.shaders as shaders
 from client.gfx.framebuffer import framebuffer as fb_class
 from client.gfx.coordinates import centered_view,Y_Axis_Down, Y_Axis_Up
 from client.gfx.primitive import primitive
+from client.gfx.blend            import blendstate,blendmode
 import os
 import audio
 
@@ -49,11 +50,13 @@ class resource_manager:
                 return get_gamepad(0)
 
             self.resource_map["core/primitive/unit_uv_square"] = primitive.get_unit_uv_primitive()
-            self.resource_map["core/factory/framebuffer/from_dimensions(w,h)"] = fb_class.from_dims
-            self.resource_map["core/factory/framebuffer/from_screen()"] = fb_class.from_screen
-            self.resource_map["core/queries/gamepad/find_by_id(id)"] = get_gamepad
-            self.resource_map["core/queries/gamepad/find_primary()"] = find_primary_gamepad
+            self.resource_map["core/factory/framebuffer/from_dimensions[w,h]"] = fb_class.from_dims
+            self.resource_map["core/factory/framebuffer/from_screen"] = fb_class.from_screen
+            self.resource_map["core/queries/gamepad/find_by_id[id]"] = get_gamepad
+            self.resource_map["core/queries/gamepad/find_primary"] = find_primary_gamepad
             self.resource_map["core/gamepad/buttons"] = pad_buttons
+            self.resource_map["core/blendmode/alpha_over"] = blendstate( blendmode.alpha_over )
+            self.resource_map["core/blendmode/add"] = blendstate( blendmode.add )
         
 
         def load_package(self,pkgname):

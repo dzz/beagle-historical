@@ -16,15 +16,18 @@ class ow_terminal:
         self.sequencer = assets.get("sylab/curve_sequence/disp_warp") 
         self.parallax = 1.0
         self.application = eaos_saver(self.registers)
+        
         self.t = 0.0
         self.x = 0.0
-        self.terminal_buffer = assets.get("core/factory/framebuffer/from_dimensions(w,h)")(384,256)
+        self.terminal_buffer = assets.exec("core/factory/framebuffer/from_dimensions[w,h]",[384,256])
 
     def render_termapp(self):
-        self.application.render()
+        if self.application is not None:
+            self.application.render()
 
     def get_terminal_buffer(self):
         return self.terminal_buffer
+
 
     def play_dist_scale(self):
         d = abs(self.ow_player.x - self.x ) 
@@ -57,5 +60,16 @@ class ow_terminal:
 
     def tick(self):
         self.t += 0.1
-        self.application.tick()
+        if self.application is not None:
+            d = (self.x - self.ow_player.x)
+            d = d*d
+            self.application.tick()
+            input_mdist_threshold = 25
+            if( d< input_mdist_threshold ):
+                self.application.handle_input()
+            if(self.application.finalized):
+                self.application = self.application.next_application
+
         self.sequencer.tick()
+
+

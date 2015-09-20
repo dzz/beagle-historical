@@ -13,7 +13,7 @@ class ow_planet:
 
     def get_shader_params(self,texture, color = [1,1,1,1]):
         phase = 30.0
-        scl = 0.25
+        scl = 1.25
         sway = -16
 
 
@@ -42,5 +42,5 @@ class ow_planet:
 
     def render(self, color = [1,1,1,1]):
         if(self.visible):
-            self.primitive.render_shaded( self.shader, self.get_shader_params( self.texture, [0.1,0.2,0.1,1.0] ))
+            self.primitive.render_shaded( self.shader, self.get_shader_params( self.texture, [1.0,1.0,1.0,1.0] ))
 

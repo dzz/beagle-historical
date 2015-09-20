@@ -38,7 +38,7 @@ class ship_game:
 
         self.t_delta = 1.0/240.0;
 
-        self.comp_buffer = assets.get("core/factory/framebuffer/from_screen()")()
+        self.comp_buffer = assets.exec("core/factory/framebuffer/from_screen")
 
 
         self.t = 0
@@ -47,10 +47,10 @@ class ship_game:
         self.chamber = chamber(self.primitive,self.view)
 
         self.posters = [ 
-                            poster( self.view, "unity", self.ow_player, [19.0,0.0], 12, False ) ,
+                            #poster( self.view, "unity", self.ow_player, [19.0,0.0], 12, False ) ,
                             poster( self.view, "unity", self.ow_player, [14.0,0.0], 12, False ) ,
                             poster( self.view, "unity", self.ow_player, [9.0,0.0], 12, True ) ,
-                            poster( self.view, "binary", self.ow_player, [-19.0,0.0], 12, False ) ,
+                            #poster( self.view, "binary", self.ow_player, [-19.0,0.0], 12, False ) ,
                             poster( self.view, "binary", self.ow_player, [-14.0,0.0], 12, False ) ,
                             poster( self.view, "binary", self.ow_player, [-9.0,0.0], 12, True ) 
                             
@@ -129,7 +129,7 @@ class ship_game:
             blkidx = uniform(0.0,1.0)
             blkmode = blendmode.alpha_over
             invblkmode = blendmode.add
-            if(blkidx>0.993):
+            if(blkidx>0.999):
                 blkmode = blendmode.add
                 invblkmode = blendmode.alpha_over
             with blendstate(blkmode):
@@ -140,8 +140,8 @@ class ship_game:
 
         with render_target(self.comp_buffer):
             self.render_starscroll()
-            with blendstate(blendmode.alpha_over):
-                self.ow_planet.render()
+            #with blendstate(blendmode.alpha_over):
+            #    self.ow_planet.render()
             with blendstate(invblkmode):
                 self.ow_terminal.render()
                 for poster in self.posters:
