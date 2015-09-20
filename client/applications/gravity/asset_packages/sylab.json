@@ -5,7 +5,7 @@
                 { 
                     "name" : "debug_vars",
                     "dict" : {
-                                "fw_seek" : 0.0
+                                "fw_seek" : 20.0
                     }
                 },
                 {
@@ -45,6 +45,11 @@
         {   
             "name" : "posters/binary",
             "filename" : "sprite/png/poster_binary.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "posters/inactive",
+            "filename" : "sprite/png/poster_inactive.png",
             "filtered" : false
         },
         {   

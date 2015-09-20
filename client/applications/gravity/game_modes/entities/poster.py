@@ -3,10 +3,12 @@ from random import uniform, choice
 from math import sin
 
 class poster:
-    def __init__(self, view, postername, player, pos = [0.0,0.0], trigger_thresh = 8):
+    def __init__(self, view, postername, player, pos = [0.0,0.0], trigger_thresh = 8, active = True):
+        self.active = active
         self.shader = assets.get("common/shader/default_2d")
         self.trigger_thresh = trigger_thresh
         self.texture = assets.get("sylab/texture/posters/" + postername)
+        self.inactive_texture = assets.get("sylab/texture/posters/inactive")
         self.primitive = assets.get("core/primitive/unit_uv_square")
         self.view = view
         self.pos = pos
@@ -18,6 +20,7 @@ class poster:
         self.viz_idktr = 0.0
 
     def get_shader_params(self,texture, color = [1,1,1,1],scale=1,prlx =1.0):
+
         return {
                  "texBuffer" : texture,
                  "translation_local"    : [0,0,0],
@@ -47,6 +50,14 @@ class poster:
         self.viz_idktr = t
 
         color = [t,t*t*t,t*t,t] 
-        self.primitive.render_shaded( self.shader, self.get_shader_params( self.texture, [0.1*t*0.2,0.3*t*0.2,0.1*t*0.4,0.1*t], 2.5, 0.2 ))
-        self.primitive.render_shaded( self.shader, self.get_shader_params( self.texture, color, 1 ))
+
+        if self.active:
+            texture = self.texture
+        else:
+            texture = self.inactive_texture
+
+        if self.active:
+            self.primitive.render_shaded( self.shader, self.get_shader_params( texture, [0.1*t*0.2,0.3*t*0.2,0.1*t*0.4,0.1*t], 2.5, 0.2 ))
+
+        self.primitive.render_shaded( self.shader, self.get_shader_params( texture, color, 1 ))
 

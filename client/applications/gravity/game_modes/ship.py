@@ -47,12 +47,12 @@ class ship_game:
         self.chamber = chamber(self.primitive,self.view)
 
         self.posters = [ 
-                            poster( self.view, "unity", self.ow_player, [19.0,0.0] ) ,
-                            poster( self.view, "unity", self.ow_player, [14.0,0.0] ) ,
-                            poster( self.view, "unity", self.ow_player, [9.0,0.0] ) ,
-                            poster( self.view, "binary", self.ow_player, [-19.0,0.0] ) ,
-                            poster( self.view, "binary", self.ow_player, [-14.0,0.0] ) ,
-                            poster( self.view, "binary", self.ow_player, [-9.0,0.0] ) 
+                            poster( self.view, "unity", self.ow_player, [19.0,0.0], 12, False ) ,
+                            poster( self.view, "unity", self.ow_player, [14.0,0.0], 12, False ) ,
+                            poster( self.view, "unity", self.ow_player, [9.0,0.0], 12, True ) ,
+                            poster( self.view, "binary", self.ow_player, [-19.0,0.0], 12, False ) ,
+                            poster( self.view, "binary", self.ow_player, [-14.0,0.0], 12, False ) ,
+                            poster( self.view, "binary", self.ow_player, [-9.0,0.0], 12, True ) 
                             
                             ]
         self.ow_terminal = ow_terminal(self.view, self.ow_player, self.posters, self.comp_buffer.get_texture() )

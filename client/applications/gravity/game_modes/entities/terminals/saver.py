@@ -29,10 +29,13 @@ class eaos_saver:
 
         render_text("SV:9.0.8.9${0:.2f}]".format(self.reg_sum),17*8,13*8,[1.0,0.8,0.0])
 
-        if(self.reg_sum>0.96):
+        if(self.reg_sum>0.96) or True:
             render_text("[            ]",17*8,18*8,[0.0,1.0,1.0])
-            if(self.t%10 > 5 ):
-                render_text("  INVOKE-001  ",17*8,18*8,[1.0,1.0,0.0])
+            render_text("   ******* ",17*8,17*8,[1.0,1.0,0.0])
+            render_text("   ******* ",17*8,19*8,[1.0,1.0,0.0])
+            render_text("   *     * ",17*8,18*8,[1.0,1.0,0.0])
+            if(self.t%20 > 10 ):
+                render_text("    READY  ",17*8,18*8,[0.0,1.0,0.0])
 
 
 
