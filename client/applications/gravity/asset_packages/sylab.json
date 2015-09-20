@@ -5,8 +5,8 @@
                 { 
                     "name" : "debug_vars",
                     "dict" : {
-                                "fw_seek" : 20.0,
-                                "eaos_saver_finalized" : true
+                                "fw_seek" : 0.0,
+                                "eaos_saver_finalized" : false
                     }
                 },
                 {

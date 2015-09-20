@@ -1,5 +1,4 @@
 from client.ctt2.assets import assets
-from client.gfx.text import render_text
 from math import sin
 
 class eaos_status:
@@ -10,7 +9,8 @@ class eaos_status:
         self.scale = 0
         self.scale_delta = 0.01
 
-    def __init__(self):
+    def __init__(self,terminal = None):
+        self.terminal = terminal
         self.finalized = False
         self.next_application = None
         self.scale = 0.0
@@ -29,7 +29,7 @@ class eaos_status:
         self.render_proc = self.render_command_select
 
     def render_cursor(self):
-        with assets.get("core/blendmode/alpha_over"):
+        with assets.get("core/hwgfx/blendmode/alpha_over"):
             assets.get("core/primitive/unit_uv_square").render_shaded(
                     assets.get("common/shader/default_2d"),{
                         "texBuffer" : assets.get("sylab/texture/crsr"),
@@ -46,8 +46,8 @@ class eaos_status:
 
     def render_command_select(self):
         commands = self.proclist
-        with assets.get("core/blendmode/add"):
-            assets.get("core/primitive/unit_uv_square").render_shaded(
+        with assets.get("core/hwgfx/blendmode/add"):
+            assets.get("core/hwgfx/primitive/unit_uv_square").render_shaded(
                     assets.get("common/shader/default_2d"),{
                         "texBuffer" : assets.get("sylab/texture/infra_overview"),
                          "translation_local"    : [0.0,0],
@@ -79,11 +79,12 @@ class eaos_status:
             else:
                 command["selected"] = False
 
-            render_text( strg, 230,(8*4)+(row*8), color )
+            with(assets.get("core/hwgfx/blendmode/alpha_over")):
+                assets.exec("core/lotext/print(pixels)[txt,[x,y],[r,g,b]]", [ strg, [230,(8*4)+(row*8)], color ] )
             row+=1
 
     def render_binmod_report(self):
-        with assets.get("core/blendmode/add"):
+        with assets.get("core/hwgfx/blendmode/add"):
             assets.get("core/primitive/unit_uv_square").render_shaded(
                     assets.get("common/shader/default_2d"),{
                         "texBuffer" : assets.get("sylab/texture/termlay"),
@@ -97,22 +98,16 @@ class eaos_status:
                          "uv_translate"         : [0,0] })
 
 
-
-        #render_text( assets.exec(
-        #                            "core/stringfx/scroll[string,offset]",
-        #                            [" modrept",int(self.scr_count)]
-        #                        ),
-        #                        0,1*8,[1,1,1])
-
-        assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
-                [
-                    [ assets.exec("core/stringfx/scroll[txt,offset]", ["::mod_rept::", int(self.scr_count) ]), 
-                                    [0,1], [1,1,1] ],
-                    [" ----------" ,[0,2], [1,1,1] ],
-                    ["  00. [A   ]",[0,3], [1,1,1] ],
-                    ["  01. [A   ]",[0,4], [1,1,1] ],
-                    ["  10. [   F]",[0,5], [1,0,0] ],
-                    ["  11. [   F]",[0,6], [1,0,0] ] ])
+        with assets.get("core/hwgfx/blendmode/alpha_over"):
+            assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
+                    [
+                        [ assets.exec("core/stringfx/scroll[txt,offset]", ["binmods ", int(self.scr_count) ]), 
+                                        [0,1], [1,1,1] ],
+                        [" ----------" ,[0,2], [1,1,1] ],
+                        ["  00. [A   ]",[0,3], [1,1,1] ],
+                        ["  01. [A   ]",[0,4], [1,1,1] ],
+                        ["  10. [   F]",[0,5], [1,0,0] ],
+                        ["  11. [   F]",[0,6], [1,0,0] ] ])
 
     def render(self):
         self.render_proc()
@@ -128,11 +123,11 @@ class eaos_status:
     def handle_input(self):
         gp = assets.exec("core/queries/gamepad/find_primary")
 
-
         if(self.render_proc!=self.render_command_select):
             if(gp.button_down( assets.get("core/gamepad/buttons").B ) ):
                 self.init_scale()
                 self.render_proc = self.render_command_select
+                self.terminal.signal_was_learned()
 
         if( gp.triggers[1] > 0.5):
             self.handle_click()

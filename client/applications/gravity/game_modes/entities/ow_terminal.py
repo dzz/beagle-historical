@@ -9,17 +9,18 @@ class ow_terminal:
         self.modBuffer = modBuffer
         self.ow_player = ow_player
         self.view = view
-        self.textures = {}
-        self.textures["sylab_head"] = assets.get("sylab/texture/sylab_phase_0_head")
         self.primitive = assets.get("core/primitive/unit_uv_square")
-        self.shader = assets.get("sylab/shader/terminal")
         self.sequencer = assets.get("sylab/curve_sequence/disp_warp") 
         self.parallax = 1.0
-        self.application = eaos_saver(self.registers)
+        self.application = eaos_saver(self.registers,self)
         self.uses_cursor = True
         self.handling_input = False
+        self.was_learned = False
         self.t = 0.0
         self.x = 0.0
+
+    def signal_was_learned(self):
+        self.was_learned = True
 
     def render_termapp(self):
         if self.application is not None:
@@ -57,20 +58,44 @@ class ow_terminal:
             "filter_color"         : self.sequencer.animated_value("filter_color"),
             "uv_translate"         : [0,0] }
 
-    def render(self):
-        self.primitive.render_shaded(self.shader, self.get_head_shader_param() )
+    def render_help(self):
+        if self.was_learned:
+            return
 
         if self.application is not None and self.application.uses_cursor and self.handling_input:
-            with assets.get("core/blendmode/alpha_over"):
-                assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
-                        [
-                                [ "When in Terminal:                 ",  [0, 0], [1,1,1] ] ,
-                                [ "      .rightStick   =>cursor.mov  ",  [0, 2], [1,1,1] ] ,
-                                [ "      .rightTrigger =>cursor.clk  ",  [0, 3], [1,1,1] ] ,
-                                [ "      .buttons('A') =>cntext.oky  ",  [0, 4], [1,1,1] ] ,
-                                [ "      .buttons('B') =>cntext.bck  ",  [0, 5], [1,1,1] ] 
-                        ])
+            fbuf = assets.lazy_reusable(    factory = "core/factory/framebuffer/[w,h]", 
+                                            args = [ 256,128],
+                                            key = "terminal_tutorial" )
+            with fbuf.as_render_target():
+                with assets.get("core/hwgfx/blendmode/alpha_over"):
+                    assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
+                            [
+                                    [ "When in Terminal:                ",  [0, 0], [1,1,1] ] ,
+                                    [ "- - - - - - - - -                ",  [0, 1], [1,1,1] ] ,
+                                    [ "     .rightStick   =>cursor.mov  ",  [0, 2], [1,0.5,0.5] ] ,
+                                    [ "     .rightTrigger =>cursor.clk  ",  [0, 3], [1,0.5,0.5] ] ,
+                                    [ "     .buttons('A') =>cntext.oky  ",  [0, 4], [0.5,0.5,1] ] ,
+                                    [ "     .buttons('B') =>cntext.bck  ",  [0, 5], [0.5,0.5,1] ] 
+                            ])
 
+            with assets.get("core/hwgfx/blendmode/alpha_over"):
+                assets.get("core/primitive/unit_uv_square" ).render_shaded(
+                                                                assets.get("common/shader/default_2d"), 
+                                                                {
+                                                                    "texBuffer" : fbuf,
+                                                                    "translation_local" :[0.0,0.0],
+                                                                    "scale_local" : [3.0*0.7,-2.0*0.7],
+                                                                    "scale_world" : [1.0,1.0],
+                                                                    "translation_world" : [self.ow_player.x,4.65],
+                                                                    "view"        : assets.get("common/coordsys/16:9"),
+                                                                    "rotation_local" : 0.0,
+                                                                    "filter_color" : [1.0,1.0,1.0,(20.0-(self.ow_player.x*self.ow_player.x))/20.0],
+                                                                    "uv_translate" : [0.0,0.0]
+                                                                } )
+
+    def render(self):
+        self.primitive.render_shaded( assets.get("sylab/shader/terminal"), self.get_head_shader_param() )
+                                                                     
     def tick(self):
         self.t += 0.1
         if self.application is not None:

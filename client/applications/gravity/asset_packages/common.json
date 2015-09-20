@@ -3,7 +3,7 @@
     "resources" : [
     {
         "type"              : "dict",
-        "name"              : "shader_config_templates",
+        "name"              : "shader_param_template",
         "dict"              : {
                                 "default_2d" : {
                                                     "unity" : {

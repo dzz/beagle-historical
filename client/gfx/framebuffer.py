@@ -20,6 +20,9 @@ class framebuffer:
         hwgfx.framebuffer_drop(self._fb)
         log.write( log.DEBUG, "Dropped framebuffer:{0}".format(self._fb))
 
+    def as_render_target(self):
+        return render_target(self)
+
     def get_texture(self):
         return self._tex
 

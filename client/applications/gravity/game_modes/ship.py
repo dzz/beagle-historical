@@ -1,12 +1,5 @@
-from random import uniform
 from client.ctt2.assets import assets
-from client.gfx.context import gfx_context
-from client.gfx.primitive import primitive
-from client.gfx.blend            import blendstate,blendmode
-from client.ctt2.animation import curve_sequencer
-from client.gfx.framebuffer import *
-from client.system.gamepad       import get_gamepad
-from client.gfx.text import render_text
+
 from .entities.chamber import chamber
 from .entities.ow_enviro import ow_enviro
 from .entities.ow_player import ow_player
@@ -47,14 +40,12 @@ class ship_game:
         self.chamber = chamber(self.primitive,self.view)
 
         self.posters = [ 
-                            #poster( self.view, "unity", self.ow_player, [19.0,0.0], 12, False ) ,
                             poster( self.view, "unity", self.ow_player, [32.0,0.0], 12, False ) ,
                             poster( self.view, "unity", self.ow_player, [18.0,0.0], 12, False ) ,
-                            #poster( self.view, "binary", self.ow_player, [-19.0,0.0], 12, False ) ,
                             poster( self.view, "binary", self.ow_player, [-18.0,0.0], 12, True ) ,
                             poster( self.view, "binary", self.ow_player, [-32.0,0.0], 12, False ) 
-                            
-                            ]
+                       ]
+
         self.ow_terminal = ow_terminal(self.view, self.ow_player, self.posters, self.comp_buffer.get_texture() )
         self.sequencer.register_slaves([ self.ow_planet, self.ow_player, self.ow_terminal, self.ow_enviro])
         self.sequencer.register_slaves( self.posters )
@@ -69,7 +60,7 @@ class ship_game:
 
 
     def render_ship(self):
-        with blendstate(blendmode.alpha_over):
+        with assets.get("core/hwgfx/blendmode/alpha_over"):
             self.primitive.render_shaded( assets.get("common/shader/default_2d"), { 
                     "texBuffer" : self.ship_texture,
                      "translation_local"    : [0.0,0],
@@ -99,8 +90,8 @@ class ship_game:
             } )
 
     def render_starscroll(self, paras = [0.01,0.05], triple=True):
-        gfx_context.clear([0.0,0.0,0.0,1.0])
-        with blendstate(blendmode.add):
+        assets.exec("core/hwgfx/context/clear[r,g,b,a]", [0.0,0.0,0.0,1.0])
+        with assets.get("core/hwgfx/blendmode/add"):
             self.primitive.render_shaded( self.star_shader, 
                         { "texBuffer"    : self.star_textures[0],
                           "uv_translate" : [self.t*paras[0]+self.ow_player.uw_x*paras[0],0.0],
@@ -124,37 +115,28 @@ class ship_game:
 
 
     def render(self,context):
-        with render_target(self.ow_terminal.get_terminal_buffer()):
-
-            blkidx = uniform(0.0,1.0)
-            blkmode = blendmode.alpha_over
-            invblkmode = blendmode.add
-            if(blkidx>0.999):
-                blkmode = blendmode.add
-                invblkmode = blendmode.alpha_over
-            with blendstate(blkmode):
-                #gfx_context.clear([0.0,0.0,0.0,1.0])
+        with self.ow_terminal.get_terminal_buffer().as_render_target():
+            with assets.get("core/hwgfx/blendmode/alpha_over"):
                 self.render_starscroll([0.003,0.01],False)
                 self.ow_terminal.render_termapp()
 
 
-        with render_target(self.comp_buffer):
+        with self.comp_buffer.as_render_target():
             self.render_starscroll()
-            #with blendstate(blendmode.alpha_over):
-            #    self.ow_planet.render()
-            with blendstate(invblkmode):
+            with assets.get("core/hwgfx/blendmode/add"):
                 self.ow_terminal.render()
                 for poster in self.posters:
                     poster.render()
 
         self.comp_buffer.render_shaded( self.comp_shader, { "filter_color" : self.sequencer.animated_value("star_fadein") } )
-        with blendstate(blendmode.add):
+        with assets.get("core/hwgfx/blendmode/add"):
             self.render_floor()
-        with blendstate(blendmode.alpha_over):
+        with assets.get("core/hwgfx/blendmode/alpha_over"):
             self.chamber.render_base( self.sequencer.animated_value("chamber_color") )
             if(self.sequencer.animated_value("sequence.time") > 8.0):
                 self.ow_player.render()
             self.render_ship()
 
             self.chamber.render_door( self.sequencer.animated_value("door_color"))
+        self.ow_terminal.render_help()
 

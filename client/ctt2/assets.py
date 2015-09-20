@@ -1,4 +1,5 @@
 import json
+from client.gfx.context import gfx_context
 from client.gfx.text import render_text
 from client.system.gamepad       import get_gamepad, pad_buttons
 import client.system.log as log
@@ -70,13 +71,17 @@ class resource_manager:
             self.resource_map["core/queries/gamepad/find_by_id[id]"] = get_gamepad
             self.resource_map["core/queries/gamepad/find_primary"] = find_primary_gamepad
             self.resource_map["core/gamepad/buttons"] = pad_buttons
-            self.resource_map["core/blendmode/alpha_over"] = blendstate( blendmode.alpha_over )
-            self.resource_map["core/blendmode/add"] = blendstate( blendmode.add )
             self.resource_map["core/stringfx/scroll[txt,offset]"] = scroll_text
+
             self.resource_map["core/lotext/print(pixels)[txt,x,y,[r,g,b]]"] = render_text
             self.resource_map["core/lotext/print(pixels)[txt,[x,y],[r,g,b]]"] = print_pixels
             self.resource_map["core/lotext/print[txt,[x,y],[r,g,b]]"] = print_pixels
             self.resource_map["core/lotext/print(rows)[txt,[x,y],[r,g,b]]"] = print_rows
+
+            self.resource_map["core/hwgfx/context/clear[r,g,b,a]"] = gfx_context.clear_rgba
+            self.resource_map["core/hwgfx/blendmode/alpha_over"] = blendstate( blendmode.alpha_over )
+            self.resource_map["core/hwgfx/blendmode/add"] = blendstate( blendmode.add )
+            self.resource_map["core/hwgfx/primitive/unit_uv_square"] = primitive.get_unit_uv_primitive()
         
 
         def load_package(self,pkgname):
@@ -182,6 +187,9 @@ class assets:
 
         def _xfkey(path,k):
             return "{0}/reusables/" + k
+
+        def lazy_reusable(factory,args,key):
+            return assets.reusable_from_factory( factory,args,key)
 
         def reusable_from_factory( factory, args, key):
             global instance
