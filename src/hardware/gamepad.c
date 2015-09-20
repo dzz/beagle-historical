@@ -1,4 +1,5 @@
 #include <SDL.H>
+#include <SDL_gamecontroller.h>
 
 #include "gamepad.h"
 #include "../system/rt_module_codes.h"
@@ -66,6 +67,12 @@ void GamepadHandleEvent( SDL_Event* event) {
 
 hw_gamepad* getGamepad(int index) {
     return( &Gamepads[index] );
+}
+
+unsigned int gamepad_get_button(hw_gamepad* gp, unsigned int button) {
+	if (gp->available) {
+		return (unsigned int)SDL_GameControllerGetButton(gp->controller, button);
+	} return 0;
 }
 
 unsigned int initGamepad() {

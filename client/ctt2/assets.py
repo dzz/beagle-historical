@@ -1,5 +1,5 @@
 import json
-from client.system.gamepad       import get_gamepad
+from client.system.gamepad       import get_gamepad, pad_buttons
 import client.system.log as log
 from client.ctt2.animation import curve_sequencer
 from client.gfx.texture import texture
@@ -53,7 +53,7 @@ class resource_manager:
             self.resource_map["core/factory/framebuffer/from_screen()"] = fb_class.from_screen
             self.resource_map["core/queries/gamepad/find_by_id(id)"] = get_gamepad
             self.resource_map["core/queries/gamepad/find_primary()"] = find_primary_gamepad
-            return
+            self.resource_map["core/gamepad/buttons"] = pad_buttons
         
 
         def load_package(self,pkgname):
@@ -92,7 +92,7 @@ class resource_manager:
                 key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
                 self.package_keys[pkgname].append(key)
                 self.resource_map[key] = self.adapters[resdef["type"]].load(resdef)
-                log.write( log.INFO, "Loaded asset {0}".format(key))
+                log.write( log.DEBUG, "Loaded asset {0}".format(key))
 
         def get_resource(self, path):
             try:
@@ -106,7 +106,7 @@ class resource_manager:
             for key in self.resource_map:
                 self.resource_map[key] = None
                 rm_keys.append(key)
-                log.write(log.INFO, "Flushed asset {0}".format(key))
+                log.write(log.DEBUG, "Flushed asset {0}".format(key))
             for key in rm_keys:
                 del self.resource_map[key]
 
@@ -152,6 +152,11 @@ class assets:
         def get(path):
             global instance
             return instance.get_resource(path)
+
+        def exec(path, arguments = [] ):
+            global instance
+            return instance.get_resource(path)(*arguments)
+
         def load_packages(pkgname):
             assets.load_package(pkgname)
 

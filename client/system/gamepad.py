@@ -7,14 +7,36 @@ gf_a = 1.0-GamepadFilter
 gf_b = GamepadFilter
 
 
+class pad_buttons:
+    A = 0
+    B = 1
+    X = 2
+    Y = 3
+    BACK = 4
+    GUIDE = 5
+    START = 6
+    LEFT_STICK = 7
+    RIGHT_STICK = 8
+    LEFT_BUMPER = 9
+    RIGHT_BUMPER = 10
+    DPAD_UP = 11
+    DPAD_DOWN = 12
+    DPAD_LEFT = 13
+    DPAD_RIGHT = 14
+
 class gamepad:
+
     def __init__(self):
+        self.idx = 0
         self.leftStick = [0.0,0.0]
         self.rightStick = [0.0,0.0]
         #aliases
         self.left_stick = self.leftStick
         self.right_stick = self.rightStick
         self.triggers = [0.0,0.0]
+
+    def button_down(self,btn):
+        return host.get_gamepad_button( self.idx,btn) != 0
 
 gamepads = [];
 
@@ -41,11 +63,13 @@ def tick():
                 if abs(axis_data[ax])<GamepadDeadzone:
                         filtered_axis_data[ax] = 0
 
+            gp.idx = i
             gp.leftStick[0]  = gp.leftStick[0]*gf_a + filtered_axis_data[0]*gf_b
             gp.leftStick[1]  = gp.leftStick[1]*gf_a + filtered_axis_data[1]*gf_b
             gp.rightStick[0]  = gp.rightStick[0]*gf_a + filtered_axis_data[2]*gf_b
             gp.rightStick[1]  = gp.rightStick[1]*gf_a + filtered_axis_data[3]*gf_b
             gp.triggers[0] = filtered_axis_data[4]
             gp.triggers[1] = filtered_axis_data[5]
+
 
 

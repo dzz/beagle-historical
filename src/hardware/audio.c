@@ -178,7 +178,7 @@ void sequencer_set_next_track_event( seq_track* track, seq_track_event* event) {
 
 void sequencer_handle_messages() {
     unsigned int trk_id;
-    //l  og_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_DEBUG, "Sequencer control thread checking messages");
+    //l    og_message( CTT2_RT_MODULE_AUDIO, LOG_LEVEL_DEBUG, "Sequencer control thread checking messages");
     for(trk_id=0; trk_id<Sequencer->n_tracks;++trk_id) {
         seq_track* track = &Sequencer->tracks[trk_id];
         sequencer_destroy_old_event(track);

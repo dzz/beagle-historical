@@ -3,8 +3,9 @@ from .terminals.saver import eaos_saver
 from random import uniform
 
 class ow_terminal:
-    def __init__(self,view, ow_player,modBuffer):
+    def __init__(self,view, ow_player,registers,modBuffer):
         assets.load_package("sylab")
+        self.registers = registers
         self.modBuffer = modBuffer
         self.ow_player = ow_player
         self.view = view
@@ -14,7 +15,7 @@ class ow_terminal:
         self.shader = assets.get("sylab/shader/terminal")
         self.sequencer = assets.get("sylab/curve_sequence/disp_warp") 
         self.parallax = 1.0
-        self.application = eaos_saver()
+        self.application = eaos_saver(self.registers)
         self.t = 0.0
         self.x = 0.0
         self.terminal_buffer = assets.get("core/factory/framebuffer/from_dimensions(w,h)")(384,256)

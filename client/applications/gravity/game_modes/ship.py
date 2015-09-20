@@ -26,6 +26,8 @@ class ship_game:
 
         self.view = assets.get("common/coordsys/16:9")
         self.ow_player = ow_player(self.view)
+        self.ow_enviro.register_child( self.ow_player )
+
         self.floor_texture = assets.get("station/texture/floor")
         self.star_shader = assets.get("station/shader/star_scroll")
         self.comp_shader = assets.get("common/shader/passthru_filtered")
@@ -38,28 +40,27 @@ class ship_game:
 
         self.comp_buffer = assets.get("core/factory/framebuffer/from_screen()")()
 
-        self.ow_terminal = ow_terminal(self.view, self.ow_player, self.comp_buffer.get_texture() )
 
         self.t = 0
         self.sequencer   = assets.get("station/curve_sequence/station")
 
         self.chamber = chamber(self.primitive,self.view)
-        self.ow_enviro.register_child( self.ow_player )
-        self.sequencer.register_slaves([ self.ow_planet, self.ow_player, self.ow_terminal, self.ow_enviro])
-        self.sequencer.tick()
-        self.sequencer.seek_forward(assets.get("sylab/dict/debug_vars")["fw_seek"])
 
         self.posters = [ 
-                            poster( self.view, "unity", self.ow_player, [17.0,0.0] ) ,
-                            poster( self.view, "unity", self.ow_player, [13.0,0.0] ) ,
+                            poster( self.view, "unity", self.ow_player, [19.0,0.0] ) ,
+                            poster( self.view, "unity", self.ow_player, [14.0,0.0] ) ,
                             poster( self.view, "unity", self.ow_player, [9.0,0.0] ) ,
-                            poster( self.view, "binary", self.ow_player, [-17.0,0.0] ) ,
-                            poster( self.view, "binary", self.ow_player, [-13.0,0.0] ) ,
+                            poster( self.view, "binary", self.ow_player, [-19.0,0.0] ) ,
+                            poster( self.view, "binary", self.ow_player, [-14.0,0.0] ) ,
                             poster( self.view, "binary", self.ow_player, [-9.0,0.0] ) 
                             
                             ]
-
+        self.ow_terminal = ow_terminal(self.view, self.ow_player, self.posters, self.comp_buffer.get_texture() )
+        self.sequencer.register_slaves([ self.ow_planet, self.ow_player, self.ow_terminal, self.ow_enviro])
         self.sequencer.register_slaves( self.posters )
+
+        self.sequencer.tick()
+        self.sequencer.seek_forward(assets.get("sylab/dict/debug_vars")["fw_seek"])
 
 
     def tick(self,context):
@@ -93,6 +94,7 @@ class ship_game:
                  "view"                 : self.view,
                  "rotation_local"       : 0.0 ,
                  "filter_color"         : [1.0,1.0,1.0,1.0],
+                 "px"                   : self.ow_player.uw_x,
                  "uv_translate"         : [0,0]
             } )
 
@@ -126,8 +128,10 @@ class ship_game:
 
             blkidx = uniform(0.0,1.0)
             blkmode = blendmode.alpha_over
-            if(blkidx>0.98):
+            invblkmode = blendmode.add
+            if(blkidx>0.993):
                 blkmode = blendmode.add
+                invblkmode = blendmode.alpha_over
             with blendstate(blkmode):
                 #gfx_context.clear([0.0,0.0,0.0,1.0])
                 self.render_starscroll([0.003,0.01],False)
@@ -138,13 +142,14 @@ class ship_game:
             self.render_starscroll()
             with blendstate(blendmode.alpha_over):
                 self.ow_planet.render()
-            with blendstate(blendmode.add):
+            with blendstate(invblkmode):
                 self.ow_terminal.render()
                 for poster in self.posters:
                     poster.render()
 
         self.comp_buffer.render_shaded( self.comp_shader, { "filter_color" : self.sequencer.animated_value("star_fadein") } )
-        self.render_floor()
+        with blendstate(blendmode.add):
+            self.render_floor()
         with blendstate(blendmode.alpha_over):
             self.chamber.render_base( self.sequencer.animated_value("chamber_color") )
             if(self.sequencer.animated_value("sequence.time") > 8.0):

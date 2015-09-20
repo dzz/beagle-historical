@@ -97,6 +97,23 @@ DEF_ARGS {
                                       gp->right_trigger );
 }
 
+MODULE_FUNC host_get_gamepad_button
+DEF_ARGS {
+    int i;
+    unsigned int btn;
+	hw_gamepad* gp;
+
+    if(!INPUT_ARGS(args,"iI",&i,&btn))
+        return NULL;
+
+    if(i>=MAX_PADS) 
+        return NULL;
+
+     gp = getGamepad(i);
+
+    return Py_BuildValue("i", gamepad_get_button( gp,btn ) );
+}
+
 /*~=`=`=`=`=`=`=`=`=`=`==`=`=`=`=`=`=`=`=`=`=`=`=``=`=`=`=`=`=`=`=`=`=`=`=`=*/
 
 static PyMethodDef host_methods[] = {
@@ -104,6 +121,7 @@ static PyMethodDef host_methods[] = {
     {"get_char_dims",       host_get_char_dims,         METH_VARARGS, NULL},
     {"get_gamepad_sticks",  host_get_gamepad_sticks,    METH_VARARGS, NULL},
     {"get_gamepad_count",   host_get_gamepad_count,     METH_VARARGS, NULL},
+    {"get_gamepad_button",  host_get_gamepad_button,     METH_VARARGS, NULL},
     {"dequeue_gamepad_dirty",   
                             host_dequeue_gamepad_dirty, METH_VARARGS, NULL},
     {"get_hf_timer",        host_get_hf_timer,          METH_VARARGS, NULL},

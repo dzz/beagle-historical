@@ -26,6 +26,7 @@ void dropGamepad();
 hw_gamepad* getGamepads();
 void GamepadHandleEvent(SDL_Event* event);
 hw_gamepad* getGamepad(int index);
+unsigned int gamepad_get_button(hw_gamepad* gp, unsigned int button);
 int GamepadDequeueIsDirty();
 
 
