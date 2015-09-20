@@ -2,6 +2,7 @@ import client.ctt2.host_config  as host_config
 import client.system.log as log
 import hwgfx
 from client.gfx.texture import *
+from client.gfx.framebuffer import framebuffer
 
 _shaders = {}
 
@@ -97,6 +98,11 @@ class shader(object):
                     vector.bind(tex_unit)
                     tex_unit += 1
                 hwgfx.shader_bind_texture( self._shader, name, vector._tex )
+            elif isinstance(vector,framebuffer):
+                if bind_textures:
+                    vector.get_texture().bind(tex_unit)
+                    tex_unit += 1
+                hwgfx.shader_bind_texture( self._shader, name, vector.get_texture()._tex )
             elif type(vector) is float:
                 hwgfx.shader_bind_float (self._shader, name, 
                         vector)

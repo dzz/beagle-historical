@@ -104,15 +104,15 @@ class eaos_status:
         #                        ),
         #                        0,1*8,[1,1,1])
 
-        assets.exec_range("core/lotext/print(pixels)[txt,[x,y],[r,g,b]]",
+        assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
                 [
                     [ assets.exec("core/stringfx/scroll[txt,offset]", ["::mod_rept::", int(self.scr_count) ]), 
-                                    0,1*8, [1,1,1] ],
-                    [" ----------" ,0,2*8, [1,1,1] ],
-                    ["  00. [A   ]",0,3*8, [1,1,1] ],
-                    ["  01. [A   ]",0,4*8, [1,1,1] ],
-                    ["  10. [   F]",0,5*8, [1,0,0] ],
-                    ["  11. [   F]",0,6*8, [1,0,0] ] ])
+                                    [0,1], [1,1,1] ],
+                    [" ----------" ,[0,2], [1,1,1] ],
+                    ["  00. [A   ]",[0,3], [1,1,1] ],
+                    ["  01. [A   ]",[0,4], [1,1,1] ],
+                    ["  10. [   F]",[0,5], [1,0,0] ],
+                    ["  11. [   F]",[0,6], [1,0,0] ] ])
 
     def render(self):
         self.render_proc()

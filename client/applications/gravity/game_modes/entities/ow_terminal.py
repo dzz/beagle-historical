@@ -20,15 +20,16 @@ class ow_terminal:
         self.handling_input = False
         self.t = 0.0
         self.x = 0.0
-        self.terminal_buffer = assets.exec("core/factory/framebuffer/from_dimensions[w,h]",[384,256])
 
     def render_termapp(self):
         if self.application is not None:
             self.application.render()
 
     def get_terminal_buffer(self):
-        return self.terminal_buffer
-
+        return assets.reusable_from_factory( 
+                                            factory ="core/factory/framebuffer/[w,h]",
+                                            args = [384,256],
+                                            key = "overworld/terminal_buffer" )
 
     def play_dist_scale(self):
         d = abs(self.ow_player.x - self.x ) 
@@ -42,7 +43,7 @@ class ow_terminal:
 
     def get_head_shader_param(self):
         return {
-            "texBuffer"            : self.terminal_buffer.get_texture(),
+            "texBuffer"            : self.get_terminal_buffer(),
             "modBuffer"            : self.modBuffer,
             "translation_local"    : [0.0,0.0],
             "scale_local"          : self.sequencer.animated_value("terminal_scale"),

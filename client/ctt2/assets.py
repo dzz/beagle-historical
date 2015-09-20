@@ -65,6 +65,7 @@ class resource_manager:
 
             self.resource_map["core/primitive/unit_uv_square"] = primitive.get_unit_uv_primitive()
             self.resource_map["core/factory/framebuffer/from_dimensions[w,h]"] = fb_class.from_dims
+            self.resource_map["core/factory/framebuffer/[w,h]"] = fb_class.from_dims
             self.resource_map["core/factory/framebuffer/from_screen"] = fb_class.from_screen
             self.resource_map["core/queries/gamepad/find_by_id[id]"] = get_gamepad
             self.resource_map["core/queries/gamepad/find_primary"] = find_primary_gamepad
@@ -179,13 +180,21 @@ class assets:
             global instance
             return instance.get_resource(path)(*arguments)
 
-        def reusable_from_factory( path,arguments, key):
+        def _xfkey(path,k):
+            return "{0}/reusables/" + k
+
+        def reusable_from_factory( factory, args, key):
             global instance
-            key = "_factory_instances/" + key
+            key = assets._xfkey(factory, key)
             if key not in instance.resource_map:
-                resource_map[key] = assets.exec( path, arguments)
-            return resource_map[key]
-            
+                instance.resource_map[key] = assets.exec( factory, args)
+            return instance.resource_map[key]
+
+        def flush_reusable( factory, key ):
+            global instance
+            key = assets._xfkey(path, key)
+            if( key in instance.resource_map ):
+                del instance.resource_map[key]
 
         def exec_range(path, arg_collection):
             r = []

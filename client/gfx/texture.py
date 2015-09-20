@@ -16,6 +16,11 @@ class texture:
         self.h      = h
         log.write(log.DEBUG, "Acquired texture {0}".format(self._tex))
 
+    def get_texture(self):
+        #yup. for interface compatilibity with framebuffers which are useful
+        #to use 'like' textures sometimes
+        return self
+
     def __del__(self):
         hwgfx.texture_drop(self._tex)
         log.write(log.DEBUG, "Dropped texture {0}".format(self._tex))

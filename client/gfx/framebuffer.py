@@ -1,6 +1,5 @@
 import client.system.log as log
 import client.gfx.texture as texture
-import client.gfx.shaders as shaders
 from client.gfx.primitive import primitive, draw_mode
 from client.math.helpers import tesselated_unit_quad, tesselated_unit_quad_uv
 from client.system.video import *
