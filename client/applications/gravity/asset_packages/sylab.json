@@ -6,7 +6,7 @@
                     "name" : "debug_vars",
                     "dict" : {
                                 "fw_seek" : 20.0,
-                                "eaos_saver_finalized" : false
+                                "eaos_saver_finalized" : true
                     }
                 },
                 {
@@ -36,6 +36,11 @@
             {   
                 "name" : "bgplanet",
                 "filename" : "sprite/png/sylabhead.png",
+                "filtered" : false
+            },
+            {   
+                "name" : "infra_overview",
+                "filename" : "sprite/png/infra_sketch_2.png",
                 "filtered" : false
             },
             {   

@@ -38,7 +38,7 @@ void main(void) {
                 (smpl_base_2 * vec4(0.0,1.0,0.0,1.0) ) +
                 (smpl_base_3 * vec4(0.0,0.0,1.0,1.0) );
 
-    vec4 col = (smpl_base * filter_color)*smpl_base;
+    vec4 col = (smpl_base  )*smpl_base;
 
     float mod_color_e = 0.9 + ((sin( uv.x*nrm_x+uv.y*23 ) + cos(a_warp*time)) / 120.0);
     
