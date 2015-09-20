@@ -18,6 +18,8 @@ class ow_terminal:
         self.was_learned = False
         self.t = 0.0
         self.x = 0.0
+        self.help_decay = 1.0
+        self.help_ticker = 0.0
 
     def signal_was_learned(self):
         self.was_learned = True
@@ -48,8 +50,8 @@ class ow_terminal:
             "modBuffer"            : self.modBuffer,
             "translation_local"    : [0.0,0.0],
             "scale_local"          : self.sequencer.animated_value("terminal_scale"),
-            "translation_world"    : self.ow_player.relative_point( [self.x,1.1] ),
-            "scale_world"          : [1.5*0.85,-1.0*0.85],
+            "translation_world"    : self.ow_player.relative_point( [self.x,0.7] ),
+            "scale_world"          : [1.5*0.95,-1.0*0.95],
             "view"                 : self.view,
             "rotation_local"       : 0.0,
             "warp"                 : self.sequencer.animated_value("warp")[0],
@@ -63,6 +65,7 @@ class ow_terminal:
             return
 
         if self.application is not None and self.application.uses_cursor and self.handling_input:
+            self.help_ticker += 1
             fbuf = assets.lazy_reusable(    factory = "core/factory/framebuffer/[w,h]", 
                                             args = [ 256,128],
                                             key = "terminal_tutorial" )
@@ -86,10 +89,10 @@ class ow_terminal:
                                                                     "translation_local" :[0.0,0.0],
                                                                     "scale_local" : [3.0*0.7,-2.0*0.7],
                                                                     "scale_world" : [1.0,1.0],
-                                                                    "translation_world" : [self.ow_player.x,4.65],
+                                                                    "translation_world" : [self.ow_player.x-5.0,4.65],
                                                                     "view"        : assets.get("common/coordsys/16:9"),
                                                                     "rotation_local" : 0.0,
-                                                                    "filter_color" : [1.0,1.0,1.0,(20.0-(self.ow_player.x*self.ow_player.x))/20.0],
+                                                                    "filter_color" : [1.0,1.0,1.0,self.help_decay*(20.0-(self.ow_player.x*self.ow_player.x))/20.0],
                                                                     "uv_translate" : [0.0,0.0]
                                                                 } )
 
@@ -97,6 +100,9 @@ class ow_terminal:
         self.primitive.render_shaded( assets.get("sylab/shader/terminal"), self.get_head_shader_param() )
                                                                      
     def tick(self):
+        if(self.help_ticker> 240):
+            self.help_decay*=0.993
+
         self.t += 0.1
         if self.application is not None:
             d = (self.x - self.ow_player.x)

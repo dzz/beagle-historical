@@ -10,9 +10,9 @@ class eaos_saver:
         self.terminal = terminal
         self.registers = registers
         self.reg_sum = 0.0
-        self.solved = False
         self.finalized = assets.get("sylab/dict/debug_vars")["eaos_saver_finalized"]
-        self.next_application = eaos_status(terminal)
+        self.solved = self.finalized
+        self.next_application = eaos_status(terminal,self)
         self.uses_cursor = False
         return
 
@@ -52,7 +52,7 @@ class eaos_saver:
             render_text("[ {0:x} ]".format(int(register.viz_idktr*32)), x, (row+12)*8 )
             row+=1
 
-        render_text("TERMINUS STATION {0:.2f}]".format(self.reg_sum),17*8,13*8,[1.0,0.8,0.0])
+        render_text("TERMINUS STATION [{0:.2f}]".format(self.reg_sum),14*8,13*8,[1.0,0.8,0.0])
 
 
             
@@ -74,6 +74,7 @@ class eaos_saver:
             gp = assets.exec("core/queries/gamepad/find_primary")
             if(gp.button_down(buttons.A)):
                     self.finalized = True
+                    self.next_application.finalized = False
 
 
     def tick(self):

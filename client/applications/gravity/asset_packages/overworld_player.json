@@ -33,7 +33,7 @@
                     "float_down" : {
                         "float_down" : [
                                 { "t" : 5.7, "vec" : [ 0.0,1.7 ] },
-                                { "t" : 7.0, "vec" : [ 0.0,2.2 ], "smooth" : "sqr" }
+                                { "t" : 7.0, "vec" : [ 0.0,2.9 ], "smooth" : "sqr" }
                             ]
                     }
                 }

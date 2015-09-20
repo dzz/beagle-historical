@@ -5,8 +5,8 @@
                 { 
                     "name" : "debug_vars",
                     "dict" : {
-                                "fw_seek" : 0.0,
-                                "eaos_saver_finalized" : false
+                                "fw_seek" : 20.0,
+                                "eaos_saver_finalized" : true
                     }
                 },
                 {
@@ -19,9 +19,9 @@
                     "name" : "player_config",
                     "dict" : {
                         "walk" : {
-                            "speed" : 0.31,
+                            "speed" : 0.06,
                             "smoothing" : 0.01,
-                            "decay" : 0.89
+                            "decay" : 0.94
                         }
                     }
                 }
@@ -46,6 +46,11 @@
             {   
                 "name" : "termlay",
                 "filename" : "sprite/png/termlay.png",
+                "filtered" : false
+            },
+            {   
+                "name" : "ident",
+                "filename" : "sprite/png/infra_sketch_3.png",
                 "filtered" : false
             },
             {   

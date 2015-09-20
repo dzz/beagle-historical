@@ -24,5 +24,6 @@ void main(void) {
 
     float mod_a = (sin(T)+1.0)/2.0;
     float mod_b = 1-mod_a;
-    gl_FragColor =  basecol + ((((smpl_base * filterColor)*mod_a) + (smpl_mod*mod_b))*filterColor);
+    vec4 rx =  basecol + ((((smpl_base * filterColor)*mod_a) + (smpl_mod*mod_b))*filterColor);
+    gl_FragColor = rx*(0.5+0.5*rx);
 }

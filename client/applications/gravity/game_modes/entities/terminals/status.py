@@ -1,15 +1,23 @@
 from client.ctt2.assets import assets
 from math import sin
 
+class eaos_binmods():
+    def __init__(self):
+        self.powersave_mode = True
+
 class eaos_status:
     def switch_to_binmod(self):
         self.render_proc = self.render_binmod_report
+
+    def switch_to_ident(self):
+        self.render_proc = self.render_ident
 
     def init_scale(self):
         self.scale = 0
         self.scale_delta = 0.01
 
-    def __init__(self,terminal = None):
+    def __init__(self,terminal = None, parent_app = None):
+        self.parent_app = parent_app
         self.terminal = terminal
         self.finalized = False
         self.next_application = None
@@ -18,12 +26,20 @@ class eaos_status:
         self.crsr = [0.0,0.0]
         self.scr_count = 0.0
         self.uses_cursor = True
+        self.timeout = 0.0
+
+        self.binmods = eaos_binmods()
 
         self.proclist =  [
-                { "type" : "decoration", "name" : "proclist", "selected" : False },
-                { "type" : "decoration", "name" : "--------", "selected" : False },
+                { "type" : "decoration", "name" : "*PROCS*", "selected" : False },
+                { "type" : "decoration", "name" : "*******", "selected" : False },
                 { "type" : "decoration", "name" : "", "selected" : False },
-                { "type" : "runnable", "name" : "binmod_cfg", "selected" : False, "action": self.switch_to_binmod }
+                { "type" : "runnable", "name" : "binmod_cfg", "selected" : False, "action": self.switch_to_binmod },
+                { "type" : "decoration", "name" : "", "selected" : False },
+                { "type" : "decoration", "name" : "", "selected" : False },
+                { "type" : "decoration", "name" : "", "selected" : False },
+                { "type" : "decoration", "name" : "", "selected" : False },
+                { "type" : "runnable", "name" : "identtool", "selected" : False, "action": self.switch_to_ident }
                      ]
 
         self.render_proc = self.render_command_select
@@ -65,23 +81,38 @@ class eaos_status:
             color = [1,1,0]
 
             if command["type"] is not "decoration":
-                strg = "{0:x}:{1}".format(row*65535,command["name"])
+                strg = command["name"]
             else:
                 strg = command["name"]
 
-            idx = int((self.crsr[1]*18))+11
+            idx = int((self.crsr[1]*18.1))+11
 
             if(self.crsr[0]>0):
                 if(idx==row) and command["type"] is not "decoration":
                     strg = "[{0}]".format(strg.upper())
                     color = [1,1,1]
                     command["selected"] = True
+                else:
+                    command["selected"] = False
             else:
                 command["selected"] = False
 
             with(assets.get("core/hwgfx/blendmode/alpha_over")):
                 assets.exec("core/lotext/print(pixels)[txt,[x,y],[r,g,b]]", [ strg, [230,(8*4)+(row*8)], color ] )
             row+=1
+
+    def render_ident(self):
+            assets.get("core/primitive/unit_uv_square").render_shaded(
+                    assets.get("common/shader/default_2d"),{
+                        "texBuffer" : assets.get("sylab/texture/ident"),
+                         "translation_local"    : [0.0,0],
+                         "scale_local"          : [1,self.scale],
+                         "translation_world"    : [0.0,0.0],
+                         "scale_world"          : [1.0,1.0],
+                         "view"                 : assets.get("common/coordsys/unit_square"),
+                         "rotation_local"       : 0.0 ,
+                         "filter_color"         : [1.0,1.0,1.0,1.0],
+                         "uv_translate"         : [0,0] })
 
     def render_binmod_report(self):
         with assets.get("core/hwgfx/blendmode/add"):
@@ -109,6 +140,14 @@ class eaos_status:
                         ["  10. [   F]",[0,5], [1,0,0] ],
                         ["  11. [   F]",[0,6], [1,0,0] ] ])
 
+            if(self.binmods.powersave_mode):
+                assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]", 
+                        [
+                            [ "LO-VOLT MODE", [16,11],[1,1,1] ],
+                            [ "requires:charge", [21,3],[1,1,1] ],
+                            [ "requires:mod_start proc", [21,4],[1,1,1] ]
+                        ]) 
+
     def render(self):
         self.render_proc()
         self.render_cursor()
@@ -123,11 +162,26 @@ class eaos_status:
     def handle_input(self):
         gp = assets.exec("core/queries/gamepad/find_primary")
 
-        if(self.render_proc!=self.render_command_select):
-            if(gp.button_down( assets.get("core/gamepad/buttons").B ) ):
-                self.init_scale()
-                self.render_proc = self.render_command_select
-                self.terminal.signal_was_learned()
+
+        if not (gp.button_down( assets.get("core/gamepad/buttons").B ) ):
+            self.timeout = -1
+
+        if(self.timeout<0):
+            if(self.render_proc!=self.render_command_select):
+                if(gp.button_down( assets.get("core/gamepad/buttons").B ) ):
+                    self.init_scale()
+                    self.render_proc = self.render_command_select
+                    #self.terminal.signal_was_learned()
+                    self.timeout = 60.0
+
+            elif(gp.button_down( assets.get("core/gamepad/buttons").B ) ):
+                self.timeout = 60.0
+                self.parent_app.finalized = False
+                self.next_application = self.parent_app
+                self.parent_app.help_ticker = 0.0
+                self.finalized = True
+
+
 
         if( gp.triggers[1] > 0.5):
             self.handle_click()
@@ -154,6 +208,9 @@ class eaos_status:
 
 
     def tick(self):
+        if(self.timeout>-1):
+            self.timeout -= 1
+
         if self.scale < 1.0:
             self.scale += self.scale_delta
             self.scale_delta *= 1.25

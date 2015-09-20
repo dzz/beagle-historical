@@ -21,6 +21,7 @@ class ship_game:
         self.ow_player = ow_player(self.view)
         self.ow_enviro.register_child( self.ow_player )
 
+        self.lights_on = True
         self.floor_texture = assets.get("station/texture/floor")
         self.star_shader = assets.get("station/shader/star_scroll")
         self.comp_shader = assets.get("common/shader/passthru_filtered")
@@ -122,7 +123,11 @@ class ship_game:
 
 
         with self.comp_buffer.as_render_target():
-            self.render_starscroll()
+            assets.exec("core/hwgfx/context/clear[r,g,b,a]",[0.0,0.0,0.0,1.0])
+            if(self.lights_on):
+                self.render_starscroll([0.01,0.01],False)
+            else:
+                assets.exec("core/hwgfx/context/clear[r,g,b,a]",[0.0,0.0,0.0,1.0])
             with assets.get("core/hwgfx/blendmode/add"):
                 self.ow_terminal.render()
                 for poster in self.posters:
