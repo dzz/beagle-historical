@@ -34,6 +34,7 @@ class poster:
         d = d*d
         if d < self.trigger_thresh:
             self.charge*=self.charge_decay
+            self.pos[0]*=1.0 + (self.charge*0.001)
 
     def render(self, color = [1,1,1,1]):
 

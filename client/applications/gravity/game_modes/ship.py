@@ -12,6 +12,7 @@ from .entities.ow_enviro import ow_enviro
 from .entities.ow_player import ow_player
 from .entities.ow_terminal import ow_terminal
 from .entities.poster import poster
+from .entities.ow_planet import ow_planet
 
 class ship_game:
     def __init__(self):
@@ -31,6 +32,7 @@ class ship_game:
         self.floor_shader = assets.get("station/shader/floor")
         self.ship_texture = assets.get("intro/texture/ascend_ship")
         self.primitive = assets.get("core/primitive/unit_uv_square")
+        self.ow_planet = ow_planet(self.view, self.ow_player, self.ow_enviro )
 
         self.t_delta = 1.0/240.0;
 
@@ -43,7 +45,7 @@ class ship_game:
 
         self.chamber = chamber(self.primitive,self.view)
         self.ow_enviro.register_child( self.ow_player )
-        self.sequencer.register_slaves([ self.ow_player, self.ow_terminal, self.ow_enviro])
+        self.sequencer.register_slaves([ self.ow_planet, self.ow_player, self.ow_terminal, self.ow_enviro])
         self.sequencer.tick()
         self.sequencer.seek_forward(assets.get("sylab/dict/debug_vars")["fw_seek"])
 
@@ -94,27 +96,29 @@ class ship_game:
                  "uv_translate"         : [0,0]
             } )
 
-    def render_starscroll(self):
+    def render_starscroll(self, paras = [0.01,0.05], triple=True):
         gfx_context.clear([0.0,0.0,0.0,1.0])
         with blendstate(blendmode.add):
             self.primitive.render_shaded( self.star_shader, 
                         { "texBuffer"    : self.star_textures[0],
-                          "uv_translate" : [self.t*0.01+self.ow_player.uw_x*0.01,0.0],
+                          "uv_translate" : [self.t*paras[0]+self.ow_player.uw_x*paras[0],0.0],
                           "uv_scale"     : [1,1],
                           "t"            : self.t,
                           "filterColor"  : [0.97,0.97,1.0,1.0]} )
             self.primitive.render_shaded( self.star_shader, 
                         { "texBuffer"    : self.star_textures[1],
-                          "uv_translate" : [self.t*0.05+self.ow_player.uw_x*0.02,0.0],
+                          "uv_translate" : [self.t*paras[1]+self.ow_player.uw_x*paras[1],0.0],
                           "uv_scale"     : [0.5,0.5],
                           "t"            : self.t,
                           "filterColor"  : [0.7,0.65,0.65,0.65]} )
-            self.primitive.render_shaded( self.star_shader, 
-                        { "texBuffer"    : self.star_textures[2],
-                          "uv_translate" : [self.t*0.5+self.ow_player.uw_x*0.03,0.0],
-                          "uv_scale"     : [0.2,0.2],
-                          "t"            : self.t,
-                          "filterColor"  : [0.28,0.35,0.25,0.25]} )
+
+            if triple:
+                self.primitive.render_shaded( self.star_shader, 
+                            { "texBuffer"    : self.star_textures[2],
+                              "uv_translate" : [self.t*0.5+self.ow_player.uw_x*0.03,0.0],
+                              "uv_scale"     : [0.2,0.2],
+                              "t"            : self.t,
+                              "filterColor"  : [0.28,0.35,0.25,0.25]} )
 
 
     def render(self,context):
@@ -126,12 +130,14 @@ class ship_game:
                 blkmode = blendmode.add
             with blendstate(blkmode):
                 #gfx_context.clear([0.0,0.0,0.0,1.0])
-                self.render_starscroll()
+                self.render_starscroll([0.003,0.01],False)
                 self.ow_terminal.render_termapp()
 
 
         with render_target(self.comp_buffer):
             self.render_starscroll()
+            with blendstate(blendmode.alpha_over):
+                self.ow_planet.render()
             with blendstate(blendmode.add):
                 self.ow_terminal.render()
                 for poster in self.posters:

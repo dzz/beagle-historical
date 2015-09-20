@@ -39,12 +39,14 @@ class ow_player:
         gp = assets.get("core/queries/gamepad/find_primary()")()
 
 
-        self.vx += gp.leftStick[0] * self.walk_cfg["smoothing"]
+        if(abs(gp.leftStick[0])>0.4):
+            self.vx += gp.leftStick[0] * self.walk_cfg["smoothing"]
         self.vx = max( -1* self.walk_cfg["speed"], min( self.walk_cfg["speed"], self.vx) )
 
         self.vx*= self.walk_cfg["decay"]
 
         self.x += self.vx
+        self.uw_x += self.vx
         if(abs(self.vx)>0.05):
             self._is_walking = True
         else:
