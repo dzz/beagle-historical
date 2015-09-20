@@ -12,7 +12,7 @@
                 {
                     "name" : "landing_enviro_config",
                     "dict" : {
-                        "room_range" : { "left" : -29.0, "right" : 29.0 } 
+                        "room_range" : { "left" : -42.0, "right" : 42.0 } 
                     }
                 },
                 {

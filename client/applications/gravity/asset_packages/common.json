@@ -3,6 +3,24 @@
     "resources" : [
     {
         "type"              : "dict",
+        "name"              : "shader_config_templates",
+        "dict"              : {
+                                "default_2d" : {
+                                                    "unity" : {
+                                                            "texBuffer" : null,
+                                                            "translation_local" : [0.0,0.0],
+                                                            "scale_local" : [1.0,1.0],
+                                                            "scale_world" : [1.0,1.0],
+                                                            "view"        : [1.0,1.0],
+                                                            "rotation_local" : 0.0,
+                                                            "filter_color" : [1.0,1.0,1.0,1.0],
+                                                            "uv_translate" : [0.0,0.0]
+                                                    }
+                                }
+        }
+    },
+    {
+        "type"              : "dict",
         "name"              : "config",
         "dict"              : { "starting_mode" : "ship" }
     },

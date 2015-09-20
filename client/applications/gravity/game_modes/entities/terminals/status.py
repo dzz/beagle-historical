@@ -1,9 +1,14 @@
 from client.ctt2.assets import assets
 from client.gfx.text import render_text
+from math import sin
 
 class eaos_status:
     def switch_to_binmod(self):
         self.render_proc = self.render_binmod_report
+
+    def init_scale(self):
+        self.scale = 0
+        self.scale_delta = 0.01
 
     def __init__(self):
         self.finalized = False
@@ -11,6 +16,8 @@ class eaos_status:
         self.scale = 0.0
         self.scale_delta = 0.01
         self.crsr = [0.0,0.0]
+        self.scr_count = 0.0
+        self.uses_cursor = True
 
         self.proclist =  [
                 { "type" : "decoration", "name" : "proclist", "selected" : False },
@@ -91,12 +98,21 @@ class eaos_status:
 
 
 
-        render_text(" modrept",0,1*8,[1,1,1])
-        render_text(" ----------",0,2*8,[1,1,1])
-        render_text("  00. [A   ]",0,3*8,[1,1,1])
-        render_text("  01. [A   ]",0,4*8,[1,1,1])
-        render_text("  10. [   F]",0,5*8,[1,0,0])
-        render_text("  11. [   F]",0,6*8,[1,0,0])
+        #render_text( assets.exec(
+        #                            "core/stringfx/scroll[string,offset]",
+        #                            [" modrept",int(self.scr_count)]
+        #                        ),
+        #                        0,1*8,[1,1,1])
+
+        assets.exec_range("core/lotext/print(pixels)[txt,[x,y],[r,g,b]]",
+                [
+                    [ assets.exec("core/stringfx/scroll[txt,offset]", ["::mod_rept::", int(self.scr_count) ]), 
+                                    0,1*8, [1,1,1] ],
+                    [" ----------" ,0,2*8, [1,1,1] ],
+                    ["  00. [A   ]",0,3*8, [1,1,1] ],
+                    ["  01. [A   ]",0,4*8, [1,1,1] ],
+                    ["  10. [   F]",0,5*8, [1,0,0] ],
+                    ["  11. [   F]",0,6*8, [1,0,0] ] ])
 
     def render(self):
         self.render_proc()
@@ -106,6 +122,7 @@ class eaos_status:
         if(self.render_proc == self.render_command_select):
             for command in self.proclist:
                 if command["type"] is not "decoration" and command["selected"]:
+                    self.init_scale()
                     command["action"]()
 
     def handle_input(self):
@@ -114,6 +131,7 @@ class eaos_status:
 
         if(self.render_proc!=self.render_command_select):
             if(gp.button_down( assets.get("core/gamepad/buttons").B ) ):
+                self.init_scale()
                 self.render_proc = self.render_command_select
 
         if( gp.triggers[1] > 0.5):
@@ -124,6 +142,8 @@ class eaos_status:
         if(abs(gp.rightStick[1])>0.2):
             self.crsr[1]+=gp.rightStick[1]*0.04
 
+
+        self.scr_count += 0.1
 
         max_crsr = 0.9
         min_crsr = -0.9

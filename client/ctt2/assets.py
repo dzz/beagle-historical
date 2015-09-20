@@ -1,4 +1,5 @@
 import json
+from client.gfx.text import render_text
 from client.system.gamepad       import get_gamepad, pad_buttons
 import client.system.log as log
 from client.ctt2.animation import curve_sequencer
@@ -49,6 +50,19 @@ class resource_manager:
             def find_primary_gamepad():
                 return get_gamepad(0)
 
+            def print_pixels(txt,pos,col):
+                return render_text(txt,pos[0],pos[1],col)
+
+            def print_rows(txt,pos,col):
+                return print_pixels(txt,[pos[0]*8,pos[1]*8],col)
+
+            def scroll_text(strg,idx):
+                idx = idx % len(strg)
+                r = ""
+                for i in range(0,len(strg)):
+                    r = r + strg[(i+idx)%len(strg)]
+                return r
+
             self.resource_map["core/primitive/unit_uv_square"] = primitive.get_unit_uv_primitive()
             self.resource_map["core/factory/framebuffer/from_dimensions[w,h]"] = fb_class.from_dims
             self.resource_map["core/factory/framebuffer/from_screen"] = fb_class.from_screen
@@ -57,6 +71,11 @@ class resource_manager:
             self.resource_map["core/gamepad/buttons"] = pad_buttons
             self.resource_map["core/blendmode/alpha_over"] = blendstate( blendmode.alpha_over )
             self.resource_map["core/blendmode/add"] = blendstate( blendmode.add )
+            self.resource_map["core/stringfx/scroll[txt,offset]"] = scroll_text
+            self.resource_map["core/lotext/print(pixels)[txt,x,y,[r,g,b]]"] = render_text
+            self.resource_map["core/lotext/print(pixels)[txt,[x,y],[r,g,b]]"] = print_pixels
+            self.resource_map["core/lotext/print[txt,[x,y],[r,g,b]]"] = print_pixels
+            self.resource_map["core/lotext/print(rows)[txt,[x,y],[r,g,b]]"] = print_rows
         
 
         def load_package(self,pkgname):
@@ -159,6 +178,20 @@ class assets:
         def exec(path, arguments = [] ):
             global instance
             return instance.get_resource(path)(*arguments)
+
+        def reusable_from_factory( path,arguments, key):
+            global instance
+            key = "_factory_instances/" + key
+            if key not in instance.resource_map:
+                resource_map[key] = assets.exec( path, arguments)
+            return resource_map[key]
+            
+
+        def exec_range(path, arg_collection):
+            r = []
+            for arg_list in arg_collection:
+                r.append(assets.exec(path,arg_list))
+            return r
 
         def load_packages(pkgname):
             assets.load_package(pkgname)

@@ -16,7 +16,8 @@ class ow_terminal:
         self.sequencer = assets.get("sylab/curve_sequence/disp_warp") 
         self.parallax = 1.0
         self.application = eaos_saver(self.registers)
-        
+        self.uses_cursor = True
+        self.handling_input = False
         self.t = 0.0
         self.x = 0.0
         self.terminal_buffer = assets.exec("core/factory/framebuffer/from_dimensions[w,h]",[384,256])
@@ -58,6 +59,17 @@ class ow_terminal:
     def render(self):
         self.primitive.render_shaded(self.shader, self.get_head_shader_param() )
 
+        if self.application is not None and self.application.uses_cursor and self.handling_input:
+            with assets.get("core/blendmode/alpha_over"):
+                assets.exec_range("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
+                        [
+                                [ "When in Terminal:                 ",  [0, 0], [1,1,1] ] ,
+                                [ "      .rightStick   =>cursor.mov  ",  [0, 2], [1,1,1] ] ,
+                                [ "      .rightTrigger =>cursor.clk  ",  [0, 3], [1,1,1] ] ,
+                                [ "      .buttons('A') =>cntext.oky  ",  [0, 4], [1,1,1] ] ,
+                                [ "      .buttons('B') =>cntext.bck  ",  [0, 5], [1,1,1] ] 
+                        ])
+
     def tick(self):
         self.t += 0.1
         if self.application is not None:
@@ -66,7 +78,10 @@ class ow_terminal:
             self.application.tick()
             input_mdist_threshold = 25
             if( d< input_mdist_threshold ):
+                self.handling_input = True
                 self.application.handle_input()
+            else:
+                self.handling_input = False
             if(self.application.finalized):
                 self.application = self.application.next_application
 

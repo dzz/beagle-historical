@@ -12,6 +12,7 @@ class eaos_saver:
         self.solved = False
         self.finalized = assets.get("sylab/dict/debug_vars")["eaos_saver_finalized"]
         self.next_application = eaos_status()
+        self.uses_cursor = False
         return
 
     def render(self):
@@ -82,4 +83,5 @@ class eaos_saver:
                 self.reg_sum += (1.0-register.charge) / len(self.registers)
             if(self.reg_sum > 0.9 ):
                 self.solved = True
+                self.uses_cursor = True
 
