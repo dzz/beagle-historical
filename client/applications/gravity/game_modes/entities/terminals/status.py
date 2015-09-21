@@ -35,10 +35,6 @@ class eaos_status:
                 { "type" : "decoration", "name" : "*******", "selected" : False },
                 { "type" : "decoration", "name" : "", "selected" : False },
                 { "type" : "runnable", "name" : "binmod_cfg", "selected" : False, "action": self.switch_to_binmod },
-                { "type" : "decoration", "name" : "", "selected" : False },
-                { "type" : "decoration", "name" : "", "selected" : False },
-                { "type" : "decoration", "name" : "", "selected" : False },
-                { "type" : "decoration", "name" : "", "selected" : False },
                 { "type" : "runnable", "name" : "identtool", "selected" : False, "action": self.switch_to_ident }
                      ]
 
@@ -78,10 +74,11 @@ class eaos_status:
         row = 0
         for command in commands:
 
-            color = [1,1,0]
+            color = [0.2,1,0]
 
             if command["type"] is not "decoration":
                 strg = command["name"]
+                color = [1,1,1]
             else:
                 strg = command["name"]
 
@@ -90,7 +87,7 @@ class eaos_status:
             if(self.crsr[0]>0):
                 if(idx==row) and command["type"] is not "decoration":
                     strg = "[{0}]".format(strg.upper())
-                    color = [1,1,1]
+                    color = [0,1,1]
                     command["selected"] = True
                 else:
                     command["selected"] = False
@@ -113,6 +110,10 @@ class eaos_status:
                          "rotation_local"       : 0.0 ,
                          "filter_color"         : [1.0,1.0,1.0,1.0],
                          "uv_translate"         : [0,0] })
+            with(assets.get("core/hwgfx/blendmode/alpha_over")):
+                assets.exec("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",["QRS 9.10.4.2",[28,18],[1,1,1] ] )
+                assets.exec("core/lotext/print(rows)[txt,[x,y],[r,g,b]]",
+                        [ assets.exec("core/stringfx/scroll[txt,offset]",["MAKING IDENT..........",int(self.scr_count)]), [28,20], [1,1,0] ])
 
     def render_binmod_report(self):
         with assets.get("core/hwgfx/blendmode/add"):

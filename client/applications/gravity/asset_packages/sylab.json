@@ -5,8 +5,8 @@
                 { 
                     "name" : "debug_vars",
                     "dict" : {
-                                "fw_seek" : 20.0,
-                                "eaos_saver_finalized" : true
+                                "fw_seek" : 0.0,
+                                "eaos_saver_finalized" : false
                     }
                 },
                 {
@@ -76,6 +76,16 @@
         {   
             "name" : "posters/unity",
             "filename" : "sprite/png/poster_unity.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "posters/leadership",
+            "filename" : "sprite/png/poster_leadership.png",
+            "filtered" : false
+        },
+        {   
+            "name" : "posters/eternity",
+            "filename" : "sprite/png/poster_eternity.png",
             "filtered" : false
         }
         ],
