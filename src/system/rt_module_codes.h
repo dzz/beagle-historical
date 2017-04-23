@@ -1,6 +1,7 @@
 #ifndef __CTT2_RT_MODULE_CODES__
 #define __CTT2_RT_MODULE_CODES__
 
+#define CTT2_RT_CORE                  (0)
 #define CTT2_RT_MODULE_LOG            (1)
 #define CTT2_RT_MODULE_DISPLAY        (2)
 #define CTT2_RT_MODULE_OPENGL         (4)

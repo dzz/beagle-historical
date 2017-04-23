@@ -110,7 +110,7 @@ static void requestVsyncMode(unsigned int mode)
     wglSwapIntervalEXT(mode);
 #endif
 #ifdef __linux__
-    log_message(LOGSYS_RUNTIME_CORE, LOG_LEVEL_WARNING, "linux unimplemented vsync()");
+    log_message(CTT2_RT_CORE, LOG_LEVEL_WARNING, "linux unimplemented vsync()");
 #endif
 }
 
