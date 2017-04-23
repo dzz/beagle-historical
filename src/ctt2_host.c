@@ -42,8 +42,16 @@ void embed_modules();                       // fwd declaration for use in init
 
 //load the python client code:
 #define FAIL_RETURN { api_fail_hard(); return 1; }
-#define CLIENT_FUNCTION(x,y) client_if.##x = PyObject_GetAttrString\
-(client_if.__module,y); if(client_if.##x==0) FAIL_RETURN
+#ifdef _WIN32
+    #define CLIENT_FUNCTION(x,y) client_if.##x = PyObject_GetAttrString\
+    (client_if.__module,y); if(client_if.##x==0) FAIL_RETURN
+#endif
+
+#ifdef __linux__
+    #define CLIENT_FUNCTION(x,y) client_if.x = PyObject_GetAttrString\
+    (client_if.__module,y); if(client_if.x==0) FAIL_RETURN
+#endif
+
 int api_init() {
     char buffer[1024];
     embed_modules();
@@ -57,7 +65,14 @@ int api_init() {
 #undef CLIENT_FUNCTION
 
 //terminate
-#define CLIENT_FUNCTION(x,y) Py_CLEAR(client_if.##x);
+#ifdef _WIN32
+    #define CLIENT_FUNCTION(x,y) Py_CLEAR(client_if.##x);
+#endif
+
+#ifdef __linux__
+    #define CLIENT_FUNCTION(x,y) Py_CLEAR(client_if.x);
+#endif
+
 int api_drop() {
     int ret; 
     ret = _pycall_noargs(client_if.finalize);
