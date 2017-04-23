@@ -37,7 +37,7 @@ static CLIENT_HANDLERS client_if;
 
 void embed_modules();                       // fwd declaration for use in init
 
-#include "api-includes\api_py_util.h"       // error handling, function calls
+#include "api-includes/api_py_util.h"       // error handling, function calls
 
 
 //load the python client code:
@@ -51,7 +51,7 @@ int api_init() {
     client_if.__module = PyImport_ImportModule("client.ctt2.main");
     if(client_if.__module == 0) FAIL_RETURN
     #include "api-includes/client-handler-inventory.h"
-    #include "system\client_key_map.h"
+    #include "system/client_key_map.h"
     return _pycall_noargs(client_if.init);
 }
 #undef CLIENT_FUNCTION
