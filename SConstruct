@@ -48,7 +48,7 @@ if build_debug_mode:
 env = Environment()
 
 if sys.platform == "linux2":
-    CCFLAGS=""
+    CCFLAGS="-Wno-incompatible-pointer-types"
 if sys.platform == "win32":
     ##CXXFLAGS="/EHsc /O2 /Ot /arch:AVX"
     CCFLAGS+""

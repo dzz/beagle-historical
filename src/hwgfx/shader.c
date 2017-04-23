@@ -1,5 +1,8 @@
-#include <stdio.h>
+#ifdef _WIN32
 #include <conio.h>
+#endif
+
+#include <stdio.h>
 #include <GLXW/glxw.h>
 #include "OGL_OBJ.h"
 
