@@ -1,4 +1,7 @@
+#ifdef _WIN32
 #include <conio.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32

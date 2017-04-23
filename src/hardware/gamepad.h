@@ -1,7 +1,7 @@
 #ifndef __HW_GAMEPAD__
 #define __HW_GAMEPAD__
 
-#include <SDL.H>
+#include <SDL.h>
 
 #define MAX_PADS 8
 

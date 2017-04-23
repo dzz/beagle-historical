@@ -1,6 +1,10 @@
 #undef _DEBUG
 #include <stdio.h>
+
+#ifdef _WIN32
 #include <conio.h>
+#endif
+
 #include <Python.h>
 #include <SDL_image.h>
 
