@@ -5,6 +5,10 @@
 #include <conio.h>
 #endif
 
+#ifdef __linux__
+#include <stdlib.h>
+#endif
+
 #include <Python.h>
 #include <SDL_image.h>
 
@@ -56,6 +60,14 @@ int api_init() {
     char buffer[1024];
     embed_modules();
     Py_Initialize();
+
+    #ifdef __linux__
+    //seems to be required to find modules
+    //in cwd
+    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("sys.path.append(\".\")");
+    #endif
+
     client_if.__module = PyImport_ImportModule("client.ctt2.main");
     if(client_if.__module == 0) FAIL_RETURN
     #include "api-includes/client-handler-inventory.h"

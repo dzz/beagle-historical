@@ -1,3 +1,3 @@
 set -e
 scons
-./bin/linux/beagle
+./beagle_runtime

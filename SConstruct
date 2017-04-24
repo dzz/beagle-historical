@@ -67,7 +67,7 @@ if sys.platform == "win32":
 
 
 env.Program(
-        './bin/linux/beagle', 
+        './beagle_runtime', 
         SourceFiles, 
         CPPPATH= IncludePaths,
         LIBPATH=['.','./lib/'],

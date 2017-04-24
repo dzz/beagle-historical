@@ -362,7 +362,7 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
-    //loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
+    loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
     /** MAIN DISPATCH LOOP **/
     {
