@@ -47,6 +47,8 @@ void initExtendedVideo() {
     primitive_create_screen_primitive   (&_screen_primitive);
     shader_load                         (&_screen_shader, "shaders/hwgfx/screen.vert.glsl",
                                                           "shaders/hwgfx/texture.frag.glsl");
+
+    log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "..theoretically loaded shaders. May not have compiled");
 }
 
 void dropExtendedVideo() {

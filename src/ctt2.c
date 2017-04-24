@@ -212,7 +212,15 @@ unsigned initOpenGL() {
     }
 
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "attempting to init extended video...");
-    initExtendedVideo();
+
+    if( USING_OPENGL_2 ) {
+
+    }
+
+    if( USING_OPENGL_3 ) {
+        initExtendedVideo();
+    }
+
     requestVsyncMode( VSYNC_ENABLED );
     if(gl_context) {
 		log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "Initialized OpenGL Context: %x", gl_context );
@@ -348,13 +356,12 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
     loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
-    return 0;
 
     loadRuntimeModule( &initAudio,      &dropAudio,         CTT2_RT_MODULE_AUDIO );
     loadRuntimeModule( &initWinMsgs,    &dropWinMsgs,       CTT2_RT_MODULE_WINDOW_MSGS );
-    //loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
+    loadRuntimeModule( &initTextInput,  &dropTextInput,     CTT2_RT_MODULE_TEXT_INPUT );
     loadRuntimeModule( &initTimer,      &dropTimer,         CTT2_RT_MODULE_TIMER );
-    //loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
+    loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
     //loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
     /** MAIN DISPATCH LOOP **/
