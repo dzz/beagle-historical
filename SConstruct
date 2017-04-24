@@ -28,8 +28,8 @@ def configure_portaudio(includes,libs):
     libs.extend(['libportaudio', 'asound'])
 
 def configure_python(includes, libs):
-    includes.append("/usr/include/python3.5/")
-    libs.extend( [ 'python3.5m', 'pthread', 'dl', 'util', 'm' ] )
+    includes.append("/usr/include/python3.6m/")
+    libs.extend( [ 'python3.6m', 'pthread', 'dl', 'util', 'm' ] )
     
 def configure_sdl(includes,libs):
     includes.append("/usr/include/SDL2/")

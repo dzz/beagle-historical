@@ -1,5 +1,5 @@
-#define USING_OPENGL_2  (1)
-#define USING_OPENGL_3  (0)
+#define USING_OPENGL_2  (0)
+#define USING_OPENGL_3  (1)
 
 #ifdef _WIN32
 #include <conio.h>
@@ -167,7 +167,7 @@ unsigned int initDisplay() {
 
     if( USING_OPENGL_3 ) {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
@@ -364,8 +364,9 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
     loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
+    int run = 0;
     /** MAIN DISPATCH LOOP **/
-    {
+    if(run) {
         SDL_Event event;
         double base_millis = timer_get_ms();
         tick_millis = timer_get_ms();
