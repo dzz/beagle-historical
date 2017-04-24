@@ -16,7 +16,10 @@
 #endif
 
 
+#ifdef _WIN32
 #include <windows.h>
+#endif
+
 #include "audio.h"
 #include "hf_timer.h"
 

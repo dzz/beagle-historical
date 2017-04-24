@@ -23,6 +23,9 @@ def populate_h_matches(matches, dir):
             if not path in matches:
                 matches.append(path)
 
+def configure_portaudio(includes):
+    includes.append("/usr/include/portaudio/")
+
 def configure_python(includes):
     includes.append("/usr/include/python3.5/")
     
@@ -37,9 +40,11 @@ IncludePaths    = []
 
 populate_c_matches(SourceFiles, "src")
 populate_h_matches(IncludePaths, "DSPFilters/source")
+
 configure_python(IncludePaths)
 configure_sdl(IncludePaths)
 configure_opengl(IncludePaths)
+configure_portaudio(IncludePaths)
 
 if build_debug_mode:
     print SourceFiles
