@@ -26,23 +26,26 @@ def populate_h_matches(matches, dir):
 def configure_portaudio(includes):
     includes.append("/usr/include/portaudio/")
 
-def configure_python(includes):
+def configure_python(includes, libs):
     includes.append("/usr/include/python3.5/")
+    libs.extend( [ 'python3.5m', 'pthread', 'dl', 'util', 'm' ] )
     
-def configure_sdl(includes):
+def configure_sdl(includes,libs):
     includes.append("/usr/include/SDL2/")
+    libs.extend( ['SDL2' ] )
 
 def configure_opengl(includes):
     includes.append("./gl_includes/")
 
+Libs            = []
 SourceFiles     = []
 IncludePaths    = []
 
 populate_c_matches(SourceFiles, "src")
 populate_h_matches(IncludePaths, "DSPFilters/source")
 
-configure_python(IncludePaths)
-configure_sdl(IncludePaths)
+configure_python(IncludePaths, Libs)
+configure_sdl(IncludePaths, Libs)
 configure_opengl(IncludePaths)
 configure_portaudio(IncludePaths)
 
@@ -64,6 +67,7 @@ env.Program(
         SourceFiles, 
         CPPPATH= IncludePaths,
         LIBPATH='.',
+        LIBS=Libs,
         CCFLAGS=CCFLAGS
 )
 
