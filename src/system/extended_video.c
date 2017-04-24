@@ -2,6 +2,7 @@
 #include <GLXW/glxw.h>
 
 #include "extended_video.h"
+#include "log.h"
 #include "../hwgfx/blend_control.h"
 #include "../hwgfx/label.h"
 #include "../hwgfx/rect.h"
@@ -32,6 +33,9 @@ void initExtendedVideo() {
         glxwInit();
         _extensions_loaded = 1;
     }
+
+
+    log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "..theoretically loaded GL extensions" );
 
     initRects();
     initLabels();
