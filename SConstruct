@@ -23,8 +23,9 @@ def populate_h_matches(matches, dir):
             if not path in matches:
                 matches.append(path)
 
-def configure_portaudio(includes):
+def configure_portaudio(includes,libs):
     includes.append("/usr/include/portaudio/")
+    libs.extend(['libportaudio', 'asound'])
 
 def configure_python(includes, libs):
     includes.append("/usr/include/python3.5/")
@@ -32,9 +33,10 @@ def configure_python(includes, libs):
     
 def configure_sdl(includes,libs):
     includes.append("/usr/include/SDL2/")
-    libs.extend( ['SDL2' ] )
+    libs.extend( ['SDL2', 'SDL_image', 'SDLmain' ] )
 
-def configure_opengl(includes):
+def configure_opengl(includes,libs):
+    libs.extend( ['GL'])
     includes.append("./gl_includes/")
 
 Libs            = []
@@ -44,29 +46,31 @@ IncludePaths    = []
 populate_c_matches(SourceFiles, "src")
 populate_h_matches(IncludePaths, "DSPFilters/source")
 
+configure_opengl(IncludePaths, Libs)
+configure_portaudio(IncludePaths, Libs) # first because python also needs pthead
 configure_python(IncludePaths, Libs)
 configure_sdl(IncludePaths, Libs)
-configure_opengl(IncludePaths)
-configure_portaudio(IncludePaths)
 
 if build_debug_mode:
     print SourceFiles
     print IncludePaths
+    print Libs
 
 env = Environment()
 
 if sys.platform == "linux2":
-    CCFLAGS="-Wno-incompatible-pointer-types"
+    CCFLAGS="-pthread -Wno-incompatible-pointer-types"
 if sys.platform == "win32":
     ##CXXFLAGS="/EHsc /O2 /Ot /arch:AVX"
     CCFLAGS+""
     #env.Append(CXXFLAGS = ['/DEBUG'])
 
+
 env.Program(
-        'cli', 
+        './bin/linux/beagle', 
         SourceFiles, 
         CPPPATH= IncludePaths,
-        LIBPATH='.',
+        LIBPATH=['.','./lib/'],
         LIBS=Libs,
         CCFLAGS=CCFLAGS
 )

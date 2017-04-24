@@ -20,6 +20,10 @@
 #include <windows.h>
 #endif
 
+#ifdef __linux__
+#include <unistd.h>
+#endif
+
 #include "audio.h"
 #include "hf_timer.h"
 
@@ -330,7 +334,15 @@ int ae_thread_run(void* data) {
     ae_init(self);
 
     while(!self->shutdown) {
+
+        #ifdef _WIN32
         Sleep(AUDIO_CONTROL_MS);
+        #endif
+
+        #ifdef __linux__
+        usleep(AUDIO_CONTROL_MS * 1000);
+        #endif
+
         sequencer_handle_messages();
     }
     DropSequencer();
