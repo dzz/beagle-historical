@@ -358,7 +358,7 @@ int main(int argc, char **argv){
     loadRuntimeModule( &initGamepad,    &dropGamepad,       CTT2_RT_MODULE_GAMEPAD);
     loadRuntimeModule( &initPython,     &dropPython,        CTT2_RT_MODULE_PYTHON);
 
-    int run = 0;
+    int run = 1;
     /** MAIN DISPATCH LOOP **/
     if(run) {
         SDL_Event event;
@@ -369,23 +369,23 @@ int main(int argc, char **argv){
         while(finished != CTT2_RT_TERMINATED ) {
             switch(ctt2_state) {
                     case CTT2_EVT_TICK:
-                        //if(api_tick() == API_FAILURE) { 
-                        //        finished = 1; 
-                        //    } else {
-                        //        tick_millis += frame_millis;
-						//		if( (timer_get_ms() - tick_millis) > frame_millis ) {
-                        //            ctt2_state = CTT2_EVT_TICK;
-                        //        } else {
-                        //        ctt2_state = CTT2_EVT_RENDER;
-                        //        }
-                        //    }
+                        if(api_tick() == API_FAILURE) { 
+                                finished = 1; 
+                            } else {
+                                tick_millis += frame_millis;
+								if( (timer_get_ms() - tick_millis) > frame_millis ) {
+                                    ctt2_state = CTT2_EVT_TICK;
+                                } else {
+                                ctt2_state = CTT2_EVT_RENDER;
+                                }
+                            }
 						 break;
                     case CTT2_EVT_RENDER:
-                         //api_render();
+                         api_render();
                          ctt2_state = CTT2_EVT_SYNC_GFX;
 						 break;
 					case CTT2_EVT_SYNC_GFX:
-						//updateViewingSurface();  
+						updateViewingSurface();  
 						ctt2_state = CTT2_EVT_POLL_EVENTS;
 						break;
                     case CTT2_EVT_POLL_EVENTS:
@@ -399,65 +399,67 @@ int main(int argc, char **argv){
             while(SDL_PollEvent(&event)) {
                 switch (event.type) {
                     case SDL_CONTROLLERDEVICEADDED:
-                        //dropGamepad();
-                        //initGamepad();
+                        dropGamepad();
+                        initGamepad();
                         break;
                     case SDL_CONTROLLERDEVICEREMOVED:
-                        //dropGamepad();
-                        //initGamepad();
+                        dropGamepad();
+                        initGamepad();
                         break;
                     case SDL_JOYAXISMOTION:
-                        //GamepadHandleEvent( &event );
+                        GamepadHandleEvent( &event );
                         break; 
                     case SDL_TEXTINPUT:
-                        //api_dispatch_text( event.text.text );
+                        api_dispatch_text( event.text.text );
                         break;
                     case SDL_QUIT:
                         finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_SYSWMEVENT:
-                       // handle_wm_event(event);
+                        #ifdef _WIN32
+                        handle_wm_event(event); //used for the wacom tablet module
+                        #endif
                         break;
                     case SDL_KEYDOWN:
-                        //if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = CTT2_RT_TERMINATED;
-                        //if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
-                        //    dropPython();
-                        //    initPython();
-                        //}
-                        //if( event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) ) {
-                        //    finished = CTT2_RT_TERMINATED;
-                        //}
+                        if( api_dispatch_key(event.key.keysym.sym,1) == API_FAILURE ) finished = CTT2_RT_TERMINATED;
+                        if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
+                            dropPython();
+                            initPython();
+                        }
+                        if( event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) ) {
+                            finished = CTT2_RT_TERMINATED;
+                        }
                         break;
                     case SDL_KEYUP:
-                        //if( api_dispatch_key(event.key.keysym.sym,0) 
-                        //        == API_FAILURE ) finished = CTT2_RT_TERMINATED;
+                        if( api_dispatch_key(event.key.keysym.sym,0) 
+                                == API_FAILURE ) finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_MOUSEBUTTONDOWN:
-                        //if(api_dispatch_mousedown(
-                        //            event.button.button, 
-                        //            event.button.x, 
-                        //            event.button.y) == API_FAILURE ) 
-                        //                finished = CTT2_RT_TERMINATED ;
+                        if(api_dispatch_mousedown(
+                                    event.button.button, 
+                                    event.button.x, 
+                                    event.button.y) == API_FAILURE ) 
+                                        finished = CTT2_RT_TERMINATED ;
                         break;
                     case SDL_MOUSEBUTTONUP:
-                        //if(api_dispatch_mouseup(
-                        //            event.button.button, 
-                        //            event.button.x, 
-                        //            event.button.y) == API_FAILURE ) 
-                        //                finished = CTT2_RT_TERMINATED;
+                        if(api_dispatch_mouseup(
+                                    event.button.button, 
+                                    event.button.x, 
+                                    event.button.y) == API_FAILURE ) 
+                                        finished = CTT2_RT_TERMINATED;
                         break;
                     case SDL_MOUSEMOTION:
-                        //if(api_dispatch_mousemotion(
-                        //            event.motion.x, 
-                        //            event.motion.y) == API_FAILURE ) 
-                        //                finished = CTT2_RT_TERMINATED;
+                        if(api_dispatch_mousemotion(
+                                    event.motion.x, 
+                                    event.motion.y) == API_FAILURE ) 
+                                        finished = CTT2_RT_TERMINATED;
                         break;
                 }
             }
         }
     }
     
-    //sequencer_halt();
+    sequencer_halt();
     dropRuntimeModules(0);
 	return 0;
 }
