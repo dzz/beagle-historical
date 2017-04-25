@@ -51,11 +51,11 @@ def init():
         gamepads.append( gamepad() );
 
 def tick():
-    if host.dequeue_gamepad_dirty() == 1:
-        for i in range(0,host.get_gamepad_count() ):
+    if beagle_runtime.dequeue_gamepad_dirty() == 1:
+        for i in range(0,beagle_runtime.get_gamepad_count() ):
             gp          = gamepads[i]
 
-            axis_data   = host.get_gamepad_sticks(i)
+            axis_data   = beagle_runtime.get_gamepad_sticks(i)
 
             filtered_axis_data = [0.0,0.0,0.0,0.0,0.0,0.0]
             for ax in range(0,6):

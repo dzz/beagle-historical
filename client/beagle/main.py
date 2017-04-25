@@ -1,5 +1,5 @@
 import sys
-import host
+import beagle_runtime
 import hwgfx
 import configparser
 import client.system.log as log
@@ -73,7 +73,7 @@ def init():
         config.read("client/application.ini")
 
     app_name = config["APPLICATION"]["name"]
-    host.set_title(app_name)
+    beagle_runtime.set_title(app_name)
     try:
         app_dir = config["APPLICATION"]["path"]
         log.write(log.INFO, "Loading application @:{0}".format(app_dir))

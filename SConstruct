@@ -103,7 +103,7 @@ if build_debug_mode:
     print Libs
 
 env.Program(
-        './beagle_runtime', 
+        './bin/beagle_runtime', 
         SourceFiles, 
         CPPPATH= IncludePaths,
         LIBPATH=['.','./lib/'],
