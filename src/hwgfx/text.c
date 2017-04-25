@@ -55,7 +55,24 @@ void initText() {
     {
         SDL_Surface* font;
         /*load font and texgen*/
+
+        printf("LOAD FONT\n");
+
+
+        #ifdef _WIN32
         font        = IMG_Load("font\\cga8.png");
+        #endif
+
+        #ifdef __linux__
+        printf("linux fallback fontloader...\n");
+        font        = IMG_Load("./font/cga8.png");
+        #endif
+
+        if(font==0) {
+            printf("error...\n");
+            printf("IMG_Load error: %s\n", IMG_GetError());
+        }
+
         texture_generate( &font_texture, font->w, font->h );
         texture_from_SDL_surface( &font_texture, font);
         charsPerRow = font->w / CHAR_DIMS; 

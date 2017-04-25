@@ -213,13 +213,7 @@ unsigned initOpenGL() {
 
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "attempting to init extended video...");
 
-    if( USING_OPENGL_2 ) {
-
-    }
-
-    if( USING_OPENGL_3 ) {
-        initExtendedVideo();
-    }
+    initExtendedVideo();
 
     requestVsyncMode( VSYNC_ENABLED );
     if(gl_context) {

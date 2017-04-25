@@ -33,7 +33,7 @@ def configure_python(includes, libs):
     
 def configure_sdl(includes,libs):
     includes.append("/usr/include/SDL2/")
-    libs.extend( ['SDL2', 'SDL_image', 'SDLmain' ] )
+    libs.extend( ['SDL2', 'SDL2_image', 'SDLmain' ] )
 
 def configure_opengl(includes,libs):
     libs.extend( ['GL'])
