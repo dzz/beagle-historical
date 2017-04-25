@@ -7,3 +7,4 @@ project-data/*.png
 project-data/export/*.png
 log.txt
 *.o
+*.obj

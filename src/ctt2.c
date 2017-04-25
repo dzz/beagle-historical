@@ -417,7 +417,9 @@ int main(int argc, char **argv){
                         break;
                     case SDL_SYSWMEVENT:
                         #ifdef _WIN32
-                        handle_wm_event(event); //used for the wacom tablet module
+                            #ifdef WACOM_ENABLED
+                                handle_wm_event(event); //used for the wacom tablet module, but currently missing...
+                            #endif
                         #endif
                         break;
                     case SDL_KEYDOWN:
