@@ -1,4 +1,3 @@
-
 import sys
 import host
 import hwgfx
@@ -7,16 +6,16 @@ import client.system.log as log
 import client.system.gamepad as gamepad
 import client.system.keyboard as keyboard
 
-from client.ctt2.mouse_focus    import mouse_focused_area
-from client.ctt2.status import render_status
-from client.ctt2.status import set_status
+from client.beagle.mouse_focus import mouse_focused_area
+from client.beagle.status import render_status
+from client.beagle.status import set_status
 
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 import client.apps
-import client.ui.areas          as ui_area
-import client.gfx.blend         as blend
-import client.ctt2.caret        as caret
-from   client.ctt2.assets       import asset_manager
+import client.ui.areas as ui_area
+import client.gfx.blend as blend
+import client.beagle.caret as caret
+from   client.beagle.assets import asset_manager
 import gc
 import os
 
@@ -103,11 +102,11 @@ def init():
         app = client.apps.get_app(app_name) 
 
     app.controller_enabled = controller_enabled
-    host_config.set_config("app_name", app_name)
+    beagle_environment.set_config("app_name", app_name)
     if not loaded_external:
-        host_config.set_config("app_dir", "client/applications/" + app_name +"/")
+        beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
     else:
-        host_config.set_config("app_dir", app_dir + "/app/")
+        beagle_environment.set_config("app_dir", app_dir + "/app/")
     try:
         if config[app_name] is not None:
             app.configure( config[app_name] );
@@ -161,7 +160,7 @@ SIGNAL_HANDLED      = True
 SIGNAL_DISCARDED    = False
 
 def set_screensize(w,h):
-    host_config.set_config("screen_dims", [ w, h ] )
+    beagle_environment.set_config("screen_dims", [ w, h ] )
 
 def dispatch_mouseup(button,x,y):
     global mouse_focused_area

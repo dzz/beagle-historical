@@ -1,4 +1,4 @@
-import host
+import beagle_runtime
 
 GamepadDeadzone = 0.1
 GamepadFilter   = 0.5
@@ -36,7 +36,7 @@ class gamepad:
         self.triggers = [0.0,0.0]
 
     def button_down(self,btn):
-        return host.get_gamepad_button( self.idx,btn) != 0
+        return beagle_runtime.get_gamepad_button( self.idx,btn) != 0
 
 gamepads = [];
 

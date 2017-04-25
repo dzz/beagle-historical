@@ -1,4 +1,4 @@
-import client.ctt2.host_config as host_config
+import client.beagle.beagle_environment as beagle_environment
 from random import choice
 from math import sqrt
 import audio
@@ -18,7 +18,7 @@ class beatEngine:
 class clip:
     def __init__(self,filename, beats = 4.0, trigger_offset = 0.0):
         print("audio.clip loading:{0}".format(filename))
-        self.audio_clip = audio.clip_create(host_config.get_config("app_dir") + filename, beats, trigger_offset)
+        self.audio_clip = audio.clip_create(beagle_environment.get_config("app_dir") + filename, beats, trigger_offset)
 
     def __del__(self):
         audio.clip_drop(self.audio_clip)

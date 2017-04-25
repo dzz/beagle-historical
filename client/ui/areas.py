@@ -1,4 +1,4 @@
-import client.ctt2.caret as caret
+import client.beagle.caret as caret
 
 SIGNAL_EXIT_HANDLER         = True
 SIGNAL_CONTINUE_HANDLING    = False

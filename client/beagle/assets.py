@@ -3,9 +3,9 @@ from client.gfx.context import gfx_context
 from client.gfx.text import render_text
 from client.system.gamepad       import get_gamepad, pad_buttons
 import client.system.log as log
-from client.ctt2.animation import curve_sequencer
+from client.beagle.animation import curve_sequencer
 from client.gfx.texture import texture
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 from client.gfx.local_image import local_image
 from client.gfx.tileset import tileset
 import client.gfx.shaders as shaders
@@ -18,7 +18,7 @@ import audio
 
 
 def cvt_path(relpath):
-        r = host_config.get_config("app_dir") + relpath
+        r = beagle_environment.get_config("app_dir") + relpath
         return r
 
 class resource_manager:
@@ -151,7 +151,7 @@ class tileset_adapter:
 
 class audioclip_adapter:
     def load(ac_def):
-        return audio.clip_create(host_config.get("app_dir") + ac_def["filename"])
+        return audio.clip_create(beagle_environment.get("app_dir") + ac_def["filename"])
 
 class coordsys_adapter:
     def load(cs_def):

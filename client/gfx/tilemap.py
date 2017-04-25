@@ -4,8 +4,7 @@ from client.gfx.rect            import rect_tile, rect_tile_start, rect_tile_raw
 from client.gfx.primitive       import primitive
 from client.gfx.primitive       import draw_mode
 import client.gfx.texture
-
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 import client.gfx.shaders       as shaders
 
 class tilemap:
@@ -127,7 +126,7 @@ class tilemap:
 
     @classmethod 
     def from_json_file(cls, path, img_path, filtered=False, coordinates = [1,1], tileheight = None ):
-        root = host_config.get_config("app_dir")
+        root = beagle_environment.get_config("app_dir")
         json_parsed = {}
         with open("{0}{1}".format(root,path)) as f:
             json_data = f.read()

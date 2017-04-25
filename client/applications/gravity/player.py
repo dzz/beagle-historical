@@ -1,25 +1,25 @@
 from client.system.audio import beatEngine
 from math import atan2, sqrt, sin, cos, floor
 from random import choice
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 import audio
 
 class player:
     def __init__(self):
         self.dummy_clips = [
-                audio.clip_create(host_config.get("app_dir") + "audio/stb00.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/stb01.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/stb02.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/stb03.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/stb04.ogg")
+                audio.clip_create(beagle_environment.get("app_dir") + "audio/stb00.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/stb01.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/stb02.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/stb03.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/stb04.ogg")
                 ]
 
         self.fire_clips = [
-                audio.clip_create(host_config.get("app_dir") + "audio/hh00.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/hh01.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/hh02.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/hh03.ogg"),
-                #audio.clip_create(host_config.get("app_dir") + "audio/hh04.ogg")
+                audio.clip_create(beagle_environment.get("app_dir") + "audio/hh00.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/hh01.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/hh02.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/hh03.ogg"),
+                #audio.clip_create(beagle_environment.get("app_dir") + "audio/hh04.ogg")
                 ]
 
         #audio.track_play_clip(1, self.dummy_clips[0] )

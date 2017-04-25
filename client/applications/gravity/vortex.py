@@ -1,6 +1,6 @@
 from math import sin,cos,sqrt
 from random import uniform,choice
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 import audio
 
 class vortex:

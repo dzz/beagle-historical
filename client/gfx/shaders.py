@@ -1,4 +1,4 @@
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 import client.system.log as log
 import hwgfx
 from client.gfx.texture import *
@@ -24,10 +24,10 @@ def get(vert,frag, path = None ):
         return loaded
 
 def get_client_program( vert, frag ):
-    return get(vert,frag, host_config.get("app_dir") + "shaders/")
+    return get(vert,frag, beagle_environment.get("app_dir") + "shaders/")
 
 def get_unique_client_program( vert, frag ):
-    return get_unique(vert,frag, host_config.get("app_dir") + "shaders/")
+    return get_unique(vert,frag, beagle_environment.get("app_dir") + "shaders/")
 
 
 class shader(object):
@@ -38,7 +38,7 @@ class shader(object):
             if path is not None:
                 log.write(log.DEBUG,"Compiling USER shader: {0}{1},{2}".format(path,vert,frag))
             else:
-                log.write(log.DEBUG,"Compiling CORE shader: {0},{1}".format(vert,frag))
+                log.write(log.DEBUG,"Compiling BeagleBase shaders: {0},{1}".format(vert,frag))
             if( path is None):
                 vpath =  "shaders/" + vert + ".vert.glsl"
                 fpath =  "shaders/" + frag + ".frag.glsl"

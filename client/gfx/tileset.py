@@ -1,6 +1,6 @@
 import os
 import hwgfx
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 from client.gfx.texture import texture
 from client.gfx.local_image import local_image
 
@@ -14,7 +14,7 @@ class tileset:
         # container directory
 
         tail,head = os.path.split( configuration["image"] )
-        self.image = host_config.get_config("app_dir") + img_path + head
+        self.image = beagle_environment.get_config("app_dir") + img_path + head
         self.imageheight = configuration["imageheight"]
         self.imagewidth = configuration["imagewidth"]
         self.margin = configuration["margin"]

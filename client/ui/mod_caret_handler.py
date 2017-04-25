@@ -1,6 +1,6 @@
 import host
 from client.ui.mod_empty    import mod_empty
-import client.ctt2.caret    as caret
+import client.beagle.caret    as caret
 
 
 class mod_caret_handler(mod_empty):

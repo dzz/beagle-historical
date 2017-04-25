@@ -1,5 +1,4 @@
 from .game import game
-import client.ctt2.host_config  as host_config
 import audio
 
 import client.system.log as log

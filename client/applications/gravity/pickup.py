@@ -12,13 +12,13 @@ from client.math.helpers import distance
 from .music_system import music_system
 import hwgfx
 from random import sample
-import client.ctt2.host_config  as host_config
+import client.beagle.beagle_environment  as beagle_environment
 import audio
 
 class pickup:
     def __init__(self, x,y, player, vortex, level_observer ):
         self.dummy_clips = [
-                audio.clip_create(host_config.get("app_dir") + "audio/bd00.ogg"),
+                audio.clip_create(beagle_environment.get("app_dir") + "audio/bd00.ogg"),
                 #audio.clip_create(host_config.get("app_dir") + "audio/bd01.ogg"),
                 #audio.clip_create(host_config.get("app_dir") + "audio/bd02.ogg"),
                 #audio.clip_create(host_config.get("app_dir") + "audio/bd03.ogg"),
