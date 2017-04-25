@@ -8,6 +8,7 @@ from client.gfx.framebuffer import *
 from client.gfx.blend            import blendstate,blendmode
 from client.gfx import context
 from client.gfx.text import render_text
+import client.gfx.shaders as shaders
 
 def tick_particles(particles,vortex, t):
     max_particles = 300
@@ -184,9 +185,11 @@ class vortex_game:
         #    self.hud_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
         
 
-        with blendstate(blendmode.add):
-            self.player_overlay.render_processed( shaders.get_client_program( "no_transform", "postfx/passthru" ),
-                        [ self.distortion_buffer ] )
+        ## commenting this out because it seems broken?? the great rebuild, 2017....
+
+        #with blendstate(blendmode.add):
+        #    self.player_overlay.render_processed( shaders.get_client_program( "no_transform", "postfx/passthru" ),
+        #                [ self.distortion_buffer ] )
         with blendstate(blendmode.alpha_over):
             self.hud_buffer.render_processed( shaders.get_client_program("no_transform","postfx/passthru") )
 

@@ -22,7 +22,7 @@
     {
         "type"              : "dict",
         "name"              : "config",
-        "dict"              : { "starting_mode" : "ship" }
+        "dict"              : { "starting_mode" : "vortex" }
     },
     {
         "type"              : "shader",
