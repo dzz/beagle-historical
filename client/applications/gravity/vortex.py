@@ -6,7 +6,7 @@ import audio
 class vortex:
     def __init__(self):
         self.dummy_clips = [
-                audio.clip_create(host_config.get("app_dir") + "audio/vt00.ogg"),
+                audio.clip_create(beagle_environment.get("app_dir") + "audio/vt00.ogg"),
                 #audio.clip_create(host_config.get("app_dir") + "audio/vt01.ogg"),
                 #audio.clip_create(host_config.get("app_dir") + "audio/vt02.ogg"),
                 #audio.clip_create(host_config.get("app_dir") + "audio/vt03.ogg"),

@@ -1,4 +1,4 @@
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 from .terminals.saver import eaos_saver
 from random import uniform
 

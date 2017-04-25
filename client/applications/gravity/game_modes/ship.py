@@ -1,4 +1,4 @@
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 
 from .entities.chamber import chamber
 from .entities.ow_enviro import ow_enviro

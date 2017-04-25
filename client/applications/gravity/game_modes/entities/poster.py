@@ -1,4 +1,4 @@
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 from random import uniform, choice
 from math import sin,floor
 

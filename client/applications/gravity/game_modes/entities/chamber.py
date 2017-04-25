@@ -1,4 +1,4 @@
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 
 class chamber:
     def __init__(self,primitive, view):

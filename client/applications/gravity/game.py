@@ -1,6 +1,6 @@
 import hwgfx
 from client.gfx import context
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 from math import floor
 from client.system.video import *
 import client.system.log as log

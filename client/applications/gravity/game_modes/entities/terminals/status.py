@@ -1,4 +1,4 @@
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 from math import sin
 
 class eaos_binmods():

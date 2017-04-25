@@ -1,7 +1,7 @@
 from random import uniform
 from math import floor
 from client.gfx.text import render_text
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 from .status import eaos_status
 
 class eaos_saver:

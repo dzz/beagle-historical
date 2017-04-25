@@ -1,4 +1,4 @@
-from client.ctt2.assets import assets
+from client.beagle.assets import assets
 
 class ow_player:
     def __init__(self, view ):
