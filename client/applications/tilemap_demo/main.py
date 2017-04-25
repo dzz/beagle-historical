@@ -152,11 +152,11 @@ def render():
     tm.render(0 - int(camera[0]),0 - int(camera[1]),4)
 
 
-    test_sprite_renderer.render( 
-           [ 
-            [ test_sprite, [camera[0]/64,camera[1]/64],6] ,
-            [ test_sprite, [camera[1]/32,camera[0]/32],12] 
-           ])
+    ## test_sprite_renderer.render( 
+    ##        [ 
+    ##         [ test_sprite, [camera[0]/64,camera[1]/64],6] ,
+    ##         [ test_sprite, [camera[1]/32,camera[0]/32],12] 
+    ##        ])
 
 def finalize():
     pass
