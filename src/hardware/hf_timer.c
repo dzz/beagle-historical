@@ -6,6 +6,9 @@
 
 
 #ifdef __linux__
+#define _POSIX_TIMERS
+#define _REENTRANT
+#define _POSIX_C_SOURCE 200809L
 #include <time.h>
 #endif
 
@@ -45,6 +48,7 @@ void dropTimer() {}
 #endif
 
 #ifdef __linux
+
 unsigned int initTimer()
 {
     return MODULE_LOADED;
@@ -54,11 +58,13 @@ double timer_get_ms()
 {
     struct timespec sample;
     clock_gettime(CLOCK_MONOTONIC_RAW, &sample);
-    //do stuff
-    //clock_gettime(CLOCK_MONOTONIC_RAW, &end);
-    //uint64_t delta_us = (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_nsec - start.tv_nsec) / 1000; 
+    {
+        double ms_seconds = (double)(sample.tv_sec) * 1000;
+        double ms_nsecs = (double)(sample.tv_nsec)/1000000;
+        double ms = ms_seconds + ms_nsecs;
 
-    return (double) ((sample.tv_sec - sample.tv_sec)*1000) + (double)((sample.tv_nsec - sample.tv_nsec) * 1000000);
+        return ms;
+    }
 }
 
 void dropTimer() {} 
