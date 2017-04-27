@@ -27,16 +27,16 @@ DEF_ARGS {
 
 MODULE_FUNC host_get_hf_timer
 DEF_ARGS {
-	return Py_BuildValue("f",timer_get_ms() );
+    return Py_BuildValue("f",timer_get_ms() );
 }
 
 MODULE_FUNC _host_get_screen_width
 DEF_ARGS {
-	return Py_BuildValue("I",host_get_screen_width() );
+    return Py_BuildValue("I",host_get_screen_width() );
 }
 MODULE_FUNC _host_get_screen_height
 DEF_ARGS {
-	return Py_BuildValue("I",host_get_screen_height() );
+    return Py_BuildValue("I",host_get_screen_height() );
 }
 
 
@@ -79,7 +79,7 @@ DEF_ARGS {
 MODULE_FUNC host_get_gamepad_sticks
 DEF_ARGS {
     int i;
-	hw_gamepad* gp;
+    hw_gamepad* gp;
 
     if(!INPUT_ARGS(args,"i",&i))
         return NULL;
@@ -101,7 +101,7 @@ MODULE_FUNC host_get_gamepad_button
 DEF_ARGS {
     int i;
     unsigned int btn;
-	hw_gamepad* gp;
+    hw_gamepad* gp;
 
     if(!INPUT_ARGS(args,"iI",&i,&btn))
         return NULL;

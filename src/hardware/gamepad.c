@@ -70,22 +70,22 @@ hw_gamepad* getGamepad(int index) {
 }
 
 unsigned int gamepad_get_button(hw_gamepad* gp, unsigned int button) {
-	if (gp->available) {
-		return (unsigned int)SDL_GameControllerGetButton(gp->controller, button);
-	} return 0;
+    if (gp->available) {
+        return (unsigned int)SDL_GameControllerGetButton(gp->controller, button);
+    } return 0;
 }
 
 unsigned int initGamepad() {
 
     int found = 0;
-	int i;
+    int i;
 
     if( SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER ) < 0)
-		return MODULE_FAILURE;
+        return MODULE_FAILURE;
 
     resetGamepad();
 
-	log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "I see %i potential controllers.",SDL_NumJoysticks());
+    log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "I see %i potential controllers.",SDL_NumJoysticks());
     for(i=0; i<SDL_NumJoysticks(); ++i) {
         if(SDL_IsGameController(i)) {
             hw_gamepad *gp = &Gamepads[found]; 
@@ -97,8 +97,8 @@ unsigned int initGamepad() {
         }
     }
 
-	log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "initialized %i gamepads",found);
-	return MODULE_LOADED;
+    log_message(CTT2_RT_MODULE_GAMEPAD, LOG_LEVEL_INFO, "initialized %i gamepads",found);
+    return MODULE_LOADED;
 }
 
 void dropGamepad() {

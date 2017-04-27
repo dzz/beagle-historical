@@ -19,7 +19,7 @@ DEF_ARGS {
 
     hw_audio_wav_data* wav;
     char *filename;
-	wav = (hw_audio_wav_data*) malloc(sizeof(hw_audio_wav_data));
+    wav = (hw_audio_wav_data*) malloc(sizeof(hw_audio_wav_data));
     if(!INPUT_ARGS(args,"s",&filename))
         return NULL;
     audio_load_wav(wav, filename);

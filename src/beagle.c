@@ -48,13 +48,13 @@ int SCREEN_HEIGHT = 700;
 static FILE streams[3];
 unsigned int streams_init = 0;
 FILE* __iob_func() {
-	if (streams_init == 0) {
-		streams[0] = *stdin;
-		streams[1] = *stdout;
-		streams[2] = *stderr;
-		streams_init = 1;
-	}
-	return streams;
+    if (streams_init == 0) {
+        streams[0] = *stdin;
+        streams[1] = *stdout;
+        streams[2] = *stderr;
+        streams_init = 1;
+    }
+    return streams;
 }
 
 char * ctt2_module_from_code( unsigned int module) {
@@ -104,7 +104,7 @@ static void updateViewingSurface() {
 #define VSYNC_ENABLED 1
 
 static void requestVsyncMode(unsigned int mode)
-{	
+{    
 #ifdef _WIN32
     typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALPROC)( int );
     PFNWGLSWAPINTERVALPROC wglSwapIntervalEXT = 0;
@@ -143,11 +143,11 @@ void dropCore() {
 }
 
 unsigned int host_get_screen_width() {
-	return SCREEN_WIDTH;
+    return SCREEN_WIDTH;
 }
 
 unsigned int host_get_screen_height() {
-	return SCREEN_HEIGHT;
+    return SCREEN_HEIGHT;
 }
 
 
@@ -175,7 +175,7 @@ unsigned int initDisplay() {
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
-			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP );
+            SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP );
     } else {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
                 SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN  );
@@ -204,9 +204,9 @@ unsigned initOpenGL() {
     log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "trying to acquire GL_context..." );
     
     gl_context = NULL;
-    gl_context = SDL_GL_CreateContext(opengl_window);	
+    gl_context = SDL_GL_CreateContext(opengl_window);    
     if(!gl_context) {
-		log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_ERROR, "Could not get valid GL context" );
+        log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_ERROR, "Could not get valid GL context" );
         log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_ERROR, "--- error (proxied) : %s", SDL_GetError());
         return MODULE_FAILURE;
     }
@@ -217,7 +217,7 @@ unsigned initOpenGL() {
 
     requestVsyncMode( VSYNC_ENABLED );
     if(gl_context) {
-		log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "Initialized OpenGL Context: %x", gl_context );
+        log_message( CTT2_RT_MODULE_OPENGL, LOG_LEVEL_INFO, "Initialized OpenGL Context: %x", gl_context );
         return MODULE_LOADED;
     }
     return MODULE_FAILURE;
@@ -237,14 +237,14 @@ void dropPython(){
     api_drop();
     log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_INFO, "Dropped application");
     Py_Finalize();
-	log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_INFO, "Dropped Python");
+    log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_INFO, "Dropped Python");
 }
 
 unsigned int initPython() {
     api_set_screensize( SCREEN_WIDTH, SCREEN_HEIGHT );
     //Py_SetProgramName("ctt2_py");
     if( api_init() == API_FAILURE ) {
-		log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_ERROR, "Error booting python environment.");
+        log_message( CTT2_RT_MODULE_PYTHON, LOG_LEVEL_ERROR, "Error booting python environment.");
         if(PyErr_Occurred()) {
             PyErr_Print();
         }
@@ -267,9 +267,9 @@ void dropTextInput() {
 
 
 #define CTT2_EVT_POLL_EVENTS         0
-#define CTT2_EVT_TICK				 1
-#define CTT2_EVT_RENDER				 2
-#define CTT2_EVT_SYNC_GFX			 3
+#define CTT2_EVT_TICK                 1
+#define CTT2_EVT_RENDER                 2
+#define CTT2_EVT_SYNC_GFX             3
 
 #define CTT2_MAX_RT_MODULES         64
 
@@ -284,12 +284,12 @@ static unsigned int rt_module_ids[CTT2_MAX_RT_MODULES];
 
 void dropRuntimeModules(unsigned int error) {
     while( rt_module_count!= 0 ) {
-		rt_module_count-=1;
-		{
-			module_destructor destructor = rt_module_destructors[rt_module_count];
-			(*destructor)();
-			log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_INFO, "Released runtime module: %s", ctt2_module_from_code(rt_module_ids[rt_module_count]));
-		}
+        rt_module_count-=1;
+        {
+            module_destructor destructor = rt_module_destructors[rt_module_count];
+            (*destructor)();
+            log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_INFO, "Released runtime module: %s", ctt2_module_from_code(rt_module_ids[rt_module_count]));
+        }
     }
     exit(error);
 }
@@ -305,7 +305,7 @@ void loadRuntimeModule( module_initializer moduleInitializer, module_destructor 
         dropRuntimeModules(CTT2_RT_ERROR);
     }
 
-	if((*moduleInitializer)() == MODULE_FAILURE) {
+    if((*moduleInitializer)() == MODULE_FAILURE) {
         log_message(CTT2_RT_MODULE_CORE, LOG_LEVEL_ERROR, "Could not initialize module: %s", ctt2_module_from_code(RT_MODULE_ID));
         dropRuntimeModules(CTT2_RT_ERROR);
     } else {
@@ -319,7 +319,7 @@ void loadRuntimeModule( module_initializer moduleInitializer, module_destructor 
 
 CTT2_RT_SIGNAL finished                         = 0;
 void host_signal_exit() {
-	dropRuntimeModules(1);
+    dropRuntimeModules(1);
 }
 
 
@@ -334,7 +334,7 @@ int main(int argc, char **argv){
     double spf                                      = 0.0;
     int tick_next                                   = 0;
     unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
-		finished = 0;
+        finished = 0;
     initialized_modules = 0;
 
     if(argc==5) {
@@ -346,7 +346,7 @@ int main(int argc, char **argv){
         frame_millis    = (double)1000/(double)fps;
     }
 
-	loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
+    loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );
     loadRuntimeModule( &initDisplay,    &dropDisplay,       CTT2_RT_MODULE_DISPLAY );
     loadRuntimeModule( &initOpenGL,     &dropOpenGL,        CTT2_RT_MODULE_OPENGL );
@@ -373,26 +373,26 @@ int main(int argc, char **argv){
                                 finished = 1; 
                             } else {
                                 tick_millis += frame_millis;
-								if( (timer_get_ms() - tick_millis) > frame_millis ) {
+                                if( (timer_get_ms() - tick_millis) > frame_millis ) {
                                     ctt2_state = CTT2_EVT_TICK;
                                 } else {
                                 ctt2_state = CTT2_EVT_RENDER;
                                 }
                             }
-						 break;
+                         break;
                     case CTT2_EVT_RENDER:
                          api_render();
                          ctt2_state = CTT2_EVT_SYNC_GFX;
-						 break;
-					case CTT2_EVT_SYNC_GFX:
-						updateViewingSurface();  
-						ctt2_state = CTT2_EVT_POLL_EVENTS;
-						break;
+                         break;
+                    case CTT2_EVT_SYNC_GFX:
+                        updateViewingSurface();  
+                        ctt2_state = CTT2_EVT_POLL_EVENTS;
+                        break;
                     case CTT2_EVT_POLL_EVENTS:
-						if( (timer_get_ms() - tick_millis) > frame_millis ) {
+                        if( (timer_get_ms() - tick_millis) > frame_millis ) {
                             ctt2_state = CTT2_EVT_TICK;
                          } 
-						  break;
+                          break;
             }
 
 
@@ -463,5 +463,5 @@ int main(int argc, char **argv){
     
     sequencer_halt();
     dropRuntimeModules(0);
-	return 0;
+    return 0;
 }

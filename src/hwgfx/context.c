@@ -38,7 +38,7 @@ viewport_dims   gfx_viewport_get_dims() {
 
 
 root_gfx_size
-	gfx_get_root_gfx_size(){
+    gfx_get_root_gfx_size(){
     root_gfx_size gfx_size;
     gfx_size.w = host_get_screen_width();
     gfx_size.h = host_get_screen_height();

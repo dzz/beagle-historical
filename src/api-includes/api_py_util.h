@@ -1,7 +1,7 @@
 void api_fail_hard() {
     if(PyErr_Occurred())
         PyErr_Print();
-	host_signal_exit();
+    host_signal_exit();
 }
 
 int api_checkfailure() {

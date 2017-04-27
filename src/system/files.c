@@ -11,8 +11,8 @@ char* read_file(char *file)
 
     fptr = fopen(file, "rb"); 
     if (!fptr)  {
-		char *r = malloc(sizeof(char));
-		r[0] = '\0';
+        char *r = malloc(sizeof(char));
+        r[0] = '\0';
         log_message( CTT2_RT_MODULE_CORE, LOG_LEVEL_ERROR, "could not read :%s",file);
         return r;
     }

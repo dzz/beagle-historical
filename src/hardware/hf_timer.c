@@ -39,7 +39,7 @@ double timer_get_ms()
     LARGE_INTEGER CurrentTime;
     QueryPerformanceCounter(&CurrentTime);
 
-	CurrentTime.QuadPart *= 1000;
+    CurrentTime.QuadPart *= 1000;
 
     return (double)CurrentTime.QuadPart / pcf;
 }

@@ -39,7 +39,7 @@ MODULE_FUNC hwgfx_rect_draw_tex_array
 DEF_ARGS {
     
     PyObject *array;
-	int i;
+    int i;
     int size;
 
     size = 10;
@@ -59,7 +59,7 @@ DEF_ARGS {
         if(t_size!= 8) {
             return NULL;
         }
-		x = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
+        x = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,0));
         y = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,1));
         w = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,2));
         h = (int)PyLong_AS_LONG( PyList_GET_ITEM(rect,3));
@@ -464,7 +464,7 @@ DEF_ARGS {
         if(PyFloat_Check(flObj)) {
             parsed=(float)PyFloat_AsDouble(flObj);
         } else {
-			PRIMITIVE_FLOAT_ERROR;
+            PRIMITIVE_FLOAT_ERROR;
         }
         coord_float_buffer[i] = parsed;
     }

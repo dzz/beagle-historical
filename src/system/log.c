@@ -17,26 +17,26 @@ void log_set_level(unsigned int level) {
 }
 
 unsigned int initLog() {
-	logfile = fopen("log.txt","wb");
-	if(!logfile)
-		return MODULE_FAILURE;
+    logfile = fopen("log.txt","wb");
+    if(!logfile)
+        return MODULE_FAILURE;
     formatting_buffer = (char*)malloc(sizeof(char)*LOG_FORMATTING_BUFFER_SIZE);
-	if(!formatting_buffer)
-		return MODULE_FAILURE;
+    if(!formatting_buffer)
+        return MODULE_FAILURE;
 
-	initialized = 1;
+    initialized = 1;
     logging_client = 0;
-	return MODULE_LOADED;
+    return MODULE_LOADED;
 }
 
 FILE *getLogfile(){
-	return logfile;
+    return logfile;
 }
 
 void dropLog() {
-	initialized = 0;
+    initialized = 0;
     free(formatting_buffer);
-	fclose(logfile);
+    fclose(logfile);
 }
 
 
@@ -85,15 +85,15 @@ void log_message(unsigned int system, unsigned int level, const char* message, .
 
     const char* format = "%-8s[%04x]\t%-8s\t%s\n";
 
-	if(!initialized) {
-		va_list args;
+    if(!initialized) {
+        va_list args;
         va_start(args, message);
-		printf("(detached):");
-		vprintf(message, args);
-		printf("\n");
+        printf("(detached):");
+        vprintf(message, args);
+        printf("\n");
         va_end(args);
-		return;
-	}
+        return;
+    }
     if( (level & LOG_LEVEL) == 0 ) {
         return;
     }
@@ -109,7 +109,7 @@ void log_message(unsigned int system, unsigned int level, const char* message, .
             fprintf(logfile, format, system_prefix, system, level_tag, formatting_buffer);
         }
         if(LOG_TARGET & LOG_TARGET_STDOUT) {
-			printf(format, system_prefix, system, level_tag, formatting_buffer);
+            printf(format, system_prefix, system, level_tag, formatting_buffer);
         }
     }
 }

@@ -18,12 +18,12 @@ double MAX( double a, double b, double c) {
 }
 
 cp_color rgb_from_dbl(double r,double g, double b) {
-	cp_color ret;
-	ret.r = (unsigned char)(r*255);
-	ret.g = (unsigned char)(g*255);
-	ret.b = (unsigned char)(b*255);
-	ret.a = 255;
-	return ret;
+    cp_color ret;
+    ret.r = (unsigned char)(r*255);
+    ret.g = (unsigned char)(g*255);
+    ret.b = (unsigned char)(b*255);
+    ret.a = 255;
+    return ret;
 }
 
 cp_color rgb_from_hsv(double h, double s, double v)
@@ -68,53 +68,53 @@ cp_color rgb_from_hsv(double h, double s, double v)
 void _hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v );
 void hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v ) {
 
-		if(col.packed == 0) {
-				*h = 0;
-				*s = 0;
-				*v = 0;
-				return;
-		} else {
-				int sum = col.rgba.r+col.rgba.g+col.rgba.b;
-				if (sum == (255+255+255)){
-						*h = 0;
-						*s = 0;
-						*v = 1;
-						return;
-				}
-		} 
+        if(col.packed == 0) {
+                *h = 0;
+                *s = 0;
+                *v = 0;
+                return;
+        } else {
+                int sum = col.rgba.r+col.rgba.g+col.rgba.b;
+                if (sum == (255+255+255)){
+                        *h = 0;
+                        *s = 0;
+                        *v = 1;
+                        return;
+                }
+        } 
 
-		_hsv_from_rgb(col,h,s,v);
+        _hsv_from_rgb(col,h,s,v);
 }
 
 void _hsv_from_rgb( uint_rgba_map col, double *h, double *s, double *v )
 {
-		double min, max, delta;
+        double min, max, delta;
 
-		double r = (float)(col.rgba.r)/255.0f;
-		double g = (float)(col.rgba.g)/255.0f;
-		double b = (float)(col.rgba.b)/255.0f;
+        double r = (float)(col.rgba.r)/255.0f;
+        double g = (float)(col.rgba.g)/255.0f;
+        double b = (float)(col.rgba.b)/255.0f;
 
-		min = MIN( r, g, b );
-		max = MAX( r, g, b );
-		*v = max; // v
-		delta = max - min;
-		if( max != 0 )
-				*s = delta / max; // s
-		else {
-				// r = g = b = 0 // s = 0, v is undefined
-				*s = 0;
-				*h = -1;
-				*v = 0;
-				return;
-		}
-		if( r == max )
-				*h = ( g - b ) / delta; // between yellow & magenta
-		else if( g == max )
-				*h = 2 + ( b - r ) / delta; // between cyan & yellow
-		else
-				*h = 4 + ( r - g ) / delta; // between magenta & cyan
-		*h *= 60; // degrees
-		if( *h < 0 )
-				*h += 360;
+        min = MIN( r, g, b );
+        max = MAX( r, g, b );
+        *v = max; // v
+        delta = max - min;
+        if( max != 0 )
+                *s = delta / max; // s
+        else {
+                // r = g = b = 0 // s = 0, v is undefined
+                *s = 0;
+                *h = -1;
+                *v = 0;
+                return;
+        }
+        if( r == max )
+                *h = ( g - b ) / delta; // between yellow & magenta
+        else if( g == max )
+                *h = 2 + ( b - r ) / delta; // between cyan & yellow
+        else
+                *h = 4 + ( r - g ) / delta; // between magenta & cyan
+        *h *= 60; // degrees
+        if( *h < 0 )
+                *h += 360;
 }
 

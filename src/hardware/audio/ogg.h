@@ -23,7 +23,7 @@
 //    Terje Mathisen     Niklas Frykholm     Andy Hill
 //    Casey Muratori     John Bolton         Gargaj
 //    Laurent Gomila     Marc LeBlanc        Ronny Chevalier
-//    Bernhard Wodo      Evan Balster			"alxprd"@github
+//    Bernhard Wodo      Evan Balster            "alxprd"@github
 //    Tom Beaumont       Ingo Leitgeb        Nicolas Guillemot
 // (If you reported a bug but do not appear in this list, it is because
 // someone else reported the bug before you. There were too many of you to

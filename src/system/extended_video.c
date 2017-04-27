@@ -20,8 +20,8 @@ void gfx_surface_render( SDL_Surface* img) {
     shader_bind                 (&_screen_shader        );
     texture_from_SDL_surface    (&_ui,      img         );
     texture_bind                (&_ui,      TEX_UNIT_0  );
-	primitive_render            ((gfx_coordinate_primitive*)
-								 (&_screen_primitive)     );
+    primitive_render            ((gfx_coordinate_primitive*)
+                                 (&_screen_primitive)     );
     blend_exit                  (                       );
 }
 
@@ -29,7 +29,7 @@ void gfx_surface_render( SDL_Surface* img) {
 void initExtendedVideo() {
     root_gfx_size rgs;   
 
-	if( _extensions_loaded == 0 ) {
+    if( _extensions_loaded == 0 ) {
         glxwInit();
         _extensions_loaded = 1;
     }
