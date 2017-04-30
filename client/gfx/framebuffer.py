@@ -33,6 +33,7 @@ class framebuffer:
         return self.render_processed( shader_program, shader_inputs )
 
     def render_processed( self, shader_program, shader_inputs = [] ):
+        """ Renders the Framebuffer with a given shader program and inputs """
         shader_program.bind( shader_inputs, False, 1 ) 
         self.bind_as_texture( texture.units[0] )
         framebuffer.screen_primitive.render()

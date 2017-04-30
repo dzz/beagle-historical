@@ -73,12 +73,15 @@ def init():
     else:
         target_application_folder = None
     
+    loading_external = False
+
     if(os.path.isfile("client/generated_application.ini")):
         config.read("client/generated_application.ini")
     else:
         if target_application_folder is None:
             config.read("client/application.ini")
         else:
+            loading_external = True
             ini_path = os.path.join( target_application_folder, "application.ini")
             print(ini_path)
             config.read(ini_path)
@@ -105,6 +108,14 @@ def init():
         telnet_port = int( config["APPLICATION"]["telnet_port"] )
         telnet_host = config["APPLICATION"]["telnet_host"]
     
+    beagle_environment.set_config("app_name", app_name)
+    if not loading_external:
+        beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
+    else:
+        beagle_environment.set_config("app_dir", target_application_folder+"/")
+    
+    if resource_json:
+            asset_manager.compile(resource_json)
     
     loaded_external = False
     if (app_dir is not None) and (app_module is not None):
@@ -112,17 +123,9 @@ def init():
         loaded_external = True
     else:
         app = client.apps.get_app(app_name) 
-
     app.controller_enabled = controller_enabled
-    beagle_environment.set_config("app_name", app_name)
-    if not loaded_external:
-        beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
-    else:
-        beagle_environment.set_config("app_dir", target_application_folder+"/")
-        app.configure( config );
-    
-    if resource_json:
-            asset_manager.compile(resource_json)
+    app.configure( config );
+
     if(telnet_enabled):
         console = telnet_console(app, telnet_host, telnet_port)
     app.init()

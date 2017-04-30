@@ -72,12 +72,10 @@ class resource_manager:
             self.resource_map["core/queries/gamepad/find_primary"] = find_primary_gamepad
             self.resource_map["core/gamepad/buttons"] = pad_buttons
             self.resource_map["core/stringfx/scroll[txt,offset]"] = scroll_text
-
             self.resource_map["core/lotext/print(pixels)[txt,x,y,[r,g,b]]"] = render_text
             self.resource_map["core/lotext/print(pixels)[txt,[x,y],[r,g,b]]"] = print_pixels
             self.resource_map["core/lotext/print[txt,[x,y],[r,g,b]]"] = print_pixels
             self.resource_map["core/lotext/print(rows)[txt,[x,y],[r,g,b]]"] = print_rows
-
             self.resource_map["core/hwgfx/context/clear[r,g,b,a]"] = gfx_context.clear_rgba
             self.resource_map["core/hwgfx/blendmode/alpha_over"] = blendstate( blendmode.alpha_over )
             self.resource_map["core/hwgfx/blendmode/add"] = blendstate( blendmode.add )
