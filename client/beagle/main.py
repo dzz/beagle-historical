@@ -67,11 +67,23 @@ def init():
 
     config = configparser.ConfigParser()
 
+    if(beagle_runtime.get_user_specified_application_folder()):
+        target_application_folder = os.path.normpath(beagle_runtime.get_user_specified_application_folder())
+        log.write(log.INFO, "Loading application @:{0}".format(target_application_folder))
+    else:
+        target_application_folder = None
+    
     if(os.path.isfile("client/generated_application.ini")):
         config.read("client/generated_application.ini")
     else:
-        config.read("client/application.ini")
+        if target_application_folder is None:
+            config.read("client/application.ini")
+        else:
+            ini_path = os.path.join( target_application_folder, "application.ini")
+            print(ini_path)
+            config.read(ini_path)
 
+    print(config["APPLICATION"])
     app_name = config["APPLICATION"]["name"]
     beagle_runtime.set_title(app_name)
     try:
@@ -79,8 +91,8 @@ def init():
         log.write(log.INFO, "Loading application @:{0}".format(app_dir))
         app_module = config["APPLICATION"]["module"]
     except:
-        app_dir = None
-        app_module = None
+        app_dir = os.path.dirname( target_application_folder )
+        app_module = os.path.basename( target_application_folder )
     try:
         resource_json = config["APPLICATION"]["assets"]
     except:
@@ -106,7 +118,7 @@ def init():
     if not loaded_external:
         beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
     else:
-        beagle_environment.set_config("app_dir", app_dir + "/app/")
+        beagle_environment.set_config("app_dir", target_application_folder+"/")
     try:
         if config[app_name] is not None:
             app.configure( config[app_name] );

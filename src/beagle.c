@@ -323,9 +323,41 @@ void host_signal_exit() {
 }
 
 
+void print_banner() {
+    printf(" ____     ___   ____   ____  _        ___ \n");
+    printf("|    \\   /  _] /    | /    || |      /  _]\n");
+    printf("|  o  ) /  [_ |  o  ||   __|| |     /  [_ \n");
+    printf("|     ||    _]|     ||  |  || |___ |    _]\n");
+    printf("|  O  ||   [_ |  _  ||  |_ ||     ||   [_ \n");
+    printf("|     ||     ||  |  ||     ||     ||     |\n");
+    printf("|     ||     ||  |  ||     ||     ||     |\n");
+    printf("|_____||_____||__|__||___,_||_____||_____|\n");
+    printf("                                          \n");
+    printf("          ~ * - B E A G L E - * ~\n");
+    printf("\n");
+    printf("an experiment in the medium of game engines\n");
+    printf("\n");
+    printf("                   v0.0\n");
+}
+
+void print_usage() {
+    #ifdef _WIN32
+    printf("    usage: bin\beagle_runtime {width} {height} {fullscreen} {fps} \"{path to application.ini}\"\n");
+    #endif
+
+    #ifdef __linux__
+    printf("    usage: ./bin/beagle_runtime {width} {height} {fullscreen} {fps} \"{path to application.ini}\"\n");
+    #endif
+
+}
+char* application_ini_location = 0;
+
+char* get_user_specified_application_folder() {
+    return application_ini_location;
+}
+
 int main(int argc, char **argv){ 
     
-
     int fps                                         = -1;
     double frame_millis                             = -1;
     double init_millis                              = 0;
@@ -337,14 +369,26 @@ int main(int argc, char **argv){
         finished = 0;
     initialized_modules = 0;
 
-    if(argc==5) {
+
+    print_banner();
+
+    if(argc==5 || argc==6) {
         SCREEN_WIDTH    = atoi( argv[1] );
         SCREEN_HEIGHT   = atoi( argv[2] );
         fullscreen      = atoi( argv[3] );
         fps             = atoi( argv[4] );
         spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
+        if(argc==6) {
+            application_ini_location = argv[5]; 
+            printf("application.ini location: `%s`\n", application_ini_location );
+        }
+    } else {
+
+        print_usage();
+        return;
     }
+
 
     loadRuntimeModule( &initLog,        &dropLog,           CTT2_RT_MODULE_LOG );
     loadRuntimeModule( &initCore,       &dropCore,          CTT2_RT_MODULE_CORE );

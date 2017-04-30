@@ -105,7 +105,7 @@ int api_drop() {
 
 #include "system/log.h"
 
-#include "api-includes/modules/host.h"
+#include "api-includes/modules/beagle_runtime.h"
 #include "api-includes/modules/hwgfx.h"
 #include "api-includes/modules/localgfx.h"
 #include "api-includes/modules/audio.h"
