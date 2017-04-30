@@ -119,14 +119,7 @@ def init():
         beagle_environment.set_config("app_dir", "client/applications/" + app_name +"/")
     else:
         beagle_environment.set_config("app_dir", target_application_folder+"/")
-    try:
-        if config[app_name] is not None:
-            app.configure( config[app_name] );
-    except KeyError:
-        pass
-        log.write(log.INFO, "No configuration found, ignoring.")
-
-
+        app.configure( config );
     
     if resource_json:
             asset_manager.compile(resource_json)

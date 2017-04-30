@@ -1,5 +1,6 @@
-#define USING_OPENGL_2  (0)
-#define USING_OPENGL_3  (1)
+//define OGL_3_3 or OGL_4_0
+#define OGL_4_0
+
 
 #ifdef _WIN32
 #include <conio.h>
@@ -157,21 +158,21 @@ unsigned int initDisplay() {
         return MODULE_FAILURE;
     } 
 
-    if( USING_OPENGL_2 ) {
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    } 
-
-    if( USING_OPENGL_3 ) {
+    #ifdef OGL_3_3
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-    }
+    #endif
+
+    #ifdef OGL_4_0
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+        SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
+        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    #endif
 
     if(fullscreen == 1 ) {
         opengl_window = SDL_CreateWindow( "ctt2_hw", 64, 64, 
