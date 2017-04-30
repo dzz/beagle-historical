@@ -3,6 +3,7 @@ from client.gfx.primitive import primitive
 from client.gfx.text import render_text
 from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
+from client.system.gamepad import pad_buttons
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
@@ -10,6 +11,20 @@ from client.gfx.context import gfx_context
 
 class beagle_api():
     """ High Level Aggregate API for Beagle """
+    class gamepads():
+        """ Gamepad API
+        
+            Attributes:
+                pad_buttons: a map of identifiers to button indices
+        """
+        def by_index(index):
+            """ returns a gamepad object by player index """
+            return assets.exec("core/queries/gamepad/find_by_id", [index] )
+        def find_primary():
+            """ returns the primary gamepad """
+            return assets.exec("core/queries/gamepad/find_primary", [])
+
+
     class primitive():
         """ Primitive API
         

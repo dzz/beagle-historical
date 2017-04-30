@@ -1,6 +1,6 @@
 import beagle_runtime
 
-GamepadDeadzone = 0.1
+GamepadDeadzone = 0.15
 GamepadFilter   = 0.5
 
 gf_a = 1.0-GamepadFilter
