@@ -1,3 +1,2 @@
-set -e
-scons
-./beagle_runtime
+#!/usr/bin/bash
+./bin/beagle_runtime $@

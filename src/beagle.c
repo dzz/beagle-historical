@@ -338,22 +338,25 @@ void print_banner() {
     printf("an experiment in the medium of game engines\n");
     printf("\n");
     printf("                   v0.0\n");
+    printf("\n");
 }
 
 void print_usage() {
     #ifdef _WIN32
-    printf("    usage: bin\beagle_runtime {width} {height} {fullscreen} {fps} \"{path to application.ini}\"\n");
+    printf("    usage: bin\beagle_runtime {width} {height} {fullscreen} {fps} {path to app}\n");
     #endif
 
     #ifdef __linux__
-    printf("    usage: ./bin/beagle_runtime {width} {height} {fullscreen} {fps} \"{path to application.ini}\"\n");
+    printf("    usage: ./bin/beagle_runtime {width} {height} {fullscreen} {fps} {path to app}\n");
     #endif
+    printf("\n");
+
 
 }
-char* application_ini_location = 0;
+char* beagle_application_path = 0;
 
 char* get_user_specified_application_folder() {
-    return application_ini_location;
+    return beagle_application_path;
 }
 
 int main(int argc, char **argv){ 
@@ -380,8 +383,8 @@ int main(int argc, char **argv){
         spf = 1.0/(double)fps;
         frame_millis    = (double)1000/(double)fps;
         if(argc==6) {
-            application_ini_location = argv[5]; 
-            printf("application.ini location: `%s`\n", application_ini_location );
+            beagle_application_path = argv[5]; 
+            printf("Application path: `%s`\n", beagle_application_path );
         }
     } else {
 
