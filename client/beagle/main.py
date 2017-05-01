@@ -42,7 +42,8 @@ def init():
             lines = txt.split("\n")
             cvt_lines = []
             for line in lines:
-                cvt_lines.append(line.rstrip())
+                if(len(line) > 0):
+                    cvt_lines.append(line.rstrip())
             return cvt_lines
 
         def flush(self):

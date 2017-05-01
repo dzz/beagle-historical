@@ -15,7 +15,7 @@ class beagle_api():
         """ Gamepad API
         
             Attributes:
-                pad_buttons: a map of identifiers to button indices
+                pad_buttons: a map of identifiers (e.g. A,B,X,Y) to button indices
         """
         def by_index(index):
             """ returns a gamepad object by player index """
@@ -49,6 +49,11 @@ class beagle_api():
         def from_dims(w,h):
             """  Create a frame buffer with specified dimensions """
             return assets.exec("core/factory/framebuffer/[w,h]",[w,h])
+
+        def from_screen():
+            """  Create a frame buffer with the same dimensions as the primary render target"""
+            return assets.exec("core/factory/framebuffer/from_screen")
+
 
     class blendmode():
         """ Blendmode API 
