@@ -19,7 +19,7 @@ class beagle_api():
         """
         def by_index(index):
             """ returns a gamepad object by player index """
-            return assets.exec("core/queries/gamepad/find_by_id", [index] )
+            return assets.exec("core/queries/gamepad/find_by_id[id]", [index] )
         def find_primary():
             """ returns the primary gamepad """
             return assets.exec("core/queries/gamepad/find_primary", [])
