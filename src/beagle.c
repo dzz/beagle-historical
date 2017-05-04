@@ -33,6 +33,34 @@
 #include "hardware/audio.h"
 #include "hwgfx/context.h"
 #include "hwgfx/text.h"
+//#include "hwgfx/primitive.h"
+//#include "hwgfx/shader.h"
+
+extern void hwgfx_render_test(); //{
+
+    /*
+    const gfx_float verts[3][2] = {
+        { -1.0, -1.0 },
+        { 1.0,-1.0},
+        { 1.0,1.0}
+    };
+    const gfx_float uvs[3][2] = {
+        { 0.0, 0.0 },
+        { 1.0,0.0},
+        { 1.0,1.0}
+    };
+    gfx_coordinate_uv_primitive primitive;
+    gfx_shader shader;
+   
+    primitive_create_coordinate_uv_primitive( &primitive, (gfx_float*)verts, (gfx_float*)uvs, 3, 2);
+    shader_load(&shader, "shaders/test/vert.glsl", "shaders/test/pixel.glsl");
+    shader_bind(&shader);
+
+    primitive_render_coordinate_uv_primitive( &primitive );
+    primitive_destroy_coordinate_uv_primitive( &primitive );
+
+    shader_drop(&shader);*/
+//}
 
 //not static due to reference in the host api for
 //host_set_title
@@ -370,6 +398,7 @@ int main(int argc, char **argv){
     double spf                                      = 0.0;
     int tick_next                                   = 0;
     unsigned int ctt2_state                         = CTT2_EVT_POLL_EVENTS;
+    unsigned int render_test = 0;
         finished = 0;
     initialized_modules = 0;
 
@@ -429,7 +458,15 @@ int main(int argc, char **argv){
                             }
                          break;
                     case CTT2_EVT_RENDER:
-                         api_render();
+                         if(render_test == 0) {
+                            api_render();
+                         } 
+                         if(render_test==1) {
+                             hwgfx_render_test();
+                         }
+                         if(render_test==2) {
+                            api_render_test();
+                         }
                          ctt2_state = CTT2_EVT_SYNC_GFX;
                          break;
                     case CTT2_EVT_SYNC_GFX:
@@ -475,6 +512,9 @@ int main(int argc, char **argv){
                         if( event.key.keysym.sym == SDLK_F5 && (event.key.keysym.mod & KMOD_CTRL) ) {
                             dropPython();
                             initPython();
+                        }
+                        if( event.key.keysym.sym == SDLK_F6 && (event.key.keysym.mod & KMOD_CTRL) ) {
+                            render_test = (render_test+1)%3;
                         }
                         if( event.key.keysym.sym == SDLK_F4 && (event.key.keysym.mod & KMOD_ALT) ) {
                             finished = CTT2_RT_TERMINATED;

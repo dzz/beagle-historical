@@ -14,6 +14,8 @@ import client.beagle.beagle_environment  as beagle_environment
 import client.apps
 import client.ui.areas as ui_area
 import client.gfx.blend as blend
+import client.gfx.primitive as primitive
+import client.gfx.shaders as shaders
 import client.beagle.caret as caret
 from   client.beagle.assets import asset_manager
 import gc
@@ -156,6 +158,24 @@ def tick():
 
 def render():
     app.render()
+
+def render_test():
+
+    test_primitive = primitive.primitive( primitive.draw_mode.TRIS,
+    [
+        (1.0, 1.0),
+        (-1.0, 1.0),
+        (-1.0,-1.0)
+    ], 
+    [
+        (0.0,0.0),
+        (1.0,0.0),
+        (1.0,1.0)
+    ])
+
+    test_shader = shaders.shader( "test/vert", "test/pixel", "shaders/" )
+    test_primitive.render_shaded( test_shader )
+    return
     
 def _get_mf_area():
     return mouse_focused_area
