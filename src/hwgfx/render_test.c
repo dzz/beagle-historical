@@ -20,7 +20,7 @@ void hwgfx_render_test() {
     shader_load(&shader, "shaders/test/vert.glsl", "shaders/test/pixel.glsl");
     shader_bind(&shader);
 
-    primitive->mode = GL_TRIANGLES;
+    primitive.mode = GL_TRIANGLES;
 
     primitive_render( &primitive );
     primitive_destroy_coordinate_uv_primitive( &primitive );
