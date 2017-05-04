@@ -1,3 +1,16 @@
+#include <stdint.h>
+
+#ifdef __X86__
+    typedef unsigned int marshalled_pointer;
+    #define PYTHON_POINTER_INT "I"
+#else
+//assumed 64bit arch
+    typedef intptr_t marshalled_pointer;
+    #define PYTHON_POINTER_INT "L"
+#endif
+
+
+
 void api_fail_hard() {
     if(PyErr_Occurred())
         PyErr_Print();

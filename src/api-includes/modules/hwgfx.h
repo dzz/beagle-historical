@@ -2,7 +2,7 @@
  * import hwgfx
  * =============
  */
-
+#include <pthread.h>
 
 /**
  *  rect
@@ -95,15 +95,15 @@ DEF_ARGS {
     gfx_label* label = (gfx_label*)malloc(sizeof(gfx_label));
 
     label_generate(label);
-    return Py_BuildValue("I",(unsigned int)label);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)label);
 }
 
 MODULE_FUNC hwgfx_label_drop 
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     gfx_label* label;
 
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     label = (gfx_label*)ptr;
     label_drop (label);
@@ -113,12 +113,12 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_label_set_text 
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     char *text; 
     gfx_label* label;
     char* py_str_txt;
 
-    if(!INPUT_ARGS(args,"Is",&ptr, &py_str_txt)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "s",&ptr, &py_str_txt)) 
         return NULL;
     label   = (gfx_label*)ptr;
     text    = py_str_txt;
@@ -128,10 +128,10 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_label_render
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     float x,y,r,g,b;
     gfx_label* label;
-    if(!INPUT_ARGS(args,"Ifffff",&ptr,&x,&y,&r,&g,&b)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "fffff",&ptr,&x,&y,&r,&g,&b)) 
         return NULL;
     label = (gfx_label*)ptr;
 
@@ -180,14 +180,14 @@ DEF_ARGS {
     gfx_framebuffer* framebuffer;
     framebuffer = (gfx_framebuffer*)malloc(sizeof(framebuffer));
     framebuffer_create_framebuffer(framebuffer);
-    return Py_BuildValue("I",(unsigned int)framebuffer);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)framebuffer);
 }
 
 MODULE_FUNC hwgfx_framebuffer_drop
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     gfx_framebuffer* framebuffer;
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_drop(framebuffer);
@@ -197,10 +197,10 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_framebuffer_bind_texture
 DEF_ARGS {
-    unsigned int ptr_fb,ptr_tex; 
+    marshalled_pointer ptr_fb,ptr_tex; 
     gfx_framebuffer* framebuffer;
     gfx_texture* texture;
-    if(!INPUT_ARGS(args,"II",&ptr_fb,&ptr_tex)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT PYTHON_POINTER_INT,&ptr_fb,&ptr_tex)) 
         return NULL;
     framebuffer = (gfx_framebuffer*)ptr_fb;
     texture = (gfx_texture*)ptr_tex;
@@ -210,9 +210,9 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_framebuffer_render_start
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     gfx_framebuffer* framebuffer;
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_render_start(framebuffer);
@@ -221,9 +221,9 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_framebuffer_render_end
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     gfx_framebuffer* framebuffer;
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     framebuffer = (gfx_framebuffer*)ptr;
     framebuffer_render_end(framebuffer);
@@ -247,15 +247,15 @@ DEF_ARGS {
     else
         texture_generate_filtered(texture,w,h);
 
-    return Py_BuildValue("I",(unsigned int)texture);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)texture);
 }
 
 MODULE_FUNC hwgfx_texture_drop
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     gfx_texture* texture;
 
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     texture = (gfx_texture*)ptr;
     texture_drop(texture);
@@ -265,11 +265,11 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_texture_bind
 DEF_ARGS {
-    unsigned int ptr; 
+    marshalled_pointer ptr; 
     int tex_unit;
     gfx_texture* texture;
 
-    if(!INPUT_ARGS(args,"Ii",&ptr, &tex_unit)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "i",&ptr, &tex_unit)) 
         return NULL;
     texture = (gfx_texture*)ptr;
     texture_bind(texture, tex_unit);
@@ -278,10 +278,10 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_texture_upload 
 DEF_ARGS {
-    unsigned int tptr,iptr;
+    marshalled_pointer tptr,iptr;
     gfx_texture* texture;
     DRAWING_SURFACE ds;
-    if(!INPUT_ARGS(args,"II",&tptr,&iptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT PYTHON_POINTER_INT,&tptr,&iptr))
         return NULL;
     texture = (gfx_texture*)tptr;
     ds      = (DRAWING_SURFACE)iptr;
@@ -291,10 +291,10 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_texture_download 
 DEF_ARGS {
-    unsigned int tptr,iptr;
+    marshalled_pointer tptr,iptr;
     gfx_texture* texture;
     DRAWING_SURFACE ds;
-    if(!INPUT_ARGS(args,"II",&tptr,&iptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT PYTHON_POINTER_INT,&tptr,&iptr))
         return NULL;
     texture = (gfx_texture*)tptr;
     ds      = (DRAWING_SURFACE)iptr;
@@ -316,7 +316,7 @@ DEF_ARGS {
     }
     shader = (gfx_shader*)malloc(sizeof(gfx_shader));
     shader_load(shader, vert, frag);
-    return Py_BuildValue("I",(unsigned int)shader);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)shader);
 }
 
 MODULE_FUNC hwgfx_shader_compile
@@ -330,14 +330,14 @@ DEF_ARGS {
     }
     shader = malloc(sizeof(gfx_shader));
     shader_load(shader, vert, frag);
-    return Py_BuildValue("I",(unsigned int)shader);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)shader);
 }
 
 MODULE_FUNC hwgfx_shader_drop
 DEF_ARGS    {
-    unsigned int ptr;
+    marshalled_pointer ptr;
 
-    if(!INPUT_ARGS(args,"I",&ptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
     shader_drop ((gfx_shader*)ptr);    
     free        ((gfx_shader*)ptr);
@@ -346,8 +346,8 @@ DEF_ARGS    {
 
 MODULE_FUNC hwgfx_shader_bind
 DEF_ARGS    {
-   unsigned int ptr;
-   if(!INPUT_ARGS(args,"I",&ptr))
+   marshalled_pointer ptr;
+   if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
        return NULL;
    shader_bind  ((gfx_shader*)ptr);
    Py_RETURN_NONE;
@@ -357,10 +357,10 @@ DEF_ARGS    {
 MODULE_FUNC hwgfx_shader_bind_float
 DEF_ARGS {
     float x;
-    unsigned int ptr;
+    marshalled_pointer ptr;
     char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Isf",&ptr,&param,&x))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sf",&ptr,&param,&x))
         return NULL;
     shader = (gfx_shader*)ptr;
     shader_bind_float(shader,param,x);
@@ -370,10 +370,10 @@ DEF_ARGS {
 MODULE_FUNC hwgfx_shader_bind_vec2
 DEF_ARGS {
     float x,y;
-    unsigned int ptr;
+    marshalled_pointer ptr;
     char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Isff",&ptr,&param,&x,&y))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sff",&ptr,&param,&x,&y))
         return NULL;
     shader = (gfx_shader*)ptr;
     shader_bind_vec2(shader,param,x,y);
@@ -383,10 +383,10 @@ DEF_ARGS {
 MODULE_FUNC hwgfx_shader_bind_vec3
 DEF_ARGS {
     float x,y,z;
-    unsigned int ptr;
+    marshalled_pointer ptr;
     char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Isfff",&ptr,&param,&x,&y,&z))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sfff",&ptr,&param,&x,&y,&z))
         return NULL;
     shader = (gfx_shader*)ptr;
     shader_bind_vec3(shader,param,x,y,z);
@@ -396,10 +396,10 @@ DEF_ARGS {
 MODULE_FUNC hwgfx_shader_bind_vec4
 DEF_ARGS {
     float x,y,z,w;
-    unsigned int ptr;
+    marshalled_pointer ptr;
     char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"Isffff",&ptr,&param,&x,&y,&z,&w))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "sffff",&ptr,&param,&x,&y,&z,&w))
         return NULL;
     shader = (gfx_shader*)ptr;
     shader_bind_vec4(shader,param,x,y,z,w);
@@ -409,11 +409,11 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_shader_bind_texture
 DEF_ARGS {
-    unsigned int ptr;
-    unsigned int tex_ptr;
+    marshalled_pointer ptr;
+    marshalled_pointer tex_ptr;
     char* param;
     gfx_shader* shader;
-    if(!INPUT_ARGS(args,"IsI",&ptr,&param,&tex_ptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "s" PYTHON_POINTER_INT,&ptr,&param,&tex_ptr))
         return NULL;
     shader = (gfx_shader*)ptr;
     shader_bind_texture(shader,param,(gfx_texture*)tex_ptr);
@@ -475,7 +475,7 @@ DEF_ARGS {
                                             vlen);
     free(coord_float_buffer);
     primitive->mode = draw_mode;
-    return Py_BuildValue("I",(unsigned int)primitive);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)primitive);
 }
 
 /* TODO:
@@ -543,25 +543,31 @@ DEF_ARGS {
     free(uv_float_buffer);
 
     primitive->mode = draw_mode;
-    return Py_BuildValue("I",(unsigned int)primitive);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)primitive);
 }
 
 MODULE_FUNC hwgfx_primitive_render
 DEF_ARGS {
-    unsigned int ptr;
+    marshalled_pointer ptr;
 
-    if(!INPUT_ARGS(args,"I",&ptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
+
+    printf("vert array :%p\n",((gfx_coordinate_primitive*)ptr)->vert_array);
+    printf("vert buffer :%p\n",((gfx_coordinate_primitive*)ptr)->vert_buffer);
+    printf("mode :%p\n",((gfx_coordinate_primitive*)ptr)->mode);
     primitive_render((gfx_coordinate_primitive*)ptr);
+
+    printf("RENDER pthread :%p\n", pthread_self());
     Py_RETURN_NONE;
 }
 
 MODULE_FUNC hwgfx_primitive_destroy_coordinate_primitive
 DEF_ARGS {
-    unsigned int ptr;
+    marshalled_pointer ptr;
     gfx_coordinate_primitive* primitive;
 
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     primitive = (gfx_coordinate_primitive*)ptr;
     primitive_destroy_coordinate_primitive(primitive);
@@ -571,10 +577,10 @@ DEF_ARGS {
 
 MODULE_FUNC hwgfx_primitive_destroy_coordinate_uv_primitive
 DEF_ARGS {
-    unsigned int ptr;
+    marshalled_pointer ptr;
     gfx_coordinate_uv_primitive* primitive;
 
-    if(!INPUT_ARGS(args,"I",&ptr)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr)) 
         return NULL;
     primitive = (gfx_coordinate_uv_primitive*)ptr;
     primitive_destroy_coordinate_uv_primitive(primitive);

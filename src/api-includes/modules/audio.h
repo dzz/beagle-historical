@@ -23,14 +23,14 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,"s",&filename))
         return NULL;
     audio_load_wav(wav, filename);
-    return Py_BuildValue("I",(unsigned int)wav);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)wav);
 }
 
 MODULE_FUNC audio_clip_drop
 DEF_ARGS {
-    unsigned int ptr;
+    marshalled_pointer ptr;
     hw_audio_wav_data* wav;
-    if(!INPUT_ARGS(args,"I",&ptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
     wav = (hw_audio_wav_data*)ptr;
     audio_drop_wav(wav);
@@ -47,14 +47,14 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,"fI",&bpm,&beatlock))
         return NULL;
     audio_create_track(track, bpm, beatlock);
-    return Py_BuildValue("I",(unsigned int)track);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)track);
 }
 
 MODULE_FUNC audio_track_drop
 DEF_ARGS {
-    unsigned int ptr;
+    marshalled_pointer ptr;
     audio_track* track;
-    if(!INPUT_ARGS(args,"I",&ptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
     track = (audio_track*)ptr;
     free(track);
@@ -72,7 +72,7 @@ DEF_ARGS {
     unsigned int track_id;
     hw_audio_wav_data* wav;
 
-    if(!INPUT_ARGS(args,"II",&track_id,&wav))  {
+    if(!INPUT_ARGS(args,"I" PYTHON_POINTER_INT,&track_id,&wav))  {
         return NULL;
     }
 
@@ -82,10 +82,10 @@ DEF_ARGS {
 
 MODULE_FUNC audio_track_set_volume
 DEF_ARGS {
-    unsigned int tptr;
+    marshalled_pointer tptr;
     float volume;
     audio_track* track;
-    if(!INPUT_ARGS(args,"If",&tptr,&volume)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "f",&tptr,&volume)) 
         return NULL;
 
     track = (audio_track*)tptr;
@@ -95,10 +95,10 @@ DEF_ARGS {
 
 MODULE_FUNC audio_track_set_pan
 DEF_ARGS {
-    unsigned int tptr;
+    marshalled_pointer tptr;
     float pan;
     audio_track* track;
-    if(!INPUT_ARGS(args,"If",&tptr,&pan)) 
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT "f",&tptr,&pan)) 
         return NULL;
 
     track = (audio_track*)tptr;
