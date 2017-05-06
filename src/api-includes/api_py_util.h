@@ -1,10 +1,9 @@
 #include <stdint.h>
 
-#ifdef __X86__
-    typedef unsigned int marshalled_pointer;
+typedef intptr_t marshalled_pointer;
+#ifdef _WIN32
     #define PYTHON_POINTER_INT "I"
 #else
-//assumed 64bit arch
     typedef intptr_t marshalled_pointer;
     #define PYTHON_POINTER_INT "L"
 #endif

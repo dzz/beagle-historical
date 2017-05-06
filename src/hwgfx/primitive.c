@@ -49,7 +49,6 @@ void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordina
     OGL_OBJ("varray",   primitive->vert_array,  OGL_RECV);
     OGL_OBJ("vbuffer",  primitive->vert_buffer, OGL_RECV);
 
-    printf("---> ADDRESS OF PRIMITIVE %x", primitive);
 }
 
 

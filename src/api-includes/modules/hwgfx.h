@@ -2,7 +2,6 @@
  * import hwgfx
  * =============
  */
-#include <pthread.h>
 
 /**
  *  rect
@@ -553,12 +552,8 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
 
-    printf("vert array :%p\n",((gfx_coordinate_primitive*)ptr)->vert_array);
-    printf("vert buffer :%p\n",((gfx_coordinate_primitive*)ptr)->vert_buffer);
-    printf("mode :%p\n",((gfx_coordinate_primitive*)ptr)->mode);
     primitive_render((gfx_coordinate_primitive*)ptr);
 
-    printf("RENDER pthread :%p\n", pthread_self());
     Py_RETURN_NONE;
 }
 
