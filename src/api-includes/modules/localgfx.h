@@ -11,7 +11,7 @@ DEF_ARGS {
        return  NULL;
 
     ds = createDrawingSurface(w,h);
-    return Py_BuildValue("I",(unsigned int)ds);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)ds);
 }
 
 MODULE_FUNC localgfx_img_load
@@ -21,13 +21,13 @@ DEF_ARGS {
     if(!INPUT_ARGS(args,"s", &py_str_txt)) 
         return NULL;
     ds = (DRAWING_SURFACE)IMG_Load(py_str_txt);
-    return Py_BuildValue("I",(unsigned int)ds);
+    return Py_BuildValue(PYTHON_POINTER_INT,(marshalled_pointer)ds);
 }
 
 MODULE_FUNC localgfx_img_drop
 DEF_ARGS {
-    unsigned int ptr;
-    if(!INPUT_ARGS(args,"I",&ptr))
+    marshalled_pointer ptr;
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
     destroyDrawingSurface((DRAWING_SURFACE)ptr);  
     Py_RETURN_NONE;
@@ -35,10 +35,10 @@ DEF_ARGS {
 
 MODULE_FUNC localgfx_img_dims
 DEF_ARGS {
-    unsigned int ptr;
+    marshalled_pointer ptr;
     SDL_Surface* surf;
 
-    if(!INPUT_ARGS(args,"I",&ptr))
+    if(!INPUT_ARGS(args,PYTHON_POINTER_INT,&ptr))
         return NULL;
     surf = (SDL_Surface*)ptr;
     return Py_BuildValue("ii",surf->w, surf->h);

@@ -1,3 +1,15 @@
+#include <stdint.h>
+
+typedef intptr_t marshalled_pointer;
+#ifdef _WIN32
+    #define PYTHON_POINTER_INT "I"
+#else
+    typedef intptr_t marshalled_pointer;
+    #define PYTHON_POINTER_INT "L"
+#endif
+
+
+
 void api_fail_hard() {
     if(PyErr_Occurred())
         PyErr_Print();

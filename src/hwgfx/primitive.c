@@ -11,8 +11,9 @@
 #define NO_POINTER_OFFSET 0
 
 /** BASIC TYPE **/
-void primitive_create_coordinate_primitive(gfx_coordinate_primitive* primitive, gfx_float* coordinates, int verts, int vlen ){
+void primitive_create_coordinate_primitive(void* _primitive, gfx_float* coordinates, int verts, int vlen ){
 
+    gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     //printf("common init : verts( %i) vlen(%i)\n", verts,vlen);
     primitive->_num_verts = verts;
     primitive->mode = GL_TRIANGLE_FAN;
@@ -47,12 +48,13 @@ void primitive_create_coordinate_primitive(gfx_coordinate_primitive* primitive, 
     
     OGL_OBJ("varray",   primitive->vert_array,  OGL_RECV);
     OGL_OBJ("vbuffer",  primitive->vert_buffer, OGL_RECV);
+
 }
 
 
-void primitive_destroy_coordinate_primitive(gfx_coordinate_primitive*
-        primitive){
+void primitive_destroy_coordinate_primitive(void* _primitive){
 
+    gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     glDeleteVertexArrays(1,&primitive->vert_array);
     glDeleteBuffers(1,&primitive->vert_buffer);
 
@@ -61,8 +63,9 @@ void primitive_destroy_coordinate_primitive(gfx_coordinate_primitive*
 
 }
 
-void primitive_render(gfx_coordinate_primitive*
-        primitive) {
+void primitive_render(void* _primitive) {
+    
+    gfx_coordinate_primitive* primitive = (gfx_coordinate_primitive*)_primitive;
     glBindVertexArray(primitive->vert_array);
     glDrawArrays(primitive->mode, 0, primitive->_num_verts);
 }
@@ -70,10 +73,9 @@ void primitive_render(gfx_coordinate_primitive*
 
 #define UV_FLOATS_PER_VERT 2
 /** UV COORD TYPE **/
-void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive* 
-        uv_primitive, gfx_float* coordinates, gfx_float* uvs,
-        int verts, int vlen ){
+void primitive_create_coordinate_uv_primitive(void* _uv_primitive, gfx_float* coordinates, gfx_float* uvs, int verts, int vlen ){
 
+    gfx_coordinate_uv_primitive* uv_primitive = (gfx_coordinate_uv_primitive*)_uv_primitive;
     //printf("common init\n");
     //initialize basic object
     primitive_create_coordinate_primitive( 
@@ -103,9 +105,10 @@ void primitive_create_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
     OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_RECV);
 }
 
-void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
-        uv_primitive) {
+void primitive_destroy_coordinate_uv_primitive(void* _uv_primitive) {
 
+
+    gfx_coordinate_primitive* uv_primitive = (gfx_coordinate_primitive*) _uv_primitive;
     /* TODO: determine if this is required or 
      * if the GL spec indicates that primitive_destroy_coordinate_primitive 
      * is all that is required 
@@ -116,18 +119,18 @@ void primitive_destroy_coordinate_uv_primitive(gfx_coordinate_uv_primitive*
     primitive_destroy_coordinate_primitive((gfx_coordinate_primitive*)
             uv_primitive);
 
-    glDeleteBuffers(1,&uv_primitive->uv_buffer);
+    //glDeleteBuffers(1,&uv_primitive->uv_buffer);
 
-    OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_DROP);
+    //OGL_OBJ("uvbuffer",uv_primitive->uv_buffer,OGL_DROP);
 }
 
 /** PRIMITIVE TEMPLATES **/
 
-void primitive_create_scrquad_primitive(gfx_coordinate_primitive* primitive) {
-    primitive_create_screen_primitive(primitive);
+void primitive_create_scrquad_primitive(void* primitive) { 
+    //primitive_create_screen_primitive(primitive);
 }
 
-void primitive_create_dab_primitive(gfx_coordinate_primitive* primitive) {
+void primitive_create_dab_primitive(void* primitive) {
     const gfx_float dab_verts[4][2] = {
         {  -1.0, -1.0 }, 
         {  1.0, -1.0 }, 
@@ -136,8 +139,8 @@ void primitive_create_dab_primitive(gfx_coordinate_primitive* primitive) {
     primitive_create_coordinate_primitive(primitive, (gfx_float*)dab_verts, 4, 2);
 }
 
-void primitive_create_screen_primitive(gfx_coordinate_primitive* primitive) {
-    const gfx_float context_verts[4][2] = {
+void primitive_create_screen_primitive(void* primitive) { 
+const gfx_float context_verts[4][2] = {
         {  0.0, 0.0 }, 
         {  1.0, 0.0 }, 
         {  1.0, 1.0 }, 
