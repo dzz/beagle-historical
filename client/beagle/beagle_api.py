@@ -23,8 +23,9 @@ class beagle_api():
             self.tickables = []
     
         def create_tickable(self, tickable):
-            """ append a tickable to the list of objects to tick """
+            """ append a tickable to the list of objects to tick. returns the bound tickable object. """
             self.tickables.append( tickable )
+            return tickable
     
         def tick(self):
             """ tick all tickables """
