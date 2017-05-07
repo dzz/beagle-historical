@@ -9,8 +9,28 @@ from client.system.gamepad import pad_buttons
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
 ## using the hash in the asset manager
 
+
+
+
 class beagle_api():
     """ High Level Aggregate API for Beagle """
+    class simple_tick_manager():
+        """ Simple Tick Manager Superclass
+
+                 Inherit from this and add tickables with create_tickable, tick will auto tick linked tickables. 
+        """
+        def __init__(self):
+            self.tickables = []
+    
+        def create_tickable(self, tickable):
+            """ append a tickable to the list of objects to tick """
+            self.tickables.append( tickable )
+    
+        def tick(self):
+            """ tick all tickables """
+            for tickable in self.tickables:
+                tickable.tick()
+
     class gamepads():
         """ Gamepad API
         
