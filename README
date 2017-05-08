@@ -14,4 +14,8 @@ an experiment in the medium of game engines
                    v0.0
 
 
+keys:
+    ctrl + f5 -> restart python environment
+    ctrl + f6 -> cycle render mode ( system test, userspace test, application )
+    ` -> reload t userspace shaders
 
