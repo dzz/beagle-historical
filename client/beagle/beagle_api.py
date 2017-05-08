@@ -83,9 +83,12 @@ class beagle_api():
 
     class framebuffer():
         """ Framebufer API """
-        def from_dims(w,h):
+        def from_dims(w,h, **kwargs):
             """  Create a frame buffer with specified dimensions """
-            return assets.exec("core/factory/framebuffer/[w,h]",[w,h])
+            if "filtered" in kwargs:
+                return assets.exec("core/factory/framebuffer/[w,h]",[w,h, kwargs['filtered']])
+            else:
+                return assets.exec("core/factory/framebuffer/[w,h]",[w,h])
 
         def from_screen():
             """  Create a frame buffer with the same dimensions as the primary render target"""
