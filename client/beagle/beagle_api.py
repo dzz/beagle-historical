@@ -4,6 +4,7 @@ from client.gfx.text import render_text
 from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
 from client.system.gamepad import pad_buttons
+from client.beagle.assets import assets
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
 ## on as-needed basis from old mechanisms which either necessitated tons of import statements, or
@@ -13,7 +14,12 @@ from client.system.gamepad import pad_buttons
 
 
 class beagle_api():
-    """ High Level Aggregate API for Beagle """
+    """ High Level Aggregate API for Beagle 
+    
+        Attributes: 
+            assets: a handle to the beagle asset manager
+    """
+    assets = assets
     class simple_tick_manager():
         """ Simple Tick Manager Superclass
 
@@ -38,6 +44,7 @@ class beagle_api():
             Attributes:
                 pad_buttons: a map of identifiers (e.g. A,B,X,Y) to button indices
         """
+        pad_buttons = pad_buttons
         def by_index(index):
             """ returns a gamepad object by player index """
             return assets.exec("core/queries/gamepad/find_by_id[id]", [index] )

@@ -5,6 +5,7 @@ from client.gfx.texture import *
 from client.gfx.framebuffer import framebuffer
 
 _shaders = {}
+_reloadables = []
 
 def build_params(dict):
     params = []
@@ -13,6 +14,12 @@ def build_params(dict):
 
 def get_unique(vert,frag, path=None):
     return shader(vert,frag,path)
+
+
+def reload():
+    global _reloadables
+    for shader in _reloadables:
+        shader.reload()
 
 def get(vert,frag, path = None ):
     global _shaders
@@ -32,7 +39,7 @@ def get_unique_client_program( vert, frag ):
 
 class shader(object):
     def __init__(self,vert,frag, path = None, compile = False ):
-
+        global _reloadables
         if not compile:
             #use shader_load to pull from filesystem
             if path is not None:
@@ -47,11 +54,18 @@ class shader(object):
                 fpath =  path + frag + ".glsl"
 
             self._shader = hwgfx.shader_load( vpath, fpath )
+            self.vpath = vpath
+            self.fpath = fpath
+            _reloadables.append( self )
         else:
             #shader compile the strings
             self._shader = hwgfx.shader_compile(vert,frag)
 
         log.write(log.DEBUG,"Linked program:{3}".format(path,vert,frag,self._shader))
+
+    def reload(self):
+        hwgfx.shader_drop(self._shader)
+        self._shader = hwgfx.shader_load(self.vpath,self.fpath)
 
     def transform_uniforms(u):
         uniforms = []

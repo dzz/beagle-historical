@@ -70,6 +70,8 @@ def init():
 
     config = configparser.ConfigParser()
 
+    keyboard.register_keyup_handler('backquote', shaders.reload )
+
     if(beagle_runtime.get_user_specified_application_folder()):
         target_application_folder = os.path.normpath(beagle_runtime.get_user_specified_application_folder())
         log.write(log.INFO, "Loading application @:{0}".format(target_application_folder))
