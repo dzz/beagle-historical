@@ -38,19 +38,28 @@ class beagle_api():
             for tickable in self.tickables:
                 tickable.tick()
 
+    class purging_tick_manager( simple_tick_manager):
+        """ Purging Tick Manager Superclass
+
+                tick manager which cleans up tickables where tick does not return True
+        """
+        def tick(self):
+            """ tick all tickables, removing ones for which tick does not return True """
+            self.tickables = list(filter( lambda tickable: tickable.tick(), self.tickables ))
+
     class gamepads():
         """ Gamepad API
         
             Attributes:
-                pad_buttons: a map of identifiers (e.g. A,B,X,Y) to button indices
+                buttons: a map of identifiers (e.g. A,B,X,Y) to button indices
         """
-        pad_buttons = pad_buttons
+        buttons = pad_buttons
         def by_index(index):
             """ returns a gamepad object by player index """
             return assets.exec("core/queries/gamepad/find_by_id[id]", [index] )
         def find_primary():
             """ returns the primary gamepad """
-            return assets.exec("core/queries/gamepad/find_primary", [])
+            return assets.exec("core/queries/gamepad/find_primary")
 
 
     class primitive():
