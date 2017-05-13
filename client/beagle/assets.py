@@ -3,6 +3,7 @@ from client.gfx.context import gfx_context
 from client.gfx.text import render_text
 from client.system.gamepad       import get_gamepad, pad_buttons
 import client.system.log as log
+from client.math.curve import curve
 from client.beagle.animation import curve_sequencer
 from client.gfx.texture import texture
 import client.beagle.beagle_environment  as beagle_environment
@@ -33,7 +34,8 @@ class resource_manager:
                               "shader"      : shader_adapter,
                               "coordsys"    : coordsys_adapter,
                               "dict"        : dict_adapter,
-                              "curve_sequence"       : scene_adapter 
+                              "curve_sequence"       : scene_adapter,
+                              "curve" : curve_adapter
                               }
 
 
@@ -164,6 +166,10 @@ class coordsys_adapter:
 class dict_adapter:
     def load(dict_def):
             return dict_def["dict"]
+
+class curve_adapter:
+    def load(dict_def):
+        return curve( dict_def["points"] )
 
 class scene_adapter:
     def load(dict_def):

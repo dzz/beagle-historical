@@ -20,6 +20,25 @@ class beagle_api():
             assets: a handle to the beagle asset manager
     """
     assets = assets
+
+    class curve_driver():
+        """ tickable binding for a curve 
+        """
+        def __init__(self,**kwargs):
+            self.curve = kwargs['curve']
+            self.rate = kwargs['rate']
+            self.t = 0
+
+        def tick(self):
+            self.t += self.rate
+        
+        def value(self):
+            return self.curve.value_at(self.t)
+
+        def is_finished(self):
+            if( self.t > self.curve.max_t ):
+                return True
+
     class simple_tick_manager():
         """ Simple Tick Manager Superclass
 

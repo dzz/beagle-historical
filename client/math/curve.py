@@ -10,7 +10,9 @@ class curve:
         mode_str = False
         vec_len = None
         mix_msg = "attempted to create animation curve with mixed vector/string data"
+        self.max_t = 0.0
         for point in points:
+            self.max_t = max(self.max_t, point["t"])
             if "string" in point:
                 if mode_vec:
                     raise ValueError(mix_msg)
