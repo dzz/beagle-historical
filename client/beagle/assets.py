@@ -34,12 +34,12 @@ class resource_manager:
                               "shader"      : shader_adapter,
                               "coordsys"    : coordsys_adapter,
                               "dict"        : dict_adapter,
-                              "curve_sequence"       : scene_adapter,
-                              "curve" : curve_adapter
+                              "curve_sequence" : scene_adapter,
+                              "curve" : curve_adapter,
+                              "default" : default_adapter
                               }
 
 
-            
             self.load_specials()
 
             for pkg in self.package_data:
@@ -47,6 +47,7 @@ class resource_manager:
                 self.package_keys[pkg] = []
                 if(pkg_def["preload"]):
                     self.load_package(pkg)
+
 
 
         def load_specials(self):
@@ -117,10 +118,14 @@ class resource_manager:
 
         def load_resource(self, pkgname, resdef):
             if resdef["type"] in self.adapters:
-                key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
-                self.package_keys[pkgname].append(key)
-                self.resource_map[key] = self.adapters[resdef["type"]].load(resdef)
-                log.write( log.DEBUG, "Loaded asset {0}".format(key))
+                adapter = self.adapters[resdef["type"]]
+            else:
+                adapter = self.adapters["default"]                
+
+            key = "{0}/{1}/{2}".format(pkgname, resdef["type"], resdef["name"])
+            self.package_keys[pkgname].append(key)
+            self.resource_map[key] = adapter.load(resdef)
+            log.write( log.DEBUG, "Loaded asset {0}".format(key))
 
         def get_resource(self, path):
             try:
@@ -163,6 +168,10 @@ class coordsys_adapter:
 
             return centered_view(cs_def["width"],cs_def["height"], y_axis )
 
+class default_adapter:
+    def load(definition):
+        return definition
+ 
 class dict_adapter:
     def load(dict_def):
             return dict_def["dict"]
@@ -181,6 +190,10 @@ class shader_adapter:
 
 instance = None
 class assets:
+        def register_adapter( key, adapter_class ):
+            global instance
+            instance.adapters[key] = adapter_class
+
         def get(path):
             global instance
             return instance.get_resource(path)
@@ -230,6 +243,8 @@ class assets:
             return instance.flush_package(pkgname)
 
 class asset_manager:
+
+
         def get(path):
             global instance
             return instance.get_resource(path)
