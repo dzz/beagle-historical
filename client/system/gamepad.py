@@ -25,7 +25,7 @@ class pad_buttons:
     DPAD_RIGHT = 14
 
 class gamepad:
-
+    axis_order = [ 0,1,2,3,4,5 ]
     def __init__(self):
         self.idx = 0
         self.leftStick = [0.0,0.0]
@@ -64,12 +64,10 @@ def tick():
                         filtered_axis_data[ax] = 0
 
             gp.idx = i
-            gp.leftStick[0]  = gp.leftStick[0]*gf_a + filtered_axis_data[0]*gf_b
-            gp.leftStick[1]  = gp.leftStick[1]*gf_a + filtered_axis_data[1]*gf_b
-            gp.rightStick[0]  = gp.rightStick[0]*gf_a + filtered_axis_data[2]*gf_b
-            gp.rightStick[1]  = gp.rightStick[1]*gf_a + filtered_axis_data[3]*gf_b
-            gp.triggers[0] = filtered_axis_data[4]
-            gp.triggers[1] = filtered_axis_data[5]
-
-
+            gp.leftStick[0]  = gp.leftStick[0]*gf_a + filtered_axis_data[gamepad.axis_order[0]]*gf_b
+            gp.leftStick[1]  = gp.leftStick[1]*gf_a + filtered_axis_data[gamepad.axis_order[1]]*gf_b
+            gp.rightStick[0]  = gp.rightStick[0]*gf_a + filtered_axis_data[gamepad.axis_order[2]]*gf_b
+            gp.rightStick[1]  = gp.rightStick[1]*gf_a + filtered_axis_data[gamepad.axis_order[3]]*gf_b
+            gp.triggers[0] = filtered_axis_data[gamepad.axis_order[4]]
+            gp.triggers[1] = filtered_axis_data[gamepad.axis_order[5]]
 

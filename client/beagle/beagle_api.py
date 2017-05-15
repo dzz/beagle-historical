@@ -3,7 +3,7 @@ from client.gfx.primitive import primitive
 from client.gfx.text import render_text
 from client.gfx.framebuffer import render_target
 from client.gfx.context import gfx_context
-from client.system.gamepad import pad_buttons
+from client.system.gamepad import pad_buttons, gamepad
 from client.beagle.assets import assets
 
 ## Ultimately all official API features need to have entry points from here, presently migrating
@@ -73,6 +73,10 @@ class beagle_api():
                 buttons: a map of identifiers (e.g. A,B,X,Y) to button indices
         """
         buttons = pad_buttons
+
+        def set_axis_order( axis_order ):
+            gamepad.axis_order = axis_order
+
         def by_index(index):
             """ returns a gamepad object by player index """
             return assets.exec("core/queries/gamepad/find_by_id[id]", [index] )
@@ -113,6 +117,8 @@ class beagle_api():
             """  Create a frame buffer with the same dimensions as the primary render target"""
             return assets.exec("core/factory/framebuffer/from_screen")
 
+    class view():
+        widescreen_16_9 = assets.get("beagle-2d/coordsys/16:9")
 
     class blendmode():
         """ Blendmode API 
@@ -133,6 +139,36 @@ class beagle_api():
         def render_text_grid( txt, x, y, color):
             """ Render text at an arbitrary (8x8) character grid position with color in form [r,g,b] """
             return render_text(txt,x*8,y*8, color)
+    
+    class game():
+        def __init__(self):
+            pass
+        def init(self):
+            pass
+        def render(self):
+            pass
+        def tick(self):
+            pass
+        def finalize(self):
+            pass
+        def configure(self, application_ini):
+            pass
 
 api = beagle_api
+
+class texture():
+    def get_label( txt, **kwargs):
+        fb = beagle_api.framebuffer.from_dims( kwargs['dims'][0], kwargs['dims'][1], filtered = False )
+        with beagle_api.context.render_target(fb):
+            beagle_api.lotext.render_text_pixels(txt, 0,0, kwargs['rgb'] )
+        return fb2.get_texture()
+
+class basic_sprite_renderer():
+    shader = beagle_api.assets.get("beagle-2d/shader/beagle-2d")
+    def render(self):
+        beagle_api.primitive.unit_uv_square.render_shaded( basic_sprite_renderer.shader, self.get_shader_params() )
+
+
+api.texture = texture
+api.basic_sprite_renderer = basic_sprite_renderer
 
